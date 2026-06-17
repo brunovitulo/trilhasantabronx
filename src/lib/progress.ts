@@ -27,6 +27,8 @@ export function isTopicComplete(topic: Topic, rows: ProgressRow[]): boolean {
       const min = s.passingScore ?? PASSING_SCORE;
       return (score ?? 0) >= min;
     }
+    // open_evaluation conta como completo assim que enviada (correção é assíncrona).
+    // practice conta como completo assim que finalizada (sem nota mínima).
     return true;
   });
 }
@@ -68,3 +70,4 @@ export function topicProgressPercent(topic: Topic, rows: ProgressRow[]): number 
   }).length;
   return Math.round((done / topic.subtasks.length) * 100);
 }
+
