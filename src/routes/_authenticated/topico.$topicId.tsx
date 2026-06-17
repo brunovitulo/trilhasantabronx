@@ -115,7 +115,7 @@ function TopicPage() {
         </Link>
         <div className={`h-1.5 w-full rounded-full bg-gradient-to-r ${topic.accent} mb-4`} />
         <div className="flex items-center gap-3 mb-2">
-          <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${topic.accent} text-white font-bold`}>
+          <div className={`flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br ${topic.accent} text-white font-bold shadow-lg`}>
             {topic.order}
           </div>
           <h1 className="text-2xl font-bold tracking-tight">{topic.title}</h1>
@@ -127,19 +127,24 @@ function TopicPage() {
             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
           </div>
         ) : topic.subtasks.length === 0 ? (
-          <Card className="mt-6 p-6 text-center text-muted-foreground">
+          <Card className="mt-6 p-6 text-center text-muted-foreground rounded-3xl">
             Este tópico ainda está em construção. Em breve!
           </Card>
         ) : (
           <div className="mt-6 space-y-3">
             {topic.subtasks.map((sub) => {
               const state = getSubtaskState(sub.id, rows);
+              // Avaliação só libera quando todas as subtarefas anteriores (não-avaliação) estiverem concluídas
+              const priorCompleted = topic.subtasks
+                .filter((s) => s.kind !== "evaluation" && s.id !== sub.id)
+                .every((s) => getSubtaskState(s.id, rows).completed);
               return (
                 <SubtaskCard
                   key={sub.id}
                   subtask={sub}
                   completed={state.completed}
                   score={state.score}
+                  priorCompleted={priorCompleted}
                   onComplete={(score) => markCompleted(sub, score)}
                   onUncheck={() => unmark(sub.id)}
                 />
