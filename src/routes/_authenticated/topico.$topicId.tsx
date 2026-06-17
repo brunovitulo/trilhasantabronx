@@ -375,6 +375,7 @@ function ApostilaSubtask({
       {open && (
         <div className="mt-4">
           <ApostilaView
+            title={subtask.title}
             intro={subtask.intro}
             sections={subtask.sections}
             extrasTitle={subtask.extrasTitle}
