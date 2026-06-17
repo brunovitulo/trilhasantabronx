@@ -252,17 +252,36 @@ function VideoSubtask({
   onComplete: () => void;
   onUncheck: () => void;
 }) {
+  const [opened, setOpened] = useState(false);
+  const canMark = opened || completed;
   return (
-    <div className="flex flex-wrap gap-2">
-      <Button asChild variant="outline" size="sm">
-        <a href={subtask.url} target="_blank" rel="noreferrer" className="gap-1.5">
+    <div className="flex flex-wrap gap-2 items-center">
+      <Button asChild variant="outline" size="sm" className="rounded-full">
+        <a
+          href={subtask.url}
+          target="_blank"
+          rel="noreferrer"
+          className="gap-1.5"
+          onClick={() => setOpened(true)}
+        >
           <ExternalLink className="h-4 w-4" /> Abrir vídeo
         </a>
       </Button>
       {completed ? (
-        <Button variant="ghost" size="sm" onClick={onUncheck}>Desmarcar</Button>
+        <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>Desmarcar</Button>
       ) : (
-        <Button size="sm" onClick={onComplete}>Já assisti</Button>
+        <Button
+          size="sm"
+          className="rounded-full"
+          disabled={!canMark}
+          onClick={onComplete}
+          title={!canMark ? "Abra o vídeo primeiro" : undefined}
+        >
+          Já assisti
+        </Button>
+      )}
+      {!completed && !canMark && (
+        <span className="text-xs text-muted-foreground">Abra o vídeo para liberar</span>
       )}
     </div>
   );
@@ -280,21 +299,42 @@ function ReadingSubtask({
   onUncheck: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [opened, setOpened] = useState(false);
+  const canMark = opened || completed;
   return (
     <div>
-      <Button variant="outline" size="sm" onClick={() => setOpen((o) => !o)}>
+      <Button
+        variant="outline"
+        size="sm"
+        className="rounded-full"
+        onClick={() => {
+          setOpen((o) => !o);
+          setOpened(true);
+        }}
+      >
         {open ? "Fechar apostila" : "Abrir apostila"}
       </Button>
       {open && (
-        <div className="mt-3 rounded-lg border bg-muted/30 p-4 text-sm whitespace-pre-wrap leading-relaxed">
+        <div className="mt-3 rounded-2xl border border-border/60 bg-muted/40 p-4 text-sm whitespace-pre-wrap leading-relaxed">
           {subtask.body}
         </div>
       )}
-      <div className="mt-2">
+      <div className="mt-2 flex items-center gap-2 flex-wrap">
         {completed ? (
-          <Button variant="ghost" size="sm" onClick={onUncheck}>Desmarcar leitura</Button>
+          <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>Desmarcar leitura</Button>
         ) : (
-          <Button size="sm" onClick={onComplete}>Marcar como lida</Button>
+          <Button
+            size="sm"
+            className="rounded-full"
+            disabled={!canMark}
+            onClick={onComplete}
+            title={!canMark ? "Abra a apostila primeiro" : undefined}
+          >
+            Marcar como lida
+          </Button>
+        )}
+        {!completed && !canMark && (
+          <span className="text-xs text-muted-foreground">Abra a apostila para liberar</span>
         )}
       </div>
     </div>
