@@ -220,7 +220,7 @@ function SubtaskCard({
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="font-medium">{subtask.title}</h3>
+              <h3 className="font-medium">{displayTitle ?? subtask.title}</h3>
               {isEvaluation && (
                 <Badge className="bg-pink-500/20 text-pink-300 hover:bg-pink-500/20 border border-pink-400/30">
                   Avaliação
