@@ -181,6 +181,39 @@ function TopicPage() {
   );
 }
 
+type SubtaskGroupEntry = { subtask: Subtask; stepLabel: string | null };
+type SubtaskGroup = {
+  key: string;
+  title: string;
+  showHeader: boolean;
+  items: SubtaskGroupEntry[];
+};
+
+function groupSubtasks(subtasks: Subtask[]): SubtaskGroup[] {
+  const groups: SubtaskGroup[] = [];
+  for (const sub of subtasks) {
+    // Split title on em dash " — " (with spaces). Prefix = group title, suffix = step label.
+    const parts = sub.title.split(/\s+—\s+/);
+    const hasGroup = parts.length >= 2;
+    const groupTitle = hasGroup ? parts[0].trim() : sub.title.trim();
+    const stepLabel = hasGroup ? parts.slice(1).join(" — ").trim() : null;
+    const last = groups[groups.length - 1];
+    if (last && last.title === groupTitle) {
+      last.items.push({ subtask: sub, stepLabel });
+    } else {
+      groups.push({
+        key: `${groupTitle}-${groups.length}`,
+        title: groupTitle,
+        showHeader: hasGroup,
+        items: [{ subtask: sub, stepLabel }],
+      });
+    }
+  }
+  // If a single-item group with no dash sits alone, still hide header (showHeader stays false).
+  // If multiple ungrouped items happen to share the same title, they'd be combined — acceptable.
+  return groups;
+}
+
 function SubtaskCard({
   subtask,
   displayTitle,
