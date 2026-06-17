@@ -85,8 +85,8 @@ export const TOPICS: Topic[] = [
         id: "apresentacao.historia.video",
         kind: "video",
         title: "1. Nossa História — assistir destaque",
-        description: "Assista o destaque 'História' no Instagram da loja.",
-        url: IG,
+        description: "Assista o destaque 'Apresentação Inicial' no Instagram da loja.",
+        url: IG_APRESENTACAO,
       },
       {
         id: "apresentacao.historia.quiz",
