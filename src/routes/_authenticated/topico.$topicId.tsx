@@ -14,14 +14,9 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+
+
+
 import { toast } from "sonner";
 import { ApostilaView } from "@/components/ApostilaView";
 
@@ -359,85 +354,63 @@ function VideoSubtask({
   onComplete: () => void;
   onUncheck: () => void;
 }) {
-  const [opened, setOpened] = useState(false);
-  const [helpOpen, setHelpOpen] = useState(false);
-  const canMark = opened || completed;
+  const [copied, setCopied] = useState(false);
+  const canMark = copied || completed;
 
   async function copyVideoLink() {
     try {
       await navigator.clipboard.writeText(subtask.url);
-      setOpened(true);
-      toast.success("Link copiado");
+      setCopied(true);
+      toast.success("Link copiado", {
+        description: "Agora cole no navegador ou no app do Instagram para abrir o destaque.",
+      });
     } catch {
-      toast.error("Não consegui copiar", {
-        description: "Copie manualmente pelo botão de abrir no Instagram.",
+      toast.error("Não consegui copiar automaticamente", {
+        description: "Selecione o link abaixo e copie manualmente.",
       });
     }
   }
 
   return (
-    <div className="flex flex-wrap gap-2 items-center">
-      <Button
-        variant="outline"
-        size="sm"
-        className="rounded-full"
-        onClick={() => {
-          setOpened(true);
-          setHelpOpen(true);
-        }}
-      >
-        <ExternalLink className="h-4 w-4" /> Abrir destaque
-      </Button>
-      <Dialog open={helpOpen} onOpenChange={setHelpOpen}>
-        <DialogContent className="max-w-md rounded-3xl">
-          <DialogHeader>
-            <DialogTitle>Assistir destaque no Instagram</DialogTitle>
-            <DialogDescription>
-              O Instagram não libera esses destaques para tocar direto dentro do app. Para evitar a tela de bloqueio, copie o link e abra pelo aplicativo do Instagram.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-sm text-muted-foreground break-all">
-            {subtask.url}
-          </div>
-          <DialogFooter className="gap-2 sm:space-x-0">
-            <Button variant="outline" onClick={copyVideoLink}>
-              Copiar link
-            </Button>
-            <Button asChild>
-              <a
-                href={subtask.url}
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => {
-                  setOpened(true);
-                  setHelpOpen(false);
-                }}
-              >
-                Tentar abrir
-              </a>
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      {completed ? (
-        <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>Desmarcar</Button>
-      ) : (
+    <div className="space-y-3">
+      <div className="rounded-2xl border border-amber-200 bg-amber-50 p-3 text-[13px] text-amber-900 leading-relaxed">
+        O Instagram bloqueia a abertura direta dos destaques por links externos.
+        <strong className="block mt-1">Copie o link abaixo e cole no navegador ou no app do Instagram</strong>
+        para assistir ao vídeo.
+      </div>
+      <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-xs sm:text-sm text-muted-foreground break-all font-mono select-all">
+        {subtask.url}
+      </div>
+      <div className="flex flex-wrap gap-2 items-center">
         <Button
+          variant="outline"
           size="sm"
           className="rounded-full"
-          disabled={!canMark}
-          onClick={onComplete}
-          title={!canMark ? "Abra o vídeo primeiro" : undefined}
+          onClick={copyVideoLink}
         >
-          Já assisti
+          <ExternalLink className="h-4 w-4" /> {copied ? "Link copiado ✓" : "Copiar link do destaque"}
         </Button>
-      )}
-      {!completed && !canMark && (
-        <span className="text-xs text-muted-foreground">Abra o vídeo para liberar</span>
-      )}
+        {completed ? (
+          <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>Desmarcar</Button>
+        ) : (
+          <Button
+            size="sm"
+            className="rounded-full"
+            disabled={!canMark}
+            onClick={onComplete}
+            title={!canMark ? "Copie o link primeiro" : undefined}
+          >
+            Já assisti
+          </Button>
+        )}
+        {!completed && !canMark && (
+          <span className="text-xs text-muted-foreground">Copie o link para liberar</span>
+        )}
+      </div>
     </div>
   );
 }
+
 
 function ReadingSubtask({
   subtask,
@@ -692,6 +665,7 @@ function PracticeSubtask({
   completed: boolean;
   onComplete: () => void;
 }) {
+  const [started, setStarted] = useState(false);
   const [answers, setAnswers] = useState<(number | null)[]>(() =>
     subtask.questions.map(() => null),
   );
@@ -707,16 +681,46 @@ function PracticeSubtask({
     setSubmitted(true);
   }
 
-  function retry() {
-    setAnswers(subtask.questions.map(() => null));
-    setSubmitted(false);
-  }
-
   const answeredCount = answers.filter((a) => a !== null).length;
   const allAnswered = answeredCount === subtask.questions.length;
   const correctCount = answers.filter(
     (a, i) => a !== null && a === subtask.questions[i].correctIndex,
   ).length;
+
+  if (completed && !submitted) {
+    return (
+      <div className="rounded-2xl border border-[var(--success)]/40 bg-[var(--success)]/10 p-4 text-sm text-foreground">
+        <p className="font-semibold mb-1">Exercício de fixação finalizado ✓</p>
+        <p className="text-muted-foreground">
+          Este exercício só pode ser respondido uma vez e já foi concluído. Avance para a avaliação final do tópico.
+        </p>
+      </div>
+    );
+  }
+
+  if (!started) {
+    return (
+      <div className="space-y-3">
+        <div className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm leading-relaxed text-amber-900">
+          <p className="font-semibold mb-2">⚠️ Antes de iniciar, leia com atenção:</p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>Ao iniciar, todas as <strong>{subtask.questions.length} perguntas</strong> vão aparecer.</li>
+            <li>Você precisa <strong>responder todas</strong> antes de finalizar.</li>
+            <li>Cada pergunta só pode ser respondida <strong>uma única vez</strong> — não dá para mudar a resposta depois.</li>
+            <li>Depois de finalizar, o exercício <strong>não pode ser refeito</strong>.</li>
+            <li>Este exercício precisa estar completo antes da avaliação final.</li>
+          </ul>
+        </div>
+        <Button
+          size="sm"
+          className="rounded-full"
+          onClick={() => setStarted(true)}
+        >
+          Iniciar exercício de fixação
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-3">
@@ -776,14 +780,9 @@ function PracticeSubtask({
           Respondidas: {answeredCount}/{subtask.questions.length}
         </span>
         {submitted ? (
-          <>
-            <Badge>
-              {correctCount}/{subtask.questions.length} corretas
-            </Badge>
-            <Button size="sm" variant="outline" className="rounded-full" onClick={retry}>
-              Refazer
-            </Button>
-          </>
+          <Badge>
+            {correctCount}/{subtask.questions.length} corretas — finalizado
+          </Badge>
         ) : (
           <Button
             size="sm"
@@ -798,6 +797,7 @@ function PracticeSubtask({
     </div>
   );
 }
+
 
 type OpenSubmission = {
   id: string;
