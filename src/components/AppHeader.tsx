@@ -34,6 +34,12 @@ export function AppHeader({ isAdmin }: { isAdmin: boolean }) {
           </div>
         </Link>
         <div className="ml-auto flex items-center gap-2">
+          <Button asChild variant="ghost" size="sm" className="text-white hover:bg-white/10 hover:text-white gap-1.5">
+            <Link to="/revisao">
+              <Brain className="h-4 w-4" />
+              <span className="hidden sm:inline">Revisão</span>
+            </Link>
+          </Button>
           {isAdmin && (
             <Button asChild variant="secondary" size="sm" className="gap-1.5">
               <Link to="/admin">
@@ -42,6 +48,7 @@ export function AppHeader({ isAdmin }: { isAdmin: boolean }) {
               </Link>
             </Button>
           )}
+
           <Button
             onClick={handleSignOut}
             size="sm"
