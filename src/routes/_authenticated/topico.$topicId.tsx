@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, CheckCircle2, Circle, ExternalLink, Loader2 } from "lucide-react";
+import { ChevronLeft, CheckCircle2, Circle, ExternalLink, Loader2, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { findTopic, type Subtask, PASSING_SCORE } from "@/data/topics";
 import { computeTopicStatuses, getSubtaskState, type ProgressRow } from "@/lib/progress";
@@ -115,7 +115,7 @@ function TopicPage() {
         </Link>
         <div className={`h-1.5 w-full rounded-full bg-gradient-to-r ${topic.accent} mb-4`} />
         <div className="flex items-center gap-3 mb-2">
-          <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${topic.accent} text-white font-bold`}>
+          <div className={`flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br ${topic.accent} text-white font-bold shadow-lg`}>
             {topic.order}
           </div>
           <h1 className="text-2xl font-bold tracking-tight">{topic.title}</h1>
@@ -127,19 +127,24 @@ function TopicPage() {
             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
           </div>
         ) : topic.subtasks.length === 0 ? (
-          <Card className="mt-6 p-6 text-center text-muted-foreground">
+          <Card className="mt-6 p-6 text-center text-muted-foreground rounded-3xl">
             Este tópico ainda está em construção. Em breve!
           </Card>
         ) : (
           <div className="mt-6 space-y-3">
             {topic.subtasks.map((sub) => {
               const state = getSubtaskState(sub.id, rows);
+              // Avaliação só libera quando todas as subtarefas anteriores (não-avaliação) estiverem concluídas
+              const priorCompleted = topic.subtasks
+                .filter((s) => s.kind !== "evaluation" && s.id !== sub.id)
+                .every((s) => getSubtaskState(s.id, rows).completed);
               return (
                 <SubtaskCard
                   key={sub.id}
                   subtask={sub}
                   completed={state.completed}
                   score={state.score}
+                  priorCompleted={priorCompleted}
                   onComplete={(score) => markCompleted(sub, score)}
                   onUncheck={() => unmark(sub.id)}
                 />
@@ -156,12 +161,14 @@ function SubtaskCard({
   subtask,
   completed,
   score,
+  priorCompleted,
   onComplete,
   onUncheck,
 }: {
   subtask: Subtask;
   completed: boolean;
   score: number | null;
+  priorCompleted: boolean;
   onComplete: (score?: number) => void;
   onUncheck: () => void;
 }) {
@@ -170,14 +177,17 @@ function SubtaskCard({
     ? (subtask as Extract<Subtask, { kind: "evaluation" }>).passingScore ?? PASSING_SCORE
     : 0;
   const passed = !isEvaluation ? completed : completed && (score ?? 0) >= passing;
+  const evalLocked = isEvaluation && !priorCompleted && !completed;
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden rounded-3xl border-border/60 bg-card/70 backdrop-blur-xl shadow-sm">
       <div className="p-4 sm:p-5">
         <div className="flex items-start gap-3">
           <div className="mt-0.5">
             {passed ? (
               <CheckCircle2 className="h-5 w-5 text-[var(--success)]" />
+            ) : evalLocked ? (
+              <Lock className="h-5 w-5 text-muted-foreground" />
             ) : (
               <Circle className="h-5 w-5 text-muted-foreground" />
             )}
@@ -186,7 +196,7 @@ function SubtaskCard({
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="font-medium">{subtask.title}</h3>
               {isEvaluation && (
-                <Badge className="bg-pink-100 text-pink-800 hover:bg-pink-100 border-pink-200">
+                <Badge className="bg-pink-500/20 text-pink-300 hover:bg-pink-500/20 border border-pink-400/30">
                   Avaliação
                 </Badge>
               )}
@@ -209,13 +219,19 @@ function SubtaskCard({
                 <ChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
               )}
               {subtask.kind === "evaluation" && (
-                <EvaluationSubtask
-                  subtask={subtask}
-                  completed={completed}
-                  score={score}
-                  passing={passing}
-                  onComplete={onComplete}
-                />
+                evalLocked ? (
+                  <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-sm text-muted-foreground">
+                    Conclua as etapas anteriores para liberar a avaliação.
+                  </div>
+                ) : (
+                  <EvaluationSubtask
+                    subtask={subtask}
+                    completed={completed}
+                    score={score}
+                    passing={passing}
+                    onComplete={onComplete}
+                  />
+                )
               )}
             </div>
           </div>
@@ -236,17 +252,36 @@ function VideoSubtask({
   onComplete: () => void;
   onUncheck: () => void;
 }) {
+  const [opened, setOpened] = useState(false);
+  const canMark = opened || completed;
   return (
-    <div className="flex flex-wrap gap-2">
-      <Button asChild variant="outline" size="sm">
-        <a href={subtask.url} target="_blank" rel="noreferrer" className="gap-1.5">
+    <div className="flex flex-wrap gap-2 items-center">
+      <Button asChild variant="outline" size="sm" className="rounded-full">
+        <a
+          href={subtask.url}
+          target="_blank"
+          rel="noreferrer"
+          className="gap-1.5"
+          onClick={() => setOpened(true)}
+        >
           <ExternalLink className="h-4 w-4" /> Abrir vídeo
         </a>
       </Button>
       {completed ? (
-        <Button variant="ghost" size="sm" onClick={onUncheck}>Desmarcar</Button>
+        <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>Desmarcar</Button>
       ) : (
-        <Button size="sm" onClick={onComplete}>Já assisti</Button>
+        <Button
+          size="sm"
+          className="rounded-full"
+          disabled={!canMark}
+          onClick={onComplete}
+          title={!canMark ? "Abra o vídeo primeiro" : undefined}
+        >
+          Já assisti
+        </Button>
+      )}
+      {!completed && !canMark && (
+        <span className="text-xs text-muted-foreground">Abra o vídeo para liberar</span>
       )}
     </div>
   );
@@ -264,21 +299,42 @@ function ReadingSubtask({
   onUncheck: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [opened, setOpened] = useState(false);
+  const canMark = opened || completed;
   return (
     <div>
-      <Button variant="outline" size="sm" onClick={() => setOpen((o) => !o)}>
+      <Button
+        variant="outline"
+        size="sm"
+        className="rounded-full"
+        onClick={() => {
+          setOpen((o) => !o);
+          setOpened(true);
+        }}
+      >
         {open ? "Fechar apostila" : "Abrir apostila"}
       </Button>
       {open && (
-        <div className="mt-3 rounded-lg border bg-muted/30 p-4 text-sm whitespace-pre-wrap leading-relaxed">
+        <div className="mt-3 rounded-2xl border border-border/60 bg-muted/40 p-4 text-sm whitespace-pre-wrap leading-relaxed">
           {subtask.body}
         </div>
       )}
-      <div className="mt-2">
+      <div className="mt-2 flex items-center gap-2 flex-wrap">
         {completed ? (
-          <Button variant="ghost" size="sm" onClick={onUncheck}>Desmarcar leitura</Button>
+          <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>Desmarcar leitura</Button>
         ) : (
-          <Button size="sm" onClick={onComplete}>Marcar como lida</Button>
+          <Button
+            size="sm"
+            className="rounded-full"
+            disabled={!canMark}
+            onClick={onComplete}
+            title={!canMark ? "Abra a apostila primeiro" : undefined}
+          >
+            Marcar como lida
+          </Button>
+        )}
+        {!completed && !canMark && (
+          <span className="text-xs text-muted-foreground">Abra a apostila para liberar</span>
         )}
       </div>
     </div>
