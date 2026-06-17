@@ -351,16 +351,17 @@ A checklist serve para garantir que nenhum passo seja pulado enquanto o processo
       {
         id: "dores.video",
         kind: "video",
-        title: "Vídeo: Dores dos clientes — Instagram",
-        description: "Assista o destaque sobre dores dos clientes no Instagram da loja antes de ler a apostila.",
-        url: IG,
+        title: "1. Assistir destaque — Dores dos clientes",
+        description: "Assista o destaque '10. Dores' no Instagram da loja antes de ler a apostila.",
+        url: IG_DORES,
       },
       {
         id: "dores.apostila",
         kind: "apostila",
-        title: "Apostila: Dores dos clientes & produtos certos",
+        title: "2. Ler apostila — Dores x Soluções",
         description:
-          "Conceito-base + cada dor com as soluções da loja. Leia tudo antes do quiz.",
+          "Conceito-base + cada dor com as soluções da loja. Leia tudo antes do exercício.",
+
         intro:
           "Pense como médico: o cliente não vem comprar um produto — vem resolver uma dor. Sua função é entender o problema e indicar a solução certa. Entenda as dores antes de decorar funções de produtos.",
         sections: [
