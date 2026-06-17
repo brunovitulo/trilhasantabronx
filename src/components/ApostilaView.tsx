@@ -13,7 +13,7 @@ const BADGE_CLASSES: Record<ApostilaBadgeColor, string> = {
 
 function Row({ item }: { item: ApostilaItem }) {
   return (
-    <div className="flex items-start gap-3 py-2.5 border-b border-zinc-200 last:border-b-0">
+    <div className="flex items-start gap-2 sm:gap-3 py-2 border-b border-zinc-200 last:border-b-0">
       <span
         className={`shrink-0 text-[9px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full border ${BADGE_CLASSES[item.badgeColor]}`}
       >
