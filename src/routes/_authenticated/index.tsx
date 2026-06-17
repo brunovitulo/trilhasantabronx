@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { CheckCircle2, Lock, Loader2, Circle, AlertTriangle } from "lucide-react";
+import { CheckCircle2, Lock, Loader2, Circle, AlertTriangle, Brain } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { TOPICS } from "@/data/topics";
 import {
