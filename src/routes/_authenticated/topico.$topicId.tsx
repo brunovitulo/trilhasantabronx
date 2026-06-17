@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, CheckCircle2, Circle, ExternalLink, Loader2 } from "lucide-react";
+import { ChevronLeft, CheckCircle2, Circle, ExternalLink, Loader2, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { findTopic, type Subtask, PASSING_SCORE } from "@/data/topics";
 import { computeTopicStatuses, getSubtaskState, type ProgressRow } from "@/lib/progress";
