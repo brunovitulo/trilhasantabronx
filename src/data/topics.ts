@@ -67,6 +67,10 @@ export type Topic = {
 export const PASSING_SCORE = 70;
 
 const IG = "https://instagram.com/formar.atendente";
+const IG_APRESENTACAO = "https://www.instagram.com/stories/highlights/17958057917908256/";
+const IG_ENVIO_PEDIDOS = "https://www.instagram.com/stories/highlights/17861958711572094/";
+const IG_VENDAS = "https://www.instagram.com/stories/highlights/17896097712329686/";
+const IG_OBJECOES = "https://www.instagram.com/stories/highlights/17979827337034215/";
 
 export const TOPICS: Topic[] = [
   {
@@ -81,8 +85,8 @@ export const TOPICS: Topic[] = [
         id: "apresentacao.historia.video",
         kind: "video",
         title: "1. Nossa História — assistir destaque",
-        description: "Assista o destaque 'História' no Instagram da loja.",
-        url: IG,
+        description: "Assista o destaque 'Apresentação Inicial' no Instagram da loja.",
+        url: IG_APRESENTACAO,
       },
       {
         id: "apresentacao.historia.quiz",
@@ -190,7 +194,7 @@ Pontos-chave:
         id: "embalar.intro.video",
         kind: "video",
         title: "1. Como embalar e chamar o 99 — assistir destaque",
-        url: IG,
+        url: IG_ENVIO_PEDIDOS,
       },
       {
         id: "embalar.intro.apostila",
@@ -285,17 +289,33 @@ A checklist serve para garantir que nenhum passo seja pulado enquanto o processo
     order: 4,
     title: "Principais Objeções (Sex Shop)",
     summary:
-      "Aprender as principais objeções do nicho e como respondê-las. (Em breve)",
+      "Aprender as principais objeções do nicho e como respondê-las.",
     accent: "from-sky-500 to-blue-600",
-    subtasks: [],
+    subtasks: [
+      {
+        id: "objecoes.video",
+        kind: "video",
+        title: "1. Principais objeções — assistir destaque",
+        description: "Assista o destaque 'Principais Objeções' no Instagram da loja.",
+        url: IG_OBJECOES,
+      },
+    ],
   },
   {
     id: "vendas",
     order: 5,
     title: "Fundamentos de Vendas",
-    summary: "Abordagem, escuta, oferta e fechamento. (Em breve)",
+    summary: "Abordagem, escuta, oferta e fechamento.",
     accent: "from-emerald-500 to-teal-600",
-    subtasks: [],
+    subtasks: [
+      {
+        id: "vendas.video",
+        kind: "video",
+        title: "1. Fundamentos de vendas — assistir destaque",
+        description: "Assista o destaque 'Fundamentos de Vendas' no Instagram da loja.",
+        url: IG_VENDAS,
+      },
+    ],
   },
   {
     id: "dores",
