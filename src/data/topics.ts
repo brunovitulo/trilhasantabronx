@@ -31,6 +31,11 @@ export type ApostilaSection = {
   tip?: { label: string; text: string };
 };
 
+export type OpenQuestion = {
+  question: string;
+  expectedAnswer: string;
+};
+
 export type Subtask =
   | { id: string; title: string; kind: "video"; url: string; description?: string }
   | { id: string; title: string; kind: "reading"; description?: string; body: string }
@@ -53,7 +58,23 @@ export type Subtask =
       description?: string;
       passingScore?: number;
       questions: QuizQuestion[];
+    }
+  | {
+      id: string;
+      title: string;
+      kind: "practice";
+      description?: string;
+      questions: QuizQuestion[];
+    }
+  | {
+      id: string;
+      title: string;
+      kind: "open_evaluation";
+      description?: string;
+      passingScore?: number;
+      questions: OpenQuestion[];
     };
+
 
 export type Topic = {
   id: string;
