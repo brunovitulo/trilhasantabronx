@@ -194,7 +194,7 @@ Pontos-chave:
         id: "embalar.intro.video",
         kind: "video",
         title: "1. Como embalar e chamar o 99 — assistir destaque",
-        url: IG,
+        url: IG_ENVIO_PEDIDOS,
       },
       {
         id: "embalar.intro.apostila",
