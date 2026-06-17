@@ -241,6 +241,7 @@ function groupSubtasks(subtasks: Subtask[]): SubtaskGroup[] {
 
 function SubtaskBody({
   subtask,
+  userId,
   displayTitle,
   completed,
   score,
@@ -249,6 +250,7 @@ function SubtaskBody({
   onUncheck,
 }: {
   subtask: Subtask;
+  userId: string;
   displayTitle?: string;
   completed: boolean;
   score: number | null;
@@ -257,11 +259,13 @@ function SubtaskBody({
   onUncheck: () => void;
 }) {
   const isEvaluation = subtask.kind === "evaluation";
+  const isOpenEval = subtask.kind === "open_evaluation";
   const passing = isEvaluation
     ? (subtask as Extract<Subtask, { kind: "evaluation" }>).passingScore ?? PASSING_SCORE
     : 0;
   const passed = !isEvaluation ? completed : completed && (score ?? 0) >= passing;
-  const evalLocked = isEvaluation && !priorCompleted && !completed;
+  const evalLocked =
+    (isEvaluation || isOpenEval) && !priorCompleted && !completed;
 
   return (
     <div className="p-4 sm:p-5">
@@ -278,12 +282,12 @@ function SubtaskBody({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <h3 className="font-medium">{displayTitle ?? subtask.title}</h3>
-            {isEvaluation && (
+            {(isEvaluation || isOpenEval) && (
               <Badge className="bg-pink-500/20 text-pink-300 hover:bg-pink-500/20 border border-pink-400/30">
                 Avaliação
               </Badge>
             )}
-            {completed && score != null && (
+            {completed && score != null && isEvaluation && (
               <Badge variant={passed ? "default" : "destructive"}>{score}%</Badge>
             )}
           </div>
@@ -304,6 +308,9 @@ function SubtaskBody({
             {subtask.kind === "checklist" && (
               <ChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
             )}
+            {subtask.kind === "practice" && (
+              <PracticeSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} />
+            )}
             {subtask.kind === "evaluation" && (
               evalLocked ? (
                 <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-sm text-muted-foreground">
@@ -319,12 +326,27 @@ function SubtaskBody({
                 />
               )
             )}
+            {subtask.kind === "open_evaluation" && (
+              evalLocked ? (
+                <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-sm text-muted-foreground">
+                  Conclua as etapas anteriores para liberar a avaliação.
+                </div>
+              ) : (
+                <OpenEvaluationSubtask
+                  subtask={subtask}
+                  userId={userId}
+                  completed={completed}
+                  onSubmitted={() => onComplete()}
+                />
+              )
+            )}
           </div>
         </div>
       </div>
     </div>
   );
 }
+
 
 function VideoSubtask({
   subtask,
