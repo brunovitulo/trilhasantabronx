@@ -161,12 +161,14 @@ function SubtaskCard({
   subtask,
   completed,
   score,
+  priorCompleted,
   onComplete,
   onUncheck,
 }: {
   subtask: Subtask;
   completed: boolean;
   score: number | null;
+  priorCompleted: boolean;
   onComplete: (score?: number) => void;
   onUncheck: () => void;
 }) {
@@ -175,14 +177,17 @@ function SubtaskCard({
     ? (subtask as Extract<Subtask, { kind: "evaluation" }>).passingScore ?? PASSING_SCORE
     : 0;
   const passed = !isEvaluation ? completed : completed && (score ?? 0) >= passing;
+  const evalLocked = isEvaluation && !priorCompleted && !completed;
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden rounded-3xl border-border/60 bg-card/70 backdrop-blur-xl shadow-sm">
       <div className="p-4 sm:p-5">
         <div className="flex items-start gap-3">
           <div className="mt-0.5">
             {passed ? (
               <CheckCircle2 className="h-5 w-5 text-[var(--success)]" />
+            ) : evalLocked ? (
+              <Lock className="h-5 w-5 text-muted-foreground" />
             ) : (
               <Circle className="h-5 w-5 text-muted-foreground" />
             )}
@@ -191,7 +196,7 @@ function SubtaskCard({
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="font-medium">{subtask.title}</h3>
               {isEvaluation && (
-                <Badge className="bg-pink-100 text-pink-800 hover:bg-pink-100 border-pink-200">
+                <Badge className="bg-pink-500/20 text-pink-300 hover:bg-pink-500/20 border border-pink-400/30">
                   Avaliação
                 </Badge>
               )}
@@ -214,13 +219,19 @@ function SubtaskCard({
                 <ChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
               )}
               {subtask.kind === "evaluation" && (
-                <EvaluationSubtask
-                  subtask={subtask}
-                  completed={completed}
-                  score={score}
-                  passing={passing}
-                  onComplete={onComplete}
-                />
+                evalLocked ? (
+                  <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-sm text-muted-foreground">
+                    Conclua as etapas anteriores para liberar a avaliação.
+                  </div>
+                ) : (
+                  <EvaluationSubtask
+                    subtask={subtask}
+                    completed={completed}
+                    score={score}
+                    passing={passing}
+                    onComplete={onComplete}
+                  />
+                )
               )}
             </div>
           </div>
