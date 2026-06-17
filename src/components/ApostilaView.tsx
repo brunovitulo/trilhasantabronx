@@ -13,7 +13,7 @@ const BADGE_CLASSES: Record<ApostilaBadgeColor, string> = {
 
 function Row({ item }: { item: ApostilaItem }) {
   return (
-    <div className="flex items-start gap-3 py-2.5 border-b border-zinc-200 last:border-b-0">
+    <div className="flex items-start gap-2 sm:gap-3 py-2 border-b border-zinc-200 last:border-b-0">
       <span
         className={`shrink-0 text-[9px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full border ${BADGE_CLASSES[item.badgeColor]}`}
       >
@@ -34,19 +34,19 @@ function Row({ item }: { item: ApostilaItem }) {
 function SectionCard({ section }: { section: ApostilaSection }) {
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white overflow-hidden shadow-sm">
-      <div className="flex items-center gap-3 p-4 border-b border-zinc-200 bg-zinc-50">
+      <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border-b border-zinc-200 bg-zinc-50">
         <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0"
+          className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-lg shrink-0"
           style={{ backgroundColor: section.iconBg }}
         >
           {section.icon}
         </div>
         <div className="min-w-0">
-          <h3 className="font-bold text-[15px] leading-tight text-zinc-900">{section.title}</h3>
-          <p className="text-xs text-zinc-600 mt-0.5">{section.subtitle}</p>
+          <h3 className="font-bold text-sm sm:text-[15px] leading-tight text-zinc-900">{section.title}</h3>
+          <p className="text-[11px] sm:text-xs text-zinc-600 mt-0.5">{section.subtitle}</p>
         </div>
       </div>
-      <div className="px-4 pb-3">
+      <div className="px-3 sm:px-4 pb-3">
         {section.items.map((item, i) => (
           <Row key={i} item={item} />
         ))}
@@ -64,11 +64,11 @@ function SectionCard({ section }: { section: ApostilaSection }) {
 function FaqCard({ q, a, n }: { q: string; a: string; n: number }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-zinc-200 bg-white p-3 sm:p-4 shadow-sm">
       <div className="text-[9px] font-bold tracking-[2px] uppercase text-violet-600 mb-1.5">
         Pergunta {n.toString().padStart(2, "0")}
       </div>
-      <p className="text-[13.5px] font-semibold text-zinc-900 leading-snug mb-2">
+      <p className="text-[13px] sm:text-[13.5px] font-semibold text-zinc-900 leading-snug mb-2">
         {q}
       </p>
       {open && (
@@ -149,13 +149,13 @@ ${html}
         </button>
       </div>
 
-      <div className="rounded-3xl bg-white text-zinc-900 p-5 sm:p-7 shadow-xl border border-zinc-200">
-        <div ref={printRef} className="space-y-5">
-          <div className="rounded-2xl bg-violet-50 border border-violet-200 p-4">
+      <div className="rounded-3xl bg-white text-zinc-900 p-3 sm:p-5 lg:p-7 shadow-xl border border-zinc-200">
+        <div ref={printRef} className="space-y-4 sm:space-y-5">
+          <div className="rounded-2xl bg-violet-50 border border-violet-200 p-3 sm:p-4">
             <div className="text-[10px] font-semibold tracking-[3px] uppercase text-violet-700 mb-2">
               Conceito base
             </div>
-            <p className="text-[14px] text-zinc-800 leading-relaxed">{intro}</p>
+            <p className="text-[13px] sm:text-[14px] text-zinc-800 leading-relaxed">{intro}</p>
           </div>
 
           <div>
@@ -174,7 +174,7 @@ ${html}
               <div className="text-[10px] font-semibold tracking-[3px] uppercase text-violet-700 mb-3">
                 {extrasTitle ?? "Outros produtos"}
               </div>
-              <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm px-4 py-2">
+              <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm px-3 sm:px-4 py-2">
                 {extras.map((item, i) => (
                   <Row key={i} item={item} />
                 ))}
