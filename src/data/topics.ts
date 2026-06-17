@@ -306,6 +306,13 @@ A checklist serve para garantir que nenhum passo seja pulado enquanto o processo
     accent: "from-violet-500 to-purple-700",
     subtasks: [
       {
+        id: "dores.video",
+        kind: "video",
+        title: "Vídeo: Dores dos clientes — Instagram",
+        description: "Assista o destaque sobre dores dos clientes no Instagram da loja antes de ler a apostila.",
+        url: IG,
+      },
+      {
         id: "dores.apostila",
         kind: "apostila",
         title: "Apostila: Dores dos clientes & produtos certos",
