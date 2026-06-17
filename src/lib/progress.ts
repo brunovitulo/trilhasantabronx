@@ -36,19 +36,14 @@ export function computeTopicStatuses(
   rows: ProgressRow[],
 ): Record<string, TopicStatus> {
   const result: Record<string, TopicStatus> = {};
-  // Gating sequencial: um tópico só fica disponível após o anterior (com subtasks) estar concluído.
-  const ordered = [...topics].sort((a, b) => a.order - b.order);
-  let previousCompleted = true; // primeiro tópico sempre liberado
-  for (const topic of ordered) {
+  // DEV: gating sequencial desativado — todos os tópicos liberados enquanto configuramos conteúdo
+  for (const topic of topics) {
     if (topic.subtasks.length === 0) {
       result[topic.id] = "empty";
-      // tópicos vazios não bloqueiam a sequência
       continue;
     }
     const done = isTopicComplete(topic, rows);
-    if (!previousCompleted) {
-      result[topic.id] = "locked";
-    } else if (done) {
+    if (done) {
       result[topic.id] = "completed";
     } else {
       const anyCompleted = topic.subtasks.some(
@@ -56,7 +51,6 @@ export function computeTopicStatuses(
       );
       result[topic.id] = anyCompleted ? "in_progress" : "available";
     }
-    previousCompleted = done;
   }
   return result;
 }
