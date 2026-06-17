@@ -140,25 +140,40 @@ function TopicPage() {
             Este tópico ainda está em construção. Em breve!
           </Card>
         ) : (
-          <div className="mt-6 space-y-3">
-            {topic.subtasks.map((sub) => {
-              const state = getSubtaskState(sub.id, rows);
-              // Avaliação só libera quando todas as subtarefas anteriores (não-avaliação) estiverem concluídas
-              const priorCompleted = topic.subtasks
-                .filter((s) => s.kind !== "evaluation" && s.id !== sub.id)
-                .every((s) => getSubtaskState(s.id, rows).completed);
-              return (
-                <SubtaskCard
-                  key={sub.id}
-                  subtask={sub}
-                  completed={state.completed}
-                  score={state.score}
-                  priorCompleted={priorCompleted}
-                  onComplete={(score) => markCompleted(sub, score)}
-                  onUncheck={() => unmark(sub.id)}
-                />
-              );
-            })}
+          <div className="mt-6 space-y-6">
+            {groupSubtasks(topic.subtasks).map((group) => (
+              <section key={group.key} className="space-y-3">
+                {group.showHeader && (
+                  <h2 className="text-lg font-semibold tracking-tight text-foreground/90 pl-1">
+                    {group.title}
+                  </h2>
+                )}
+                <div className="space-y-3">
+                  {group.items.map((entry, idx) => {
+                    const sub = entry.subtask;
+                    const state = getSubtaskState(sub.id, rows);
+                    const priorCompleted = topic.subtasks
+                      .filter((s) => s.kind !== "evaluation" && s.id !== sub.id)
+                      .every((s) => getSubtaskState(s.id, rows).completed);
+                    const displayTitle = entry.stepLabel
+                      ? `Passo ${idx + 1}: ${entry.stepLabel}`
+                      : sub.title;
+                    return (
+                      <SubtaskCard
+                        key={sub.id}
+                        subtask={sub}
+                        displayTitle={displayTitle}
+                        completed={state.completed}
+                        score={state.score}
+                        priorCompleted={priorCompleted}
+                        onComplete={(score) => markCompleted(sub, score)}
+                        onUncheck={() => unmark(sub.id)}
+                      />
+                    );
+                  })}
+                </div>
+              </section>
+            ))}
           </div>
         )}
       </main>
@@ -166,8 +181,42 @@ function TopicPage() {
   );
 }
 
+type SubtaskGroupEntry = { subtask: Subtask; stepLabel: string | null };
+type SubtaskGroup = {
+  key: string;
+  title: string;
+  showHeader: boolean;
+  items: SubtaskGroupEntry[];
+};
+
+function groupSubtasks(subtasks: Subtask[]): SubtaskGroup[] {
+  const groups: SubtaskGroup[] = [];
+  for (const sub of subtasks) {
+    // Split title on em dash " — " (with spaces). Prefix = group title, suffix = step label.
+    const parts = sub.title.split(/\s+—\s+/);
+    const hasGroup = parts.length >= 2;
+    const groupTitle = hasGroup ? parts[0].trim() : sub.title.trim();
+    const stepLabel = hasGroup ? parts.slice(1).join(" — ").trim() : null;
+    const last = groups[groups.length - 1];
+    if (last && last.title === groupTitle) {
+      last.items.push({ subtask: sub, stepLabel });
+    } else {
+      groups.push({
+        key: `${groupTitle}-${groups.length}`,
+        title: groupTitle,
+        showHeader: hasGroup,
+        items: [{ subtask: sub, stepLabel }],
+      });
+    }
+  }
+  // If a single-item group with no dash sits alone, still hide header (showHeader stays false).
+  // If multiple ungrouped items happen to share the same title, they'd be combined — acceptable.
+  return groups;
+}
+
 function SubtaskCard({
   subtask,
+  displayTitle,
   completed,
   score,
   priorCompleted,
@@ -175,6 +224,7 @@ function SubtaskCard({
   onUncheck,
 }: {
   subtask: Subtask;
+  displayTitle?: string;
   completed: boolean;
   score: number | null;
   priorCompleted: boolean;
@@ -203,7 +253,7 @@ function SubtaskCard({
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="font-medium">{subtask.title}</h3>
+              <h3 className="font-medium">{displayTitle ?? subtask.title}</h3>
               {isEvaluation && (
                 <Badge className="bg-pink-500/20 text-pink-300 hover:bg-pink-500/20 border border-pink-400/30">
                   Avaliação
