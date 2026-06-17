@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { CheckCircle2, Lock, Loader2, Circle, AlertTriangle } from "lucide-react";
+import { CheckCircle2, Lock, Loader2, Circle, AlertTriangle, PlayCircle } from "lucide-react";
+import { getSubtaskState } from "@/lib/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { TOPICS } from "@/data/topics";
 import {
@@ -99,7 +100,7 @@ function HomePage() {
             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
           </div>
         ) : (
-          <ol className="space-y-3">
+          <ol className="space-y-4">
             {TOPICS.map((topic) => {
               const status = statuses[topic.id];
               const percent = topicProgressPercent(topic, rows);
@@ -117,7 +118,7 @@ function HomePage() {
                       <div
                         className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${topic.accent} text-white font-bold`}
                       >
-                        {topic.order}
+                        {locked ? <Lock className="h-5 w-5" /> : topic.order}
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
@@ -144,6 +145,47 @@ function HomePage() {
                         )}
                       </div>
                     </div>
+
+                    {!isEmpty && (
+                      <ol className="mt-4 space-y-2 border-t pt-4">
+                        {topic.subtasks.map((sub, idx) => {
+                          const { completed } = getSubtaskState(sub.id, rows);
+                          return (
+                            <li
+                              key={sub.id}
+                              className="flex items-center gap-3 text-sm"
+                            >
+                              <span className="flex h-6 w-6 shrink-0 items-center justify-center">
+                                {completed ? (
+                                  <CheckCircle2 className="h-5 w-5 text-[var(--success)]" />
+                                ) : locked ? (
+                                  <Lock className="h-4 w-4 text-muted-foreground" />
+                                ) : (
+                                  <PlayCircle className="h-5 w-5 text-muted-foreground" />
+                                )}
+                              </span>
+                              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                                Passo {idx + 1}
+                              </span>
+                              <span
+                                className={`flex-1 min-w-0 truncate ${
+                                  completed ? "line-through text-muted-foreground" : ""
+                                }`}
+                              >
+                                {sub.title}
+                              </span>
+                            </li>
+                          );
+                        })}
+                      </ol>
+                    )}
+
+                    {locked && !isEmpty && (
+                      <p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+                        <Lock className="h-3.5 w-3.5" />
+                        Conclua o tópico anterior para desbloquear
+                      </p>
+                    )}
                   </div>
                 </Card>
               );
