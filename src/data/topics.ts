@@ -651,7 +651,48 @@ A checklist serve para garantir que nenhum passo seja pulado enquanto o processo
             answer:
               "Contém apenas vitaminas diretamente ligadas à libido. O da farmácia mistura vitaminas genéricas que não têm relação com desejo sexual.",
           },
+          {
+            question: "Como abordar uma cliente que diz ter dor na penetração?",
+            answer:
+              "Antes de produto, identifique a causa: ressecamento → hidratante vaginal + lubrificante; falta de excitação → preliminares + excitante feminino; canal estreito ou pós-parto/menopausa → kit de dilatadores. Nunca empurre só lubrificante se a dor for estrutural.",
+          },
+          {
+            question: "Qual a diferença entre lubrificante à base de água, silicone e óleo?",
+            answer:
+              "Água: leve, seca rápido, compatível com brinquedos e camisinha. Silicone: dura muito mais, ótimo para anal e para o chuveiro, mas não usar com brinquedos de silicone. Óleo: deslizamento intenso, mas DANIFICA a camisinha de látex — só para sexo sem preservativo.",
+          },
+          {
+            question: "Quando indicar o anel peniano e quando indicar o spray retardante?",
+            answer:
+              "Anel peniano: ajuda a manter a ereção firme por mais tempo (segura o sangue no pênis). Spray retardante: reduz a sensibilidade para retardar a ejaculação precoce. Problemas diferentes: o anel ajuda a manter, o spray ajuda a durar mais antes de gozar.",
+          },
+          {
+            question: "Cliente diz que perdeu o tesão pelo parceiro — o que sugerir primeiro?",
+            answer:
+              "Foque em quebrar a rotina antes de vender estímulo químico: jogos eróticos, fantasias, cartas de desejo, lingerie nova. Excitantes e energéticos com catuaba entram como reforço, não como solução isolada — desejo se recupera com novidade, não só com produto.",
+          },
+          {
+            question: "Como apresentar brinquedos para casais que nunca usaram?",
+            answer:
+              "Comece pelos mais leves e de uso conjunto: anel peniano com vibração, vibrador de clitóris pequeno (formato discreto), óleo comestível ou gel beijável. Evite começar por plugs anais, vibradores grandes ou produtos BDSM — assusta e fecha a venda.",
+          },
+          {
+            question: "Diferença entre vibrador de ponto G, sugador de clitóris e varinha mágica?",
+            answer:
+              "Ponto G: curvado, estimula internamente. Sugador (pressure wave): cria pulsos de ar/sucção direto no clitóris — orgasmo rápido e intenso. Varinha mágica: vibração potente e ampla, ótima para quem nunca teve orgasmo ou tem sensibilidade reduzida. Pergunte ONDE ela sente mais antes de indicar.",
+          },
+          {
+            question: "Cliente está envergonhada e não fala a dor — como conduzir?",
+            answer:
+              "Tire o peso da conversa: fale você primeiro de forma técnica e natural (\"a maioria das clientes que chega aqui tem alguma dessas três situações...\"). Dê opções múltiplas em vez de pedir para ela descrever. Use linguagem médica/profissional, nunca chula. Vergonha some quando ela vê que pra você é assunto normal.",
+          },
+          {
+            question: "Como justificar o preço de um produto mais caro frente a um similar barato?",
+            answer:
+              "Foque no resultado, não no produto. Ex.: \"a versão mais simples cumpre, mas essa aqui tem motor mais silencioso, bateria que dura X horas e material médico — você compra uma vez e dura anos\". Compare custo por uso, não preço de etiqueta. E sempre pergunte o orçamento antes de mostrar, para não constranger.",
+          },
         ],
+
       },
       {
         id: "dores.pratica",
