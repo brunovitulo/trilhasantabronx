@@ -86,6 +86,15 @@ function AdminPage() {
         <p className="text-muted-foreground text-sm mt-1">
           Veja o progresso de cada atendente, libere quem está travada ou bloqueie acessos.
         </p>
+        <div className="mt-3">
+          <Link
+            to="/admin/avaliacoes"
+            className="inline-flex items-center rounded-full border border-border/60 bg-card px-4 py-2 text-sm font-medium hover:bg-muted/60"
+          >
+            Avaliações dissertativas pendentes →
+          </Link>
+        </div>
+
 
         {loading ? (
           <div className="flex justify-center py-10">
