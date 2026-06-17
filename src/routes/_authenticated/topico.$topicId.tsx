@@ -12,6 +12,14 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { ApostilaView } from "@/components/ApostilaView";
 
@@ -257,20 +265,65 @@ function VideoSubtask({
   onUncheck: () => void;
 }) {
   const [opened, setOpened] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const canMark = opened || completed;
+
+  async function copyVideoLink() {
+    try {
+      await navigator.clipboard.writeText(subtask.url);
+      setOpened(true);
+      toast.success("Link copiado");
+    } catch {
+      toast.error("Não consegui copiar", {
+        description: "Copie manualmente pelo botão de abrir no Instagram.",
+      });
+    }
+  }
+
   return (
     <div className="flex flex-wrap gap-2 items-center">
-      <Button asChild variant="outline" size="sm" className="rounded-full">
-        <a
-          href={subtask.url}
-          target="_blank"
-          rel="noreferrer"
-          className="gap-1.5"
-          onClick={() => setOpened(true)}
-        >
-          <ExternalLink className="h-4 w-4" /> Abrir vídeo
-        </a>
+      <Button
+        variant="outline"
+        size="sm"
+        className="rounded-full"
+        onClick={() => {
+          setOpened(true);
+          setHelpOpen(true);
+        }}
+      >
+        <ExternalLink className="h-4 w-4" /> Abrir destaque
       </Button>
+      <Dialog open={helpOpen} onOpenChange={setHelpOpen}>
+        <DialogContent className="max-w-md rounded-3xl">
+          <DialogHeader>
+            <DialogTitle>Assistir destaque no Instagram</DialogTitle>
+            <DialogDescription>
+              O Instagram não libera esses destaques para tocar direto dentro do app. Para evitar a tela de bloqueio, copie o link e abra pelo aplicativo do Instagram.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-sm text-muted-foreground break-all">
+            {subtask.url}
+          </div>
+          <DialogFooter className="gap-2 sm:space-x-0">
+            <Button variant="outline" onClick={copyVideoLink}>
+              Copiar link
+            </Button>
+            <Button asChild>
+              <a
+                href={subtask.url}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => {
+                  setOpened(true);
+                  setHelpOpen(false);
+                }}
+              >
+                Tentar abrir
+              </a>
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       {completed ? (
         <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>Desmarcar</Button>
       ) : (
