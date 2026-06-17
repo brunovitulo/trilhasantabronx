@@ -14,6 +14,89 @@ export type Database = {
   }
   public: {
     Tables: {
+      open_evaluation_answers: {
+        Row: {
+          answer_text: string
+          created_at: string
+          feedback: string | null
+          id: string
+          is_correct: boolean | null
+          question_index: number
+          question_text: string
+          submission_id: string
+          updated_at: string
+        }
+        Insert: {
+          answer_text?: string
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          is_correct?: boolean | null
+          question_index: number
+          question_text: string
+          submission_id: string
+          updated_at?: string
+        }
+        Update: {
+          answer_text?: string
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          is_correct?: boolean | null
+          question_index?: number
+          question_text?: string
+          submission_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "open_evaluation_answers_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "open_evaluation_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      open_evaluation_submissions: {
+        Row: {
+          created_at: string
+          general_feedback: string | null
+          id: string
+          reviewed_at: string | null
+          reviewer_id: string | null
+          score: number | null
+          status: string
+          subtask_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          general_feedback?: string | null
+          id?: string
+          reviewed_at?: string | null
+          reviewer_id?: string | null
+          score?: number | null
+          status?: string
+          subtask_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          general_feedback?: string | null
+          id?: string
+          reviewed_at?: string | null
+          reviewer_id?: string | null
+          score?: number | null
+          status?: string
+          subtask_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           blocked: boolean
