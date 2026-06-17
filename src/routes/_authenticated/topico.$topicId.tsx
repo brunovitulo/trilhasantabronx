@@ -162,7 +162,12 @@ function TopicPage() {
                       const sub = entry.subtask;
                       const state = getSubtaskState(sub.id, rows);
                       const priorCompleted = topic.subtasks
-                        .filter((s) => s.kind !== "evaluation" && s.id !== sub.id)
+                        .filter(
+                          (s) =>
+                            s.kind !== "evaluation" &&
+                            s.kind !== "open_evaluation" &&
+                            s.id !== sub.id,
+                        )
                         .every((s) => getSubtaskState(s.id, rows).completed);
                       const displayTitle = multi
                         ? `Passo ${idx + 1}: ${entry.stepLabel}`
@@ -171,6 +176,7 @@ function TopicPage() {
                         <SubtaskBody
                           key={sub.id}
                           subtask={sub}
+                          userId={user.id}
                           displayTitle={displayTitle}
                           completed={state.completed}
                           score={state.score}
@@ -179,6 +185,7 @@ function TopicPage() {
                           onUncheck={() => unmark(sub.id)}
                         />
                       );
+
                     })}
                   </div>
                 </Card>
