@@ -670,6 +670,7 @@ function PracticeSubtask({
   completed: boolean;
   onComplete: () => void;
 }) {
+  const [started, setStarted] = useState(false);
   const [answers, setAnswers] = useState<(number | null)[]>(() =>
     subtask.questions.map(() => null),
   );
@@ -685,16 +686,46 @@ function PracticeSubtask({
     setSubmitted(true);
   }
 
-  function retry() {
-    setAnswers(subtask.questions.map(() => null));
-    setSubmitted(false);
-  }
-
   const answeredCount = answers.filter((a) => a !== null).length;
   const allAnswered = answeredCount === subtask.questions.length;
   const correctCount = answers.filter(
     (a, i) => a !== null && a === subtask.questions[i].correctIndex,
   ).length;
+
+  if (completed && !submitted) {
+    return (
+      <div className="rounded-2xl border border-[var(--success)]/40 bg-[var(--success)]/10 p-4 text-sm text-foreground">
+        <p className="font-semibold mb-1">Exercício de fixação finalizado ✓</p>
+        <p className="text-muted-foreground">
+          Este exercício só pode ser respondido uma vez e já foi concluído. Avance para a avaliação final do tópico.
+        </p>
+      </div>
+    );
+  }
+
+  if (!started) {
+    return (
+      <div className="space-y-3">
+        <div className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm leading-relaxed text-amber-900">
+          <p className="font-semibold mb-2">⚠️ Antes de iniciar, leia com atenção:</p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>Ao iniciar, todas as <strong>{subtask.questions.length} perguntas</strong> vão aparecer.</li>
+            <li>Você precisa <strong>responder todas</strong> antes de finalizar.</li>
+            <li>Cada pergunta só pode ser respondida <strong>uma única vez</strong> — não dá para mudar a resposta depois.</li>
+            <li>Depois de finalizar, o exercício <strong>não pode ser refeito</strong>.</li>
+            <li>Este exercício precisa estar completo antes da avaliação final.</li>
+          </ul>
+        </div>
+        <Button
+          size="sm"
+          className="rounded-full"
+          onClick={() => setStarted(true)}
+        >
+          Iniciar exercício de fixação
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-3">
@@ -754,14 +785,9 @@ function PracticeSubtask({
           Respondidas: {answeredCount}/{subtask.questions.length}
         </span>
         {submitted ? (
-          <>
-            <Badge>
-              {correctCount}/{subtask.questions.length} corretas
-            </Badge>
-            <Button size="sm" variant="outline" className="rounded-full" onClick={retry}>
-              Refazer
-            </Button>
-          </>
+          <Badge>
+            {correctCount}/{subtask.questions.length} corretas — finalizado
+          </Badge>
         ) : (
           <Button
             size="sm"
@@ -776,6 +802,7 @@ function PracticeSubtask({
     </div>
   );
 }
+
 
 type OpenSubmission = {
   id: string;
