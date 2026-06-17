@@ -188,8 +188,17 @@ function SubtaskCard({
   priorCompleted,
   onComplete,
   onUncheck,
+function SubtaskCard({
+  subtask,
+  displayTitle,
+  completed,
+  score,
+  priorCompleted,
+  onComplete,
+  onUncheck,
 }: {
   subtask: Subtask;
+  displayTitle?: string;
   completed: boolean;
   score: number | null;
   priorCompleted: boolean;
