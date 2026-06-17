@@ -216,6 +216,9 @@ function SubtaskCard({
               {subtask.kind === "reading" && (
                 <ReadingSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
               )}
+              {subtask.kind === "apostila" && (
+                <ApostilaSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
+              )}
               {subtask.kind === "checklist" && (
                 <ChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
               )}
