@@ -345,6 +345,68 @@ function ReadingSubtask({
   );
 }
 
+function ApostilaSubtask({
+  subtask,
+  completed,
+  onComplete,
+  onUncheck,
+}: {
+  subtask: Extract<Subtask, { kind: "apostila" }>;
+  completed: boolean;
+  onComplete: () => void;
+  onUncheck: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [opened, setOpened] = useState(false);
+  const canMark = opened || completed;
+  return (
+    <div>
+      <Button
+        variant="outline"
+        size="sm"
+        className="rounded-full"
+        onClick={() => {
+          setOpen((o) => !o);
+          setOpened(true);
+        }}
+      >
+        {open ? "Fechar apostila" : "Abrir apostila"}
+      </Button>
+      {open && (
+        <div className="mt-4">
+          <ApostilaView
+            intro={subtask.intro}
+            sections={subtask.sections}
+            extrasTitle={subtask.extrasTitle}
+            extras={subtask.extras}
+            faq={subtask.faq}
+          />
+        </div>
+      )}
+      <div className="mt-3 flex items-center gap-2 flex-wrap">
+        {completed ? (
+          <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>
+            Desmarcar leitura
+          </Button>
+        ) : (
+          <Button
+            size="sm"
+            className="rounded-full"
+            disabled={!canMark}
+            onClick={onComplete}
+            title={!canMark ? "Abra a apostila primeiro" : undefined}
+          >
+            Marcar como lida
+          </Button>
+        )}
+        {!completed && !canMark && (
+          <span className="text-xs text-muted-foreground">Abra a apostila para liberar</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function ChecklistSubtask({
   subtask,
   completed,
