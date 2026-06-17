@@ -140,40 +140,48 @@ function TopicPage() {
             Este tópico ainda está em construção. Em breve!
           </Card>
         ) : (
-          <div className="mt-6 space-y-6">
-            {groupSubtasks(topic.subtasks).map((group) => (
-              <section key={group.key} className="space-y-3">
-                {group.showHeader && (
-                  <h2 className="text-lg font-semibold tracking-tight text-foreground/90 pl-1">
-                    {group.title}
-                  </h2>
-                )}
-                <div className="space-y-3">
-                  {group.items.map((entry, idx) => {
-                    const sub = entry.subtask;
-                    const state = getSubtaskState(sub.id, rows);
-                    const priorCompleted = topic.subtasks
-                      .filter((s) => s.kind !== "evaluation" && s.id !== sub.id)
-                      .every((s) => getSubtaskState(s.id, rows).completed);
-                    const displayTitle = entry.stepLabel
-                      ? `Passo ${idx + 1}: ${entry.stepLabel}`
-                      : sub.title;
-                    return (
-                      <SubtaskCard
-                        key={sub.id}
-                        subtask={sub}
-                        displayTitle={displayTitle}
-                        completed={state.completed}
-                        score={state.score}
-                        priorCompleted={priorCompleted}
-                        onComplete={(score) => markCompleted(sub, score)}
-                        onUncheck={() => unmark(sub.id)}
-                      />
-                    );
-                  })}
-                </div>
-              </section>
-            ))}
+          <div className="mt-6 space-y-4">
+            {groupSubtasks(topic.subtasks).map((group) => {
+              const multi = group.items.length > 1;
+              return (
+                <Card
+                  key={group.key}
+                  className="overflow-hidden rounded-3xl border-border/60 bg-card/70 backdrop-blur-xl shadow-sm"
+                >
+                  {multi && (
+                    <div className="px-4 sm:px-5 pt-4 sm:pt-5">
+                      <h2 className="text-lg font-semibold tracking-tight text-foreground/90">
+                        {group.title}
+                      </h2>
+                    </div>
+                  )}
+                  <div className="divide-y divide-border/50">
+                    {group.items.map((entry, idx) => {
+                      const sub = entry.subtask;
+                      const state = getSubtaskState(sub.id, rows);
+                      const priorCompleted = topic.subtasks
+                        .filter((s) => s.kind !== "evaluation" && s.id !== sub.id)
+                        .every((s) => getSubtaskState(s.id, rows).completed);
+                      const displayTitle = multi
+                        ? `Passo ${idx + 1}: ${entry.stepLabel}`
+                        : group.title;
+                      return (
+                        <SubtaskBody
+                          key={sub.id}
+                          subtask={sub}
+                          displayTitle={displayTitle}
+                          completed={state.completed}
+                          score={state.score}
+                          priorCompleted={priorCompleted}
+                          onComplete={(score) => markCompleted(sub, score)}
+                          onUncheck={() => unmark(sub.id)}
+                        />
+                      );
+                    })}
+                  </div>
+                </Card>
+              );
+            })}
           </div>
         )}
       </main>
@@ -181,40 +189,48 @@ function TopicPage() {
   );
 }
 
-type SubtaskGroupEntry = { subtask: Subtask; stepLabel: string | null };
+type SubtaskGroupEntry = { subtask: Subtask; stepLabel: string };
 type SubtaskGroup = {
   key: string;
   title: string;
-  showHeader: boolean;
   items: SubtaskGroupEntry[];
+  titleFromDash: boolean;
 };
 
 function groupSubtasks(subtasks: Subtask[]): SubtaskGroup[] {
   const groups: SubtaskGroup[] = [];
+  const indexByNum = new Map<string, number>();
   for (const sub of subtasks) {
-    // Split title on em dash " — " (with spaces). Prefix = group title, suffix = step label.
-    const parts = sub.title.split(/\s+—\s+/);
-    const hasGroup = parts.length >= 2;
-    const groupTitle = hasGroup ? parts[0].trim() : sub.title.trim();
-    const stepLabel = hasGroup ? parts.slice(1).join(" — ").trim() : null;
-    const last = groups[groups.length - 1];
-    if (last && last.title === groupTitle) {
-      last.items.push({ subtask: sub, stepLabel });
-    } else {
+    const m = sub.title.match(/^(\d+)\.\s+(.*)$/);
+    const num = m ? m[1] : null;
+    const rest = (m ? m[2] : sub.title).trim();
+    const dashParts = rest.split(/\s+—\s+/);
+    const hasDash = dashParts.length >= 2;
+    const headerFromDash = hasDash
+      ? `${num ? num + ". " : ""}${dashParts[0].trim()}`
+      : null;
+    const stepLabel = hasDash ? dashParts.slice(1).join(" — ").trim() : rest;
+
+    let groupIdx = num != null ? indexByNum.get(num) : undefined;
+    if (groupIdx === undefined) {
+      groupIdx = groups.length;
       groups.push({
-        key: `${groupTitle}-${groups.length}`,
-        title: groupTitle,
-        showHeader: hasGroup,
-        items: [{ subtask: sub, stepLabel }],
+        key: num ?? `solo-${groups.length}`,
+        title: headerFromDash ?? (num ? `${num}. ${rest}` : rest),
+        titleFromDash: headerFromDash != null,
+        items: [],
       });
+      if (num != null) indexByNum.set(num, groupIdx);
+    } else if (headerFromDash && !groups[groupIdx].titleFromDash) {
+      groups[groupIdx].title = headerFromDash;
+      groups[groupIdx].titleFromDash = true;
     }
+    groups[groupIdx].items.push({ subtask: sub, stepLabel });
   }
-  // If a single-item group with no dash sits alone, still hide header (showHeader stays false).
-  // If multiple ungrouped items happen to share the same title, they'd be combined — acceptable.
   return groups;
 }
 
-function SubtaskCard({
+function SubtaskBody({
   subtask,
   displayTitle,
   completed,
@@ -239,67 +255,65 @@ function SubtaskCard({
   const evalLocked = isEvaluation && !priorCompleted && !completed;
 
   return (
-    <Card className="overflow-hidden rounded-3xl border-border/60 bg-card/70 backdrop-blur-xl shadow-sm">
-      <div className="p-4 sm:p-5">
-        <div className="flex items-start gap-3">
-          <div className="mt-0.5">
-            {passed ? (
-              <CheckCircle2 className="h-5 w-5 text-[var(--success)]" />
-            ) : evalLocked ? (
-              <Lock className="h-5 w-5 text-muted-foreground" />
-            ) : (
-              <Circle className="h-5 w-5 text-muted-foreground" />
+    <div className="p-4 sm:p-5">
+      <div className="flex items-start gap-3">
+        <div className="mt-0.5">
+          {passed ? (
+            <CheckCircle2 className="h-5 w-5 text-[var(--success)]" />
+          ) : evalLocked ? (
+            <Lock className="h-5 w-5 text-muted-foreground" />
+          ) : (
+            <Circle className="h-5 w-5 text-muted-foreground" />
+          )}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h3 className="font-medium">{displayTitle ?? subtask.title}</h3>
+            {isEvaluation && (
+              <Badge className="bg-pink-500/20 text-pink-300 hover:bg-pink-500/20 border border-pink-400/30">
+                Avaliação
+              </Badge>
+            )}
+            {completed && score != null && (
+              <Badge variant={passed ? "default" : "destructive"}>{score}%</Badge>
             )}
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="font-medium">{displayTitle ?? subtask.title}</h3>
-              {isEvaluation && (
-                <Badge className="bg-pink-500/20 text-pink-300 hover:bg-pink-500/20 border border-pink-400/30">
-                  Avaliação
-                </Badge>
-              )}
-              {completed && score != null && (
-                <Badge variant={passed ? "default" : "destructive"}>{score}%</Badge>
-              )}
-            </div>
-            {"description" in subtask && subtask.description && (
-              <p className="text-sm text-muted-foreground mt-1">{subtask.description}</p>
-            )}
+          {"description" in subtask && subtask.description && (
+            <p className="text-sm text-muted-foreground mt-1">{subtask.description}</p>
+          )}
 
-            <div className="mt-3">
-              {subtask.kind === "video" && (
-                <VideoSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
-              )}
-              {subtask.kind === "reading" && (
-                <ReadingSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
-              )}
-              {subtask.kind === "apostila" && (
-                <ApostilaSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
-              )}
-              {subtask.kind === "checklist" && (
-                <ChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
-              )}
-              {subtask.kind === "evaluation" && (
-                evalLocked ? (
-                  <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-sm text-muted-foreground">
-                    Conclua as etapas anteriores para liberar a avaliação.
-                  </div>
-                ) : (
-                  <EvaluationSubtask
-                    subtask={subtask}
-                    completed={completed}
-                    score={score}
-                    passing={passing}
-                    onComplete={onComplete}
-                  />
-                )
-              )}
-            </div>
+          <div className="mt-3">
+            {subtask.kind === "video" && (
+              <VideoSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
+            )}
+            {subtask.kind === "reading" && (
+              <ReadingSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
+            )}
+            {subtask.kind === "apostila" && (
+              <ApostilaSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
+            )}
+            {subtask.kind === "checklist" && (
+              <ChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
+            )}
+            {subtask.kind === "evaluation" && (
+              evalLocked ? (
+                <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-sm text-muted-foreground">
+                  Conclua as etapas anteriores para liberar a avaliação.
+                </div>
+              ) : (
+                <EvaluationSubtask
+                  subtask={subtask}
+                  completed={completed}
+                  score={score}
+                  passing={passing}
+                  onComplete={onComplete}
+                />
+              )
+            )}
           </div>
         </div>
       </div>
-    </Card>
+    </div>
   );
 }
 
