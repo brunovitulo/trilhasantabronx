@@ -682,3 +682,337 @@ function EvaluationSubtask({
     </div>
   );
 }
+
+function PracticeSubtask({
+  subtask,
+  completed,
+  onComplete,
+}: {
+  subtask: Extract<Subtask, { kind: "practice" }>;
+  completed: boolean;
+  onComplete: () => void;
+}) {
+  const [answers, setAnswers] = useState<(number | null)[]>(() =>
+    subtask.questions.map(() => null),
+  );
+  const [submitted, setSubmitted] = useState(false);
+
+  function pick(qi: number, oi: number) {
+    if (answers[qi] != null) return;
+    setAnswers((prev) => prev.map((a, i) => (i === qi ? oi : a)));
+  }
+
+  function finish() {
+    if (!completed) onComplete();
+    setSubmitted(true);
+  }
+
+  function retry() {
+    setAnswers(subtask.questions.map(() => null));
+    setSubmitted(false);
+  }
+
+  const answeredCount = answers.filter((a) => a !== null).length;
+  const allAnswered = answeredCount === subtask.questions.length;
+  const correctCount = answers.filter(
+    (a, i) => a !== null && a === subtask.questions[i].correctIndex,
+  ).length;
+
+  return (
+    <div className="space-y-3">
+      {subtask.questions.map((q, qi) => {
+        const chosen = answers[qi];
+        return (
+          <div key={qi} className="rounded-2xl border border-border/60 bg-muted/30 p-3">
+            <p className="text-sm font-medium mb-2">
+              {qi + 1}. {q.question}
+            </p>
+            <div className="space-y-1.5">
+              {q.options.map((opt, oi) => {
+                const isChosen = chosen === oi;
+                const isCorrect = oi === q.correctIndex;
+                const answered = chosen != null;
+                const tone = !answered
+                  ? "border-border/60 hover:bg-muted/60"
+                  : isCorrect
+                  ? "border-[var(--success)]/50 bg-[var(--success)]/10"
+                  : isChosen
+                  ? "border-destructive/50 bg-destructive/10"
+                  : "border-border/40 opacity-60";
+                return (
+                  <button
+                    key={oi}
+                    type="button"
+                    disabled={answered}
+                    onClick={() => pick(qi, oi)}
+                    className={`w-full text-left text-sm rounded-xl border px-3 py-2 transition-colors ${tone}`}
+                  >
+                    <span className="font-semibold mr-1">
+                      {String.fromCharCode(97 + oi)})
+                    </span>
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+            {chosen != null && (
+              <p
+                className={`mt-2 text-xs font-medium ${
+                  chosen === q.correctIndex
+                    ? "text-[var(--success)]"
+                    : "text-destructive"
+                }`}
+              >
+                {chosen === q.correctIndex
+                  ? "✓ Correto"
+                  : `✗ Resposta correta: ${String.fromCharCode(97 + q.correctIndex)}`}
+              </p>
+            )}
+          </div>
+        );
+      })}
+      <div className="flex items-center gap-3 flex-wrap pt-1">
+        <span className="text-xs text-muted-foreground">
+          Respondidas: {answeredCount}/{subtask.questions.length}
+        </span>
+        {submitted ? (
+          <>
+            <Badge>
+              {correctCount}/{subtask.questions.length} corretas
+            </Badge>
+            <Button size="sm" variant="outline" className="rounded-full" onClick={retry}>
+              Refazer
+            </Button>
+          </>
+        ) : (
+          <Button
+            size="sm"
+            className="rounded-full"
+            disabled={!allAnswered}
+            onClick={finish}
+          >
+            Finalizar exercício
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+type OpenSubmission = {
+  id: string;
+  status: "pending_review" | "approved" | "rejected";
+  score: number | null;
+  general_feedback: string | null;
+  created_at: string;
+  reviewed_at: string | null;
+};
+
+type OpenAnswerRow = {
+  id: string;
+  question_index: number;
+  answer_text: string;
+  is_correct: boolean | null;
+  feedback: string | null;
+};
+
+function OpenEvaluationSubtask({
+  subtask,
+  userId,
+  completed,
+  onSubmitted,
+}: {
+  subtask: Extract<Subtask, { kind: "open_evaluation" }>;
+  userId: string;
+  completed: boolean;
+  onSubmitted: () => void;
+}) {
+  const [loading, setLoading] = useState(true);
+  const [submission, setSubmission] = useState<OpenSubmission | null>(null);
+  const [answerRows, setAnswerRows] = useState<OpenAnswerRow[]>([]);
+  const [drafts, setDrafts] = useState<string[]>(() => subtask.questions.map(() => ""));
+  const [sending, setSending] = useState(false);
+
+  async function load() {
+    setLoading(true);
+    const { data: subs } = await supabase
+      .from("open_evaluation_submissions")
+      .select("id, status, score, general_feedback, created_at, reviewed_at")
+      .eq("user_id", userId)
+      .eq("subtask_id", subtask.id)
+      .order("created_at", { ascending: false })
+      .limit(1);
+    const latest = (subs?.[0] as OpenSubmission | undefined) ?? null;
+    setSubmission(latest);
+    if (latest) {
+      const { data: ans } = await supabase
+        .from("open_evaluation_answers")
+        .select("id, question_index, answer_text, is_correct, feedback")
+        .eq("submission_id", latest.id)
+        .order("question_index", { ascending: true });
+      const rows = (ans ?? []) as OpenAnswerRow[];
+      setAnswerRows(rows);
+      setDrafts(
+        subtask.questions.map(
+          (_, i) => rows.find((r) => r.question_index === i)?.answer_text ?? "",
+        ),
+      );
+    }
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, subtask.id]);
+
+  async function submit() {
+    if (drafts.some((d) => d.trim().length === 0)) {
+      toast.error("Responda todas as 15 perguntas antes de enviar");
+      return;
+    }
+    setSending(true);
+    const { data: sub, error: subErr } = await supabase
+      .from("open_evaluation_submissions")
+      .insert({
+        user_id: userId,
+        subtask_id: subtask.id,
+        status: "pending_review",
+      })
+      .select()
+      .single();
+    if (subErr || !sub) {
+      setSending(false);
+      toast.error("Não consegui enviar", { description: subErr?.message });
+      return;
+    }
+    const rows = subtask.questions.map((q, i) => ({
+      submission_id: sub.id,
+      question_index: i,
+      question_text: q.question,
+      answer_text: drafts[i].trim(),
+    }));
+    const { error: ansErr } = await supabase
+      .from("open_evaluation_answers")
+      .insert(rows);
+    if (ansErr) {
+      setSending(false);
+      toast.error("Erro ao salvar respostas", { description: ansErr.message });
+      return;
+    }
+    onSubmitted();
+    toast.success("Avaliação enviada para revisão");
+    await load();
+    setSending(false);
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-4">
+        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (submission) {
+    const statusLabel =
+      submission.status === "pending_review"
+        ? "Pendente revisão"
+        : submission.status === "approved"
+        ? `Aprovada${submission.score != null ? ` — ${Math.round(submission.score)}%` : ""}`
+        : `Reprovada — pode refazer${submission.score != null ? ` (${Math.round(submission.score)}%)` : ""}`;
+    const statusTone =
+      submission.status === "pending_review"
+        ? "bg-amber-500/15 text-amber-400 border-amber-500/30"
+        : submission.status === "approved"
+        ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
+        : "bg-rose-500/15 text-rose-400 border-rose-500/30";
+
+    return (
+      <div className="space-y-3">
+        <div className={`rounded-2xl border px-3 py-2 text-sm font-medium ${statusTone}`}>
+          Status: {statusLabel}
+        </div>
+        {submission.general_feedback && (
+          <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-sm">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
+              Feedback da gestora
+            </p>
+            <p className="whitespace-pre-wrap leading-relaxed">{submission.general_feedback}</p>
+          </div>
+        )}
+        <div className="space-y-2">
+          {subtask.questions.map((q, i) => {
+            const row = answerRows.find((r) => r.question_index === i);
+            return (
+              <div key={i} className="rounded-2xl border border-border/60 bg-muted/20 p-3">
+                <p className="text-sm font-medium">
+                  {i + 1}. {q.question}
+                </p>
+                <p className="mt-2 text-sm whitespace-pre-wrap text-foreground/90">
+                  {row?.answer_text || <span className="text-muted-foreground">(sem resposta)</span>}
+                </p>
+                {row?.is_correct != null && (
+                  <p
+                    className={`mt-1 text-xs font-semibold ${
+                      row.is_correct ? "text-[var(--success)]" : "text-destructive"
+                    }`}
+                  >
+                    {row.is_correct ? "✓ Correta" : "✗ Incorreta"}
+                  </p>
+                )}
+                {row?.feedback && (
+                  <p className="mt-1 text-xs text-muted-foreground italic">
+                    Feedback: {row.feedback}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        {submission.status === "rejected" && (
+          <div className="pt-2">
+            <Button
+              size="sm"
+              className="rounded-full"
+              onClick={() => {
+                setSubmission(null);
+                setAnswerRows([]);
+                setDrafts(subtask.questions.map(() => ""));
+              }}
+            >
+              Refazer avaliação
+            </Button>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      <p className="text-xs text-muted-foreground">
+        Responda com suas próprias palavras. Ao enviar, o próximo tópico é liberado e a gestora corrige depois.
+      </p>
+      {subtask.questions.map((q, i) => (
+        <div key={i} className="rounded-2xl border border-border/60 bg-muted/20 p-3">
+          <label className="block text-sm font-medium mb-2">
+            {i + 1}. {q.question}
+          </label>
+          <Textarea
+            value={drafts[i]}
+            onChange={(e) =>
+              setDrafts((prev) => prev.map((d, idx) => (idx === i ? e.target.value : d)))
+            }
+            placeholder="Escreva sua resposta aqui..."
+            rows={3}
+            className="bg-background"
+          />
+        </div>
+      ))}
+      <Button onClick={submit} disabled={sending} className="rounded-full">
+        {sending ? "Enviando..." : "Enviar para revisão"}
+      </Button>
+    </div>
+  );
+}
