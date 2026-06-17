@@ -34,19 +34,19 @@ function Row({ item }: { item: ApostilaItem }) {
 function SectionCard({ section }: { section: ApostilaSection }) {
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white overflow-hidden shadow-sm">
-      <div className="flex items-center gap-3 p-4 border-b border-zinc-200 bg-zinc-50">
+      <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border-b border-zinc-200 bg-zinc-50">
         <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0"
+          className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-lg shrink-0"
           style={{ backgroundColor: section.iconBg }}
         >
           {section.icon}
         </div>
         <div className="min-w-0">
-          <h3 className="font-bold text-[15px] leading-tight text-zinc-900">{section.title}</h3>
-          <p className="text-xs text-zinc-600 mt-0.5">{section.subtitle}</p>
+          <h3 className="font-bold text-sm sm:text-[15px] leading-tight text-zinc-900">{section.title}</h3>
+          <p className="text-[11px] sm:text-xs text-zinc-600 mt-0.5">{section.subtitle}</p>
         </div>
       </div>
-      <div className="px-4 pb-3">
+      <div className="px-3 sm:px-4 pb-3">
         {section.items.map((item, i) => (
           <Row key={i} item={item} />
         ))}
