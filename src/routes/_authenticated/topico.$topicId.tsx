@@ -183,12 +183,12 @@ function TopicPage() {
 
 function SubtaskCard({
   subtask,
+  displayTitle,
   completed,
   score,
   priorCompleted,
   onComplete,
   onUncheck,
-function SubtaskCard({
   subtask,
   displayTitle,
   completed,
