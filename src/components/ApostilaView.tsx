@@ -64,11 +64,11 @@ function SectionCard({ section }: { section: ApostilaSection }) {
 function FaqCard({ q, a, n }: { q: string; a: string; n: number }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-zinc-200 bg-white p-3 sm:p-4 shadow-sm">
       <div className="text-[9px] font-bold tracking-[2px] uppercase text-violet-600 mb-1.5">
         Pergunta {n.toString().padStart(2, "0")}
       </div>
-      <p className="text-[13.5px] font-semibold text-zinc-900 leading-snug mb-2">
+      <p className="text-[13px] sm:text-[13.5px] font-semibold text-zinc-900 leading-snug mb-2">
         {q}
       </p>
       {open && (
