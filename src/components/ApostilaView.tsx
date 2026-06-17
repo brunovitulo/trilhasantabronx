@@ -149,13 +149,13 @@ ${html}
         </button>
       </div>
 
-      <div className="rounded-3xl bg-white text-zinc-900 p-5 sm:p-7 shadow-xl border border-zinc-200">
-        <div ref={printRef} className="space-y-5">
-          <div className="rounded-2xl bg-violet-50 border border-violet-200 p-4">
+      <div className="rounded-3xl bg-white text-zinc-900 p-3 sm:p-5 lg:p-7 shadow-xl border border-zinc-200">
+        <div ref={printRef} className="space-y-4 sm:space-y-5">
+          <div className="rounded-2xl bg-violet-50 border border-violet-200 p-3 sm:p-4">
             <div className="text-[10px] font-semibold tracking-[3px] uppercase text-violet-700 mb-2">
               Conceito base
             </div>
-            <p className="text-[14px] text-zinc-800 leading-relaxed">{intro}</p>
+            <p className="text-[13px] sm:text-[14px] text-zinc-800 leading-relaxed">{intro}</p>
           </div>
 
           <div>
@@ -174,7 +174,7 @@ ${html}
               <div className="text-[10px] font-semibold tracking-[3px] uppercase text-violet-700 mb-3">
                 {extrasTitle ?? "Outros produtos"}
               </div>
-              <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm px-4 py-2">
+              <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm px-3 sm:px-4 py-2">
                 {extras.map((item, i) => (
                   <Row key={i} item={item} />
                 ))}
