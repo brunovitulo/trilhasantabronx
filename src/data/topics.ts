@@ -289,17 +289,33 @@ A checklist serve para garantir que nenhum passo seja pulado enquanto o processo
     order: 4,
     title: "Principais Objeções (Sex Shop)",
     summary:
-      "Aprender as principais objeções do nicho e como respondê-las. (Em breve)",
+      "Aprender as principais objeções do nicho e como respondê-las.",
     accent: "from-sky-500 to-blue-600",
-    subtasks: [],
+    subtasks: [
+      {
+        id: "objecoes.video",
+        kind: "video",
+        title: "1. Principais objeções — assistir destaque",
+        description: "Assista o destaque 'Principais Objeções' no Instagram da loja.",
+        url: IG_OBJECOES,
+      },
+    ],
   },
   {
     id: "vendas",
     order: 5,
     title: "Fundamentos de Vendas",
-    summary: "Abordagem, escuta, oferta e fechamento. (Em breve)",
+    summary: "Abordagem, escuta, oferta e fechamento.",
     accent: "from-emerald-500 to-teal-600",
-    subtasks: [],
+    subtasks: [
+      {
+        id: "vendas.video",
+        kind: "video",
+        title: "1. Fundamentos de vendas — assistir destaque",
+        description: "Assista o destaque 'Fundamentos de Vendas' no Instagram da loja.",
+        url: IG_VENDAS,
+      },
+    ],
   },
   {
     id: "dores",
