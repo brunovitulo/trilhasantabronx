@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist — Embalar Pedido</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(160deg,#1a1630 0%,#0f0c1e 100%);min-height:100vh;color:#fff;padding:0 0 80px}
+
+.header{padding:28px 20px 16px;text-align:center}
+.tag{display:inline-block;background:rgba(93,202,165,0.2);color:#9FE1CB;border:0.5px solid rgba(93,202,165,0.4);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 12px;border-radius:20px;margin-bottom:10px}
+.header h1{font-size:20px;font-weight:600;color:#fff;margin-bottom:4px}
+.header p{font-size:12px;color:rgba(255,255,255,0.5)}
+
+.wrap{max-width:540px;margin:0 auto;padding:0 16px}
+
+.block{background:rgba(255,255,255,0.05);backdrop-filter:blur(16px);border:0.5px solid rgba(255,255,255,0.1);border-radius:18px;padding:18px 16px;margin-bottom:14px}
+.block-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:0.5px solid rgba(255,255,255,0.08)}
+.block-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.bi-purple{background:rgba(127,119,221,0.25);color:#AFA9EC}
+.bi-teal{background:rgba(93,202,165,0.2);color:#9FE1CB}
+.bi-amber{background:rgba(239,159,39,0.2);color:#FAC775}
+.bi-red{background:rgba(226,75,74,0.2);color:#F09595}
+.block-head h2{font-size:14px;font-weight:600;color:#fff}
+.block-head p{font-size:11px;color:rgba(255,255,255,0.45);margin-top:2px}
+
+.item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:0.5px solid rgba(255,255,255,0.06);cursor:pointer;user-select:none}
+.item:last-child{border-bottom:none;padding-bottom:0}
+.item:first-child{padding-top:0}
+.check{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all 0.15s}
+.check i{font-size:12px;opacity:0}
+.item.done .check{background:#5DCAA5;border-color:#5DCAA5}
+.item.done .check i{opacity:1;color:#04342C}
+.item.done .item-text{color:rgba(255,255,255,0.4);text-decoration:line-through;text-decoration-color:rgba(255,255,255,0.2)}
+.item-text{font-size:13px;color:rgba(255,255,255,0.85);line-height:1.5}
+.item-text strong{color:#fff;font-weight:600}
+
+.progress-wrap{margin-bottom:20px}
+.progress-bar{height:6px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;background:linear-gradient(90deg,#5DCAA5,#AFA9EC);border-radius:4px;transition:width 0.3s ease;width:0%}
+.progress-label{font-size:11px;color:rgba(255,255,255,0.5);text-align:right}
+
+.btn-reset{display:block;width:100%;margin-top:6px;padding:13px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.14);border-radius:12px;color:rgba(255,255,255,0.5);font-size:13px;cursor:pointer;text-align:center}
+.btn-reset:hover{background:rgba(255,255,255,0.1);color:#fff}
+
+.congrats{display:none;background:rgba(93,202,165,0.12);border:0.5px solid rgba(93,202,165,0.35);border-radius:14px;padding:18px;text-align:center;margin-bottom:14px}
+.congrats i{font-size:28px;color:#9FE1CB;margin-bottom:8px;display:block}
+.congrats p{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px}
+.congrats span{font-size:12px;color:rgba(255,255,255,0.55)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="tag">Checklist</div>
+  <h1>Embalar pedido</h1>
+  <p>Marque cada item conforme for executando</p>
+</div>
+
+<div class="wrap">
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="pbar"></div></div>
+    <div class="progress-label" id="plabel">0 / 0 itens</div>
+  </div>
+
+  <div id="congrats" class="congrats">
+    <i class="ti ti-circle-check"></i>
+    <p>Checklist completo!</p>
+    <span>Pedido conferido e pronto para envio.</span>
+  </div>
+
+  <!-- BLOCO 1 -->
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-purple"><i class="ti ti-clipboard-list"></i></div>
+      <div>
+        <h2>Antes de embalar</h2>
+        <p>Confira o pedido no sistema primeiro</p>
+      </div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Abri o resumo do pedido no sistema e conferi <strong>nome do cliente, endereço e produtos</strong></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Conferi a <strong>variação de cada produto</strong> (cor, sabor ou tamanho) — se não estava especificado, perguntei ao cliente</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Conferi a <strong>quantidade de cada item</strong> — não assumi que é sempre 1 unidade</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Verifiquei se o cliente <strong>ganhou brinde</strong> e separei junto caso sim</div>
+    </div>
+  </div>
+
+  <!-- BLOCO 2 -->
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-teal"><i class="ti ti-box-seam"></i></div>
+      <div>
+        <h2>Na hora de embalar</h2>
+        <p>Execute com calma, um passo de cada vez</p>
+      </div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Se o produto tem <strong>formato de pênis</strong>, envolvi com <strong>plástico bolha</strong> antes de colocar no saquinho — para disfarçar o formato e garantir a discrição</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Testei todo <strong>produto eletrônico</strong> antes de lacrar (vibrador, sugador, etc.)</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Coloquei o(s) produto(s) no <strong>saquinho com lacre</strong> do tamanho certo e lacrei corretamente</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Coloquei o saquinho dentro da <strong>sacola do tamanho certo</strong> (menor que cabe sem forçar)</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Grampeei a sacola com <strong>dois grampos</strong>, um de cada lado</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Colei o <strong>adesivo lacre</strong> por fora corretamente (dobrado e colado dos dois lados)</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Escrevi no post-it o <strong>nome + rua + número + complemento</strong> do cliente, grampeei na sacola</div>
+    </div>
+  </div>
+
+  <!-- BLOCO 3 -->
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-amber"><i class="ti ti-map-search"></i></div>
+      <div>
+        <h2>Antes de chamar o motoboy</h2>
+        <p>Não chame sem confirmar os dois itens abaixo</p>
+      </div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Validei o endereço: pesquisei no Google e comparei com o <strong>link da localização do cliente</strong> nas observações do pedido</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Enviei o <strong>fluxo de pré-envio</strong> pelo Bot Conversa e o cliente confirmou que está no endereço e vai receber</div>
+    </div>
+  </div>
+
+  <!-- BLOCO 4 -->
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-red"><i class="ti ti-scooter"></i></div>
+      <div>
+        <h2>No app 99</h2>
+        <p>Antes de confirmar o pedido</p>
+      </div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Coloquei o <strong>nome do cliente em MAIÚSCULAS</strong> no campo de contato do 99</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Coloquei o <strong>telefone do cliente</strong> no campo de contato</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">A <strong>primeira caixinha</strong> (código de coleta) está <strong>marcada</strong> — em Uberlândia tem vários entregadores juntos, o código evita retirada errada</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">A <strong>segunda caixinha</strong> (código de confirmação do cliente) está <strong>marcada</strong></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Confirmei visualmente que o <strong>ponto no mapa do 99</strong> está em Araguari e no local correto</div>
+    </div>
+  </div>
+
+  <button class="btn-reset" onclick="reset()">
+    <i class="ti ti-refresh" style="font-size:14px;vertical-align:-2px;margin-right:6px"></i>
+    Limpar checklist para o próximo pedido
+  </button>
+
+</div>
+
+<script>
+function toggle(el){
+  el.classList.toggle('done');
+  update();
+}
+function update(){
+  const all = document.querySelectorAll('.item');
+  const done = document.querySelectorAll('.item.done');
+  const pct = all.length ? Math.round(done.length/all.length*100) : 0;
+  document.getElementById('pbar').style.width = pct+'%';
+  document.getElementById('plabel').textContent = done.length+' / '+all.length+' itens';
+  document.getElementById('congrats').style.display = (done.length === all.length && all.length > 0) ? 'block' : 'none';
+}
+function reset(){
+  document.querySelectorAll('.item.done').forEach(el=>el.classList.remove('done'));
+  update();
+}
+update();
+</script>
+</body>
+</html>
