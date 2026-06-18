@@ -394,9 +394,7 @@ function VideoSubtask({
             variant="outline"
             size="sm"
             className="rounded-full"
-            disabled={!canMark}
             onClick={onComplete}
-            title={!canMark ? "Copie o link primeiro" : undefined}
           >
             Já assisti
           </Button>
