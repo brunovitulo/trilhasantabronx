@@ -62,7 +62,7 @@ function HomePage() {
   const overallPercent = Math.round((totalDone / TOPICS.length) * 100);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <AppHeader isAdmin={isAdmin} />
       <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8">
         <div className="mb-6">
