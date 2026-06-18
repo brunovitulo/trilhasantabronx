@@ -207,6 +207,7 @@ function AdminPage() {
               <AttendantCard
                 key={att.id}
                 att={att}
+                reviewerId={user.id}
                 onCorrect={setCorrection}
                 onOpenHistory={() => setHistoryFor({ id: att.id, name: att.full_name })}
               />
