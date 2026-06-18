@@ -333,6 +333,17 @@ function AttendantCard({
           </div>
         )}
 
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="rounded-full w-full sm:w-auto gap-1.5"
+          onClick={onOpenHistory}
+        >
+          <FileText className="h-4 w-4" />
+          Ver histórico de provas
+        </Button>
+
         <ResetProgressBlock attendantId={att.id} attendantName={att.full_name} />
       </div>
     </Card>
