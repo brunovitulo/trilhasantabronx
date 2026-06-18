@@ -421,7 +421,7 @@ function ReadingSubtask({
 }) {
   const [open, setOpen] = useState(false);
   const [opened, setOpened] = useState(false);
-  const canMark = opened || completed;
+  const canMark = true;
   return (
     <div>
       <Button
