@@ -175,83 +175,18 @@ function TopicPage() {
           </Card>
         ) : (
           <div className="mt-6 space-y-4">
-            {(() => {
-              // Padrão global: todo tópico pode ter um sub-assunto "Antes da prova"
-              // com um vídeo do Bruno (`*.prova.video`) + a prova dissertativa
-              // (`*.prova.exam`). Ambos só liberam quando todos os outros passos
-              // estiverem concluídos. E a prova só abre após o vídeo ser marcado.
-              const gateVideo = topic.subtasks.find((s) => /\.prova\.video$/.test(s.id));
-              const gateExam = topic.subtasks.find((s) => /\.prova\.exam$/.test(s.id));
-              const FINAL_GATE_IDS = new Set<string>(
-                [gateVideo?.id, gateExam?.id].filter(Boolean) as string[],
-              );
-              const EXAM_ID = gateExam?.id ?? null;
-              const GATE_VIDEO_ID = gateVideo?.id ?? null;
-
-              const nonGateSubtasks = topic.subtasks.filter((s) => !FINAL_GATE_IDS.has(s.id));
-              const gateUnlocked =
-                nonGateSubtasks.length === 0 ||
-                nonGateSubtasks.every((s) => getSubtaskState(s.id, rows).completed);
-              const gateVideoCompleted = GATE_VIDEO_ID
-                ? getSubtaskState(GATE_VIDEO_ID, rows).completed
-                : true;
-
-              return groupSubtasks(topic.subtasks).map((group) => {
-                const multi = group.items.length > 1;
-                return (
-                  <Card
-                    key={group.key}
-                    className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.06] backdrop-blur-xl shadow-[0_8px_32px_-12px_rgba(0,0,0,0.45)]"
-                  >
-                    {multi && (
-                      <div className="px-4 sm:px-5 pt-4 sm:pt-5">
-                        <h2 className="text-lg font-semibold tracking-tight text-foreground/90">
-                          {group.title}
-                        </h2>
-                      </div>
-                    )}
-                    <div className="divide-y divide-border/50">
-                      {group.items.map((entry, idx) => {
-                        const sub = entry.subtask;
-                        const state = getSubtaskState(sub.id, rows);
-                        const priorCompleted = topic.subtasks
-                          .filter(
-                            (s) =>
-                              s.kind !== "evaluation" &&
-                              s.kind !== "open_evaluation" &&
-                              s.id !== sub.id,
-                          )
-                          .every((s) => getSubtaskState(s.id, rows).completed);
-                        const displayTitle = multi
-                          ? `Passo ${idx + 1}: ${entry.stepLabel}`
-                          : group.title;
-                        const inFinalGate = FINAL_GATE_IDS.has(sub.id);
-                        const gateLocked = inFinalGate && !gateUnlocked && !isAdmin;
-                        const examNeedsVideo =
-                          sub.id === EXAM_ID && gateUnlocked && !gateVideoCompleted && !isAdmin;
-                        const useExamDialog = sub.id === EXAM_ID;
-                        return (
-                          <SubtaskBody
-                            key={sub.id}
-                            subtask={sub}
-                            userId={user.id}
-                            displayTitle={displayTitle}
-                            completed={state.completed}
-                            score={state.score}
-                            priorCompleted={priorCompleted}
-                            gateLocked={gateLocked}
-                            examNeedsVideo={examNeedsVideo}
-                            useExamDialog={useExamDialog}
-                            onComplete={(score) => markCompleted(sub, score)}
-                            onUncheck={() => unmark(sub.id)}
-                          />
-                        );
-                      })}
-                    </div>
-                  </Card>
-                );
-              });
-            })()}
+            {groupSubtasks(topic.subtasks).map((group) => (
+              <SubtaskGroupCard
+                key={group.key}
+                group={group}
+                topic={topic}
+                rows={rows}
+                userId={user.id}
+                isAdmin={isAdmin}
+                onComplete={markCompleted}
+                onUncheck={unmark}
+              />
+            ))}
           </div>
 
         )}
