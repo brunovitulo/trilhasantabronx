@@ -92,6 +92,25 @@ function AdminPage() {
 
   useEffect(() => {
     refresh();
+    const ch = supabase
+      .channel("admin-pendings")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "open_evaluation_submissions" },
+        () => refresh(),
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "subtask_progress" },
+        () => refresh(),
+      )
+      .subscribe();
+    const onFocus = () => refresh();
+    window.addEventListener("focus", onFocus);
+    return () => {
+      supabase.removeChannel(ch);
+      window.removeEventListener("focus", onFocus);
+    };
   }, []);
 
   return (
@@ -228,7 +247,7 @@ function AttendantCard({ att }: { att: AttendantRow }) {
                     </p>
                   </div>
                   <Button asChild size="sm" className="rounded-full shrink-0">
-                    <Link to="/admin/avaliacoes" hash={p.id}>
+                    <Link to="/admin/avaliacoes" search={{ user: att.id }} hash={p.id}>
                       Corrigir
                     </Link>
                   </Button>
