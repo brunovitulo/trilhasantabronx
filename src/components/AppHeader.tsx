@@ -84,6 +84,13 @@ export function AppHeader({ isAdmin }: { isAdmin: boolean }) {
           </Button>
         </div>
       </div>
+      {userId && !isAdmin && (
+        <SubmissionHistoryDialog
+          open={historyOpen}
+          onOpenChange={setHistoryOpen}
+          userId={userId}
+        />
+      )}
     </header>
   );
 }
