@@ -9,6 +9,7 @@ import { NotificationBell } from "@/components/NotificationBell";
 import { SubmissionHistoryDialog } from "@/components/SubmissionHistoryDialog";
 import { AdminPendingBell } from "@/components/AdminPendingBell";
 import { QuickChecklistDrawer } from "@/components/QuickChecklistDrawer";
+import { DailyTasksButton } from "@/components/DailyTasksButton";
 
 export function AppHeader({ isAdmin }: { isAdmin: boolean }) {
   const navigate = useNavigate();
@@ -47,6 +48,7 @@ export function AppHeader({ isAdmin }: { isAdmin: boolean }) {
         <div className="ml-auto flex items-center gap-2">
           {userId && <NotificationBell userId={userId} />}
           {isAdmin && <AdminPendingBell />}
+          {userId && !isAdmin && <DailyTasksButton />}
           <QuickChecklistDrawer />
           {userId && !isAdmin && (
             <Button
