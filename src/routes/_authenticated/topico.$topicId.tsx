@@ -1,8 +1,14 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, CheckCircle2, Circle, Copy, Loader2, Lock, X } from "lucide-react";
+import {
+  ChevronLeft, CheckCircle2, Circle, Copy, Loader2, Lock, X,
+  Check, ChevronDown, Play, BookOpen, ListChecks, ClipboardCheck,
+  FilePen, Download, History, MapPin, Hand, LayoutGrid, Globe, Package,
+  ShieldCheck, Star,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
-import { findTopic, type Subtask, PASSING_SCORE } from "@/data/topics";
+import { findTopic, type Subtask, type Topic, PASSING_SCORE } from "@/data/topics";
 import { computeTopicStatuses, getSubtaskState, type ProgressRow } from "@/lib/progress";
 import { TOPICS } from "@/data/topics";
 import { AppHeader } from "@/components/AppHeader";
