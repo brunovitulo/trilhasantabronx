@@ -126,14 +126,30 @@ function TopicPage() {
         <Link to="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4">
           <ChevronLeft className="h-4 w-4" /> Voltar à trilha
         </Link>
-        <div className={`h-1.5 w-full rounded-full bg-gradient-to-r ${topic.accent} mb-4`} />
-        <div className="flex items-center gap-3 mb-2">
-          <div className={`flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br ${topic.accent} text-white font-bold shadow-lg`}>
-            {topic.order}
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight">{topic.title}</h1>
-        </div>
+        {(() => {
+          const totalTopics = TOPICS.length;
+          const tIdx = Math.max(0, TOPICS.findIndex((x) => x.id === topic.id));
+          const t = totalTopics > 1 ? tIdx / (totalTopics - 1) : 0;
+          const L = 0.74 - t * 0.32;
+          const Ldark = Math.max(L - 0.10, 0.30);
+          const gradient = `linear-gradient(135deg, oklch(${L.toFixed(3)} 0.18 295), oklch(${Ldark.toFixed(3)} 0.19 295))`;
+          return (
+            <>
+              <div className="h-1.5 w-full rounded-full mb-4" style={{ background: gradient }} />
+              <div className="flex items-center gap-3 mb-2">
+                <div
+                  className="flex h-11 w-11 items-center justify-center rounded-2xl text-white font-bold shadow-lg"
+                  style={{ background: gradient }}
+                >
+                  {topic.order}
+                </div>
+                <h1 className="text-2xl font-bold tracking-tight">{topic.title}</h1>
+              </div>
+            </>
+          );
+        })()}
         <p className="text-muted-foreground">{topic.summary}</p>
+
 
         {loading ? (
           <div className="flex justify-center py-10">
