@@ -429,7 +429,7 @@ function ExamDialogLauncher({
   return (
     <div className="space-y-2">
       {needsVideo && (
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-foreground/80">
           Assista o vídeo acima e marque como visto para liberar o botão de iniciar a prova.
         </p>
       )}
