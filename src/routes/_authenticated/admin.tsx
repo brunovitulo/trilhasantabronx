@@ -92,6 +92,25 @@ function AdminPage() {
 
   useEffect(() => {
     refresh();
+    const ch = supabase
+      .channel("admin-pendings")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "open_evaluation_submissions" },
+        () => refresh(),
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "subtask_progress" },
+        () => refresh(),
+      )
+      .subscribe();
+    const onFocus = () => refresh();
+    window.addEventListener("focus", onFocus);
+    return () => {
+      supabase.removeChannel(ch);
+      window.removeEventListener("focus", onFocus);
+    };
   }, []);
 
   return (
