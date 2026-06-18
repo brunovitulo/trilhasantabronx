@@ -183,7 +183,12 @@ function AdminPage() {
         ) : (
           <div className="mt-6 space-y-4">
             {list.map((att) => (
-              <AttendantCard key={att.id} att={att} onCorrect={setCorrection} />
+              <AttendantCard
+                key={att.id}
+                att={att}
+                onCorrect={setCorrection}
+                onOpenHistory={() => setHistoryFor({ id: att.id, name: att.full_name })}
+              />
             ))}
           </div>
         )}
@@ -195,6 +200,13 @@ function AdminPage() {
             setCorrection(null);
             refresh();
           }}
+        />
+        <SubmissionHistoryDialog
+          open={historyFor !== null}
+          onOpenChange={(o) => !o && setHistoryFor(null)}
+          userId={historyFor?.id ?? null}
+          userName={historyFor?.name ?? null}
+          isAdmin
         />
       </main>
     </div>
