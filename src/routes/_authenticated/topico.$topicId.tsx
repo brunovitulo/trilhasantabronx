@@ -191,9 +191,9 @@ function TopicPage() {
                           ? `Passo ${idx + 1}: ${entry.stepLabel}`
                           : group.title;
                         const inFinalGate = FINAL_GATE_IDS.has(sub.id);
-                        const gateLocked = inFinalGate && !gateUnlocked;
+                        const gateLocked = inFinalGate && !gateUnlocked && !isAdmin;
                         const examNeedsVideo =
-                          sub.id === EXAM_ID && gateUnlocked && !gateVideoCompleted;
+                          sub.id === EXAM_ID && gateUnlocked && !gateVideoCompleted && !isAdmin;
                         const useExamDialog = sub.id === EXAM_ID;
                         return (
                           <SubtaskBody
