@@ -385,6 +385,12 @@ function SubtaskBody({
                     />
                   )
                 )}
+                {subtask.kind === "external_html" && (
+                  <ExternalHtmlSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
+                )}
+                {subtask.kind === "multi_checklist" && (
+                  <MultiChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
+                )}
                 {subtask.kind === "open_evaluation" && (
                   useExamDialog ? (
                     <ExamDialogLauncher
@@ -719,6 +725,137 @@ function ChecklistSubtask({
           <Button variant="ghost" size="sm" onClick={onUncheck}>Desmarcar</Button>
         ) : (
           <Button size="sm" disabled={!allChecked} onClick={onComplete}>
+            Concluir
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ExternalHtmlSubtask({
+  subtask,
+  completed,
+  onComplete,
+  onUncheck,
+}: {
+  subtask: Extract<Subtask, { kind: "external_html" }>;
+  completed: boolean;
+  onComplete: () => void;
+  onUncheck: () => void;
+}) {
+  const [confirmed, setConfirmed] = useState(completed);
+  useEffect(() => setConfirmed(completed), [completed]);
+  const isDownload = !!subtask.downloadAs;
+  const buttonLabel = subtask.openLabel ?? (isDownload ? "Baixar arquivo" : "Abrir");
+
+  return (
+    <div className="space-y-3">
+      <div className="flex flex-wrap gap-2">
+        <Button asChild size="sm" className="rounded-full">
+          {isDownload ? (
+            <a href={subtask.url} download={subtask.downloadAs}>
+              {buttonLabel}
+            </a>
+          ) : (
+            <a href={subtask.url} target="_blank" rel="noopener noreferrer">
+              {buttonLabel}
+            </a>
+          )}
+        </Button>
+      </div>
+      <div className="flex items-start gap-2 rounded-2xl border border-border/60 bg-muted/40 p-3">
+        <Checkbox
+          id={`${subtask.id}-confirm`}
+          checked={confirmed}
+          disabled={completed}
+          onCheckedChange={(v) => setConfirmed(!!v)}
+        />
+        <Label htmlFor={`${subtask.id}-confirm`} className="text-sm font-normal cursor-pointer leading-snug">
+          {subtask.confirmLabel}
+        </Label>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {completed ? (
+          <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>
+            Desmarcar
+          </Button>
+        ) : (
+          <Button size="sm" className="rounded-full" disabled={!confirmed} onClick={onComplete}>
+            Concluir passo
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function MultiChecklistSubtask({
+  subtask,
+  completed,
+  onComplete,
+  onUncheck,
+}: {
+  subtask: Extract<Subtask, { kind: "multi_checklist" }>;
+  completed: boolean;
+  onComplete: () => void;
+  onUncheck: () => void;
+}) {
+  const [checks, setChecks] = useState<boolean[][]>(() =>
+    subtask.groups.map((g) => g.items.map(() => completed)),
+  );
+  useEffect(() => {
+    setChecks(subtask.groups.map((g) => g.items.map(() => completed)));
+  }, [completed, subtask.id]);
+  const allDone = checks.every((g) => g.every(Boolean));
+  return (
+    <div className="space-y-3">
+      {subtask.groups.map((group, gi) => {
+        const done = checks[gi]?.every(Boolean);
+        return (
+          <div
+            key={gi}
+            className={`rounded-2xl border p-3 ${
+              done ? "border-[var(--success)]/40 bg-[var(--success)]/5" : "border-border/60 bg-muted/30"
+            }`}
+          >
+            <p className="text-sm font-semibold">{group.title}</p>
+            {group.subtitle && (
+              <p className="text-xs text-muted-foreground mt-0.5">{group.subtitle}</p>
+            )}
+            <ul className="mt-2 space-y-1.5">
+              {group.items.map((item, ii) => (
+                <li key={ii} className="flex items-start gap-2">
+                  <Checkbox
+                    id={`${subtask.id}-${gi}-${ii}`}
+                    checked={checks[gi]?.[ii] ?? false}
+                    onCheckedChange={(v) =>
+                      setChecks((prev) =>
+                        prev.map((g, gIdx) =>
+                          gIdx === gi ? g.map((c, iIdx) => (iIdx === ii ? !!v : c)) : g,
+                        ),
+                      )
+                    }
+                  />
+                  <Label
+                    htmlFor={`${subtask.id}-${gi}-${ii}`}
+                    className="text-sm font-normal cursor-pointer leading-snug"
+                  >
+                    {item}
+                  </Label>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })}
+      <div>
+        {completed ? (
+          <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>
+            Desmarcar
+          </Button>
+        ) : (
+          <Button size="sm" className="rounded-full" disabled={!allDone} onClick={onComplete}>
             Concluir
           </Button>
         )}

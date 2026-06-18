@@ -73,6 +73,23 @@ export type Subtask =
       description?: string;
       passingScore?: number;
       questions: OpenQuestion[];
+    }
+  | {
+      id: string;
+      title: string;
+      kind: "external_html";
+      description?: string;
+      url: string;
+      openLabel?: string;
+      downloadAs?: string;
+      confirmLabel: string;
+    }
+  | {
+      id: string;
+      title: string;
+      kind: "multi_checklist";
+      description?: string;
+      groups: { title: string; subtitle?: string; items: string[] }[];
     };
 
 
@@ -233,53 +250,307 @@ export const TOPICS: Topic[] = [
       },
       {
         id: "embalar.intro.apostila",
-        kind: "reading",
-        title: "1. Apostila de embalagem e despacho",
-        body: `**Passo a passo de embalagem e despacho**
-
-1. Conferir o pedido no sistema interno.
-2. Separar os produtos certos (nome e quantidade).
-3. Embalar com discrição — embalagem neutra, sem indicar o conteúdo.
-4. Solicitar a entrega no app **99 Entregas** com os dados corretos.
-5. Marcar o pedido como **despachado** no sistema.
-
-**Principais erros a evitar:** embalagem aberta, endereço errado no 99, esquecer item, não marcar como despachado.`,
-      },
-      {
-        id: "embalar.intro.checklist",
-        kind: "reading",
-        title: "1. Baixar checklist para usar no início",
-        body: `Baixe e imprima a **checklist de embalagem** e mantenha junto à bancada nas primeiras semanas.
-
-A checklist serve para garantir que nenhum passo seja pulado enquanto o processo ainda não está automático.`,
+        kind: "external_html",
+        title: "1. Como embalar e chamar o 99 — ler apostila completa",
+        description: "Baixe e leia a apostila por completo para fixar tudo que você assistiu.",
+        url: "/embalar/apostila.html",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li todo o conteúdo da apostila.",
       },
       {
         id: "embalar.checklist.video",
         kind: "video",
-        title: "1. Destaque sobre uso da checklist — assistir",
-        url: IG,
+        title: "1. Como embalar e chamar o 99 — assistir destaque: checklist de embalagem",
+        description: "Copie o link, cole em outra aba, assista o destaque por completo.",
+        url: "https://instagram.com/formar.atendente",
+      },
+      {
+        id: "embalar.checklist.baixar",
+        kind: "external_html",
+        title: "1. Como embalar e chamar o 99 — baixar checklist de embalagem",
+        description:
+          "Baixe o checklist e use sempre que for embalar um pedido, principalmente nos primeiros dias.",
+        url: "/embalar/checklist.html",
+        downloadAs: "checklist-embalagem.html",
+        openLabel: "Baixar checklist",
+        confirmLabel: "Baixei o checklist e já está salvo no meu computador.",
       },
       {
         id: "embalar.pratica.video",
         kind: "video",
         title: "2. Exercício de embalar na prática — assistir destaque",
-        url: IG,
+        url: "https://www.instagram.com/stories/highlights/18119892343771884/",
       },
       {
-        id: "embalar.pratica.arquivo",
-        kind: "reading",
-        title: "2. Baixar arquivo com os pedidos do exercício",
-        body: `Baixe o arquivo com a lista de pedidos do exercício prático e separe o material para realizar a atividade.`,
+        id: "embalar.pratica.pedidos",
+        kind: "multi_checklist",
+        title: "2. Exercício de embalar na prática — embalar os pedidos do exercício",
+        description:
+          "Embale os 3 pedidos abaixo, um por vez. Para cada pedido: embale, preencha as informações no 99 Entregas e peça ao responsável para avaliar antes de passar para o próximo.",
+        groups: [
+          {
+            title: "Pedido 1 — Maurilio",
+            subtitle:
+              "Tel: 34997654835 · Produtos: PNI75 / POT01 / EXC46 · Rua Itumbiara, 268 (muro azul)",
+            items: [
+              "Separei os produtos e embalei o pedido",
+              "Preenchi as informações no 99 Entregas",
+              "Pedi ao responsável para avaliar",
+            ],
+          },
+          {
+            title: "Pedido 2 — Beatriz Silva",
+            subtitle:
+              "Tel: 34985212578 · Produtos: PLU40 / EST12 · Rua C, 240 (deixar na caixinha de correio)",
+            items: [
+              "Separei os produtos e embalei o pedido",
+              "Preenchi as informações no 99 Entregas",
+              "Pedi ao responsável para avaliar",
+            ],
+          },
+          {
+            title: "Pedido 3 — Aline Campos",
+            subtitle: "Tel: 34987563254 · Produtos: COL03 / VEL02 · Rua Cláudio Manoel, 512",
+            items: [
+              "Separei os produtos e embalei o pedido",
+              "Preenchi as informações no 99 Entregas",
+              "Pedi ao responsável para avaliar",
+            ],
+          },
+        ],
       },
       {
-        id: "embalar.pratica.checklist",
-        kind: "checklist",
-        title: "2. Realizar a atividade prática",
-        items: [
-          "Separar produtos do pedido 1, embalar e cadastrar no 99",
-          "Separar produtos do pedido 2, embalar e cadastrar no 99",
-          "Separar produtos do pedido 3, embalar e cadastrar no 99",
-          "Conferir se todos foram marcados como despachados",
+        id: "embalar.pratica.fixacao",
+        kind: "practice",
+        title: "2. Exercício de embalar na prática — exercício de fixação (20 questões)",
+        description:
+          "Múltipla escolha autocorrigido. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Quais são os 4 materiais indispensáveis para embalar um pedido corretamente?",
+            options: [
+              "Sacola, fita adesiva, caneta e caixa de papelão",
+              "Sacola, saquinho com lacre, grampeador e post-it com caneta",
+              "Saquinho com lacre, fita dupla face, etiqueta e sacola",
+              "Grampeador, caixa, lacre e post-it",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "O que deve estar escrito no post-it colado na sacola?",
+            options: [
+              "Apenas o nome do cliente",
+              "Nome do cliente e final do número do WhatsApp",
+              "Nome, rua, número e complemento do endereço do cliente",
+              "Só o endereço e o telefone",
+            ],
+            correctIndex: 2,
+          },
+          {
+            question: "Por que o post-it deve ser grampeado na sacola além de colado?",
+            options: [
+              "Para ficar mais bonito",
+              "Porque a cola do post-it é fraca e ele pode soltar durante o transporte",
+              "Para o motoboy não conseguir tirar",
+              "É opcional",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "Um produto com formato de pênis deve ser embalado como?",
+            options: [
+              "Direto no saquinho com lacre, sem preparo extra",
+              "Em uma sacola diferente, sem saquinho interno",
+              "Envolto em plástico bolha antes de colocar no saquinho, para disfarçar o formato",
+              "Apenas com a sacola externa, sem saquinho interno",
+            ],
+            correctIndex: 2,
+          },
+          {
+            question: "Por que todo produto eletrônico deve ser testado antes de lacrar?",
+            options: [
+              "Para ver se a cor está certa",
+              "Para garantir que funciona — se chegar com defeito, paga-se outro motoboy para buscar",
+              "É uma exigência do app 99",
+              "Para verificar se a bateria está carregada",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "Como escolher o tamanho correto da embalagem?",
+            options: [
+              "Sempre usar a maior disponível",
+              "Usar o tamanho padrão independente do produto",
+              "Usar a menor embalagem que cabe o produto sem forçar",
+              "O tamanho não importa",
+            ],
+            correctIndex: 2,
+          },
+          {
+            question: "Qual o processo correto para trabalhar com vários pedidos ao mesmo tempo?",
+            options: [
+              "Embalar todos de uma vez e organizar no final",
+              "Abrir todos os pedidos no sistema ao mesmo tempo e embalar em paralelo",
+              "Um pedido por vez: abrir o resumo, separar os produtos, embalar, colar post-it com todas as informações e só então passar para o próximo",
+              "Embalar todos os produtos primeiro e organizar os post-its depois",
+            ],
+            correctIndex: 2,
+          },
+          {
+            question: "O nome do cliente deve ser inserido no app 99 de que forma?",
+            options: [
+              "Como está no WhatsApp",
+              "Em letras minúsculas",
+              "Em LETRAS MAIÚSCULAS — com vários motoboys na porta ao mesmo tempo fica fácil identificar qual sacola é de quem",
+              "Não precisa colocar o nome, só o telefone",
+            ],
+            correctIndex: 2,
+          },
+          {
+            question: "A caixinha de \"código de coleta\" no app 99 deve estar:",
+            options: [
+              "Sempre desmarcada para agilizar",
+              "Marcada — em Uberlândia costuma ter vários entregadores juntos, o código evita que o pacote seja retirado pelo motoboy errado",
+              "Marcada apenas quando houver mais de 2 pedidos",
+              "Tanto faz",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "O que acontece se a \"caixinha 2\" (código do cliente) for desmarcada no 99?",
+            options: [
+              "O pedido fica mais rápido de finalizar",
+              "O motoboy pode finalizar a corrida sem o cliente estar presente, sem nenhuma segurança",
+              "O cliente recebe uma notificação extra",
+              "Nada muda",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "Como funciona o código de 4 dígitos gerado pelo app 99?",
+            options: [
+              "É o código de rastreamento para o cliente acompanhar",
+              "É o código que o motoboy usa para encontrar o endereço",
+              "É um código que o cliente passa para o motoboy na entrega — sem ele, o 99 não finaliza a corrida",
+              "É gerado apenas quando o cliente solicita",
+            ],
+            correctIndex: 2,
+          },
+          {
+            question: "Qual o primeiro passo para validar o endereço de um cliente antes de enviar?",
+            options: [
+              "Ligar para o cliente para confirmar",
+              "Jogar direto no 99 e ver se aparece algum resultado",
+              "Copiar a rua e número e pesquisar no Google, gerando um ponto no mapa para comparar",
+              "Confiar no que o cliente digitou",
+            ],
+            correctIndex: 2,
+          },
+          {
+            question: "Onde fica salvo o link da localização real do cliente?",
+            options: [
+              "No WhatsApp da loja",
+              "Nas observações do pedido no sistema de gestão",
+              "No histórico do app 99",
+              "Precisa pedir para o cliente reenviar",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "O que fazer quando o ponto do Google não bate com a localização real do cliente?",
+            options: [
+              "Enviar assim mesmo",
+              "Cancelar o pedido e pedir o endereço novamente",
+              "Usar a opção \"marcar local no mapa\" dentro do app 99 para posicionar o ponto correto manualmente",
+              "Ligar para o cliente e pedir que ele saia na porta para esperar",
+            ],
+            correctIndex: 2,
+          },
+          {
+            question: "O que é o fluxo de pré-envio e quando deve ser enviado?",
+            options: [
+              "Uma mensagem enviada após o motoboy sair confirmando o envio",
+              "Uma mensagem enviada antes de chamar o motoboy, perguntando se o cliente está online e pode receber agora",
+              "Um formulário preenchido no sistema antes de embalar",
+              "Uma notificação automática do app 99",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "O que fazer se o cliente não responder o fluxo de pré-envio?",
+            options: [
+              "Enviar assim mesmo",
+              "Esperar 5 minutos e enviar sem confirmação",
+              "Não enviar — esperar a resposta ou ligar pelo WhatsApp antes de chamar o motoboy",
+              "Chamar o motoboy e avisar que o cliente pode não estar em casa",
+            ],
+            correctIndex: 2,
+          },
+          {
+            question: "Quando se usa motoboy particular em vez do app 99?",
+            options: [
+              "Sempre que o pedido for urgente",
+              "Quando o cliente morar longe do centro",
+              "Somente quando houver pedidos acumulados para entregar de uma vez",
+              "Nunca — o 99 deve ser usado em todos os casos",
+            ],
+            correctIndex: 2,
+          },
+          {
+            question: "Qual desses é um dos erros mais comuns no processo de envio?",
+            options: [
+              "Usar grampos demais na sacola",
+              "Esquecer de colocar o brinde quando o cliente tiver ganhado",
+              "Usar o app 99 no modo corrida em vez de entrega",
+              "Não colocar o telefone do cliente no 99",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "Por que confirmar a variação do produto (cor, sabor ou tamanho) é tão importante?",
+            options: [
+              "Porque o sistema não registra variações automaticamente",
+              "Porque variação errada obriga a pagar outro motoboy para buscar o produto de volta",
+              "Porque o cliente sempre muda de ideia na hora",
+              "É importante apenas para produtos eletrônicos",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "Por que é importante ter calma ao embalar pedidos com atraso acumulado?",
+            options: [
+              "Porque o cliente está sempre esperando e vai ligar cobrando",
+              "Porque o app 99 exige um tempo mínimo entre pedidos",
+              "Porque erros cometidos com pressa geram custos maiores do que o tempo perdido sendo cuidadoso",
+              "Porque o motoboy precisa de tempo para chegar",
+            ],
+            correctIndex: 2,
+          },
+        ],
+      },
+      {
+        id: "embalar.prova.exam",
+        kind: "open_evaluation",
+        title: "2. Exercício de embalar na prática — prova dissertativa (15 questões)",
+        description:
+          "Prova dissertativa corrigida pela gestora. Nota mínima 70%.",
+        passingScore: 70,
+        questions: [
+          { question: "Quais são os materiais necessários para embalar um pedido e por que é importante sempre verificar o estoque deles antes de precisar?", expectedAnswer: "" },
+          { question: "Quais informações devem estar escritas no post-it colado na sacola, e por que ele precisa ser grampeado além de colado?", expectedAnswer: "" },
+          { question: "O que deve ser feito com produtos que têm formato de pênis antes de embalar, e por que isso é importante?", expectedAnswer: "" },
+          { question: "Por que todo produto eletrônico deve ser testado antes de ser lacrado e enviado? O que acontece se não for testado?", expectedAnswer: "" },
+          { question: "Como escolher o tamanho correto da embalagem, e por que usar uma embalagem maior do que o necessário é um problema?", expectedAnswer: "" },
+          { question: "Descreva o processo correto para embalar vários pedidos ao mesmo tempo sem se confundir, do começo ao fim.", expectedAnswer: "" },
+          { question: "Por que o nome do cliente deve ser inserido em letras maiúsculas no app 99?", expectedAnswer: "" },
+          { question: "Explique o que são as duas caixinhas do app 99, se cada uma deve ficar marcada ou desmarcada, e por quê.", expectedAnswer: "" },
+          { question: "Como funciona o código de 4 dígitos do app 99 e qual a importância dele para a segurança da loja?", expectedAnswer: "" },
+          { question: "Descreva o processo completo de validar o endereço de um cliente antes de chamar o motoboy.", expectedAnswer: "" },
+          { question: "O que fazer quando o ponto do Google e o link de localização do cliente não batem?", expectedAnswer: "" },
+          { question: "O que é o fluxo de pré-envio, quando deve ser enviado, e o que fazer se o cliente não responder?", expectedAnswer: "" },
+          { question: "Em quais situações se usa motoboy particular em vez do app 99, e como funciona o processo?", expectedAnswer: "" },
+          { question: "Cite e explique pelo menos 4 erros comuns no processo de envio e como cada um pode ser evitado.", expectedAnswer: "" },
+          { question: "Por que é importante ter calma ao embalar pedidos com atraso acumulado, e o que fazer quando a mente estiver confusa com muitos pedidos ao mesmo tempo?", expectedAnswer: "" },
         ],
       },
     ],
