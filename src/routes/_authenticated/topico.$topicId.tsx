@@ -385,6 +385,12 @@ function SubtaskBody({
                     />
                   )
                 )}
+                {subtask.kind === "external_html" && (
+                  <ExternalHtmlSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
+                )}
+                {subtask.kind === "multi_checklist" && (
+                  <MultiChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
+                )}
                 {subtask.kind === "open_evaluation" && (
                   useExamDialog ? (
                     <ExamDialogLauncher
