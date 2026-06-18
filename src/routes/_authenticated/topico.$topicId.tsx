@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, CheckCircle2, Circle, ExternalLink, Loader2, Lock } from "lucide-react";
+import { ChevronLeft, CheckCircle2, Circle, Copy, Loader2, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { findTopic, type Subtask, PASSING_SCORE } from "@/data/topics";
 import { computeTopicStatuses, getSubtaskState, type ProgressRow } from "@/lib/progress";
@@ -354,8 +354,19 @@ function VideoSubtask({
   onComplete: () => void;
   onUncheck: () => void;
 }) {
-  const [opened, setOpened] = useState(false);
-  const canMark = opened || completed;
+  const [copied, setCopied] = useState(false);
+  const canMark = copied || completed;
+
+  async function copyVideoLink() {
+    try {
+      await navigator.clipboard.writeText(subtask.url);
+      setCopied(true);
+      toast.success("Link copiado", { description: "Cole no navegador para abrir o vídeo." });
+    } catch {
+      setCopied(true);
+      window.prompt("Copie este link e cole no navegador:", subtask.url);
+    }
+  }
 
   return (
     <div className="space-y-3">
@@ -363,15 +374,14 @@ function VideoSubtask({
         {subtask.url}
       </div>
       <div className="flex flex-wrap gap-2 items-center">
-        <a
-          href={subtask.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => setOpened(true)}
-          className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+        <Button
+          type="button"
+          size="sm"
+          className="rounded-full"
+          onClick={copyVideoLink}
         >
-          <ExternalLink className="h-4 w-4" /> Abrir o vídeo
-        </a>
+          <Copy className="h-4 w-4" /> {copied ? "Link copiado" : "Copiar link do vídeo"}
+        </Button>
 
         {completed ? (
           <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>Desmarcar</Button>
@@ -382,13 +392,10 @@ function VideoSubtask({
             className="rounded-full"
             disabled={!canMark}
             onClick={onComplete}
-            title={!canMark ? "Abra o vídeo primeiro" : undefined}
+            title={!canMark ? "Copie o link primeiro" : undefined}
           >
             Já assisti
           </Button>
-        )}
-        {!completed && !canMark && (
-          <span className="text-xs text-muted-foreground">Abra o vídeo para liberar</span>
         )}
       </div>
     </div>
