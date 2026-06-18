@@ -111,4 +111,33 @@
     color: var(--color-foreground);
     font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   }
+  .dark body {
+    background-color: oklch(0.11 0.022 290);
+    background-image:
+      radial-gradient(1200px 800px at -10% -10%, oklch(0.42 0.18 295 / 38%), transparent 60%),
+      radial-gradient(1100px 750px at 110% 10%, oklch(0.45 0.20 320 / 32%), transparent 60%),
+      radial-gradient(1000px 700px at 50% 120%, oklch(0.38 0.16 280 / 28%), transparent 60%);
+    background-attachment: fixed;
+  }
 }
+
+/* Glassmorphism — superfícies transl\u00facidas com desfoque */
+@utility glass {
+  background-color: oklch(1 0 0 / 6%);
+  border: 1px solid oklch(1 0 0 / 10%);
+  backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: 0 8px 32px -12px oklch(0 0 0 / 35%);
+}
+
+@utility glass-strong {
+  background-color: oklch(1 0 0 / 10%);
+  border: 1px solid oklch(1 0 0 / 14%);
+  backdrop-filter: blur(24px) saturate(160%);
+  box-shadow: 0 12px 40px -12px oklch(0 0 0 / 45%);
+}
+
+@utility glass-success {
+  background-color: oklch(0.68 0.16 150 / 14%);
+  border: 1px solid oklch(0.68 0.16 150 / 28%);
+}
+
