@@ -73,6 +73,23 @@ export type Subtask =
       description?: string;
       passingScore?: number;
       questions: OpenQuestion[];
+    }
+  | {
+      id: string;
+      title: string;
+      kind: "external_html";
+      description?: string;
+      url: string;
+      openLabel?: string;
+      downloadAs?: string;
+      confirmLabel: string;
+    }
+  | {
+      id: string;
+      title: string;
+      kind: "multi_checklist";
+      description?: string;
+      groups: { title: string; subtitle?: string; items: string[] }[];
     };
 
 
