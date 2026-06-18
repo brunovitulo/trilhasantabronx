@@ -315,25 +315,19 @@ function SubtaskGroupCard({
   const pct = total > 0 ? (doneCount / total) * 100 : 0;
   const firstPendingIdx = itemStates.findIndex((s) => !s.passed);
 
-  const [openId, setOpenId] = useState<string | null>(() => {
-    if (firstPendingIdx === -1) return null;
-    return group.items[firstPendingIdx]?.subtask.id ?? null;
-  });
-
-  // Auto-advance: if the open step gets completed, open the next pending
+  // All steps start collapsed by default. User expands manually.
+  const [openId, setOpenId] = useState<string | null>(null);
+  // Collapse a step automatically once it's marked complete.
   useEffect(() => {
     setOpenId((cur) => {
-      if (allDone) return null;
+      if (cur == null) return cur;
       const curIdx = group.items.findIndex((it) => it.subtask.id === cur);
-      const curPassed = curIdx >= 0 && itemStates[curIdx]?.passed;
-      if (curIdx === -1 || curPassed) {
-        const nextIdx = itemStates.findIndex((s) => !s.passed);
-        return nextIdx === -1 ? null : group.items[nextIdx].subtask.id;
-      }
+      if (curIdx >= 0 && itemStates[curIdx]?.passed) return null;
       return cur;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doneCount, total, allDone]);
+  }, [doneCount]);
+  void firstPendingIdx;
 
   const GroupIcon = pickGroupIcon(group.title);
 
@@ -375,21 +369,34 @@ function SubtaskGroupCard({
           const { state, passed } = itemStates[idx];
           const inFinalGate = FINAL_GATE_IDS.has(sub.id);
           const gateLocked = inFinalGate && !gateUnlocked && !isAdmin;
+          const sequentialLocked =
+            !isAdmin && idx > 0 && !itemStates[idx - 1].passed;
+          const isLocked = gateLocked || sequentialLocked;
           const examNeedsVideo =
             sub.id === EXAM_ID && gateUnlocked && !gateVideoCompleted && !isAdmin;
           const useExamDialog = sub.id === EXAM_ID;
           const hasDownload = "downloadAs" in sub && !!(sub as { downloadAs?: string }).downloadAs;
           const StepIcon = pickStepIcon(sub.kind, hasDownload);
-          const isOpen = openId === sub.id;
-          const label = total > 1 ? entry.stepLabel : group.title;
+          const isOpen = openId === sub.id && !isLocked;
+          const baseLabel = total > 1 ? entry.stepLabel : group.title;
+          const label = `Passo ${idx + 1}: ${baseLabel}`;
           const isEvalLike = sub.kind === "evaluation" || sub.kind === "open_evaluation";
 
           return (
             <div key={sub.id}>
               <button
                 type="button"
-                onClick={() => setOpenId(isOpen ? null : sub.id)}
-                className="w-full flex items-center gap-3 px-4 sm:px-5 py-3 text-left transition-colors hover:bg-white/[0.03]"
+                disabled={isLocked}
+                onClick={() => {
+                  if (isLocked) return;
+                  setOpenId(isOpen ? null : sub.id);
+                }}
+                className={cn(
+                  "w-full flex items-center gap-3 px-4 sm:px-5 py-3 text-left transition-colors",
+                  isLocked
+                    ? "opacity-60 cursor-not-allowed"
+                    : "hover:bg-white/[0.03] cursor-pointer",
+                )}
               >
                 <span
                   className={cn(
@@ -401,7 +408,7 @@ function SubtaskGroupCard({
                 >
                   {passed ? (
                     <Check className="h-3 w-3" strokeWidth={3} />
-                  ) : gateLocked ? (
+                  ) : isLocked ? (
                     <Lock className="h-2.5 w-2.5" />
                   ) : null}
                 </span>
@@ -416,7 +423,7 @@ function SubtaskGroupCard({
                     "flex-1 text-sm leading-tight",
                     passed
                       ? "text-muted-foreground line-through"
-                      : gateLocked
+                      : isLocked
                         ? "text-muted-foreground"
                         : "text-foreground",
                   )}
@@ -431,6 +438,20 @@ function SubtaskGroupCard({
                 {state.completed && state.score != null && sub.kind === "evaluation" && (
                   <Badge variant={passed ? "default" : "destructive"}>{state.score}%</Badge>
                 )}
+                <span
+                  className="shrink-0 font-medium lowercase tracking-wide"
+                  style={{
+                    fontSize: "10px",
+                    padding: "2px 9px",
+                    borderRadius: "20px",
+                    background: "rgba(175, 169, 236, 0.12)",
+                    border: "0.5px solid rgba(175, 169, 236, 0.25)",
+                    color: "rgba(175, 169, 236, 0.8)",
+                    opacity: passed ? 0.5 : 1,
+                  }}
+                >
+                  passo {idx + 1}
+                </span>
                 <ChevronDown
                   className={cn(
                     "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
@@ -681,7 +702,9 @@ function VideoSubtask({
           <Button
             variant="outline"
             size="sm"
-            className="rounded-full border-white/15 bg-transparent hover:bg-white/5"
+            disabled={!copied}
+            title={!copied ? "Copie o link do vídeo primeiro" : undefined}
+            className="rounded-full border-white/15 bg-transparent hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={onComplete}
           >
             Já assisti
