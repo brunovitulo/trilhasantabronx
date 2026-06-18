@@ -138,9 +138,22 @@ function AdminPage() {
       .subscribe();
     const onFocus = () => refresh();
     window.addEventListener("focus", onFocus);
+    const onOpenCorrection = (e: Event) => {
+      const detail = (e as CustomEvent<AdminOpenCorrectionDetail>).detail;
+      if (!detail) return;
+      setCorrection({
+        id: detail.submissionId,
+        user_id: detail.userId,
+        subtask_id: detail.subtaskId,
+        created_at: detail.createdAt,
+        full_name: detail.fullName,
+      });
+    };
+    window.addEventListener(ADMIN_OPEN_CORRECTION_EVENT, onOpenCorrection);
     return () => {
       supabase.removeChannel(ch);
       window.removeEventListener("focus", onFocus);
+      window.removeEventListener(ADMIN_OPEN_CORRECTION_EVENT, onOpenCorrection);
     };
   }, []);
 
