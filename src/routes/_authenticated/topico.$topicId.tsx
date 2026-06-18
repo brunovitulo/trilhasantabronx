@@ -588,9 +588,9 @@ function ExamDialogLauncher({
           Assista o vídeo acima e marque como visto para liberar o botão de iniciar a prova.
         </p>
       )}
-      <Button
+      <Button variant="outline"
         size="sm"
-        className="rounded-full"
+        className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25"
         disabled={needsVideo}
         onClick={() => setOpen(true)}
       >
@@ -666,10 +666,10 @@ function VideoSubtask({
         Copie o link, cole em outra aba, assista o destaque por completo.
       </p>
       <div className="flex flex-wrap gap-2 items-center">
-        <Button
+        <Button variant="outline"
           type="button"
           size="sm"
-          className="rounded-full"
+          className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25"
           onClick={copyVideoLink}
         >
           <Copy className="h-4 w-4" /> {copied ? "Link copiado" : "Copiar link do vídeo"}
@@ -913,10 +913,10 @@ function InlineHtmlSubtask({
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap gap-2">
-        <Button
+        <Button variant="outline"
           type="button"
           size="sm"
-          className="rounded-full"
+          className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25"
           onClick={() => {
             setNonce((n) => n + 1);
             setOpen(true);
@@ -1298,9 +1298,9 @@ function PracticeSubtask({
             <li>Este exercício precisa estar completo antes da avaliação final.</li>
           </ul>
         </div>
-        <Button
+        <Button variant="outline"
           size="sm"
-          className="rounded-full"
+          className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25"
           onClick={() => setStarted(true)}
         >
           Iniciar exercício de fixação
@@ -1371,9 +1371,9 @@ function PracticeSubtask({
             {correctCount}/{subtask.questions.length} corretas — finalizado
           </Badge>
         ) : (
-          <Button
+          <Button variant="outline"
             size="sm"
-            className="rounded-full"
+            className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25"
             disabled={!allAnswered}
             onClick={finish}
           >
@@ -1561,9 +1561,9 @@ function OpenEvaluationSubtask({
         {submission.status === "rejected" && (
           <div className="pt-2">
             {submission.retry_allowed ? (
-              <Button
+              <Button variant="outline"
                 size="sm"
-                className="rounded-full"
+                className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25"
                 onClick={() => {
                   setSubmission(null);
                   setAnswerRows([]);
@@ -1604,7 +1604,7 @@ function OpenEvaluationSubtask({
           />
         </div>
       ))}
-      <Button onClick={submit} disabled={sending} className="rounded-full">
+      <Button variant="outline" onClick={submit} disabled={sending} className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25">
         {sending ? "Enviando..." : "Enviar para revisão"}
       </Button>
     </div>
