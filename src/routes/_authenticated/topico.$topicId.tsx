@@ -681,7 +681,7 @@ function VideoSubtask({
           <Button
             variant="outline"
             size="sm"
-            className="rounded-full"
+            className="rounded-full border-white/15 bg-transparent hover:bg-white/5"
             onClick={onComplete}
           >
             Já assisti
@@ -711,7 +711,7 @@ function ReadingSubtask({
       <Button
         variant="outline"
         size="sm"
-        className="rounded-full"
+        className="rounded-full border-white/15 bg-transparent hover:bg-white/5"
         onClick={() => setOpen((o) => !o)}
       >
         {open ? "Fechar apostila" : "Abrir apostila"}
@@ -751,7 +751,7 @@ function ApostilaSubtask({
       <Button
         variant="outline"
         size="sm"
-        className="rounded-full"
+        className="rounded-full border-white/15 bg-transparent hover:bg-white/5"
         onClick={() => setOpen((o) => !o)}
       >
         {open ? "Fechar apostila" : "Abrir apostila"}
