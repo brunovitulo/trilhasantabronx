@@ -1,6 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { CheckCircle2, Lock, Loader2, Circle, AlertTriangle, Brain } from "lucide-react";
+import {
+  CheckCircle2,
+  Lock,
+  Loader2,
+  Circle,
+  AlertTriangle,
+  Brain,
+  Store,
+  Package,
+  ClipboardCheck,
+  MessageCircleQuestion,
+  TrendingUp,
+  HeartPulse,
+  Tag,
+  Users,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { TOPICS } from "@/data/topics";
 import {
@@ -11,7 +26,6 @@ import {
 import { AppHeader } from "@/components/AppHeader";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({ meta: [{ title: "Trilha — Santa Bronx Formação" }] }),
