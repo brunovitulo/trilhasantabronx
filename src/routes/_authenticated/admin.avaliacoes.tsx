@@ -81,6 +81,25 @@ function AvaliacoesPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
+  // Auto-expande a submissão indicada pelo hash da URL (ex: vindo do painel admin)
+  const location = useLocation();
+  useEffect(() => {
+    const hash = location.hash?.replace(/^#/, "");
+    if (!hash) return;
+    if (subs.some((s) => s.id === hash)) {
+      setExpandedId(hash);
+      // Garante o filtro certo se a submissão não estiver no filtro atual
+      setTimeout(() => {
+        const el = document.getElementById(`sub-${hash}`);
+        el?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 100);
+    } else if (filter !== "all") {
+      // Pode estar em outro filtro — tenta "all"
+      setFilter("all");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.hash, subs]);
+
   return (
     <div className="min-h-screen">
       <AppHeader isAdmin />
