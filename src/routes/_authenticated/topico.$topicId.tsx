@@ -356,7 +356,7 @@ function VideoSubtask({
   onUncheck: () => void;
 }) {
   const [copied, setCopied] = useState(false);
-  const canMark = copied || completed;
+  const canMark = true;
 
   async function copyVideoLink() {
     try {
