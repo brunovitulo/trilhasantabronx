@@ -42,7 +42,7 @@ export function QuickChecklistDrawer() {
         </SheetHeader>
         <iframe
           key={nonce}
-          src="/embalar/checklist.html"
+          srcDoc={checklistHtml}
           title="Checklist de embalagem"
           className="flex-1 w-full border-0"
         />
