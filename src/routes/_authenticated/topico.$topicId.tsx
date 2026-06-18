@@ -25,7 +25,7 @@ import { Label } from "@/components/ui/label";
 
 import { toast } from "sonner";
 import { ApostilaView } from "@/components/ApostilaView";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+
 import apostilaEmbalarHtml from "@/content/embalar/apostila.html?raw";
 import checklistEmbalarHtml from "@/content/embalar/checklist.html?raw";
 
