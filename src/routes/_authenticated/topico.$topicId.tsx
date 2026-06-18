@@ -354,62 +354,49 @@ function VideoSubtask({
   onComplete: () => void;
   onUncheck: () => void;
 }) {
-  const [copied, setCopied] = useState(false);
-  const canMark = copied || completed;
+  const [opened, setOpened] = useState(false);
+  const canMark = opened || completed;
 
-  async function copyVideoLink() {
-    try {
-      await navigator.clipboard.writeText(subtask.url);
-      setCopied(true);
-      toast.success("Link copiado", {
-        description: "Agora cole no navegador ou no app do Instagram para abrir o destaque.",
-      });
-    } catch {
-      toast.error("Não consegui copiar automaticamente", {
-        description: "Selecione o link abaixo e copie manualmente.",
-      });
-    }
+  function openVideo() {
+    window.open(subtask.url, "_blank", "noopener,noreferrer");
+    setOpened(true);
   }
 
   return (
     <div className="space-y-3">
-      <div className="rounded-2xl border border-amber-200 bg-amber-50 p-3 text-[13px] text-amber-900 leading-relaxed">
-        O Instagram bloqueia a abertura direta dos destaques por links externos.
-        <strong className="block mt-1">Copie o link abaixo e cole no navegador ou no app do Instagram</strong>
-        para assistir ao vídeo.
-      </div>
       <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-xs sm:text-sm text-muted-foreground break-all font-mono select-all">
         {subtask.url}
       </div>
       <div className="flex flex-wrap gap-2 items-center">
         <Button
-          variant="outline"
           size="sm"
           className="rounded-full"
-          onClick={copyVideoLink}
+          onClick={openVideo}
         >
-          <ExternalLink className="h-4 w-4" /> {copied ? "Link copiado ✓" : "Copiar link do destaque"}
+          <ExternalLink className="h-4 w-4" /> Abrir o vídeo
         </Button>
         {completed ? (
           <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>Desmarcar</Button>
         ) : (
           <Button
+            variant="outline"
             size="sm"
             className="rounded-full"
             disabled={!canMark}
             onClick={onComplete}
-            title={!canMark ? "Copie o link primeiro" : undefined}
+            title={!canMark ? "Abra o vídeo primeiro" : undefined}
           >
             Já assisti
           </Button>
         )}
         {!completed && !canMark && (
-          <span className="text-xs text-muted-foreground">Copie o link para liberar</span>
+          <span className="text-xs text-muted-foreground">Abra o vídeo para liberar</span>
         )}
       </div>
     </div>
   );
 }
+
 
 
 function ReadingSubtask({
