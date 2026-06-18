@@ -1,204 +1,201 @@
-<!doctype html>
-<html lang="pt-br">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Apostila — Primeira Responsabilidade</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 <style>
-  :root {
-    --bg: #fafaf9;
-    --card: #ffffff;
-    --ink: #18181b;
-    --muted: #52525b;
-    --line: #e4e4e7;
-    --brand: #b45309;
-    --brand-soft: #fef3c7;
-    --accent: #7c3aed;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: var(--bg);
-    color: var(--ink);
-    line-height: 1.55;
-  }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 28px 22px 60px; }
-  header.hero {
-    background: linear-gradient(135deg, #f59e0b, #b45309);
-    color: #fff;
-    border-radius: 22px;
-    padding: 26px 24px;
-    margin-bottom: 24px;
-  }
-  header.hero .eyebrow {
-    font-size: 11px; letter-spacing: 3px; text-transform: uppercase; opacity: .85;
-  }
-  header.hero h1 { margin: 6px 0 6px; font-size: 24px; line-height: 1.2; }
-  header.hero p { margin: 0; font-size: 14px; opacity: .92; }
-  section.card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 18px;
-    padding: 18px 20px;
-    margin-bottom: 16px;
-  }
-  section.card h2 {
-    margin: 0 0 10px;
-    font-size: 16px;
-    color: var(--brand);
-    display: flex; align-items: center; gap: 8px;
-  }
-  section.card h2 .num {
-    background: var(--brand-soft);
-    color: var(--brand);
-    font-size: 12px;
-    border-radius: 999px;
-    padding: 2px 10px;
-    font-weight: 700;
-  }
-  p { margin: 8px 0; font-size: 14px; color: var(--ink); }
-  ul { margin: 8px 0 8px 0; padding-left: 20px; }
-  li { font-size: 14px; margin: 4px 0; }
-  .pillars { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
-  .pillar {
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 12px;
-    background: #fff;
-    text-align: center;
-  }
-  .pillar .icon { font-size: 22px; }
-  .pillar .name { font-weight: 700; font-size: 13px; margin-top: 4px; color: var(--brand); }
-  .pillar .desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
-  .callout {
-    border-left: 4px solid var(--accent);
-    background: #f5f3ff;
-    padding: 10px 12px;
-    border-radius: 10px;
-    font-size: 13px;
-    color: #4c1d95;
-    margin: 10px 0;
-  }
-  .warn {
-    border-left: 4px solid #dc2626;
-    background: #fef2f2;
-    padding: 10px 12px;
-    border-radius: 10px;
-    font-size: 13px;
-    color: #7f1d1d;
-    margin: 10px 0;
-  }
-  ol.steps { padding-left: 22px; }
-  ol.steps li { margin: 6px 0; font-size: 14px; }
-  footer {
-    text-align: center; font-size: 12px; color: var(--muted); margin-top: 24px;
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: linear-gradient(160deg, #1a1630 0%, #0f0c1e 100%); min-height: 100vh; color: #fff; padding: 0 0 60px; }
+
+  .hero { background: linear-gradient(135deg, rgba(127,119,221,0.25), rgba(93,202,165,0.1)); border-bottom: 0.5px solid rgba(255,255,255,0.1); padding: 48px 28px 36px; text-align: center; }
+  .hero-tag { display: inline-block; background: rgba(93,202,165,0.2); color: #9FE1CB; border: 0.5px solid rgba(93,202,165,0.4); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+  .hero h1 { font-size: 24px; font-weight: 600; line-height: 1.25; margin-bottom: 10px; }
+  .hero h1 span { color: #AFA9EC; }
+  .hero p { font-size: 14px; color: rgba(255,255,255,0.55); max-width: 380px; margin: 0 auto; line-height: 1.6; }
+
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 18px; }
+
+  .section { background: rgba(255,255,255,0.05); backdrop-filter: blur(16px); border: 0.5px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 24px 22px; margin-top: 20px; }
+  .section-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .section-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 22px; }
+  .icon-purple { background: rgba(127,119,221,0.25); color: #AFA9EC; }
+  .icon-teal   { background: rgba(93,202,165,0.2);  color: #9FE1CB; }
+  .icon-amber  { background: rgba(239,159,39,0.2);  color: #FAC775; }
+  .icon-red    { background: rgba(226,75,74,0.2);   color: #F09595; }
+  .icon-blue   { background: rgba(55,138,221,0.2);  color: #85B7EB; }
+  .icon-pink   { background: rgba(212,83,126,0.2);  color: #ED93B1; }
+  .section-head h2 { font-size: 17px; font-weight: 600; color: #fff; margin: 0; }
+  .section-head p { font-size: 12px; color: rgba(255,255,255,0.45); margin: 3px 0 0; }
+
+  .pilares { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .pilar { background: rgba(255,255,255,0.06); border: 0.5px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 16px 14px; }
+  .pilar i { font-size: 22px; margin-bottom: 8px; display: block; }
+  .pilar strong { font-size: 13px; color: #fff; display: block; margin-bottom: 4px; }
+  .pilar span { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5; display: block; }
+
+  .steps { display: flex; flex-direction: column; gap: 12px; }
+  .step { display: flex; gap: 14px; align-items: flex-start; }
+  .step-num { width: 26px; height: 26px; border-radius: 50%; background: rgba(93,202,165,0.25); color: #9FE1CB; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); }
+  .step-text strong { color: #fff; font-weight: 600; }
+
+  .alert { background: rgba(226,75,74,0.12); border: 0.5px solid rgba(226,75,74,0.3); border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; margin-top: 12px; }
+  .alert i { font-size: 18px; color: #F09595; flex-shrink: 0; margin-top: 1px; }
+  .alert-text { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+  .alert-text strong { color: #fff; }
+
+  .tip { background: rgba(93,202,165,0.1); border: 0.5px solid rgba(93,202,165,0.3); border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; margin-top: 12px; }
+  .tip i { font-size: 18px; color: #9FE1CB; flex-shrink: 0; margin-top: 1px; }
+  .tip-text { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+  .tip-text strong { color: #fff; }
+
+  .divider { height: 0.5px; background: rgba(255,255,255,0.08); margin: 16px 0; }
+
+  .destaque { background: rgba(127,119,221,0.12); border: 0.5px solid rgba(127,119,221,0.3); border-radius: 14px; padding: 20px; text-align: center; margin-top: 20px; }
+  .destaque i { font-size: 32px; color: #AFA9EC; margin-bottom: 10px; display: block; }
+  .destaque p { font-size: 15px; font-weight: 500; color: #fff; margin-bottom: 6px; }
+  .destaque span { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6; }
 </style>
 </head>
 <body>
+
+<div class="hero">
+  <div class="hero-tag">Apostila — Módulo 3</div>
+  <h1>Sua <span>primeira responsabilidade</span></h1>
+  <p>A partir de agora, os pedidos da loja são sua responsabilidade. Entenda o que é esperado de você.</p>
+</div>
+
 <div class="wrap">
-  <header class="hero">
-    <div class="eyebrow">Santa Bronx · Formação</div>
-    <h1>Sua primeira responsabilidade: embalar e despachar pedidos</h1>
-    <p>O que se espera de você a partir de agora — comportamento, atenção e processo.</p>
-  </header>
 
-  <section class="card">
-    <h2><span class="num">1</span> O que é esperado de você</h2>
-    <p>
-      A partir deste módulo, a sua principal responsabilidade é
-      <strong>embalar, enviar e garantir que os pedidos cheguem sem erros ao cliente</strong>.
-      Cada pedido representa uma cliente confiando na nossa loja —
-      é o seu trabalho proteger essa confiança.
-    </p>
-    <p>
-      O gestor acompanha o seu trabalho <strong>pelo sistema de pedidos e pelo Discord</strong>
-      durante todo o horário de funcionamento. Você não está sozinha: sempre
-      que tiver dúvida, pergunte antes de errar.
-    </p>
-  </section>
-
-  <section class="card">
-    <h2><span class="num">2</span> Os 5 pilares da boa atendente</h2>
-    <div class="pillars">
-      <div class="pillar"><div class="icon">⚡</div><div class="name">Agilidade</div><div class="desc">Sem correr — sem enrolar.</div></div>
-      <div class="pillar"><div class="icon">🧺</div><div class="name">Organização</div><div class="desc">Um pedido por vez, do início ao fim.</div></div>
-      <div class="pillar"><div class="icon">👀</div><div class="name">Atenção</div><div class="desc">Cor, tamanho e quantidade certos.</div></div>
-      <div class="pillar"><div class="icon">🧘</div><div class="name">Calma</div><div class="desc">Pressa gera erro — e erro custa caro.</div></div>
-      <div class="pillar"><div class="icon">🤝</div><div class="name">Comprometimento</div><div class="desc">Pergunte sempre que tiver dúvida.</div></div>
+  <!-- O QUE MUDOU -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-purple"><i class="ti ti-flag"></i></div>
+      <div>
+        <h2>O que muda a partir de agora</h2>
+        <p>Você passou pelos módulos de apresentação e embalagem</p>
+      </div>
     </div>
-    <div class="callout">
-      Atenção é <strong>verificar cor, tamanho e quantidade certos antes de embalar</strong>.
-      Um segundo a mais de atenção evita horas de retrabalho.
+    <div class="steps">
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text">Você já conhece a loja, os produtos e onde fica cada coisa.</div>
+      </div>
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text">Você já sabe embalar, chamar o motoboy no app 99 e evitar os principais erros de envio.</div>
+      </div>
+      <div class="step">
+        <div class="step-num"><i class="ti ti-arrow-right" style="font-size:13px"></i></div>
+        <div class="step-text"><strong>Daqui pra frente:</strong> todo pedido que entrar na loja é sua responsabilidade — embalar corretamente, enviar com agilidade e garantir que o cliente receba sem erros.</div>
+      </div>
     </div>
-  </section>
+  </div>
 
-  <section class="card">
-    <h2><span class="num">3</span> Nunca se apresse, mesmo com pedidos acumulados</h2>
-    <p>
-      Quando os pedidos acumulam, é tentador correr. Mas o
-      <strong>erro cometido com pressa custa mais caro do que o tempo perdido sendo cuidadosa</strong>:
-      você paga outro motoboy para buscar e levar, perde produto, e ainda dá uma má experiência para o cliente.
-    </p>
-    <ul>
-      <li>Respire. Embale <strong>um pedido por vez</strong>.</li>
-      <li>Confira cor, sabor, tamanho e quantidade <strong>antes de lacrar</strong>.</li>
-      <li>Se algo parecer estranho, pare e pergunte ao gestor.</li>
-    </ul>
-  </section>
-
-  <section class="card">
-    <h2><span class="num">4</span> Produto eletrônico: sempre testar</h2>
-    <p>
-      Todo produto eletrônico (vibradores, anéis, sucções, etc.)
-      <strong>precisa ser testado antes de lacrar a embalagem</strong>.
-      Se o cliente receber um produto que não liga, a loja paga outro motoboy
-      para buscar e levar de volta — prejuízo duplo.
-    </p>
-  </section>
-
-  <section class="card">
-    <h2><span class="num">5</span> O erro mais comum (e mais caro)</h2>
-    <p>
-      Enviar produto com a <strong>variação errada</strong> — cor, sabor ou tamanho diferente do que a cliente pediu —
-      é um dos erros mais frequentes e custosos. Antes de lacrar, leia o pedido
-      mais uma vez e confirme cada variação no produto que você separou.
-    </p>
-    <div class="warn">
-      Em dúvida sobre qual variação enviar? <strong>Pergunte no Discord</strong>.
-      Perguntar é sempre melhor do que cometer um erro evitável.
+  <!-- OS 5 PILARES -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-teal"><i class="ti ti-star"></i></div>
+      <div>
+        <h2>Os 5 pilares do seu trabalho</h2>
+        <p>O que define uma boa atendente aqui na Santa Bronx</p>
+      </div>
     </div>
-  </section>
+    <div class="pilares">
+      <div class="pilar">
+        <i class="ti ti-bolt" style="color:#FAC775"></i>
+        <strong>Agilidade</strong>
+        <span>Pedido fechado é pedido que precisa sair rápido. Não deixe acumular sem necessidade.</span>
+      </div>
+      <div class="pilar">
+        <i class="ti ti-layout-grid" style="color:#AFA9EC"></i>
+        <strong>Organização</strong>
+        <span>Mesa limpa, loja arrumada, pedidos identificados. Ambiente organizado = menos erro.</span>
+      </div>
+      <div class="pilar">
+        <i class="ti ti-eye" style="color:#9FE1CB"></i>
+        <strong>Atenção</strong>
+        <span>Cor certa, tamanho certo, quantidade certa. Um segundo de atenção evita retrabalho.</span>
+      </div>
+      <div class="pilar">
+        <i class="ti ti-heart" style="color:#ED93B1"></i>
+        <strong>Calma</strong>
+        <span>Com pedidos acumulados, nunca se apresse. Erro com pressa custa mais do que tempo perdido.</span>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:14px">
+      <i class="ti ti-bulb"></i>
+      <div class="tip-text"><strong>Comprometimento</strong> é o pilar que une todos os outros. Fazer bem feito não porque alguém está olhando — mas porque é o certo a fazer.</div>
+    </div>
+  </div>
 
-  <section class="card">
-    <h2><span class="num">6</span> Antes de chamar o motoboy: pré-envio</h2>
-    <p>
-      O <strong>pré-envio</strong> é uma mensagem enviada à cliente
-      <strong>antes</strong> de chamar o motoboy, confirmando que ela está no
-      endereço e pode receber agora. Isso evita motoboy chegar em casa vazia,
-      pedido recusado e nova corrida paga pela loja.
-    </p>
-    <ol class="steps">
-      <li>Envie o pré-envio para a cliente.</li>
-      <li>Aguarde a confirmação de que ela está no endereço.</li>
-      <li>Valide o endereço no mapa.</li>
-      <li>Só então chame o motoboy no 99 Entregas.</li>
-    </ol>
-  </section>
+  <!-- O QUE NÃO PODE ACONTECER -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-red"><i class="ti ti-ban"></i></div>
+      <div>
+        <h2>O que não pode acontecer</h2>
+        <p>Erros que geram custo e prejudicam o cliente</p>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="alert">
+        <i class="ti ti-color-swatch"></i>
+        <div class="alert-text"><strong>Enviar produto errado</strong> (cor, sabor, tamanho ou quantidade) — sempre confirme a variação e a quantidade antes de embalar.</div>
+      </div>
+      <div class="alert">
+        <i class="ti ti-gift"></i>
+        <div class="alert-text"><strong>Esquecer o brinde</strong> — sempre verifique se o cliente ganhou brinde antes de lacrar a sacola.</div>
+      </div>
+      <div class="alert">
+        <i class="ti ti-device-mobile-off"></i>
+        <div class="alert-text"><strong>Enviar produto eletrônico sem testar</strong> — sempre teste antes de lacrar. Produto com defeito = novo custo de motoboy.</div>
+      </div>
+      <div class="alert">
+        <i class="ti ti-map-2"></i>
+        <div class="alert-text"><strong>Enviar para o endereço errado</strong> — sempre valide o endereço comparando o Google com o link da localização do cliente no sistema.</div>
+      </div>
+      <div class="alert">
+        <i class="ti ti-send"></i>
+        <div class="alert-text"><strong>Chamar o motoboy sem confirmar com o cliente</strong> — sempre envie o pré-envio e aguarde a confirmação antes de chamar.</div>
+      </div>
+    </div>
+  </div>
 
-  <section class="card">
-    <h2><span class="num">7</span> Em caso de dúvida</h2>
-    <p>
-      Pergunte ao gestor pelo <strong>Discord</strong> antes de errar.
-      Tentar resolver sozinha pode parecer "não incomodar", mas se gerar erro,
-      o problema fica maior. Perguntar é sempre o caminho certo.
-    </p>
-  </section>
+  <!-- COMO O GESTOR ACOMPANHA -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-blue"><i class="ti ti-eye"></i></div>
+      <div>
+        <h2>Como o gestor acompanha</h2>
+        <p>Você não estará sozinha</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text">O gestor acompanha os pedidos do sistema e pode ver em tempo real o andamento das entregas.</div>
+      </div>
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text">Em caso de dúvida, o gestor está disponível no Discord durante o horário de funcionamento da loja. <strong>Pergunte antes de errar.</strong></div>
+      </div>
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text">Erros que poderiam ter sido evitados com uma simples pergunta são os mais difíceis de justificar. Não tenha receio de perguntar.</div>
+      </div>
+    </div>
+  </div>
 
-  <footer>
-    Santa Bronx — Apostila de Primeira Responsabilidade
-  </footer>
+  <!-- RESUMO FINAL -->
+  <div class="destaque">
+    <i class="ti ti-rocket"></i>
+    <p>Você está pronta para assumir essa responsabilidade.</p>
+    <span>Seja ágil, organizada, atenciosa e calma. Um pedido por vez, sempre com cuidado. A loja confia em você.</span>
+  </div>
+
 </div>
 </body>
 </html>
