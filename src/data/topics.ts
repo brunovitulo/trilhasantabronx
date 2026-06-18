@@ -87,6 +87,16 @@ export type Subtask =
   | {
       id: string;
       title: string;
+      kind: "inline_html";
+      description?: string;
+      source: "apostila" | "checklist";
+      openLabel?: string;
+      helperText?: string;
+      confirmLabel: string;
+    }
+  | {
+      id: string;
+      title: string;
       kind: "multi_checklist";
       description?: string;
       groups: { title: string; subtitle?: string; items: string[] }[];
@@ -250,10 +260,10 @@ export const TOPICS: Topic[] = [
       },
       {
         id: "embalar.intro.apostila",
-        kind: "external_html",
+        kind: "inline_html",
         title: "1. Como embalar e chamar o 99 — ler apostila completa",
         description: "Baixe e leia a apostila por completo para fixar tudo que você assistiu.",
-        url: "/embalar/apostila.html",
+        source: "apostila",
         openLabel: "Abrir apostila",
         confirmLabel: "Li todo o conteúdo da apostila.",
       },
@@ -266,14 +276,15 @@ export const TOPICS: Topic[] = [
       },
       {
         id: "embalar.checklist.baixar",
-        kind: "external_html",
-        title: "1. Como embalar e chamar o 99 — baixar checklist de embalagem",
+        kind: "inline_html",
+        title: "1. Como embalar e chamar o 99 — ver checklist de embalagem",
         description:
-          "Baixe o checklist e use sempre que for embalar um pedido, principalmente nos primeiros dias.",
-        url: "/embalar/checklist.html",
-        downloadAs: "checklist-embalagem.html",
-        openLabel: "Baixar checklist",
-        confirmLabel: "Baixei o checklist e já está salvo no meu computador.",
+          "Veja o checklist e use sempre que for embalar um pedido, principalmente nos primeiros dias.",
+        source: "checklist",
+        openLabel: "Ver checklist",
+        helperText:
+          "O checklist também fica sempre disponível no ícone do topo do site, para você acessar rapidamente sempre que for embalar.",
+        confirmLabel: "Já vi o checklist e sei onde acessá-lo no topo do site.",
       },
       {
         id: "embalar.pratica.video",

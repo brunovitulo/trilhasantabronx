@@ -25,6 +25,14 @@ import { Label } from "@/components/ui/label";
 
 import { toast } from "sonner";
 import { ApostilaView } from "@/components/ApostilaView";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import apostilaEmbalarHtml from "@/content/embalar/apostila.html?raw";
+import checklistEmbalarHtml from "@/content/embalar/checklist.html?raw";
+
+const INLINE_HTML_SOURCES: Record<"apostila" | "checklist", { title: string; html: string }> = {
+  apostila: { title: "Apostila — Embalar e Despachar Pedidos", html: apostilaEmbalarHtml },
+  checklist: { title: "Checklist de embalagem", html: checklistEmbalarHtml },
+};
 
 
 export const Route = createFileRoute("/_authenticated/topico/$topicId")({
@@ -388,6 +396,9 @@ function SubtaskBody({
                 {subtask.kind === "external_html" && (
                   <ExternalHtmlSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
                 )}
+                {subtask.kind === "inline_html" && (
+                  <InlineHtmlSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
+                )}
                 {subtask.kind === "multi_checklist" && (
                   <MultiChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
                 )}
@@ -732,6 +743,81 @@ function ChecklistSubtask({
     </div>
   );
 }
+
+function InlineHtmlSubtask({
+  subtask,
+  completed,
+  onComplete,
+  onUncheck,
+}: {
+  subtask: Extract<Subtask, { kind: "inline_html" }>;
+  completed: boolean;
+  onComplete: () => void;
+  onUncheck: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [nonce, setNonce] = useState(0);
+  const [confirmed, setConfirmed] = useState(completed);
+  useEffect(() => setConfirmed(completed), [completed]);
+  const source = INLINE_HTML_SOURCES[subtask.source];
+
+  return (
+    <div className="space-y-3">
+      <div className="flex flex-wrap gap-2">
+        <Button
+          type="button"
+          size="sm"
+          className="rounded-full"
+          onClick={() => {
+            setNonce((n) => n + 1);
+            setOpen(true);
+          }}
+        >
+          {subtask.openLabel ?? "Abrir"}
+        </Button>
+      </div>
+      {subtask.helperText && (
+        <p className="text-xs text-muted-foreground leading-snug">{subtask.helperText}</p>
+      )}
+      <div className="flex items-start gap-2 rounded-2xl border border-border/60 bg-muted/40 p-3">
+        <Checkbox
+          id={`${subtask.id}-confirm`}
+          checked={confirmed}
+          disabled={completed}
+          onCheckedChange={(v) => setConfirmed(!!v)}
+        />
+        <Label htmlFor={`${subtask.id}-confirm`} className="text-sm font-normal cursor-pointer leading-snug">
+          {subtask.confirmLabel}
+        </Label>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {completed ? (
+          <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>
+            Desmarcar
+          </Button>
+        ) : (
+          <Button size="sm" className="rounded-full" disabled={!confirmed} onClick={onComplete}>
+            Concluir passo
+          </Button>
+        )}
+      </div>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent side="right" className="p-0 w-full sm:max-w-2xl flex flex-col">
+          <SheetHeader className="px-4 py-3 border-b">
+            <SheetTitle className="text-base">{source.title}</SheetTitle>
+          </SheetHeader>
+          <iframe
+            key={nonce}
+            srcDoc={source.html}
+            title={source.title}
+            className="flex-1 w-full border-0"
+          />
+        </SheetContent>
+      </Sheet>
+    </div>
+  );
+}
+
 
 function ExternalHtmlSubtask({
   subtask,
