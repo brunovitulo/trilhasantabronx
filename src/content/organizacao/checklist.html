@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist — Organização da Loja</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(160deg,#1a1630 0%,#0f0c1e 100%);min-height:100vh;color:#fff;padding:0 0 80px}
+
+.header{padding:28px 20px 16px;text-align:center}
+.tag{display:inline-block;background:rgba(93,202,165,0.2);color:#9FE1CB;border:0.5px solid rgba(93,202,165,0.4);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 12px;border-radius:20px;margin-bottom:10px}
+.header h1{font-size:20px;font-weight:600;color:#fff;margin-bottom:4px}
+.header p{font-size:12px;color:rgba(255,255,255,0.5)}
+
+.wrap{max-width:540px;margin:0 auto;padding:0 16px}
+
+.block{background:rgba(255,255,255,0.05);backdrop-filter:blur(16px);border:0.5px solid rgba(255,255,255,0.1);border-radius:18px;padding:18px 16px;margin-bottom:14px}
+.block-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:0.5px solid rgba(255,255,255,0.08)}
+.block-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.bi-purple{background:rgba(127,119,221,0.25);color:#AFA9EC}
+.bi-teal{background:rgba(93,202,165,0.2);color:#9FE1CB}
+.bi-amber{background:rgba(239,159,39,0.2);color:#FAC775}
+.bi-blue{background:rgba(55,138,221,0.2);color:#85B7EB}
+
+.block-head h2{font-size:14px;font-weight:600;color:#fff}
+.block-head p{font-size:11px;color:rgba(255,255,255,0.45);margin-top:2px}
+
+.item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:0.5px solid rgba(255,255,255,0.06);cursor:pointer;user-select:none}
+.item:last-child{border-bottom:none;padding-bottom:0}
+.item:first-child{padding-top:0}
+.check{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all 0.15s}
+.check i{font-size:12px;opacity:0}
+.item.done .check{background:#5DCAA5;border-color:#5DCAA5}
+.item.done .check i{opacity:1;color:#04342C}
+.item.done .item-text{color:rgba(255,255,255,0.4);text-decoration:line-through;text-decoration-color:rgba(255,255,255,0.2)}
+.item-text{font-size:13px;color:rgba(255,255,255,0.85);line-height:1.5}
+.item-text strong{color:#fff;font-weight:600}
+
+.progress-wrap{margin-bottom:20px}
+.progress-bar{height:6px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;background:linear-gradient(90deg,#5DCAA5,#AFA9EC);border-radius:4px;transition:width 0.3s ease;width:0%}
+.progress-label{font-size:11px;color:rgba(255,255,255,0.5);text-align:right}
+
+.btn-reset{display:block;width:100%;margin-top:6px;padding:13px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.14);border-radius:12px;color:rgba(255,255,255,0.5);font-size:13px;cursor:pointer;text-align:center}
+.btn-reset:hover{background:rgba(255,255,255,0.1);color:#fff}
+
+.congrats{display:none;background:rgba(93,202,165,0.12);border:0.5px solid rgba(93,202,165,0.35);border-radius:14px;padding:18px;text-align:center;margin-bottom:14px}
+.congrats i{font-size:28px;color:#9FE1CB;margin-bottom:8px;display:block}
+.congrats p{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px}
+.congrats span{font-size:12px;color:rgba(255,255,255,0.55)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="tag">Checklist</div>
+  <h1>Organização da loja</h1>
+  <p>Verifique cada item antes de iniciar o dia</p>
+</div>
+
+<div class="wrap">
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="pbar"></div></div>
+    <div class="progress-label" id="plabel">0 / 0 itens</div>
+  </div>
+
+  <div id="congrats" class="congrats">
+    <i class="ti ti-circle-check"></i>
+    <p>Checklist completo!</p>
+    <span>Loja organizada e pronta para atender.</span>
+  </div>
+
+  <!-- BLOCO 1 — Limpeza -->
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-teal"><i class="ti ti-wash"></i></div>
+      <div>
+        <h2>Limpeza</h2>
+        <p>Manter a loja limpa e apresentável</p>
+      </div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Verificar a <strong>mesinha central</strong> — se estiver manchada, passar um pano</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Verificar o <strong>chão</strong> — retirar qualquer sujeira; se estiver sujo, passar um pano</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Verificar os <strong>lixos da loja</strong> — precisam ser trocados?</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Bater o <strong>tapete da entrada</strong> (porta) — se estiver com sujeira, bater do lado de fora para limpar</div>
+    </div>
+  </div>
+
+  <!-- BLOCO 2 — Organização -->
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-purple"><i class="ti ti-layout-grid"></i></div>
+      <div>
+        <h2>Organização</h2>
+        <p>Tudo no lugar certo</p>
+      </div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Verificar as <strong>prateleiras de produtos</strong> — tem algum produto caído ou fora do lugar? Organizar</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Manter a <strong>mesa de trabalho</strong> (onde fica o notebook) limpa e com o mínimo de coisas em cima — quanto mais organizada, mais produtiva será a atendente</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Verificar a <strong>janela</strong> — deve estar aberta apenas uma fresta, nunca completamente aberta</div>
+    </div>
+  </div>
+
+  <!-- BLOCO 3 — Visão da loja -->
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-amber"><i class="ti ti-eye"></i></div>
+      <div>
+        <h2>Visão da loja</h2>
+        <p>Como a loja aparece para quem chega</p>
+      </div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Ficar na <strong>porta da loja</strong> e olhar para dentro — a loja está bem apresentada? É uma boa primeira impressão? Ajustar o que for necessário</div>
+    </div>
+  </div>
+
+  <button class="btn-reset" onclick="reset()">
+    <i class="ti ti-refresh" style="font-size:14px;vertical-align:-2px;margin-right:6px"></i>
+    Limpar checklist para o próximo dia
+  </button>
+
+</div>
+
+<script>
+function toggle(el){
+  el.classList.toggle('done');
+  update();
+}
+function update(){
+  const all = document.querySelectorAll('.item');
+  const done = document.querySelectorAll('.item.done');
+  const pct = all.length ? Math.round(done.length/all.length*100) : 0;
+  document.getElementById('pbar').style.width = pct+'%';
+  document.getElementById('plabel').textContent = done.length+' / '+all.length+' itens';
+  document.getElementById('congrats').style.display = (done.length === all.length && all.length > 0) ? 'block' : 'none';
+}
+function reset(){
+  document.querySelectorAll('.item.done').forEach(el=>el.classList.remove('done'));
+  update();
+}
+update();
+</script>
+</body>
+</html>
