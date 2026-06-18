@@ -259,8 +259,9 @@ function SubtaskBody({
     ? (subtask as Extract<Subtask, { kind: "evaluation" }>).passingScore ?? PASSING_SCORE
     : 0;
   const passed = !isEvaluation ? completed : completed && (score ?? 0) >= passing;
-  const evalLocked =
-    (isEvaluation || isOpenEval) && !priorCompleted && !completed;
+  // Gating sequencial desativado — todas as etapas ficam liberadas.
+  void priorCompleted;
+  const evalLocked = false;
 
   return (
     <div className="p-4 sm:p-5">
