@@ -1000,7 +1000,7 @@ function OpenEvaluationSubtask({
 
   async function submit() {
     if (drafts.some((d) => d.trim().length === 0)) {
-      toast.error("Responda todas as 15 perguntas antes de enviar");
+      toast.error(`Responda todas as ${subtask.questions.length} perguntas antes de enviar`);
       return;
     }
     setSending(true);
