@@ -725,7 +725,7 @@ function ReadingSubtask({
         {completed ? (
           <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>Desmarcar leitura</Button>
         ) : (
-          <Button size="sm" className="rounded-full" onClick={onComplete}>
+          <Button variant="outline" size="sm" className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25" onClick={onComplete}>
             Marcar como lida
           </Button>
         )}
@@ -774,7 +774,7 @@ function ApostilaSubtask({
             Desmarcar leitura
           </Button>
         ) : (
-          <Button size="sm" className="rounded-full" onClick={onComplete}>
+          <Button variant="outline" size="sm" className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25" onClick={onComplete}>
             Marcar como lida
           </Button>
         )}
@@ -945,7 +945,7 @@ function InlineHtmlSubtask({
             Desmarcar
           </Button>
         ) : (
-          <Button size="sm" className="rounded-full" disabled={!confirmed} onClick={onComplete}>
+          <Button variant="outline" size="sm" className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25" disabled={!confirmed} onClick={onComplete}>
             Concluir passo
           </Button>
         )}
@@ -997,7 +997,7 @@ function ExternalHtmlSubtask({
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap gap-2">
-        <Button asChild size="sm" className="rounded-full">
+        <Button asChild variant="outline" size="sm" className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25">
           {isDownload ? (
             <a href={subtask.url} download={subtask.downloadAs}>
               {buttonLabel}
@@ -1026,7 +1026,7 @@ function ExternalHtmlSubtask({
             Desmarcar
           </Button>
         ) : (
-          <Button size="sm" className="rounded-full" disabled={!confirmed} onClick={onComplete}>
+          <Button variant="outline" size="sm" className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25" disabled={!confirmed} onClick={onComplete}>
             Concluir passo
           </Button>
         )}
