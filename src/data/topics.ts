@@ -87,6 +87,16 @@ export type Subtask =
   | {
       id: string;
       title: string;
+      kind: "inline_html";
+      description?: string;
+      source: "apostila" | "checklist";
+      openLabel?: string;
+      helperText?: string;
+      confirmLabel: string;
+    }
+  | {
+      id: string;
+      title: string;
       kind: "multi_checklist";
       description?: string;
       groups: { title: string; subtitle?: string; items: string[] }[];
