@@ -574,18 +574,15 @@ function ResetProgressBlock({
               {selectedTopic ? (
                 <>
                   Isso vai zerar o progresso de{" "}
-                  <strong>{attendantName ?? "esta atendente"}</strong> a partir do tópico{" "}
+                  <strong>{attendantName ?? "esta atendente"}</strong> apenas no tópico{" "}
                   <strong>
                     {selectedTopic.order}. {selectedTopic.title}
-                  </strong>{" "}
-                  em diante. Os tópicos anteriores{" "}
-                  {selectedTopic.order > 1
-                    ? `(1 a ${selectedTopic.order - 1})`
-                    : "(nenhum)"}{" "}
-                  não serão afetados. Avaliações e notas a partir desse ponto também serão apagadas. Confirmar?
+                  </strong>
+                  . Os demais tópicos (anteriores e posteriores) não serão afetados. Confirmar?
                 </>
               ) : null}
             </AlertDialogDescription>
+
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={working}>Cancelar</AlertDialogCancel>
