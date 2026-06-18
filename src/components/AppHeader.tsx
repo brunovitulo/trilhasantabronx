@@ -45,6 +45,19 @@ export function AppHeader({ isAdmin }: { isAdmin: boolean }) {
         </Link>
         <div className="ml-auto flex items-center gap-2">
           {userId && <NotificationBell userId={userId} />}
+          {isAdmin && <AdminPendingBell />}
+          {userId && !isAdmin && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setHistoryOpen(true)}
+              className="text-white hover:bg-white/10 hover:text-white gap-1.5"
+            >
+              <FileText className="h-4 w-4" />
+              <span className="hidden sm:inline">Minhas provas</span>
+            </Button>
+          )}
           <Button asChild variant="ghost" size="sm" className="text-white hover:bg-white/10 hover:text-white gap-1.5">
             <Link to="/revisao">
               <Brain className="h-4 w-4" />
