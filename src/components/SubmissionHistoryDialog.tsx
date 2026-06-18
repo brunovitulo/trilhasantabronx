@@ -117,29 +117,36 @@ export function SubmissionHistoryDialog({
     setViewing((v) => (v && v.id === sub.id ? { ...v, retry_allowed: true } : v));
   }
 
+  const noContent = subs.length === 0 && practice.length === 0;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[88vh] overflow-y-auto sm:max-w-3xl">
         <DialogHeader>
-          {viewing ? (
+          {viewing || viewingPractice ? (
             <>
               <button
                 type="button"
-                onClick={() => setViewing(null)}
+                onClick={() => {
+                  setViewing(null);
+                  setViewingPractice(null);
+                }}
                 className="inline-flex items-center text-xs text-muted-foreground hover:text-foreground mb-1 self-start"
               >
                 <ChevronLeft className="h-3 w-3" /> Voltar ao histórico
               </button>
-              <DialogTitle>Detalhes da prova</DialogTitle>
+              <DialogTitle>
+                {viewingPractice ? "Detalhes do exercício de fixação" : "Detalhes da prova"}
+              </DialogTitle>
               <DialogDescription>
-                {findSubtask(viewing.subtask_id)?.topic.title ?? "Prova"}
+                {findSubtask((viewing ?? viewingPractice!)!.subtask_id)?.topic.title ?? "Prova"}
               </DialogDescription>
             </>
           ) : (
             <>
-              <DialogTitle>Histórico de provas</DialogTitle>
+              <DialogTitle>Histórico de provas e exercícios</DialogTitle>
               <DialogDescription>
-                {userName ?? "Todas as provas enviadas, incluindo tentativas anteriores."}
+                {userName ?? "Todas as provas enviadas e exercícios de fixação respondidos."}
               </DialogDescription>
             </>
           )}
@@ -155,59 +162,167 @@ export function SubmissionHistoryDialog({
             isAdmin={!!isAdmin}
             onReleaseRetry={() => releaseRetry(viewing)}
           />
-        ) : subs.length === 0 ? (
+        ) : viewingPractice ? (
+          <PracticeDetail attempt={viewingPractice} />
+        ) : noContent ? (
           <Card className="p-6 text-center text-sm text-muted-foreground">
-            Nenhuma prova enviada ainda.
+            Nenhuma prova nem exercício enviado ainda.
           </Card>
         ) : (
-          <div className="space-y-4">
-            {Object.entries(grouped).map(([subtaskId, list]) => {
-              const meta = findSubtask(subtaskId);
-              const topicTitle = meta?.topic.title ?? "Prova";
-              const sorted = [...list].sort(
-                (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
-              );
-              return (
-                <div key={subtaskId} className="space-y-2">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    {topicTitle}
-                  </p>
-                  {sorted.map((s, idx) => (
-                    <button
-                      key={s.id}
-                      type="button"
-                      onClick={() => setViewing(s)}
-                      className="w-full text-left rounded-2xl border border-border/60 bg-muted/30 p-3 hover:bg-muted/50 transition"
-                    >
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-sm font-medium">
-                          Tentativa {idx + 1}
-                        </span>
-                        {statusBadge(s.status)}
-                        {s.score != null && (
-                          <Badge variant="outline">{Math.round(s.score)}%</Badge>
-                        )}
-                        {s.retry_allowed && s.status === "rejected" && (
-                          <Badge className="bg-blue-500/20 text-blue-300 border border-blue-500/30">
-                            Nova tentativa liberada
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Enviada em {new Date(s.created_at).toLocaleString("pt-BR")}
-                        {s.reviewed_at && (
-                          <> · Corrigida em {new Date(s.reviewed_at).toLocaleString("pt-BR")}</>
-                        )}
+          <div className="space-y-6">
+            {Object.keys(grouped).length > 0 && (
+              <div className="space-y-4">
+                <h3 className="text-sm font-semibold text-foreground/90">Provas dissertativas</h3>
+                {Object.entries(grouped).map(([subtaskId, list]) => {
+                  const meta = findSubtask(subtaskId);
+                  const topicTitle = meta?.topic.title ?? "Prova";
+                  const sorted = [...list].sort(
+                    (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+                  );
+                  return (
+                    <div key={subtaskId} className="space-y-2">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        {topicTitle}
                       </p>
-                    </button>
-                  ))}
-                </div>
-              );
-            })}
+                      {sorted.map((s, idx) => (
+                        <button
+                          key={s.id}
+                          type="button"
+                          onClick={() => setViewing(s)}
+                          className="w-full text-left rounded-2xl border border-border/60 bg-muted/30 p-3 hover:bg-muted/50 transition"
+                        >
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-sm font-medium">Tentativa {idx + 1}</span>
+                            {statusBadge(s.status)}
+                            {s.score != null && (
+                              <Badge variant="outline">{Math.round(s.score)}%</Badge>
+                            )}
+                            {s.retry_allowed && s.status === "rejected" && (
+                              <Badge className="bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                                Nova tentativa liberada
+                              </Badge>
+                            )}
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Enviada em {new Date(s.created_at).toLocaleString("pt-BR")}
+                            {s.reviewed_at && (
+                              <> · Corrigida em {new Date(s.reviewed_at).toLocaleString("pt-BR")}</>
+                            )}
+                          </p>
+                        </button>
+                      ))}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {Object.keys(groupedPractice).length > 0 && (
+              <div className="space-y-4">
+                <h3 className="text-sm font-semibold text-foreground/90">Exercícios de fixação (múltipla escolha)</h3>
+                {Object.entries(groupedPractice).map(([subtaskId, list]) => {
+                  const meta = findSubtask(subtaskId);
+                  const topicTitle = meta?.topic.title ?? "Exercício";
+                  const subtitle = meta?.subtask.title ?? "";
+                  const sorted = [...list].sort(
+                    (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+                  );
+                  return (
+                    <div key={subtaskId} className="space-y-2">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        {topicTitle}{subtitle ? ` · ${subtitle}` : ""}
+                      </p>
+                      {sorted.map((p, idx) => (
+                        <button
+                          key={p.id}
+                          type="button"
+                          onClick={() => setViewingPractice(p)}
+                          className="w-full text-left rounded-2xl border border-border/60 bg-muted/30 p-3 hover:bg-muted/50 transition"
+                        >
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-sm font-medium">Tentativa {idx + 1}</span>
+                            <Badge variant="outline">
+                              {p.correct_count}/{p.total} corretas
+                            </Badge>
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Realizado em {new Date(p.created_at).toLocaleString("pt-BR")}
+                          </p>
+                        </button>
+                      ))}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
       </DialogContent>
     </Dialog>
+  );
+}
+
+function PracticeDetail({ attempt }: { attempt: PracticeAttempt }) {
+  const meta = findSubtask(attempt.subtask_id);
+  const sub = meta?.subtask;
+  const questions =
+    sub && sub.kind === "practice" ? sub.questions : [];
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-2 flex-wrap">
+        <Badge variant="outline">
+          {attempt.correct_count}/{attempt.total} corretas
+        </Badge>
+        <Badge className="bg-muted text-foreground/80 border border-border/60">
+          {Math.round((attempt.correct_count / Math.max(attempt.total, 1)) * 100)}%
+        </Badge>
+      </div>
+      <div className="space-y-2">
+        {questions.map((q, i) => {
+          const chosen = attempt.answers[i];
+          const isCorrect = chosen === q.correctIndex;
+          return (
+            <div key={i} className="rounded-2xl border border-border/60 bg-muted/20 p-3">
+              <p className="text-sm font-medium">{i + 1}. {q.question}</p>
+              <div className="mt-2 space-y-1">
+                {q.options.map((opt, oi) => {
+                  const isChosen = chosen === oi;
+                  const isAnswer = oi === q.correctIndex;
+                  const tone = isAnswer
+                    ? "border-[var(--success)]/50 bg-[var(--success)]/10"
+                    : isChosen
+                    ? "border-destructive/50 bg-destructive/10"
+                    : "border-border/40 opacity-70";
+                  return (
+                    <div
+                      key={oi}
+                      className={`text-xs rounded-xl border px-3 py-2 ${tone}`}
+                    >
+                      <span className="font-semibold mr-1">
+                        {String.fromCharCode(97 + oi)})
+                      </span>
+                      {opt}
+                      {isChosen && (
+                        <span className="ml-2 font-semibold">
+                          ← escolha da atendente
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              <p
+                className={`mt-2 text-xs font-semibold ${
+                  isCorrect ? "text-[var(--success)]" : "text-destructive"
+                }`}
+              >
+                {isCorrect ? "✓ Correto" : "✗ Incorreta"}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
