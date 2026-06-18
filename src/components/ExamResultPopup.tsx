@@ -89,28 +89,6 @@ export function ExamResultPopup({ userId }: { userId: string }) {
       window.removeEventListener(EXAM_POPUP_EVENT, onShow);
     };
   }, [userId, fetchUnseen, enqueue]);
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "open_evaluation_submissions",
-          filter: `user_id=eq.${userId}`,
-        },
-        (payload) => {
-          const row = payload.new as ReviewedRow;
-          if (
-            (row.status === "approved" || row.status === "rejected") &&
-            row.reviewed_at &&
-            isUnseen(row)
-          ) {
-            enqueue(row);
-          }
-        },
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [userId, fetchUnseen, enqueue]);
 
   const current = pending[0] ?? null;
 
