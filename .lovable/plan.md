@@ -1,28 +1,13 @@
-## Verificação de Row Level Security (RLS)
+## Redesign da página /auth
 
-Verifiquei o estado atual do banco. **Tudo já está configurado corretamente — nenhuma mudança é necessária.**
+Trocar o fundo roxo da página de login por **preto puro** e aplicar o mesmo visual glassmorphism usado no resto do app (home, tópicos, admin).
 
-### RLS ativado em todas as tabelas
-Consulta direta ao banco confirmou que as 3 tabelas do schema `public` têm RLS ligado:
+### Mudanças em `src/routes/auth.tsx`
 
-| Tabela | RLS |
-|---|---|
-| `profiles` | ✅ ativo |
-| `subtask_progress` | ✅ ativo |
-| `user_roles` | ✅ ativo |
+1. **Fundo**: substituir `bg-gradient-to-br from-[var(--brand-deep)] via-purple-900 to-fuchsia-900` por um fundo preto (`bg-black`) com sutis halos roxos de fundo (blobs `blur-3xl` em `bg-primary/20` posicionados absolutamente) para manter a identidade Santa Bronx sem perder o preto dominante.
+2. **Card**: aplicar a mesma classe glass usada no app (`bg-white/5 backdrop-blur-xl border border-white/10`) em vez do Card branco padrão; texto em branco/`white/70`.
+3. **Tabs / Inputs / Labels**: ajustar para o tema escuro — `TabsList` translúcido, inputs com `bg-white/5 border-white/10 text-white placeholder:text-white/40`, labels em `text-white/80`.
+4. **Botão Entrar/Criar conta**: usar o gradiente roxo da marca (mesma variante já usada nos CTAs do app) para criar contraste sobre o preto.
+5. **Logo + título**: mantidos no topo; ajustar o ring do logo para `ring-white/10` e o subtítulo para `text-white/60`.
 
-### Políticas de acesso por atendente
-
-**`subtask_progress`** (progresso dos atendentes) — a política garante exatamente o que você pediu:
-- Cada atendente só lê/escreve/atualiza/apaga linhas onde `user_id = auth.uid()` (o próprio progresso dele).
-- Admin tem acesso a todos os progressos (via função `has_role(auth.uid(), 'admin')`).
-- Nenhum outro atendente consegue ver o progresso de outro.
-
-**`profiles`** — cada usuário vê e edita só o próprio perfil; admin vê/edita todos; ninguém apaga.
-
-**`user_roles`** — cada usuário vê só os próprios papéis; admin vê todos; inserção/edição/remoção bloqueadas no client (gerenciadas pelo trigger `handle_new_user` no servidor, para evitar escalonamento de privilégios).
-
-### Conclusão
-A configuração de segurança está sólida e segue as melhores práticas (papéis em tabela separada, função `SECURITY DEFINER` para evitar recursão, isolamento por `auth.uid()`). **Não há nada para corrigir.**
-
-Se mesmo assim quiser que eu rode o scan de segurança completo (que verifica também configurações de auth, senhas vazadas, etc.) ou revise alguma tabela nova que você pretende criar, é só dizer.
+Nada de lógica de auth muda — apenas estilos.
