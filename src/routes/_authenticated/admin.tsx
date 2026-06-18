@@ -237,6 +237,8 @@ function AttendantCard({ att }: { att: AttendantRow }) {
             })}
           </div>
         )}
+
+        <ResetProgressBlock attendantId={att.id} attendantName={att.full_name} />
       </div>
     </Card>
   );
