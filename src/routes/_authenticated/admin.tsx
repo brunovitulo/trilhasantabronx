@@ -322,6 +322,67 @@ function AttendantCard({
           </p>
         </div>
 
+        {/* Pedidos de permissão para prova */}
+        {att.permissionRequests.length > 0 && (
+          <div className="space-y-2">
+            {att.permissionRequests.map((p) => {
+              const meta = findSubtask(p.subtask_id);
+              const label = meta?.topic.title ?? "Prova";
+              return (
+                <div
+                  key={p.id}
+                  className="rounded-2xl border-2 border-rose-400/60 bg-rose-500/15 p-3 animate-pulse-once shadow-[0_0_24px_-4px_rgba(244,63,94,0.5)]"
+                >
+                  <div className="flex items-start gap-3">
+                    <KeyRound className="h-5 w-5 text-rose-200 shrink-0 mt-0.5" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-foreground">
+                        🔔 {att.full_name ?? "Atendente"} pediu permissão
+                      </p>
+                      <p className="text-sm text-foreground/90">
+                        Prova: {label}
+                      </p>
+                      <p className="text-xs text-foreground/70">
+                        Solicitado em {new Date(p.created_at).toLocaleString("pt-BR")}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <Button
+                      type="button"
+                      size="sm"
+                      className="rounded-full bg-emerald-500 hover:bg-emerald-600 text-white"
+                      onClick={async () => {
+                        const { error } = await approvePermission(p.id, reviewerId);
+                        if (error) {
+                          toast.error("Não consegui liberar", { description: error.message });
+                        } else {
+                          toast.success(`Prova liberada para ${att.full_name ?? "atendente"} — acompanhe em tempo real.`);
+                        }
+                      }}
+                    >
+                      Liberar prova
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="rounded-full"
+                      onClick={async () => {
+                        const { error } = await rejectPermission(p.id, reviewerId);
+                        if (error) toast.error("Erro", { description: error.message });
+                        else toast("Pedido rejeitado");
+                      }}
+                    >
+                      Rejeitar
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         {/* Avaliações pendentes inline */}
         {att.pending.length > 0 && (
           <div className="space-y-2">
