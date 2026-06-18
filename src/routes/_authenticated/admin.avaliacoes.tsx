@@ -338,12 +338,25 @@ function SubmissionRow({
                 />
               </div>
 
-              <div className="flex flex-wrap gap-2 justify-end">
+              <div className="flex flex-wrap items-center gap-2 justify-end">
+                {answers.length > 0 && (
+                  <span className="mr-auto text-xs text-muted-foreground">
+                    {answers.filter((a) => a.is_correct !== null).length} de {answers.length} perguntas marcadas
+                  </span>
+                )}
                 <Button size="sm" variant="outline" onClick={saveFeedbackOnly} disabled={saving}>
                   Salvar feedback
                 </Button>
-                <Button size="sm" onClick={finalize} disabled={saving}>
-                  {saving ? "Salvando..." : "Finalizar correção"}
+                <Button
+                  size="sm"
+                  onClick={finalize}
+                  disabled={
+                    saving ||
+                    answers.length === 0 ||
+                    answers.some((a) => a.is_correct === null)
+                  }
+                >
+                  {saving ? "Salvando..." : "Finalizar avaliação"}
                 </Button>
               </div>
             </>
