@@ -41,6 +41,7 @@ export function AppHeader({ isAdmin }: { isAdmin: boolean }) {
           </div>
         </Link>
         <div className="ml-auto flex items-center gap-2">
+          {userId && <NotificationBell userId={userId} />}
           <Button asChild variant="ghost" size="sm" className="text-white hover:bg-white/10 hover:text-white gap-1.5">
             <Link to="/revisao">
               <Brain className="h-4 w-4" />
