@@ -495,9 +495,7 @@ function ResetProgressBlock({
   async function doReset() {
     if (!selectedTopic) return;
     setWorking(true);
-    const subtaskIds = TOPICS.filter((t) => t.order >= selectedTopic.order).flatMap((t) =>
-      t.subtasks.map((s) => s.id),
-    );
+    const subtaskIds = selectedTopic.subtasks.map((s) => s.id);
     if (subtaskIds.length === 0) {
       setWorking(false);
       setConfirmOpen(false);
@@ -524,12 +522,12 @@ function ResetProgressBlock({
       return;
     }
     toast.success(
-      `Progresso de ${attendantName ?? "atendente"} zerado a partir de "${selectedTopic.title}"`,
+      `Progresso de ${attendantName ?? "atendente"} zerado no tópico "${selectedTopic.title}"`,
     );
     setFromTopicId("");
-    // Atualiza a UI do painel
     if (typeof window !== "undefined") window.location.reload();
   }
+
 
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 space-y-2">
