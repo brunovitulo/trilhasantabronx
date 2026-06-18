@@ -1,6 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { CheckCircle2, Lock, Loader2, Circle, AlertTriangle, Brain } from "lucide-react";
+import {
+  CheckCircle2,
+  Lock,
+  Loader2,
+  Circle,
+  AlertTriangle,
+  Brain,
+  Store,
+  Package,
+  ClipboardCheck,
+  MessageCircleQuestion,
+  TrendingUp,
+  HeartPulse,
+  Tag,
+  Users,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { TOPICS } from "@/data/topics";
 import {
@@ -11,7 +26,6 @@ import {
 import { AppHeader } from "@/components/AppHeader";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({ meta: [{ title: "Trilha — Santa Bronx Formação" }] }),
@@ -23,6 +37,29 @@ type Profile = {
   blocked: boolean;
   blocked_reason: string | null;
 };
+
+function topicIcon(id: string) {
+  switch (id) {
+    case "apresentacao":
+      return Store;
+    case "embalar":
+      return Package;
+    case "responsabilidade":
+      return ClipboardCheck;
+    case "objecoes":
+      return MessageCircleQuestion;
+    case "vendas":
+      return TrendingUp;
+    case "dores":
+      return HeartPulse;
+    case "produtos":
+      return Tag;
+    case "presencial":
+      return Users;
+    default:
+      return Circle;
+  }
+}
 
 function HomePage() {
   const { user } = Route.useRouteContext();
@@ -96,7 +133,6 @@ function HomePage() {
 
         {totalDone > 0 && <ReviewReminder userId={user.id} />}
 
-
         {loading ? (
           <div className="flex justify-center py-10">
             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -115,26 +151,28 @@ function HomePage() {
               const purple = `oklch(${L.toFixed(3)} 0.18 295)`;
               const purpleDark = `oklch(${Ldark.toFixed(3)} 0.19 295)`;
               const gradient = `linear-gradient(135deg, ${purple}, ${purpleDark})`;
+              const TopicIcon = topicIcon(topic.id);
               const card = (
                 <Card
                   className={`relative overflow-hidden rounded-2xl border-white/10 bg-white/[0.06] backdrop-blur-xl shadow-[0_8px_32px_-12px_rgba(0,0,0,0.45)] transition-all ${
                     locked ? "opacity-60" : "hover:-translate-y-0.5 hover:bg-white/[0.09]"
                   } ${status === "completed" ? "ring-1 ring-[oklch(0.68_0.16_150/40%)]" : ""}`}
                 >
-                  <div className="h-1.5 w-full" style={{ background: gradient }} />
                   <div className="p-4 sm:p-5">
                     <div className="flex items-start gap-4">
-                      <div
-                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white font-bold shadow-lg"
-                        style={{ background: gradient }}
-                      >
-                        {topic.order}
+                      <div className="relative shrink-0">
+                        <div
+                          className="flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-lg"
+                          style={{ background: gradient }}
+                        >
+                          <TopicIcon className="h-6 w-6" strokeWidth={2} />
+                        </div>
+                        <div className="absolute -top-1.5 -left-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[oklch(0.78_0.12_175)] text-[oklch(0.22_0.06_170)] text-[10px] font-bold shadow-md border border-white/20">
+                          {topic.order}
+                        </div>
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <h2 className="font-semibold text-base sm:text-lg">{topic.title}</h2>
-                          <StatusBadge status={status} />
-                        </div>
+                        <h2 className="font-semibold text-base sm:text-lg">{topic.title}</h2>
                         <p className="text-sm text-muted-foreground mt-1">{topic.summary}</p>
                         {!isEmpty && (
                           <div className="mt-3 flex items-center gap-3">
@@ -175,21 +213,10 @@ function HomePage() {
               );
             })}
           </ol>
-
         )}
       </main>
     </div>
   );
-}
-
-function StatusBadge({ status }: { status: string }) {
-  if (status === "completed")
-    return <Badge className="bg-[var(--success)] text-[var(--success-foreground)] hover:bg-[var(--success)]">Concluído</Badge>;
-  if (status === "in_progress")
-    return <Badge className="bg-[var(--warning)] text-[var(--warning-foreground)] hover:bg-[var(--warning)]">Em andamento</Badge>;
-  if (status === "available") return <Badge variant="secondary">Disponível</Badge>;
-  if (status === "empty") return <Badge variant="outline">Em breve</Badge>;
-  return <Badge variant="outline" className="text-muted-foreground">Bloqueado</Badge>;
 }
 
 function ReviewReminder({ userId }: { userId: string }) {
@@ -248,4 +275,3 @@ function ReviewReminder({ userId }: { userId: string }) {
     </Card>
   );
 }
-
