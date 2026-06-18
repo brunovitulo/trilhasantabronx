@@ -34,6 +34,15 @@ type AnswerRow = {
   feedback: string | null;
 };
 
+type PracticeAttempt = {
+  id: string;
+  subtask_id: string;
+  answers: number[];
+  correct_count: number;
+  total: number;
+  created_at: string;
+};
+
 export function SubmissionHistoryDialog({
   open,
   onOpenChange,
@@ -48,24 +57,35 @@ export function SubmissionHistoryDialog({
   isAdmin?: boolean;
 }) {
   const [subs, setSubs] = useState<Submission[]>([]);
+  const [practice, setPractice] = useState<PracticeAttempt[]>([]);
   const [loading, setLoading] = useState(false);
   const [viewing, setViewing] = useState<Submission | null>(null);
+  const [viewingPractice, setViewingPractice] = useState<PracticeAttempt | null>(null);
 
   async function refresh() {
     if (!userId) return;
     setLoading(true);
-    const { data } = await supabase
-      .from("open_evaluation_submissions")
-      .select("id, subtask_id, status, score, general_feedback, created_at, reviewed_at, retry_allowed")
-      .eq("user_id", userId)
-      .order("created_at", { ascending: false });
-    setSubs((data ?? []) as Submission[]);
+    const [{ data: subData }, { data: pData }] = await Promise.all([
+      supabase
+        .from("open_evaluation_submissions")
+        .select("id, subtask_id, status, score, general_feedback, created_at, reviewed_at, retry_allowed")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("practice_attempts")
+        .select("id, subtask_id, answers, correct_count, total, created_at")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false }),
+    ]);
+    setSubs((subData ?? []) as Submission[]);
+    setPractice((pData ?? []) as unknown as PracticeAttempt[]);
     setLoading(false);
   }
 
   useEffect(() => {
     if (!open) {
       setViewing(null);
+      setViewingPractice(null);
       return;
     }
     refresh();
@@ -75,6 +95,11 @@ export function SubmissionHistoryDialog({
   // Agrupa por subtask para contar tentativas
   const grouped = subs.reduce<Record<string, Submission[]>>((acc, s) => {
     (acc[s.subtask_id] ??= []).push(s);
+    return acc;
+  }, {});
+
+  const groupedPractice = practice.reduce<Record<string, PracticeAttempt[]>>((acc, p) => {
+    (acc[p.subtask_id] ??= []).push(p);
     return acc;
   }, {});
 
