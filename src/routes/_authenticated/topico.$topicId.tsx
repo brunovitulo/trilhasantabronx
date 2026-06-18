@@ -521,6 +521,39 @@ function ApostilaSubtask({
   );
 }
 
+function renderTextWithLinks(text: string): React.ReactNode {
+  const urlRegex = /(https?:\/\/[^\s<>"{}|\\^`\[\]]+)/g;
+  const elements: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match;
+  let key = 0;
+
+  while ((match = urlRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      elements.push(text.slice(lastIndex, match.index));
+    }
+    elements.push(
+      <a
+        key={key++}
+        href={match[0]}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-primary underline break-all"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {match[0]}
+      </a>
+    );
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < text.length) {
+    elements.push(text.slice(lastIndex));
+  }
+
+  return elements;
+}
+
 function ChecklistSubtask({
   subtask,
   completed,
@@ -547,7 +580,7 @@ function ChecklistSubtask({
               }
             />
             <Label htmlFor={`${subtask.id}-${i}`} className="text-sm font-normal cursor-pointer leading-snug">
-              {item}
+              {renderTextWithLinks(item)}
             </Label>
           </li>
         ))}
