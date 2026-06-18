@@ -315,25 +315,19 @@ function SubtaskGroupCard({
   const pct = total > 0 ? (doneCount / total) * 100 : 0;
   const firstPendingIdx = itemStates.findIndex((s) => !s.passed);
 
-  const [openId, setOpenId] = useState<string | null>(() => {
-    if (firstPendingIdx === -1) return null;
-    return group.items[firstPendingIdx]?.subtask.id ?? null;
-  });
-
-  // Auto-advance: if the open step gets completed, open the next pending
+  // All steps start collapsed by default. User expands manually.
+  const [openId, setOpenId] = useState<string | null>(null);
+  // Collapse a step automatically once it's marked complete.
   useEffect(() => {
     setOpenId((cur) => {
-      if (allDone) return null;
+      if (cur == null) return cur;
       const curIdx = group.items.findIndex((it) => it.subtask.id === cur);
-      const curPassed = curIdx >= 0 && itemStates[curIdx]?.passed;
-      if (curIdx === -1 || curPassed) {
-        const nextIdx = itemStates.findIndex((s) => !s.passed);
-        return nextIdx === -1 ? null : group.items[nextIdx].subtask.id;
-      }
+      if (curIdx >= 0 && itemStates[curIdx]?.passed) return null;
       return cur;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doneCount, total, allDone]);
+  }, [doneCount]);
+  void firstPendingIdx;
 
   const GroupIcon = pickGroupIcon(group.title);
 
