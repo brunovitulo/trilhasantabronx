@@ -89,7 +89,7 @@ export type Subtask =
       title: string;
       kind: "inline_html";
       description?: string;
-      source: "apostila" | "checklist" | "organizacao";
+      source: "apostila" | "checklist" | "organizacao" | "responsabilidade";
       openLabel?: string;
       helperText?: string;
       confirmLabel: string;
@@ -595,10 +595,123 @@ export const TOPICS: Topic[] = [
     accent: "from-amber-500 to-orange-600",
     subtasks: [
       {
-        id: "responsabilidade.expectativas.video",
-        kind: "video",
-        title: "1. O que é esperado (atrasos, erros) — assistir destaque",
-        url: IG,
+        id: "responsabilidade.expectativas.apostila",
+        kind: "inline_html",
+        title: "1. O que é esperado (atrasos, erros) — ler apostila de responsabilidades",
+        description:
+          "Leia com atenção — esta apostila resume o que é esperado de você a partir de agora na loja.",
+        source: "responsabilidade",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila e entendo o que é esperado de mim.",
+      },
+      {
+        id: "responsabilidade.expectativas.fixacao",
+        kind: "practice",
+        title: "1. O que é esperado (atrasos, erros) — exercício de fixação (10 questões)",
+        description:
+          "Responda as questões abaixo para fixar o que você leu. Sem nota mínima — apenas fixação.",
+        questions: [
+          {
+            question: "Qual é a principal responsabilidade da atendente a partir deste módulo?",
+            options: [
+              "Atender clientes presenciais",
+              "Embalar, enviar e garantir que os pedidos cheguem sem erros ao cliente",
+              "Organizar o estoque da loja",
+              "Fazer o atendimento pelo WhatsApp",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "O que deve ser feito antes de lacrar qualquer produto eletrônico?",
+            options: [
+              "Verificar se a embalagem está no tamanho certo",
+              "Confirmar o endereço do cliente",
+              "Testar se o produto está funcionando corretamente",
+              "Escrever o post-it com o nome do cliente",
+            ],
+            correctIndex: 2,
+          },
+          {
+            question: "O que significa ter \"atenção\" no trabalho segundo os pilares da Santa Bronx?",
+            options: [
+              "Responder rápido as mensagens do gestor",
+              "Verificar cor, tamanho e quantidade certos antes de embalar — um segundo de atenção evita retrabalho",
+              "Manter a loja sempre aberta no horário certo",
+              "Decorar todos os produtos da loja",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "Por que nunca se deve se apressar com pedidos acumulados?",
+            options: [
+              "Porque o cliente não tem pressa",
+              "Porque o motoboy demora para chegar de qualquer forma",
+              "Porque erros cometidos com pressa geram custos maiores do que o tempo perdido sendo cuidadoso",
+              "Porque o gestor precisa revisar cada pedido",
+            ],
+            correctIndex: 2,
+          },
+          {
+            question: "O que fazer em caso de dúvida durante o trabalho?",
+            options: [
+              "Tentar resolver sozinha para não incomodar o gestor",
+              "Esperar o gestor entrar em contato",
+              "Perguntar ao gestor pelo Discord antes de errar — perguntar é sempre melhor do que cometer um erro evitável",
+              "Consultar o catálogo de produtos",
+            ],
+            correctIndex: 2,
+          },
+          {
+            question: "O que é o fluxo de pré-envio e quando deve ser usado?",
+            options: [
+              "Uma mensagem enviada ao gestor confirmando que o pedido foi embalado",
+              "Uma mensagem enviada ao cliente antes de chamar o motoboy, confirmando que ele está no endereço e pode receber agora",
+              "Um formulário preenchido no sistema após o envio",
+              "Uma notificação automática gerada pelo app 99",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual erro é considerado um dos mais comuns e custosos no dia a dia?",
+            options: [
+              "Usar embalagem de tamanho errado",
+              "Não anotar o nome do motoboy",
+              "Enviar produto com variação errada (cor, sabor ou tamanho diferente do pedido)",
+              "Não fechar o app 99 após o pedido",
+            ],
+            correctIndex: 2,
+          },
+          {
+            question: "Quais são os 5 pilares esperados de uma boa atendente na Santa Bronx?",
+            options: [
+              "Velocidade, simpatia, pontualidade, criatividade e flexibilidade",
+              "Agilidade, organização, atenção, calma e comprometimento",
+              "Honestidade, dedicação, pontualidade, simpatia e velocidade",
+              "Organização, obediência, rapidez, simpatia e proatividade",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "Como o gestor acompanha o trabalho da atendente?",
+            options: [
+              "Apenas através das câmeras de segurança da loja",
+              "Pelo sistema de pedidos e pelo Discord durante o horário de funcionamento",
+              "Somente através dos relatórios semanais",
+              "O gestor não acompanha — a atendente trabalha de forma completamente autônoma",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "O que deve ser feito sempre, sem exceção, antes de enviar qualquer pedido?",
+            options: [
+              "Tirar uma foto da embalagem para registrar",
+              "Ligar para o cliente confirmando o endereço por voz",
+              "Enviar o pré-envio, confirmar que o cliente está no endereço, validar o endereço no mapa e só então chamar o motoboy",
+              "Avisar o gestor que o pedido está saindo",
+            ],
+            correctIndex: 2,
+          },
+        ],
       },
       {
         id: "responsabilidade.app.video",

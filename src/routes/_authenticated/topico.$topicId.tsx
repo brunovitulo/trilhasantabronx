@@ -36,11 +36,13 @@ import { useExamPermission, requestPermission } from "@/lib/examPermission";
 import apostilaEmbalarHtml from "@/content/embalar/apostila.html?raw";
 import checklistEmbalarHtml from "@/content/embalar/checklist.html?raw";
 import checklistOrganizacaoHtml from "@/content/organizacao/checklist.html?raw";
+import apostilaResponsabilidadeHtml from "@/content/responsabilidade/apostila.html?raw";
 
-const INLINE_HTML_SOURCES: Record<"apostila" | "checklist" | "organizacao", { title: string; html: string }> = {
+const INLINE_HTML_SOURCES: Record<"apostila" | "checklist" | "organizacao" | "responsabilidade", { title: string; html: string }> = {
   apostila: { title: "Apostila — Embalar e Despachar Pedidos", html: apostilaEmbalarHtml },
   checklist: { title: "Checklist de embalagem", html: checklistEmbalarHtml },
   organizacao: { title: "Checklist — Organização da loja", html: checklistOrganizacaoHtml },
+  responsabilidade: { title: "Apostila — Primeira Responsabilidade", html: apostilaResponsabilidadeHtml },
 };
 
 
