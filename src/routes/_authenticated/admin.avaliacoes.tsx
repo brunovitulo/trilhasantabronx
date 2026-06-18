@@ -252,7 +252,7 @@ function SubmissionRow({
   }
 
   return (
-    <Card className="p-4">
+    <Card id={`sub-${submission.id}`} className="p-4 scroll-mt-24">
       <button
         type="button"
         onClick={onToggle}
