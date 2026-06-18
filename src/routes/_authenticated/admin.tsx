@@ -76,11 +76,18 @@ type AnswerRow = {
   feedback: string | null;
 };
 
+type PermissionRequest = {
+  id: string;
+  subtask_id: string;
+  created_at: string;
+};
+
 type AttendantRow = {
   id: string;
   full_name: string | null;
   progress: ProgressRow[];
   pending: PendingSubmission[];
+  permissionRequests: PermissionRequest[];
 };
 
 function AdminPage() {
