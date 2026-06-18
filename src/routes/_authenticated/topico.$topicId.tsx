@@ -1053,6 +1053,10 @@ function MultiChecklistSubtask({
     setChecks(subtask.groups.map((g) => g.items.map(() => completed)));
   }, [completed, subtask.id]);
   const allDone = checks.every((g) => g.every(Boolean));
+  useEffect(() => {
+    if (allDone && !completed) onComplete();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allDone]);
   return (
     <div className="space-y-3">
       {subtask.groups.map((group, gi) => {
@@ -1067,7 +1071,7 @@ function MultiChecklistSubtask({
           <div
             key={gi}
             className={`rounded-2xl border p-4 ${
-              done ? "border-[var(--success)]/40 bg-[var(--success)]/5" : "border-border/60 bg-muted/30"
+              done ? "border-[var(--success)]/40 bg-[var(--success)]/5" : "border-white/10 bg-white/[0.04]"
             }`}
           >
             <p className="text-base font-semibold leading-tight">{group.title}</p>
@@ -1085,46 +1089,63 @@ function MultiChecklistSubtask({
                 ))}
               </div>
             )}
-            <ul className="mt-3 space-y-1 border-t border-border/40 pt-3">
-              {group.items.map((item, ii) => (
-                <li key={ii} className="flex items-start gap-2">
-                  <Checkbox
-                    id={`${subtask.id}-${gi}-${ii}`}
-                    checked={checks[gi]?.[ii] ?? false}
-                    onCheckedChange={(v) =>
-                      setChecks((prev) =>
-                        prev.map((g, gIdx) =>
-                          gIdx === gi ? g.map((c, iIdx) => (iIdx === ii ? !!v : c)) : g,
-                        ),
-                      )
-                    }
-                  />
-                  <Label
-                    htmlFor={`${subtask.id}-${gi}-${ii}`}
-                    className="text-xs font-normal cursor-pointer leading-snug text-muted-foreground"
-                  >
-                    {item}
-                  </Label>
-                </li>
-              ))}
+            <ul className="mt-3 space-y-1 border-t border-white/10 pt-3">
+              {group.items.map((item, ii) => {
+                const c = checks[gi]?.[ii] ?? false;
+                const toggle = () =>
+                  setChecks((prev) =>
+                    prev.map((g, gIdx) =>
+                      gIdx === gi ? g.map((cc, iIdx) => (iIdx === ii ? !cc : cc)) : g,
+                    ),
+                  );
+                return (
+                  <li key={ii} className="flex items-start gap-3 py-1.5">
+                    <button
+                      type="button"
+                      role="checkbox"
+                      aria-checked={c}
+                      onClick={toggle}
+                      className={cn(
+                        "mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors",
+                        c
+                          ? "border-[var(--success)] bg-[var(--success)] text-white"
+                          : "border-white/30 bg-transparent hover:border-white/60",
+                      )}
+                    >
+                      {c && <Check className="h-3 w-3" strokeWidth={3} />}
+                    </button>
+                    <span
+                      onClick={toggle}
+                      className={cn(
+                        "text-xs leading-snug cursor-pointer select-none",
+                        c ? "text-muted-foreground line-through" : "text-foreground/80",
+                      )}
+                    >
+                      {item}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         );
       })}
-      <div>
-        {completed ? (
-          <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>
+      {completed && (
+        <div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full border-white/15 bg-transparent"
+            onClick={onUncheck}
+          >
             Desmarcar
           </Button>
-        ) : (
-          <Button size="sm" className="rounded-full" disabled={!allDone} onClick={onComplete}>
-            Concluir
-          </Button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
+
 
 function EvaluationSubtask({
   subtask,
