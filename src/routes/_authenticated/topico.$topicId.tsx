@@ -182,7 +182,7 @@ function TopicPage() {
                 return (
                   <Card
                     key={group.key}
-                    className="overflow-hidden rounded-3xl border-border/60 bg-card/70 backdrop-blur-xl shadow-sm"
+                    className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.06] backdrop-blur-xl shadow-[0_8px_32px_-12px_rgba(0,0,0,0.45)]"
                   >
                     {multi && (
                       <div className="px-4 sm:px-5 pt-4 sm:pt-5">
