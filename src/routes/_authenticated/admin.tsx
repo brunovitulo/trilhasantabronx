@@ -1,6 +1,6 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, Loader2, AlertCircle, MapPin, RotateCcw } from "lucide-react";
+import { ChevronLeft, Loader2, AlertCircle, MapPin, RotateCcw, FileText } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AppHeader } from "@/components/AppHeader";
 import { TOPICS, findSubtask, PASSING_SCORE } from "@/data/topics";
@@ -10,6 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { SubmissionHistoryDialog } from "@/components/SubmissionHistoryDialog";
+import {
+  ADMIN_OPEN_CORRECTION_EVENT,
+  type AdminOpenCorrectionDetail,
+} from "@/components/AdminPendingBell";
 import {
   Dialog,
   DialogContent,
@@ -82,6 +87,7 @@ function AdminPage() {
   const [list, setList] = useState<AttendantRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [correction, setCorrection] = useState<CorrectionTarget | null>(null);
+  const [historyFor, setHistoryFor] = useState<{ id: string; name: string | null } | null>(null);
 
   async function refresh() {
     setLoading(true);
@@ -132,9 +138,22 @@ function AdminPage() {
       .subscribe();
     const onFocus = () => refresh();
     window.addEventListener("focus", onFocus);
+    const onOpenCorrection = (e: Event) => {
+      const detail = (e as CustomEvent<AdminOpenCorrectionDetail>).detail;
+      if (!detail) return;
+      setCorrection({
+        id: detail.submissionId,
+        user_id: detail.userId,
+        subtask_id: detail.subtaskId,
+        created_at: detail.createdAt,
+        full_name: detail.fullName,
+      });
+    };
+    window.addEventListener(ADMIN_OPEN_CORRECTION_EVENT, onOpenCorrection);
     return () => {
       supabase.removeChannel(ch);
       window.removeEventListener("focus", onFocus);
+      window.removeEventListener(ADMIN_OPEN_CORRECTION_EVENT, onOpenCorrection);
     };
   }, []);
 
@@ -164,7 +183,12 @@ function AdminPage() {
         ) : (
           <div className="mt-6 space-y-4">
             {list.map((att) => (
-              <AttendantCard key={att.id} att={att} onCorrect={setCorrection} />
+              <AttendantCard
+                key={att.id}
+                att={att}
+                onCorrect={setCorrection}
+                onOpenHistory={() => setHistoryFor({ id: att.id, name: att.full_name })}
+              />
             ))}
           </div>
         )}
@@ -176,6 +200,13 @@ function AdminPage() {
             setCorrection(null);
             refresh();
           }}
+        />
+        <SubmissionHistoryDialog
+          open={historyFor !== null}
+          onOpenChange={(o) => !o && setHistoryFor(null)}
+          userId={historyFor?.id ?? null}
+          userName={historyFor?.name ?? null}
+          isAdmin
         />
       </main>
     </div>
@@ -193,9 +224,11 @@ function initials(name: string | null) {
 function AttendantCard({
   att,
   onCorrect,
+  onOpenHistory,
 }: {
   att: AttendantRow;
   onCorrect: (submission: CorrectionTarget) => void;
+  onOpenHistory: () => void;
 }) {
   const statuses = useMemo(() => computeTopicStatuses(TOPICS, att.progress), [att.progress]);
   const totalTopics = TOPICS.length;
@@ -299,6 +332,17 @@ function AttendantCard({
             })}
           </div>
         )}
+
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="rounded-full w-full sm:w-auto gap-1.5"
+          onClick={onOpenHistory}
+        >
+          <FileText className="h-4 w-4" />
+          Ver histórico de provas
+        </Button>
 
         <ResetProgressBlock attendantId={att.id} attendantName={att.full_name} />
       </div>

@@ -960,6 +960,7 @@ type OpenSubmission = {
   general_feedback: string | null;
   created_at: string;
   reviewed_at: string | null;
+  retry_allowed: boolean;
 };
 
 type OpenAnswerRow = {
@@ -991,7 +992,7 @@ function OpenEvaluationSubtask({
     setLoading(true);
     const { data: subs } = await supabase
       .from("open_evaluation_submissions")
-      .select("id, status, score, general_feedback, created_at, reviewed_at")
+      .select("id, status, score, general_feedback, created_at, reviewed_at, retry_allowed")
       .eq("user_id", userId)
       .eq("subtask_id", subtask.id)
       .order("created_at", { ascending: false })
@@ -1126,17 +1127,23 @@ function OpenEvaluationSubtask({
         </div>
         {submission.status === "rejected" && (
           <div className="pt-2">
-            <Button
-              size="sm"
-              className="rounded-full"
-              onClick={() => {
-                setSubmission(null);
-                setAnswerRows([]);
-                setDrafts(subtask.questions.map(() => ""));
-              }}
-            >
-              Refazer avaliação
-            </Button>
+            {submission.retry_allowed ? (
+              <Button
+                size="sm"
+                className="rounded-full"
+                onClick={() => {
+                  setSubmission(null);
+                  setAnswerRows([]);
+                  setDrafts(subtask.questions.map(() => ""));
+                }}
+              >
+                Refazer avaliação
+              </Button>
+            ) : (
+              <p className="text-xs text-muted-foreground">
+                Para refazer esta prova, peça à gestora para liberar uma nova tentativa.
+              </p>
+            )}
           </div>
         )}
       </div>

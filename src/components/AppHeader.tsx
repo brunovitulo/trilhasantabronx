@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { LogOut, Shield, Brain } from "lucide-react";
+import { LogOut, Shield, Brain, FileText } from "lucide-react";
 
 import logo from "@/assets/logo.png";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { NotificationBell } from "@/components/NotificationBell";
+import { SubmissionHistoryDialog } from "@/components/SubmissionHistoryDialog";
+import { AdminPendingBell } from "@/components/AdminPendingBell";
 
 export function AppHeader({ isAdmin }: { isAdmin: boolean }) {
   const navigate = useNavigate();
   const [userId, setUserId] = useState<string | null>(null);
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
@@ -42,6 +45,19 @@ export function AppHeader({ isAdmin }: { isAdmin: boolean }) {
         </Link>
         <div className="ml-auto flex items-center gap-2">
           {userId && <NotificationBell userId={userId} />}
+          {isAdmin && <AdminPendingBell />}
+          {userId && !isAdmin && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setHistoryOpen(true)}
+              className="text-white hover:bg-white/10 hover:text-white gap-1.5"
+            >
+              <FileText className="h-4 w-4" />
+              <span className="hidden sm:inline">Minhas provas</span>
+            </Button>
+          )}
           <Button asChild variant="ghost" size="sm" className="text-white hover:bg-white/10 hover:text-white gap-1.5">
             <Link to="/revisao">
               <Brain className="h-4 w-4" />
@@ -68,6 +84,13 @@ export function AppHeader({ isAdmin }: { isAdmin: boolean }) {
           </Button>
         </div>
       </div>
+      {userId && !isAdmin && (
+        <SubmissionHistoryDialog
+          open={historyOpen}
+          onOpenChange={setHistoryOpen}
+          userId={userId}
+        />
+      )}
     </header>
   );
 }
