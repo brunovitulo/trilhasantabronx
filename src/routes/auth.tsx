@@ -10,11 +10,6 @@ import { toast } from "sonner";
 import logo from "@/assets/logo.png";
 
 export const Route = createFileRoute("/auth")({
-  ssr: false,
-  beforeLoad: async () => {
-    const { data } = await supabase.auth.getUser();
-    if (data.user) throw redirect({ to: "/" });
-  },
   head: () => ({
     meta: [{ title: "Entrar — Santa Bronx Formação" }],
   }),
