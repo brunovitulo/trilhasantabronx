@@ -12,6 +12,9 @@ import { findSubtask, PASSING_SCORE } from "@/data/topics";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/avaliacoes")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    user: typeof search.user === "string" ? search.user : undefined,
+  }),
   beforeLoad: async ({ context }) => {
     const { data } = await supabase
       .from("user_roles")
