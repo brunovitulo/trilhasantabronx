@@ -12,6 +12,7 @@ import { AdminPendingBell } from "@/components/AdminPendingBell";
 export function AppHeader({ isAdmin }: { isAdmin: boolean }) {
   const navigate = useNavigate();
   const [userId, setUserId] = useState<string | null>(null);
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
