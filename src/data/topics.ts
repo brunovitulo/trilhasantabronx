@@ -114,7 +114,7 @@ export type Topic = {
 
 export const PASSING_SCORE = 70;
 
-const IG = "https://instagram.com/formar.atendente";
+const IG = "https://www.instagram.com/stories/highlights/17908962375245598/";
 const IG_APRESENTACAO = "https://www.instagram.com/stories/highlights/17892062016515877/";
 const IG_ENVIO_PEDIDOS = "https://www.instagram.com/stories/highlights/17861958711572094/";
 const IG_VENDAS = "https://www.instagram.com/stories/highlights/17896097712329686/";
@@ -284,7 +284,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "1. Como embalar e chamar o 99 — assistir destaque: checklist de embalagem",
         description: "Copie o link, cole em outra aba, assista o destaque por completo.",
-        url: "https://instagram.com/formar.atendente",
+        url: "https://www.instagram.com/stories/highlights/17908962375245598/",
       },
       {
         id: "embalar.checklist.baixar",
