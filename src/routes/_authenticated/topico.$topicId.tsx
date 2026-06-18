@@ -672,7 +672,13 @@ function ChecklistSubtask({
   onComplete: () => void;
   onUncheck: () => void;
 }) {
-  const [checks, setChecks] = useState<boolean[]>(() => subtask.items.map(() => false));
+  const [checks, setChecks] = useState<boolean[]>(() =>
+    subtask.items.map(() => completed),
+  );
+  // Sync com o estado persistido sempre que o `completed` carregar do banco
+  useEffect(() => {
+    setChecks(subtask.items.map(() => completed));
+  }, [completed, subtask.id, subtask.items.length]);
   const allChecked = checks.every(Boolean);
   return (
     <div className="space-y-2">
