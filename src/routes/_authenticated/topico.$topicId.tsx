@@ -420,18 +420,13 @@ function ReadingSubtask({
   onUncheck: () => void;
 }) {
   const [open, setOpen] = useState(false);
-  const [opened, setOpened] = useState(false);
-  const canMark = true;
   return (
     <div>
       <Button
         variant="outline"
         size="sm"
         className="rounded-full"
-        onClick={() => {
-          setOpen((o) => !o);
-          setOpened(true);
-        }}
+        onClick={() => setOpen((o) => !o)}
       >
         {open ? "Fechar apostila" : "Abrir apostila"}
       </Button>
@@ -444,18 +439,9 @@ function ReadingSubtask({
         {completed ? (
           <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>Desmarcar leitura</Button>
         ) : (
-          <Button
-            size="sm"
-            className="rounded-full"
-            disabled={!canMark}
-            onClick={onComplete}
-            title={!canMark ? "Abra a apostila primeiro" : undefined}
-          >
+          <Button size="sm" className="rounded-full" onClick={onComplete}>
             Marcar como lida
           </Button>
-        )}
-        {!completed && !canMark && (
-          <span className="text-xs text-muted-foreground">Abra a apostila para liberar</span>
         )}
       </div>
     </div>
