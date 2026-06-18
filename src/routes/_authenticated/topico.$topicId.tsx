@@ -259,8 +259,9 @@ function SubtaskBody({
     ? (subtask as Extract<Subtask, { kind: "evaluation" }>).passingScore ?? PASSING_SCORE
     : 0;
   const passed = !isEvaluation ? completed : completed && (score ?? 0) >= passing;
-  const evalLocked =
-    (isEvaluation || isOpenEval) && !priorCompleted && !completed;
+  // Gating sequencial desativado — todas as etapas ficam liberadas.
+  void priorCompleted;
+  const evalLocked = false;
 
   return (
     <div className="p-4 sm:p-5">
@@ -355,7 +356,6 @@ function VideoSubtask({
   onUncheck: () => void;
 }) {
   const [copied, setCopied] = useState(false);
-  const canMark = copied || completed;
 
   async function copyVideoLink() {
     try {
@@ -393,9 +393,7 @@ function VideoSubtask({
             variant="outline"
             size="sm"
             className="rounded-full"
-            disabled={!canMark}
             onClick={onComplete}
-            title={!canMark ? "Copie o link primeiro" : undefined}
           >
             Já assisti
           </Button>
@@ -419,18 +417,13 @@ function ReadingSubtask({
   onUncheck: () => void;
 }) {
   const [open, setOpen] = useState(false);
-  const [opened, setOpened] = useState(false);
-  const canMark = opened || completed;
   return (
     <div>
       <Button
         variant="outline"
         size="sm"
         className="rounded-full"
-        onClick={() => {
-          setOpen((o) => !o);
-          setOpened(true);
-        }}
+        onClick={() => setOpen((o) => !o)}
       >
         {open ? "Fechar apostila" : "Abrir apostila"}
       </Button>
@@ -443,18 +436,9 @@ function ReadingSubtask({
         {completed ? (
           <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>Desmarcar leitura</Button>
         ) : (
-          <Button
-            size="sm"
-            className="rounded-full"
-            disabled={!canMark}
-            onClick={onComplete}
-            title={!canMark ? "Abra a apostila primeiro" : undefined}
-          >
+          <Button size="sm" className="rounded-full" onClick={onComplete}>
             Marcar como lida
           </Button>
-        )}
-        {!completed && !canMark && (
-          <span className="text-xs text-muted-foreground">Abra a apostila para liberar</span>
         )}
       </div>
     </div>
@@ -473,18 +457,13 @@ function ApostilaSubtask({
   onUncheck: () => void;
 }) {
   const [open, setOpen] = useState(false);
-  const [opened, setOpened] = useState(false);
-  const canMark = opened || completed;
   return (
     <div>
       <Button
         variant="outline"
         size="sm"
         className="rounded-full"
-        onClick={() => {
-          setOpen((o) => !o);
-          setOpened(true);
-        }}
+        onClick={() => setOpen((o) => !o)}
       >
         {open ? "Fechar apostila" : "Abrir apostila"}
       </Button>
@@ -506,18 +485,9 @@ function ApostilaSubtask({
             Desmarcar leitura
           </Button>
         ) : (
-          <Button
-            size="sm"
-            className="rounded-full"
-            disabled={!canMark}
-            onClick={onComplete}
-            title={!canMark ? "Abra a apostila primeiro" : undefined}
-          >
+          <Button size="sm" className="rounded-full" onClick={onComplete}>
             Marcar como lida
           </Button>
-        )}
-        {!completed && !canMark && (
-          <span className="text-xs text-muted-foreground">Abra a apostila para liberar</span>
         )}
       </div>
     </div>
