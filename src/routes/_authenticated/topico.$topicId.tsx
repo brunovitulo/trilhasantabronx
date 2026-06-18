@@ -145,55 +145,80 @@ function TopicPage() {
           </Card>
         ) : (
           <div className="mt-6 space-y-4">
-            {groupSubtasks(topic.subtasks).map((group) => {
-              const multi = group.items.length > 1;
-              return (
-                <Card
-                  key={group.key}
-                  className="overflow-hidden rounded-3xl border-border/60 bg-card/70 backdrop-blur-xl shadow-sm"
-                >
-                  {multi && (
-                    <div className="px-4 sm:px-5 pt-4 sm:pt-5">
-                      <h2 className="text-lg font-semibold tracking-tight text-foreground/90">
-                        {group.title}
-                      </h2>
-                    </div>
-                  )}
-                  <div className="divide-y divide-border/50">
-                    {group.items.map((entry, idx) => {
-                      const sub = entry.subtask;
-                      const state = getSubtaskState(sub.id, rows);
-                      const priorCompleted = topic.subtasks
-                        .filter(
-                          (s) =>
-                            s.kind !== "evaluation" &&
-                            s.kind !== "open_evaluation" &&
-                            s.id !== sub.id,
-                        )
-                        .every((s) => getSubtaskState(s.id, rows).completed);
-                      const displayTitle = multi
-                        ? `Passo ${idx + 1}: ${entry.stepLabel}`
-                        : group.title;
-                      return (
-                        <SubtaskBody
-                          key={sub.id}
-                          subtask={sub}
-                          userId={user.id}
-                          displayTitle={displayTitle}
-                          completed={state.completed}
-                          score={state.score}
-                          priorCompleted={priorCompleted}
-                          onComplete={(score) => markCompleted(sub, score)}
-                          onUncheck={() => unmark(sub.id)}
-                        />
-                      );
+            {(() => {
+              // Final gate: video de alinhamento + prova dissertativa.
+              // Ambos só liberam quando todos os outros passos do tópico estiverem concluídos.
+              const FINAL_GATE_IDS = new Set<string>([
+                "apresentacao.prova.video",
+                "apresentacao.prova.exam",
+              ]);
+              const EXAM_ID = "apresentacao.prova.exam";
+              const GATE_VIDEO_ID = "apresentacao.prova.video";
 
-                    })}
-                  </div>
-                </Card>
-              );
-            })}
+              const nonGateSubtasks = topic.subtasks.filter((s) => !FINAL_GATE_IDS.has(s.id));
+              const gateUnlocked =
+                nonGateSubtasks.length === 0 ||
+                nonGateSubtasks.every((s) => getSubtaskState(s.id, rows).completed);
+              const gateVideoCompleted = getSubtaskState(GATE_VIDEO_ID, rows).completed;
+
+              return groupSubtasks(topic.subtasks).map((group) => {
+                const multi = group.items.length > 1;
+                return (
+                  <Card
+                    key={group.key}
+                    className="overflow-hidden rounded-3xl border-border/60 bg-card/70 backdrop-blur-xl shadow-sm"
+                  >
+                    {multi && (
+                      <div className="px-4 sm:px-5 pt-4 sm:pt-5">
+                        <h2 className="text-lg font-semibold tracking-tight text-foreground/90">
+                          {group.title}
+                        </h2>
+                      </div>
+                    )}
+                    <div className="divide-y divide-border/50">
+                      {group.items.map((entry, idx) => {
+                        const sub = entry.subtask;
+                        const state = getSubtaskState(sub.id, rows);
+                        const priorCompleted = topic.subtasks
+                          .filter(
+                            (s) =>
+                              s.kind !== "evaluation" &&
+                              s.kind !== "open_evaluation" &&
+                              s.id !== sub.id,
+                          )
+                          .every((s) => getSubtaskState(s.id, rows).completed);
+                        const displayTitle = multi
+                          ? `Passo ${idx + 1}: ${entry.stepLabel}`
+                          : group.title;
+                        const inFinalGate = FINAL_GATE_IDS.has(sub.id);
+                        const gateLocked = inFinalGate && !gateUnlocked;
+                        const examNeedsVideo =
+                          sub.id === EXAM_ID && gateUnlocked && !gateVideoCompleted;
+                        const useExamDialog = sub.id === EXAM_ID;
+                        return (
+                          <SubtaskBody
+                            key={sub.id}
+                            subtask={sub}
+                            userId={user.id}
+                            displayTitle={displayTitle}
+                            completed={state.completed}
+                            score={state.score}
+                            priorCompleted={priorCompleted}
+                            gateLocked={gateLocked}
+                            examNeedsVideo={examNeedsVideo}
+                            useExamDialog={useExamDialog}
+                            onComplete={(score) => markCompleted(sub, score)}
+                            onUncheck={() => unmark(sub.id)}
+                          />
+                        );
+                      })}
+                    </div>
+                  </Card>
+                );
+              });
+            })()}
           </div>
+
         )}
       </main>
     </div>
