@@ -100,6 +100,7 @@ export function ExamResultPopup({ userId }: { userId: string }) {
       /* noop */
     }
     setPending((prev) => prev.slice(1));
+    window.dispatchEvent(new CustomEvent(EXAM_SEEN_EVENT));
   }
 
   if (!current) return null;
