@@ -247,7 +247,7 @@ function AttendantCard({ att }: { att: AttendantRow }) {
                     </p>
                   </div>
                   <Button asChild size="sm" className="rounded-full shrink-0">
-                    <Link to="/admin/avaliacoes" hash={p.id}>
+                    <Link to="/admin/avaliacoes" search={{ user: att.id }} hash={p.id}>
                       Corrigir
                     </Link>
                   </Button>
