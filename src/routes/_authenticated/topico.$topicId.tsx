@@ -835,36 +835,63 @@ function ChecklistSubtask({
     setChecks(subtask.items.map(() => completed));
   }, [completed, subtask.id, subtask.items.length]);
   const allChecked = checks.every(Boolean);
+  // Auto-completa o passo quando todos os itens estão marcados
+  useEffect(() => {
+    if (allChecked && !completed) onComplete();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allChecked]);
   return (
     <div className="space-y-2">
-      <ul className="space-y-2">
-        {subtask.items.map((item, i) => (
-          <li key={i} className="flex items-start gap-2">
-            <Checkbox
-              id={`${subtask.id}-${i}`}
-              checked={checks[i]}
-              onCheckedChange={(v) =>
-                setChecks((prev) => prev.map((p, idx) => (idx === i ? !!v : p)))
-              }
-            />
-            <Label htmlFor={`${subtask.id}-${i}`} className="text-sm font-normal cursor-pointer leading-snug">
-              {renderTextWithLinks(item)}
-            </Label>
-          </li>
-        ))}
+      <ul className="space-y-1">
+        {subtask.items.map((item, i) => {
+          const c = checks[i];
+          const toggle = () =>
+            setChecks((prev) => prev.map((p, idx) => (idx === i ? !p : p)));
+          return (
+            <li key={i} className="flex items-start gap-3 py-1.5">
+              <button
+                type="button"
+                role="checkbox"
+                aria-checked={c}
+                onClick={toggle}
+                className={cn(
+                  "mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors",
+                  c
+                    ? "border-[var(--success)] bg-[var(--success)] text-white"
+                    : "border-white/30 bg-transparent hover:border-white/60",
+                )}
+              >
+                {c && <Check className="h-3 w-3" strokeWidth={3} />}
+              </button>
+              <span
+                onClick={toggle}
+                className={cn(
+                  "text-sm leading-snug cursor-pointer select-none",
+                  c ? "text-muted-foreground line-through" : "text-foreground/90",
+                )}
+              >
+                {renderTextWithLinks(item)}
+              </span>
+            </li>
+          );
+        })}
       </ul>
-      <div className="pt-1">
-        {completed ? (
-          <Button variant="ghost" size="sm" onClick={onUncheck}>Desmarcar</Button>
-        ) : (
-          <Button size="sm" disabled={!allChecked} onClick={onComplete}>
-            Concluir
+      {completed && (
+        <div className="pt-1">
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full border-white/15 bg-transparent"
+            onClick={onUncheck}
+          >
+            Desmarcar
           </Button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
+
 
 function InlineHtmlSubtask({
   subtask,
