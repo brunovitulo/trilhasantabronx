@@ -488,18 +488,9 @@ function ApostilaSubtask({
             Desmarcar leitura
           </Button>
         ) : (
-          <Button
-            size="sm"
-            className="rounded-full"
-            disabled={!canMark}
-            onClick={onComplete}
-            title={!canMark ? "Abra a apostila primeiro" : undefined}
-          >
+          <Button size="sm" className="rounded-full" onClick={onComplete}>
             Marcar como lida
           </Button>
-        )}
-        {!completed && !canMark && (
-          <span className="text-xs text-muted-foreground">Abra a apostila para liberar</span>
         )}
       </div>
     </div>
