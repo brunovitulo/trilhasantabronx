@@ -507,7 +507,7 @@ function VideoSubtask({
       <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-xs sm:text-sm text-muted-foreground break-all font-mono select-all">
         {subtask.url}
       </div>
-      <p className="text-xs text-muted-foreground">
+      <p className="text-xs text-foreground/80">
         Copie o link, cole em outra aba, assista o destaque por completo.
       </p>
       <div className="flex flex-wrap gap-2 items-center">
