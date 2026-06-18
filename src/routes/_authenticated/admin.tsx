@@ -245,10 +245,12 @@ function initials(name: string | null) {
 
 function AttendantCard({
   att,
+  reviewerId,
   onCorrect,
   onOpenHistory,
 }: {
   att: AttendantRow;
+  reviewerId: string;
   onCorrect: (submission: CorrectionTarget) => void;
   onOpenHistory: () => void;
 }) {
