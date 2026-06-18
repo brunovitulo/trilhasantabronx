@@ -1,4 +1,4 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect, useLocation } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -80,6 +80,25 @@ function AvaliacoesPage() {
     refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
+
+  // Auto-expande a submissão indicada pelo hash da URL (ex: vindo do painel admin)
+  const location = useLocation();
+  useEffect(() => {
+    const hash = location.hash?.replace(/^#/, "");
+    if (!hash) return;
+    if (subs.some((s) => s.id === hash)) {
+      setExpandedId(hash);
+      // Garante o filtro certo se a submissão não estiver no filtro atual
+      setTimeout(() => {
+        const el = document.getElementById(`sub-${hash}`);
+        el?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 100);
+    } else if (filter !== "all") {
+      // Pode estar em outro filtro — tenta "all"
+      setFilter("all");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.hash, subs]);
 
   return (
     <div className="min-h-screen">
@@ -233,7 +252,7 @@ function SubmissionRow({
   }
 
   return (
-    <Card className="p-4">
+    <Card id={`sub-${submission.id}`} className="p-4 scroll-mt-24">
       <button
         type="button"
         onClick={onToggle}
@@ -319,12 +338,25 @@ function SubmissionRow({
                 />
               </div>
 
-              <div className="flex flex-wrap gap-2 justify-end">
+              <div className="flex flex-wrap items-center gap-2 justify-end">
+                {answers.length > 0 && (
+                  <span className="mr-auto text-xs text-muted-foreground">
+                    {answers.filter((a) => a.is_correct !== null).length} de {answers.length} perguntas marcadas
+                  </span>
+                )}
                 <Button size="sm" variant="outline" onClick={saveFeedbackOnly} disabled={saving}>
                   Salvar feedback
                 </Button>
-                <Button size="sm" onClick={finalize} disabled={saving}>
-                  {saving ? "Salvando..." : "Finalizar correção"}
+                <Button
+                  size="sm"
+                  onClick={finalize}
+                  disabled={
+                    saving ||
+                    answers.length === 0 ||
+                    answers.some((a) => a.is_correct === null)
+                  }
+                >
+                  {saving ? "Salvando..." : "Finalizar avaliação"}
                 </Button>
               </div>
             </>

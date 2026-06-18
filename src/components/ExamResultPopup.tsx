@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { EXAM_POPUP_EVENT, EXAM_SEEN_EVENT } from "@/components/NotificationBell";
 
 type ReviewedRow = {
   id: string;
@@ -81,8 +82,11 @@ export function ExamResultPopup({ userId }: { userId: string }) {
         },
       )
       .subscribe();
+    const onShow = () => fetchUnseen();
+    window.addEventListener(EXAM_POPUP_EVENT, onShow);
     return () => {
       supabase.removeChannel(channel);
+      window.removeEventListener(EXAM_POPUP_EVENT, onShow);
     };
   }, [userId, fetchUnseen, enqueue]);
 
@@ -96,6 +100,7 @@ export function ExamResultPopup({ userId }: { userId: string }) {
       /* noop */
     }
     setPending((prev) => prev.slice(1));
+    window.dispatchEvent(new CustomEvent(EXAM_SEEN_EVENT));
   }
 
   if (!current) return null;
