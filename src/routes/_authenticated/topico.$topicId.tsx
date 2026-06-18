@@ -1127,17 +1127,23 @@ function OpenEvaluationSubtask({
         </div>
         {submission.status === "rejected" && (
           <div className="pt-2">
-            <Button
-              size="sm"
-              className="rounded-full"
-              onClick={() => {
-                setSubmission(null);
-                setAnswerRows([]);
-                setDrafts(subtask.questions.map(() => ""));
-              }}
-            >
-              Refazer avaliação
-            </Button>
+            {submission.retry_allowed ? (
+              <Button
+                size="sm"
+                className="rounded-full"
+                onClick={() => {
+                  setSubmission(null);
+                  setAnswerRows([]);
+                  setDrafts(subtask.questions.map(() => ""));
+                }}
+              >
+                Refazer avaliação
+              </Button>
+            ) : (
+              <p className="text-xs text-muted-foreground">
+                Para refazer esta prova, peça à gestora para liberar uma nova tentativa.
+              </p>
+            )}
           </div>
         )}
       </div>
