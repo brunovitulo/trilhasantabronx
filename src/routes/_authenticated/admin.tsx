@@ -224,9 +224,11 @@ function initials(name: string | null) {
 function AttendantCard({
   att,
   onCorrect,
+  onOpenHistory,
 }: {
   att: AttendantRow;
   onCorrect: (submission: CorrectionTarget) => void;
+  onOpenHistory: () => void;
 }) {
   const statuses = useMemo(() => computeTopicStatuses(TOPICS, att.progress), [att.progress]);
   const totalTopics = TOPICS.length;
