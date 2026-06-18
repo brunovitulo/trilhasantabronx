@@ -89,7 +89,7 @@ export type Subtask =
       title: string;
       kind: "inline_html";
       description?: string;
-      source: "apostila" | "checklist";
+      source: "apostila" | "checklist" | "organizacao";
       openLabel?: string;
       helperText?: string;
       confirmLabel: string;
@@ -188,6 +188,18 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "4. Padrão de organização — assistir destaque",
         url: "https://www.instagram.com/stories/highlights/18089212679196183/",
+      },
+      {
+        id: "apresentacao.padrao.checklist",
+        kind: "inline_html",
+        title: "4. Padrão de organização — ver checklist de organização",
+        description:
+          "Use este checklist diariamente para garantir que a loja está sempre organizada e bem apresentada antes de atender.",
+        source: "organizacao",
+        openLabel: "Ver checklist",
+        helperText:
+          "Este checklist também fica sempre disponível no ícone do topo do site.",
+        confirmLabel: "Já vi o checklist e sei onde acessá-lo no topo do site.",
       },
       {
         id: "apresentacao.site.video",
