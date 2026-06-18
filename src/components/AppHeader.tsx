@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { NotificationBell } from "@/components/NotificationBell";
 import { SubmissionHistoryDialog } from "@/components/SubmissionHistoryDialog";
 import { AdminPendingBell } from "@/components/AdminPendingBell";
+import { QuickChecklistDrawer } from "@/components/QuickChecklistDrawer";
 
 export function AppHeader({ isAdmin }: { isAdmin: boolean }) {
   const navigate = useNavigate();
