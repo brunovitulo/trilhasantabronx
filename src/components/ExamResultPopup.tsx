@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { EXAM_POPUP_EVENT, EXAM_SEEN_EVENT } from "@/components/NotificationBell";
 
 type ReviewedRow = {
   id: string;
