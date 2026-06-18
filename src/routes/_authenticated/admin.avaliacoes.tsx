@@ -86,22 +86,36 @@ function AvaliacoesPage() {
 
   // Auto-expande a submissão indicada pelo hash da URL (ex: vindo do painel admin)
   const location = useLocation();
+  const { user: userParam } = Route.useSearch();
   useEffect(() => {
     const hash = location.hash?.replace(/^#/, "");
-    if (!hash) return;
-    if (subs.some((s) => s.id === hash)) {
+    // 1) Tenta achar pelo hash exato
+    if (hash && subs.some((s) => s.id === hash)) {
       setExpandedId(hash);
-      // Garante o filtro certo se a submissão não estiver no filtro atual
       setTimeout(() => {
-        const el = document.getElementById(`sub-${hash}`);
-        el?.scrollIntoView({ behavior: "smooth", block: "center" });
+        document.getElementById(`sub-${hash}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
       }, 100);
-    } else if (filter !== "all") {
-      // Pode estar em outro filtro — tenta "all"
+      return;
+    }
+    // 2) Fallback: se veio user na URL, abre a pendente mais recente desse user
+    if (userParam) {
+      const candidate =
+        subs.find((s) => s.user_id === userParam && s.status === "pending_review") ??
+        subs.find((s) => s.user_id === userParam);
+      if (candidate) {
+        setExpandedId(candidate.id);
+        setTimeout(() => {
+          document.getElementById(`sub-${candidate.id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 100);
+        return;
+      }
+    }
+    // 3) Última tentativa: ampliar o filtro para "all"
+    if (hash && filter !== "all") {
       setFilter("all");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.hash, subs]);
+  }, [location.hash, userParam, subs]);
 
   return (
     <div className="min-h-screen">
