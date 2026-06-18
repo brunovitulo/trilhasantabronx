@@ -236,13 +236,241 @@ function groupSubtasks(subtasks: Subtask[]): SubtaskGroup[] {
   return groups;
 }
 
-function SubtaskBody({
+function pickGroupIcon(title: string) {
+  const t = title.toLowerCase();
+  if (t.includes("históri") || t.includes("histori")) return History;
+  if (t.includes("onde fica") || t.includes("loja") || t.includes("mapa")) return MapPin;
+  if (t.includes("familiar") || t.includes("produto")) return Hand;
+  if (t.includes("organiza") || t.includes("padrão") || t.includes("padrao")) return LayoutGrid;
+  if (t.includes("site") || t.includes("apresenta")) return Globe;
+  if (t.includes("embalar") || t.includes("despach") || t.includes("99")) return Package;
+  if (t.includes("antes da prova")) return ShieldCheck;
+  if (t.includes("prova") || t.includes("avalia")) return FilePen;
+  if (t.includes("exerc") || t.includes("prática") || t.includes("pratica")) return ClipboardCheck;
+  if (t.includes("checklist")) return ListChecks;
+  return Star;
+}
+
+function pickStepIcon(kind: Subtask["kind"], hasDownload?: boolean) {
+  switch (kind) {
+    case "video": return Play;
+    case "reading":
+    case "apostila":
+    case "inline_html": return BookOpen;
+    case "checklist":
+    case "multi_checklist": return ListChecks;
+    case "practice": return ClipboardCheck;
+    case "evaluation":
+    case "open_evaluation": return FilePen;
+    case "external_html": return hasDownload ? Download : BookOpen;
+    default: return BookOpen;
+  }
+}
+
+function SubtaskGroupCard({
+  group,
+  topic,
+  rows,
+  userId,
+  isAdmin,
+  onComplete,
+  onUncheck,
+}: {
+  group: SubtaskGroup;
+  topic: Topic;
+  rows: ProgressRow[];
+  userId: string;
+  isAdmin: boolean;
+  onComplete: (subtask: Subtask, score?: number) => void;
+  onUncheck: (subtaskId: string) => void;
+}) {
+  const gateVideo = topic.subtasks.find((s) => /\.prova\.video$/.test(s.id));
+  const gateExam = topic.subtasks.find((s) => /\.prova\.exam$/.test(s.id));
+  const FINAL_GATE_IDS = new Set<string>(
+    [gateVideo?.id, gateExam?.id].filter(Boolean) as string[],
+  );
+  const EXAM_ID = gateExam?.id ?? null;
+  const GATE_VIDEO_ID = gateVideo?.id ?? null;
+  const nonGateSubtasks = topic.subtasks.filter((s) => !FINAL_GATE_IDS.has(s.id));
+  const gateUnlocked =
+    nonGateSubtasks.length === 0 ||
+    nonGateSubtasks.every((s) => getSubtaskState(s.id, rows).completed);
+  const gateVideoCompleted = GATE_VIDEO_ID
+    ? getSubtaskState(GATE_VIDEO_ID, rows).completed
+    : true;
+
+  const itemStates = group.items.map(({ subtask }) => {
+    const st = getSubtaskState(subtask.id, rows);
+    const isEval = subtask.kind === "evaluation";
+    const passing = isEval
+      ? (subtask as Extract<Subtask, { kind: "evaluation" }>).passingScore ?? PASSING_SCORE
+      : 0;
+    const passed = !isEval ? st.completed : st.completed && (st.score ?? 0) >= passing;
+    return { state: st, passed };
+  });
+
+  const total = group.items.length;
+  const doneCount = itemStates.filter((s) => s.passed).length;
+  const allDone = doneCount === total;
+  const pct = total > 0 ? (doneCount / total) * 100 : 0;
+  const firstPendingIdx = itemStates.findIndex((s) => !s.passed);
+
+  const [openId, setOpenId] = useState<string | null>(() => {
+    if (firstPendingIdx === -1) return null;
+    return group.items[firstPendingIdx]?.subtask.id ?? null;
+  });
+
+  // Auto-advance: if the open step gets completed, open the next pending
+  useEffect(() => {
+    setOpenId((cur) => {
+      if (allDone) return null;
+      const curIdx = group.items.findIndex((it) => it.subtask.id === cur);
+      const curPassed = curIdx >= 0 && itemStates[curIdx]?.passed;
+      if (curIdx === -1 || curPassed) {
+        const nextIdx = itemStates.findIndex((s) => !s.passed);
+        return nextIdx === -1 ? null : group.items[nextIdx].subtask.id;
+      }
+      return cur;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doneCount, total, allDone]);
+
+  const GroupIcon = pickGroupIcon(group.title);
+
+  return (
+    <Card className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.06] backdrop-blur-xl shadow-[0_8px_32px_-12px_rgba(0,0,0,0.45)]">
+      <div className="p-4 sm:p-5 flex items-start gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-primary/30 bg-primary/15 text-primary">
+          <GroupIcon className="h-5 w-5" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h3 className="text-[15px] sm:text-base font-medium text-foreground leading-tight">
+            {group.title}
+          </h3>
+          <p className="text-[11px] text-muted-foreground mt-0.5">
+            {doneCount} de {total} {total === 1 ? "passo concluído" : "passos concluídos"}
+          </p>
+          <div className="mt-2 h-1 w-full rounded-full bg-white/10 overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{
+                width: `${pct}%`,
+                background: "linear-gradient(90deg, #5DCAA5, #AFA9EC)",
+              }}
+            />
+          </div>
+        </div>
+        <div className="mt-0.5 shrink-0">
+          {allDone ? (
+            <CheckCircle2 className="h-6 w-6 text-[var(--success)]" />
+          ) : (
+            <Circle className="h-6 w-6 text-white/25" />
+          )}
+        </div>
+      </div>
+
+      <div className="border-t border-white/5 divide-y divide-white/5">
+        {group.items.map((entry, idx) => {
+          const sub = entry.subtask;
+          const { state, passed } = itemStates[idx];
+          const inFinalGate = FINAL_GATE_IDS.has(sub.id);
+          const gateLocked = inFinalGate && !gateUnlocked && !isAdmin;
+          const examNeedsVideo =
+            sub.id === EXAM_ID && gateUnlocked && !gateVideoCompleted && !isAdmin;
+          const useExamDialog = sub.id === EXAM_ID;
+          const hasDownload = "downloadAs" in sub && !!(sub as { downloadAs?: string }).downloadAs;
+          const StepIcon = pickStepIcon(sub.kind, hasDownload);
+          const isOpen = openId === sub.id;
+          const label = total > 1 ? entry.stepLabel : group.title;
+          const isEvalLike = sub.kind === "evaluation" || sub.kind === "open_evaluation";
+
+          return (
+            <div key={sub.id}>
+              <button
+                type="button"
+                onClick={() => setOpenId(isOpen ? null : sub.id)}
+                className="w-full flex items-center gap-3 px-4 sm:px-5 py-3 text-left transition-colors hover:bg-white/[0.03]"
+              >
+                <span
+                  className={cn(
+                    "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors",
+                    passed
+                      ? "border-[var(--success)] bg-[var(--success)] text-white"
+                      : "border-white/30 bg-transparent text-muted-foreground",
+                  )}
+                >
+                  {passed ? (
+                    <Check className="h-3 w-3" strokeWidth={3} />
+                  ) : gateLocked ? (
+                    <Lock className="h-2.5 w-2.5" />
+                  ) : null}
+                </span>
+                <StepIcon
+                  className={cn(
+                    "h-4 w-4 shrink-0",
+                    passed ? "text-muted-foreground" : "text-primary/80",
+                  )}
+                />
+                <span
+                  className={cn(
+                    "flex-1 text-sm leading-tight",
+                    passed
+                      ? "text-muted-foreground line-through"
+                      : gateLocked
+                        ? "text-muted-foreground"
+                        : "text-foreground",
+                  )}
+                >
+                  {label}
+                </span>
+                {isEvalLike && (
+                  <Badge className="bg-pink-500/20 text-pink-300 hover:bg-pink-500/20 border border-pink-400/30">
+                    Avaliação
+                  </Badge>
+                )}
+                {state.completed && state.score != null && sub.kind === "evaluation" && (
+                  <Badge variant={passed ? "default" : "destructive"}>{state.score}%</Badge>
+                )}
+                <ChevronDown
+                  className={cn(
+                    "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
+                    isOpen && "rotate-180",
+                  )}
+                />
+              </button>
+              {isOpen && (
+                <div className="px-4 sm:px-5 pb-4 sm:pb-5 pt-1">
+                  {"description" in sub && sub.description && (
+                    <p className="text-sm text-muted-foreground mb-3">{sub.description}</p>
+                  )}
+                  <SubtaskContent
+                    subtask={sub}
+                    userId={userId}
+                    displayTitle={label}
+                    completed={state.completed}
+                    score={state.score}
+                    gateLocked={gateLocked}
+                    examNeedsVideo={examNeedsVideo}
+                    useExamDialog={useExamDialog}
+                    onComplete={(score) => onComplete(sub, score)}
+                    onUncheck={() => onUncheck(sub.id)}
+                  />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </Card>
+  );
+}
+
+function SubtaskContent({
   subtask,
   userId,
   displayTitle,
   completed,
   score,
-  priorCompleted,
   gateLocked = false,
   examNeedsVideo = false,
   useExamDialog = false,
@@ -251,130 +479,78 @@ function SubtaskBody({
 }: {
   subtask: Subtask;
   userId: string;
-  displayTitle?: string;
+  displayTitle: string;
   completed: boolean;
   score: number | null;
-  priorCompleted: boolean;
   gateLocked?: boolean;
   examNeedsVideo?: boolean;
   useExamDialog?: boolean;
   onComplete: (score?: number) => void;
   onUncheck: () => void;
 }) {
-  const isEvaluation = subtask.kind === "evaluation";
-  const isOpenEval = subtask.kind === "open_evaluation";
-  const passing = isEvaluation
-    ? (subtask as Extract<Subtask, { kind: "evaluation" }>).passingScore ?? PASSING_SCORE
-    : 0;
-  const passed = !isEvaluation ? completed : completed && (score ?? 0) >= passing;
-  // Gating sequencial desativado — todas as etapas ficam liberadas.
-  void priorCompleted;
-  const evalLocked = false;
-  const showLocked = gateLocked;
-
-  return (
-    <div className="p-4 sm:p-5">
-      <div className="flex items-start gap-3">
-        <div className="mt-0.5">
-          {passed ? (
-            <CheckCircle2 className="h-5 w-5 text-[var(--success)]" />
-          ) : showLocked || evalLocked ? (
-            <Lock className="h-5 w-5 text-muted-foreground" />
-          ) : (
-            <Circle className="h-5 w-5 text-muted-foreground" />
-          )}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h3 className={`font-medium ${showLocked ? "text-muted-foreground" : ""}`}>
-              {displayTitle ?? subtask.title}
-            </h3>
-            {(isEvaluation || isOpenEval) && (
-              <Badge className="bg-pink-500/20 text-pink-300 hover:bg-pink-500/20 border border-pink-400/30">
-                Avaliação
-              </Badge>
-            )}
-            {completed && score != null && isEvaluation && (
-              <Badge variant={passed ? "default" : "destructive"}>{score}%</Badge>
-            )}
-          </div>
-          {"description" in subtask && subtask.description && (
-            <p className="text-sm text-muted-foreground mt-1">{subtask.description}</p>
-          )}
-
-          <div className="mt-3">
-            {showLocked ? (
-              <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-sm text-foreground/80">
-                🔒 Conclua todos os passos acima para liberar.
-              </div>
-            ) : (
-              <>
-                {subtask.kind === "video" && (
-                  <VideoSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
-                )}
-                {subtask.kind === "reading" && (
-                  <ReadingSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
-                )}
-                {subtask.kind === "apostila" && (
-                  <ApostilaSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
-                )}
-                {subtask.kind === "checklist" && (
-                  <ChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
-                )}
-                {subtask.kind === "practice" && (
-                  <PracticeSubtask subtask={subtask} userId={userId} completed={completed} onComplete={() => onComplete()} />
-                )}
-                {subtask.kind === "evaluation" && (
-                  evalLocked ? (
-                    <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-sm text-foreground/80">
-                      Conclua as etapas anteriores para liberar a avaliação.
-                    </div>
-                  ) : (
-                    <EvaluationSubtask
-                      subtask={subtask}
-                      completed={completed}
-                      score={score}
-                      passing={passing}
-                      onComplete={onComplete}
-                    />
-                  )
-                )}
-                {subtask.kind === "external_html" && (
-                  <ExternalHtmlSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
-                )}
-                {subtask.kind === "inline_html" && (
-                  <InlineHtmlSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
-                )}
-                {subtask.kind === "multi_checklist" && (
-                  <MultiChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
-                )}
-                {subtask.kind === "open_evaluation" && (
-                  useExamDialog ? (
-                    <ExamDialogLauncher
-                      subtask={subtask}
-                      userId={userId}
-                      completed={completed}
-                      blockTitle={displayTitle ?? subtask.title}
-                      needsVideo={examNeedsVideo}
-                      onSubmitted={() => onComplete()}
-                    />
-                  ) : (
-                    <OpenEvaluationSubtask
-                      subtask={subtask}
-                      userId={userId}
-                      completed={completed}
-                      onSubmitted={() => onComplete()}
-                    />
-                  )
-                )}
-              </>
-            )}
-          </div>
-        </div>
+  if (gateLocked) {
+    return (
+      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-sm text-foreground/80">
+        🔒 Conclua todos os passos acima para liberar.
       </div>
-    </div>
-  );
+    );
+  }
+  const passing =
+    subtask.kind === "evaluation"
+      ? (subtask as Extract<Subtask, { kind: "evaluation" }>).passingScore ?? PASSING_SCORE
+      : 0;
+
+  switch (subtask.kind) {
+    case "video":
+      return <VideoSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
+    case "reading":
+      return <ReadingSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
+    case "apostila":
+      return <ApostilaSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
+    case "checklist":
+      return <ChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
+    case "practice":
+      return <PracticeSubtask subtask={subtask} userId={userId} completed={completed} onComplete={() => onComplete()} />;
+    case "evaluation":
+      return (
+        <EvaluationSubtask
+          subtask={subtask}
+          completed={completed}
+          score={score}
+          passing={passing}
+          onComplete={onComplete}
+        />
+      );
+    case "external_html":
+      return <ExternalHtmlSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
+    case "inline_html":
+      return <InlineHtmlSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
+    case "multi_checklist":
+      return <MultiChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
+    case "open_evaluation":
+      return useExamDialog ? (
+        <ExamDialogLauncher
+          subtask={subtask}
+          userId={userId}
+          completed={completed}
+          blockTitle={displayTitle}
+          needsVideo={examNeedsVideo}
+          onSubmitted={() => onComplete()}
+        />
+      ) : (
+        <OpenEvaluationSubtask
+          subtask={subtask}
+          userId={userId}
+          completed={completed}
+          onSubmitted={() => onComplete()}
+        />
+      );
+    default:
+      return null;
+  }
 }
+
+
 
 function ExamDialogLauncher({
   subtask,
