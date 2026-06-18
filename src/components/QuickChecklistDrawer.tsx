@@ -8,6 +8,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import checklistHtml from "@/content/embalar/checklist.html?raw";
 
 export function QuickChecklistDrawer() {
   const [open, setOpen] = useState(false);
