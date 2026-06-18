@@ -243,3 +243,130 @@ function AttendantCard({ att }: { att: AttendantRow }) {
     </Card>
   );
 }
+
+function ResetProgressBlock({
+  attendantId,
+  attendantName,
+}: {
+  attendantId: string;
+  attendantName: string | null;
+}) {
+  const [fromTopicId, setFromTopicId] = useState<string>("");
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [working, setWorking] = useState(false);
+
+  const selectedTopic = TOPICS.find((t) => t.id === fromTopicId) ?? null;
+
+  async function doReset() {
+    if (!selectedTopic) return;
+    setWorking(true);
+    const subtaskIds = TOPICS.filter((t) => t.order >= selectedTopic.order).flatMap((t) =>
+      t.subtasks.map((s) => s.id),
+    );
+    if (subtaskIds.length === 0) {
+      setWorking(false);
+      setConfirmOpen(false);
+      return;
+    }
+    const [{ error: e1 }, { error: e2 }] = await Promise.all([
+      supabase
+        .from("subtask_progress")
+        .delete()
+        .eq("user_id", attendantId)
+        .in("subtask_id", subtaskIds),
+      supabase
+        .from("open_evaluation_submissions")
+        .delete()
+        .eq("user_id", attendantId)
+        .in("subtask_id", subtaskIds),
+    ]);
+    setWorking(false);
+    setConfirmOpen(false);
+    if (e1 || e2) {
+      toast.error("Erro ao resetar", {
+        description: (e1 ?? e2)?.message ?? "Tente novamente",
+      });
+      return;
+    }
+    toast.success(
+      `Progresso de ${attendantName ?? "atendente"} zerado a partir de "${selectedTopic.title}"`,
+    );
+    setFromTopicId("");
+    // Atualiza a UI do painel
+    if (typeof window !== "undefined") window.location.reload();
+  }
+
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 space-y-2">
+      <div className="flex items-center gap-2">
+        <RotateCcw className="h-4 w-4 text-foreground/70" />
+        <p className="text-sm font-medium text-foreground/90">Resetar progresso</p>
+      </div>
+      <p className="text-xs text-foreground/60">
+        Apaga o progresso desta atendente a partir do tópico escolhido (inclusive). Os tópicos anteriores não são afetados.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-2">
+        <Select value={fromTopicId} onValueChange={setFromTopicId}>
+          <SelectTrigger className="bg-white/5 border-white/10">
+            <SelectValue placeholder="Escolha o tópico inicial..." />
+          </SelectTrigger>
+          <SelectContent>
+            {TOPICS.map((t) => (
+              <SelectItem key={t.id} value={t.id}>
+                {t.order}. {t.title}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {fromTopicId && (
+          <Button
+            type="button"
+            variant="destructive"
+            size="sm"
+            className="rounded-full shrink-0"
+            onClick={() => setConfirmOpen(true)}
+          >
+            Resetar a partir daqui
+          </Button>
+        )}
+      </div>
+
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar reset de progresso</AlertDialogTitle>
+            <AlertDialogDescription>
+              {selectedTopic ? (
+                <>
+                  Isso vai zerar o progresso de{" "}
+                  <strong>{attendantName ?? "esta atendente"}</strong> a partir do tópico{" "}
+                  <strong>
+                    {selectedTopic.order}. {selectedTopic.title}
+                  </strong>{" "}
+                  em diante. Os tópicos anteriores{" "}
+                  {selectedTopic.order > 1
+                    ? `(1 a ${selectedTopic.order - 1})`
+                    : "(nenhum)"}{" "}
+                  não serão afetados. Avaliações e notas a partir desse ponto também serão apagadas. Confirmar?
+                </>
+              ) : null}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={working}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                doReset();
+              }}
+              disabled={working}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {working ? "Resetando..." : "Sim, resetar"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}
