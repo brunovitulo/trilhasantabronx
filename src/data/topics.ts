@@ -115,7 +115,7 @@ export type Topic = {
 export const PASSING_SCORE = 70;
 
 const IG = "https://instagram.com/formar.atendente";
-const IG_APRESENTACAO = "https://www.instagram.com/stories/highlights/17958057917908256/";
+const IG_APRESENTACAO = "https://www.instagram.com/stories/highlights/17892062016515877/";
 const IG_ENVIO_PEDIDOS = "https://www.instagram.com/stories/highlights/17861958711572094/";
 const IG_VENDAS = "https://www.instagram.com/stories/highlights/17896097712329686/";
 const IG_OBJECOES = "https://www.instagram.com/stories/highlights/17979827337034215/";
@@ -221,7 +221,7 @@ export const TOPICS: Topic[] = [
         title: "6. Antes da prova — assistir vídeo do Bruno",
         description:
           "Vídeo de alinhamento antes da prova. Recapitula o módulo, avisa que o gestor vai acompanhar a prova em tempo real e reforça a regra de 70% para passar.",
-        url: "https://www.instagram.com/stories/highlights/17958057917908256/",
+        url: "https://www.instagram.com/stories/highlights/17892062016515877/",
       },
       {
         id: "apresentacao.prova.exam",
