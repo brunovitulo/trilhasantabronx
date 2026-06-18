@@ -192,7 +192,7 @@ function SubmissionRow({
   async function finalize() {
     const reviewed = answers.filter((a) => a.is_correct !== null);
     if (reviewed.length < answers.length) {
-      toast.error("Marque correta/incorreta em todas as 15 perguntas antes de finalizar");
+      toast.error(`Marque correta/incorreta em todas as ${answers.length} perguntas antes de finalizar`);
       return;
     }
     setSaving(true);
