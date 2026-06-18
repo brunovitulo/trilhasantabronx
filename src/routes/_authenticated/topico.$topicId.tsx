@@ -334,7 +334,7 @@ function SubtaskBody({
 
           <div className="mt-3">
             {showLocked ? (
-              <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-sm text-muted-foreground">
+              <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-sm text-foreground/80">
                 🔒 Conclua todos os passos acima para liberar.
               </div>
             ) : (
@@ -356,7 +356,7 @@ function SubtaskBody({
                 )}
                 {subtask.kind === "evaluation" && (
                   evalLocked ? (
-                    <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-sm text-muted-foreground">
+                    <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-sm text-foreground/80">
                       Conclua as etapas anteriores para liberar a avaliação.
                     </div>
                   ) : (
@@ -783,7 +783,7 @@ function EvaluationSubtask({
       <Button onClick={submit} disabled={!allAnswered}>
         Enviar respostas
       </Button>
-      <p className="text-xs text-muted-foreground">Nota mínima: {passing}%.</p>
+      <p className="text-xs text-foreground/80">Nota mínima: {passing}%.</p>
     </div>
   );
 }
@@ -823,7 +823,7 @@ function PracticeSubtask({
     return (
       <div className="rounded-2xl border border-[var(--success)]/40 bg-[var(--success)]/10 p-4 text-sm text-foreground">
         <p className="font-semibold mb-1">Exercício de fixação finalizado ✓</p>
-        <p className="text-muted-foreground">
+        <p className="text-foreground/80">
           Este exercício só pode ser respondido uma vez e já foi concluído. Avance para a avaliação final do tópico.
         </p>
       </div>
@@ -1123,7 +1123,7 @@ function OpenEvaluationSubtask({
 
   return (
     <div className="space-y-3">
-      <p className="text-xs text-muted-foreground">
+      <p className="text-xs text-foreground/80">
         Responda com suas próprias palavras. Ao enviar, o próximo tópico é liberado e a gestora corrige depois.
       </p>
       {subtask.questions.map((q, i) => (
