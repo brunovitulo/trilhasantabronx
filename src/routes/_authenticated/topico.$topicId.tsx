@@ -170,20 +170,25 @@ function TopicPage() {
         ) : (
           <div className="mt-6 space-y-4">
             {(() => {
-              // Final gate: video de alinhamento + prova dissertativa.
-              // Ambos só liberam quando todos os outros passos do tópico estiverem concluídos.
-              const FINAL_GATE_IDS = new Set<string>([
-                "apresentacao.prova.video",
-                "apresentacao.prova.exam",
-              ]);
-              const EXAM_ID = "apresentacao.prova.exam";
-              const GATE_VIDEO_ID = "apresentacao.prova.video";
+              // Padrão global: todo tópico pode ter um sub-assunto "Antes da prova"
+              // com um vídeo do Bruno (`*.prova.video`) + a prova dissertativa
+              // (`*.prova.exam`). Ambos só liberam quando todos os outros passos
+              // estiverem concluídos. E a prova só abre após o vídeo ser marcado.
+              const gateVideo = topic.subtasks.find((s) => /\.prova\.video$/.test(s.id));
+              const gateExam = topic.subtasks.find((s) => /\.prova\.exam$/.test(s.id));
+              const FINAL_GATE_IDS = new Set<string>(
+                [gateVideo?.id, gateExam?.id].filter(Boolean) as string[],
+              );
+              const EXAM_ID = gateExam?.id ?? null;
+              const GATE_VIDEO_ID = gateVideo?.id ?? null;
 
               const nonGateSubtasks = topic.subtasks.filter((s) => !FINAL_GATE_IDS.has(s.id));
               const gateUnlocked =
                 nonGateSubtasks.length === 0 ||
                 nonGateSubtasks.every((s) => getSubtaskState(s.id, rows).completed);
-              const gateVideoCompleted = getSubtaskState(GATE_VIDEO_ID, rows).completed;
+              const gateVideoCompleted = GATE_VIDEO_ID
+                ? getSubtaskState(GATE_VIDEO_ID, rows).completed
+                : true;
 
               return groupSubtasks(topic.subtasks).map((group) => {
                 const multi = group.items.length > 1;
