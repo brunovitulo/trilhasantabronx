@@ -460,18 +460,13 @@ function ApostilaSubtask({
   onUncheck: () => void;
 }) {
   const [open, setOpen] = useState(false);
-  const [opened, setOpened] = useState(false);
-  const canMark = true;
   return (
     <div>
       <Button
         variant="outline"
         size="sm"
         className="rounded-full"
-        onClick={() => {
-          setOpen((o) => !o);
-          setOpened(true);
-        }}
+        onClick={() => setOpen((o) => !o)}
       >
         {open ? "Fechar apostila" : "Abrir apostila"}
       </Button>
