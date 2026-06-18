@@ -76,7 +76,7 @@ function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <AppHeader isAdmin />
       <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
         <Link to="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4">

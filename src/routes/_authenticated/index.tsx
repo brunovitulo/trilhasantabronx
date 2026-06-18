@@ -62,7 +62,7 @@ function HomePage() {
   const overallPercent = Math.round((totalDone / TOPICS.length) * 100);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <AppHeader isAdmin={isAdmin} />
       <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8">
         <div className="mb-6">
@@ -103,22 +103,30 @@ function HomePage() {
           </div>
         ) : (
           <ol className="space-y-3">
-            {TOPICS.map((topic) => {
+            {TOPICS.map((topic, idx) => {
               const status = statuses[topic.id];
               const percent = topicProgressPercent(topic, rows);
               const locked = status === "locked" || profile?.blocked;
               const isEmpty = topic.subtasks.length === 0;
+              // Progressão de roxo: do mais claro (topo) para o mais escuro (final)
+              const t = TOPICS.length > 1 ? idx / (TOPICS.length - 1) : 0;
+              const L = 0.74 - t * 0.32; // 0.74 → 0.42
+              const Ldark = Math.max(L - 0.10, 0.30);
+              const purple = `oklch(${L.toFixed(3)} 0.18 295)`;
+              const purpleDark = `oklch(${Ldark.toFixed(3)} 0.19 295)`;
+              const gradient = `linear-gradient(135deg, ${purple}, ${purpleDark})`;
               const card = (
                 <Card
-                  className={`relative overflow-hidden transition-all ${
-                    locked ? "opacity-60" : "hover:shadow-md hover:-translate-y-0.5"
-                  }`}
+                  className={`relative overflow-hidden rounded-2xl border-white/10 bg-white/[0.06] backdrop-blur-xl shadow-[0_8px_32px_-12px_rgba(0,0,0,0.45)] transition-all ${
+                    locked ? "opacity-60" : "hover:-translate-y-0.5 hover:bg-white/[0.09]"
+                  } ${status === "completed" ? "ring-1 ring-[oklch(0.68_0.16_150/40%)]" : ""}`}
                 >
-                  <div className={`h-1.5 w-full bg-gradient-to-r ${topic.accent}`} />
+                  <div className="h-1.5 w-full" style={{ background: gradient }} />
                   <div className="p-4 sm:p-5">
                     <div className="flex items-start gap-4">
                       <div
-                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${topic.accent} text-white font-bold`}
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white font-bold shadow-lg"
+                        style={{ background: gradient }}
                       >
                         {topic.order}
                       </div>
@@ -158,7 +166,7 @@ function HomePage() {
                     <Link
                       to="/topico/$topicId"
                       params={{ topicId: topic.id }}
-                      className="block focus:outline-none focus:ring-2 focus:ring-[var(--ring)] rounded-xl"
+                      className="block focus:outline-none focus:ring-2 focus:ring-[var(--ring)] rounded-2xl"
                     >
                       {card}
                     </Link>
@@ -167,6 +175,7 @@ function HomePage() {
               );
             })}
           </ol>
+
         )}
       </main>
     </div>
