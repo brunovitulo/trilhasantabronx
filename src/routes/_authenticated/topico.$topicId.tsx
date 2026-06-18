@@ -31,6 +31,7 @@ import { Label } from "@/components/ui/label";
 
 import { toast } from "sonner";
 import { ApostilaView } from "@/components/ApostilaView";
+import { useExamPermission, requestPermission } from "@/lib/examPermission";
 
 import apostilaEmbalarHtml from "@/content/embalar/apostila.html?raw";
 import checklistEmbalarHtml from "@/content/embalar/checklist.html?raw";
@@ -604,6 +605,36 @@ function ExamDialogLauncher({
     );
   }
 
+  const { row: permRow, status: permStatus } = useExamPermission(userId, subtask.id);
+  const [requesting, setRequesting] = useState(false);
+
+  async function handleRequest() {
+    setRequesting(true);
+    const { error } = await requestPermission(userId, subtask.id);
+    setRequesting(false);
+    if (error) {
+      toast.error("Não consegui enviar o pedido", { description: error.message });
+      return;
+    }
+    toast.success("Pedido enviado ao gestor");
+  }
+
+  const canRequest =
+    !needsVideo &&
+    (permStatus === "none" ||
+      permStatus === "expired" ||
+      permStatus === "rejected" ||
+      permStatus === "consumed");
+  const isPending = permStatus === "pending";
+  const isApproved = permStatus === "approved";
+  const isRejected = permStatus === "rejected";
+  const isExpired = permStatus === "expired";
+
+  const expiresAt = permRow?.expires_at ? new Date(permRow.expires_at) : null;
+  const minutesLeft = expiresAt
+    ? Math.max(0, Math.ceil((expiresAt.getTime() - Date.now()) / 60000))
+    : 0;
+
   return (
     <div className="space-y-2">
       {needsVideo && (
@@ -611,14 +642,63 @@ function ExamDialogLauncher({
           Assista o vídeo acima e marque como visto para liberar o botão de iniciar a prova.
         </p>
       )}
-      <Button variant="outline"
-        size="sm"
-        className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25"
-        disabled={needsVideo}
-        onClick={() => setOpen(true)}
-      >
-        Realizar prova
-      </Button>
+
+      {canRequest && (
+        <>
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25"
+            disabled={needsVideo || requesting}
+            onClick={handleRequest}
+          >
+            {requesting ? "Enviando..." : "Solicitar permissão para realizar a prova"}
+          </Button>
+          {isRejected && (
+            <p className="text-xs text-rose-300">
+              O gestor ainda não está disponível para acompanhar. Tente novamente em alguns minutos.
+            </p>
+          )}
+          {isExpired && (
+            <p className="text-xs text-amber-300">
+              A liberação anterior expirou. Solicite novamente para iniciar a prova.
+            </p>
+          )}
+        </>
+      )}
+
+      {isPending && (
+        <>
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full border-amber-400/40 bg-amber-500/15 text-amber-100"
+            disabled
+          >
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            Aguardando liberação do gestor...
+          </Button>
+          <p className="text-xs text-foreground/80">
+            Seu pedido foi enviado. Aguarde o gestor liberar a prova — ele estará acompanhando você em tempo real.
+          </p>
+        </>
+      )}
+
+      {isApproved && (
+        <>
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full border-emerald-400/50 bg-emerald-500/20 text-foreground hover:bg-emerald-500/30"
+            onClick={() => setOpen(true)}
+          >
+            Realizar prova
+          </Button>
+          <p className="text-xs text-emerald-200">
+            Liberação ativa — inicie em até {minutesLeft} min, senão será necessário solicitar de novo.
+          </p>
+        </>
+      )}
 
       <Dialog open={open} onOpenChange={(o) => { if (o) setOpen(true); /* impedimos fechar via overlay/esc */ }}>
         <DialogContent

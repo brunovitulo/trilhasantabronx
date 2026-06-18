@@ -1,6 +1,7 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, Loader2, AlertCircle, MapPin, RotateCcw, FileText } from "lucide-react";
+import { ChevronLeft, Loader2, AlertCircle, MapPin, RotateCcw, FileText, KeyRound } from "lucide-react";
+import { approvePermission, rejectPermission } from "@/lib/examPermission";
 import { supabase } from "@/integrations/supabase/client";
 import { AppHeader } from "@/components/AppHeader";
 import { TOPICS, findSubtask, PASSING_SCORE } from "@/data/topics";
@@ -75,11 +76,18 @@ type AnswerRow = {
   feedback: string | null;
 };
 
+type PermissionRequest = {
+  id: string;
+  subtask_id: string;
+  created_at: string;
+};
+
 type AttendantRow = {
   id: string;
   full_name: string | null;
   progress: ProgressRow[];
   pending: PendingSubmission[];
+  permissionRequests: PermissionRequest[];
 };
 
 function AdminPage() {
@@ -91,7 +99,7 @@ function AdminPage() {
 
   async function refresh() {
     setLoading(true);
-    const [{ data: profiles }, { data: progress }, { data: pendings }] = await Promise.all([
+    const [{ data: profiles }, { data: progress }, { data: pendings }, { data: perms }] = await Promise.all([
       supabase
         .from("profiles")
         .select("id, full_name")
@@ -101,6 +109,11 @@ function AdminPage() {
         .from("open_evaluation_submissions")
         .select("id, user_id, subtask_id, created_at")
         .eq("status", "pending_review")
+        .order("created_at", { ascending: true }),
+      supabase
+        .from("exam_permission_requests")
+        .select("id, user_id, subtask_id, created_at")
+        .eq("status", "pending")
         .order("created_at", { ascending: true }),
     ]);
     const grouped: AttendantRow[] = (profiles ?? []).map((p) => ({
@@ -114,6 +127,9 @@ function AdminPage() {
           score: r.score,
         })),
       pending: (pendings ?? [])
+        .filter((s) => s.user_id === p.id)
+        .map((s) => ({ id: s.id, subtask_id: s.subtask_id, created_at: s.created_at })),
+      permissionRequests: (perms ?? [])
         .filter((s) => s.user_id === p.id)
         .map((s) => ({ id: s.id, subtask_id: s.subtask_id, created_at: s.created_at })),
     }));
@@ -133,6 +149,11 @@ function AdminPage() {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "subtask_progress" },
+        () => refresh(),
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "exam_permission_requests" },
         () => refresh(),
       )
       .subscribe();
@@ -186,6 +207,7 @@ function AdminPage() {
               <AttendantCard
                 key={att.id}
                 att={att}
+                reviewerId={user.id}
                 onCorrect={setCorrection}
                 onOpenHistory={() => setHistoryFor({ id: att.id, name: att.full_name })}
               />
@@ -223,10 +245,12 @@ function initials(name: string | null) {
 
 function AttendantCard({
   att,
+  reviewerId,
   onCorrect,
   onOpenHistory,
 }: {
   att: AttendantRow;
+  reviewerId: string;
   onCorrect: (submission: CorrectionTarget) => void;
   onOpenHistory: () => void;
 }) {
@@ -297,6 +321,67 @@ function AttendantCard({
             {doneTopics} de {totalTopics} tópicos concluídos
           </p>
         </div>
+
+        {/* Pedidos de permissão para prova */}
+        {att.permissionRequests.length > 0 && (
+          <div className="space-y-2">
+            {att.permissionRequests.map((p) => {
+              const meta = findSubtask(p.subtask_id);
+              const label = meta?.topic.title ?? "Prova";
+              return (
+                <div
+                  key={p.id}
+                  className="rounded-2xl border-2 border-rose-400/60 bg-rose-500/15 p-3 animate-pulse-once shadow-[0_0_24px_-4px_rgba(244,63,94,0.5)]"
+                >
+                  <div className="flex items-start gap-3">
+                    <KeyRound className="h-5 w-5 text-rose-200 shrink-0 mt-0.5" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-foreground">
+                        🔔 {att.full_name ?? "Atendente"} pediu permissão
+                      </p>
+                      <p className="text-sm text-foreground/90">
+                        Prova: {label}
+                      </p>
+                      <p className="text-xs text-foreground/70">
+                        Solicitado em {new Date(p.created_at).toLocaleString("pt-BR")}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <Button
+                      type="button"
+                      size="sm"
+                      className="rounded-full bg-emerald-500 hover:bg-emerald-600 text-white"
+                      onClick={async () => {
+                        const { error } = await approvePermission(p.id, reviewerId);
+                        if (error) {
+                          toast.error("Não consegui liberar", { description: error.message });
+                        } else {
+                          toast.success(`Prova liberada para ${att.full_name ?? "atendente"} — acompanhe em tempo real.`);
+                        }
+                      }}
+                    >
+                      Liberar prova
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="rounded-full"
+                      onClick={async () => {
+                        const { error } = await rejectPermission(p.id, reviewerId);
+                        if (error) toast.error("Erro", { description: error.message });
+                        else toast("Pedido rejeitado");
+                      }}
+                    >
+                      Rejeitar
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Avaliações pendentes inline */}
         {att.pending.length > 0 && (
