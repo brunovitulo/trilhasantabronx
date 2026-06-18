@@ -536,8 +536,9 @@ function ResetProgressBlock({
         <p className="text-sm font-medium text-foreground/90">Resetar progresso</p>
       </div>
       <p className="text-xs text-foreground/60">
-        Apaga o progresso desta atendente a partir do tópico escolhido (inclusive). Os tópicos anteriores não são afetados.
+        Apaga o progresso da atendente apenas no tópico escolhido. Os demais tópicos, anteriores ou posteriores, não são afetados.
       </p>
+
       <div className="flex flex-col sm:flex-row gap-2">
         <Select value={fromTopicId} onValueChange={setFromTopicId}>
           <SelectTrigger className="bg-white/5 border-white/10">
