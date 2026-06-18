@@ -87,6 +87,7 @@ function AdminPage() {
   const [list, setList] = useState<AttendantRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [correction, setCorrection] = useState<CorrectionTarget | null>(null);
+  const [historyFor, setHistoryFor] = useState<{ id: string; name: string | null } | null>(null);
 
   async function refresh() {
     setLoading(true);
