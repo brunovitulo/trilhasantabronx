@@ -284,7 +284,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "1. Como embalar e chamar o 99 — assistir destaque: checklist de embalagem",
         description: "Copie o link, cole em outra aba, assista o destaque por completo.",
-        url: "https://instagram.com/formar.atendente",
+        url: "https://www.instagram.com/stories/highlights/17908962375245598/",
       },
       {
         id: "embalar.checklist.baixar",
