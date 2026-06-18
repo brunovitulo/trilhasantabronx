@@ -63,6 +63,7 @@ export type Database = {
           created_at: string
           general_feedback: string | null
           id: string
+          retry_allowed: boolean
           reviewed_at: string | null
           reviewer_id: string | null
           score: number | null
@@ -75,6 +76,7 @@ export type Database = {
           created_at?: string
           general_feedback?: string | null
           id?: string
+          retry_allowed?: boolean
           reviewed_at?: string | null
           reviewer_id?: string | null
           score?: number | null
@@ -87,6 +89,7 @@ export type Database = {
           created_at?: string
           general_feedback?: string | null
           id?: string
+          retry_allowed?: boolean
           reviewed_at?: string | null
           reviewer_id?: string | null
           score?: number | null
