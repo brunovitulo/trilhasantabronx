@@ -1,6 +1,6 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, Loader2, AlertCircle, MapPin, RotateCcw } from "lucide-react";
+import { ChevronLeft, Loader2, AlertCircle, MapPin, RotateCcw, FileText } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AppHeader } from "@/components/AppHeader";
 import { TOPICS, findSubtask, PASSING_SCORE } from "@/data/topics";
@@ -10,6 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { SubmissionHistoryDialog } from "@/components/SubmissionHistoryDialog";
+import {
+  ADMIN_OPEN_CORRECTION_EVENT,
+  type AdminOpenCorrectionDetail,
+} from "@/components/AdminPendingBell";
 import {
   Dialog,
   DialogContent,
