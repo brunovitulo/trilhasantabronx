@@ -1067,10 +1067,12 @@ function EvaluationSubtask({
 
 function PracticeSubtask({
   subtask,
+  userId,
   completed,
   onComplete,
 }: {
   subtask: Extract<Subtask, { kind: "practice" }>;
+  userId: string;
   completed: boolean;
   onComplete: () => void;
 }) {
@@ -1085,7 +1087,18 @@ function PracticeSubtask({
     setAnswers((prev) => prev.map((a, i) => (i === qi ? oi : a)));
   }
 
-  function finish() {
+  async function finish() {
+    const correct = answers.filter(
+      (a, i) => a !== null && a === subtask.questions[i].correctIndex,
+    ).length;
+    // Persiste tentativa para a gestora ver no painel admin
+    await supabase.from("practice_attempts").insert({
+      user_id: userId,
+      subtask_id: subtask.id,
+      answers: answers as unknown as number[],
+      correct_count: correct,
+      total: subtask.questions.length,
+    });
     if (!completed) onComplete();
     setSubmitted(true);
   }
@@ -1110,13 +1123,13 @@ function PracticeSubtask({
   if (!started) {
     return (
       <div className="space-y-3">
-        <div className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm leading-relaxed text-amber-900">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.06] backdrop-blur-xl p-4 text-sm leading-relaxed text-foreground/90">
           <p className="font-semibold mb-2">⚠️ Antes de iniciar, leia com atenção:</p>
-          <ul className="list-disc pl-5 space-y-1">
-            <li>Ao iniciar, todas as <strong>{subtask.questions.length} perguntas</strong> vão aparecer.</li>
-            <li>Você precisa <strong>responder todas</strong> antes de finalizar.</li>
-            <li>Cada pergunta só pode ser respondida <strong>uma única vez</strong> — não dá para mudar a resposta depois.</li>
-            <li>Depois de finalizar, o exercício <strong>não pode ser refeito</strong>.</li>
+          <ul className="list-disc pl-5 space-y-1 text-foreground/80">
+            <li>Ao iniciar, todas as <strong className="text-foreground">{subtask.questions.length} perguntas</strong> vão aparecer.</li>
+            <li>Você precisa <strong className="text-foreground">responder todas</strong> antes de finalizar.</li>
+            <li>Cada pergunta só pode ser respondida <strong className="text-foreground">uma única vez</strong> — não dá para mudar a resposta depois.</li>
+            <li>Depois de finalizar, o exercício <strong className="text-foreground">não pode ser refeito</strong>.</li>
             <li>Este exercício precisa estar completo antes da avaliação final.</li>
           </ul>
         </div>
@@ -1132,33 +1145,33 @@ function PracticeSubtask({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-5">
       {subtask.questions.map((q, qi) => {
         const chosen = answers[qi];
         return (
-          <div key={qi} className="rounded-2xl border border-border/60 bg-muted/30 p-3">
-            <p className="text-sm font-medium mb-2">
+          <div key={qi} className="rounded-2xl border border-border/60 bg-muted/30 p-4">
+            <p className="text-[15px] sm:text-base font-semibold text-foreground leading-snug mb-4">
               {qi + 1}. {q.question}
             </p>
-            <div className="space-y-1.5">
+            <div className="space-y-2.5">
               {q.options.map((opt, oi) => {
                 const isChosen = chosen === oi;
                 const isCorrect = oi === q.correctIndex;
                 const answered = chosen != null;
                 const tone = !answered
-                  ? "border-border/60 hover:bg-muted/60"
+                  ? "border-border/60 hover:bg-muted/60 text-foreground/80"
                   : isCorrect
-                  ? "border-[var(--success)]/50 bg-[var(--success)]/10"
+                  ? "border-[var(--success)]/50 bg-[var(--success)]/10 text-foreground/90"
                   : isChosen
-                  ? "border-destructive/50 bg-destructive/10"
-                  : "border-border/40 opacity-60";
+                  ? "border-destructive/50 bg-destructive/10 text-foreground/90"
+                  : "border-border/40 opacity-60 text-foreground/70";
                 return (
                   <button
                     key={oi}
                     type="button"
                     disabled={answered}
                     onClick={() => pick(qi, oi)}
-                    className={`w-full text-left text-sm rounded-xl border px-3 py-2 transition-colors ${tone}`}
+                    className={`w-full text-left text-[13px] rounded-xl border px-3 py-2.5 transition-colors ${tone}`}
                   >
                     <span className="font-semibold mr-1">
                       {String.fromCharCode(97 + oi)})
@@ -1170,7 +1183,7 @@ function PracticeSubtask({
             </div>
             {chosen != null && (
               <p
-                className={`mt-2 text-xs font-medium ${
+                className={`mt-3 text-xs font-medium ${
                   chosen === q.correctIndex
                     ? "text-[var(--success)]"
                     : "text-destructive"
