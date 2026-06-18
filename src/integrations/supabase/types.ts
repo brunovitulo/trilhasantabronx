@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      exam_permission_requests: {
+        Row: {
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          expires_at: string | null
+          id: string
+          status: Database["public"]["Enums"]["exam_permission_status"]
+          subtask_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          expires_at?: string | null
+          id?: string
+          status?: Database["public"]["Enums"]["exam_permission_status"]
+          subtask_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          expires_at?: string | null
+          id?: string
+          status?: Database["public"]["Enums"]["exam_permission_status"]
+          subtask_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       open_evaluation_answers: {
         Row: {
           answer_text: string
@@ -226,6 +262,12 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "atendente"
+      exam_permission_status:
+        | "pending"
+        | "approved"
+        | "rejected"
+        | "expired"
+        | "consumed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -354,6 +396,13 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "atendente"],
+      exam_permission_status: [
+        "pending",
+        "approved",
+        "rejected",
+        "expired",
+        "consumed",
+      ],
     },
   },
 } as const
