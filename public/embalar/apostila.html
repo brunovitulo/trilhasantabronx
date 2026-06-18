@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apostila — Embalar e Despachar Pedidos</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: linear-gradient(160deg, #1a1630 0%, #0f0c1e 100%);
+    min-height: 100vh;
+    color: #fff;
+    padding: 0 0 60px;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, rgba(127,119,221,0.25), rgba(93,202,165,0.1));
+    border-bottom: 0.5px solid rgba(255,255,255,0.1);
+    padding: 48px 28px 36px;
+    text-align: center;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(93,202,165,0.2);
+    color: #9FE1CB;
+    border: 0.5px solid rgba(93,202,165,0.4);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .hero h1 {
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .hero h1 span { color: #AFA9EC; }
+  .hero p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+    max-width: 380px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 18px; }
+
+  .section {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(16px);
+    border: 0.5px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 24px 22px;
+    margin-top: 20px;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .section-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 22px;
+  }
+  .icon-purple { background: rgba(127,119,221,0.25); color: #AFA9EC; }
+  .icon-teal   { background: rgba(93,202,165,0.2);  color: #9FE1CB; }
+  .icon-amber  { background: rgba(239,159,39,0.2);  color: #FAC775; }
+  .icon-red    { background: rgba(226,75,74,0.2);   color: #F09595; }
+  .icon-blue   { background: rgba(55,138,221,0.2);  color: #85B7EB; }
+  .icon-pink   { background: rgba(212,83,126,0.2);  color: #ED93B1; }
+
+  .section-head h2 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+  }
+  .section-head p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    margin: 3px 0 0;
+  }
+
+  .steps { display: flex; flex-direction: column; gap: 12px; }
+  .step {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(93,202,165,0.25);
+    color: #9FE1CB;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.85);
+  }
+  .step-text strong {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+  }
+  .mini-card {
+    background: rgba(255,255,255,0.06);
+    border: 0.5px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 16px 14px;
+    text-align: center;
+  }
+  .mini-card i { font-size: 26px; margin-bottom: 8px; display: block; }
+  .mini-card strong { font-size: 13px; color: #fff; display: block; }
+  .mini-card span { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 3px; display: block; }
+
+  .alert {
+    background: rgba(226,75,74,0.12);
+    border: 0.5px solid rgba(226,75,74,0.3);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-top: 12px;
+  }
+  .alert i { font-size: 18px; color: #F09595; flex-shrink: 0; margin-top: 1px; }
+  .alert-text { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+  .alert-text strong { color: #fff; }
+
+  .tip {
+    background: rgba(93,202,165,0.1);
+    border: 0.5px solid rgba(93,202,165,0.3);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-top: 12px;
+  }
+  .tip i { font-size: 18px; color: #9FE1CB; flex-shrink: 0; margin-top: 1px; }
+  .tip-text { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+  .tip-text strong { color: #fff; }
+
+  .divider {
+    height: 0.5px;
+    background: rgba(255,255,255,0.08);
+    margin: 16px 0;
+  }
+
+  .tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag {
+    background: rgba(255,255,255,0.07);
+    border: 0.5px solid rgba(255,255,255,0.14);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tag i { font-size: 15px; color: #AFA9EC; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">Apostila — Módulo 2</div>
+  <h1>Embalar e <span>despachar pedidos</span></h1>
+  <p>Tudo que você precisa saber para embalar corretamente, usar o app 99 e evitar os erros mais comuns.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- EMBALAGEM -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-purple"><i class="ti ti-box-seam"></i></div>
+      <div>
+        <h2>Como embalar um pedido</h2>
+        <p>Processo passo a passo</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">Coloque o produto dentro do <strong>saquinho com lacre</strong> (similar ao do Mercado Livre). Cole o lacre com atenção — não tem como descolar depois.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">Coloque o saquinho lacrado dentro da <strong>sacola externa</strong>.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">Grampeie a sacola: <strong>dois grampos</strong>, um de cada lado, para fechar com segurança.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text">Cole o <strong>adesivo lacre</strong> por fora: dobra de um lado, passa pelo centro e cola do outro. Não descola — só rasga para abrir.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-text">Cole o <strong>post-it</strong> na sacola com o nome do cliente e o final do número do WhatsApp (para se organizar quando tiver vários pedidos ao mesmo tempo).</div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="alert" style="background:rgba(127,119,221,0.12);border:0.5px solid rgba(127,119,221,0.35)">
+      <i class="ti ti-eye-off" style="color:#AFA9EC"></i>
+      <div class="alert-text" style="color:rgba(255,255,255,0.85)"><strong style="color:#fff">Produto com formato de pênis?</strong> Antes de colocar no saquinho com lacre, envolva o produto com <strong style="color:#fff">plástico bolha</strong> para disfarçar o formato. O entregador não deve conseguir identificar o que está dentro pelo formato externo da embalagem. Discrição é um diferencial importante da nossa loja.</div>
+    </div>
+    <div class="divider"></div>
+    <div class="tip">
+      <i class="ti ti-bulb"></i>
+      <div class="tip-text">Antes de lacrar, <strong>teste todo produto eletrônico</strong> (vibrador, sugador, etc). Se chegar com defeito na casa do cliente, a gente paga outro motoboy pra buscar. Jamais envie sem testar.</div>
+    </div>
+  </div>
+
+  <!-- MATERIAIS -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-teal"><i class="ti ti-checklist"></i></div>
+      <div>
+        <h2>Materiais necessários</h2>
+        <p>Sempre verifique o estoque desses itens</p>
+      </div>
+    </div>
+    <div class="cards-grid">
+      <div class="mini-card">
+        <i class="ti ti-layout-grid" style="color:#AFA9EC"></i>
+        <strong>Sacolas</strong>
+        <span>3 tamanhos: P, M, G</span>
+      </div>
+      <div class="mini-card">
+        <i class="ti ti-shield-lock" style="color:#9FE1CB"></i>
+        <strong>Saquinhos c/ lacre</strong>
+        <span>3 tamanhos: P, M, G</span>
+      </div>
+      <div class="mini-card">
+        <i class="ti ti-clipboard" style="color:#FAC775"></i>
+        <strong>Grampeador</strong>
+        <span>Confira os grampos</span>
+      </div>
+      <div class="mini-card">
+        <i class="ti ti-note" style="color:#ED93B1"></i>
+        <strong>Post-it + caneta</strong>
+        <span>Para identificar sacolas</span>
+      </div>
+    </div>
+    <div class="alert">
+      <i class="ti ti-alert-triangle"></i>
+      <div class="alert-text">Faltou post-it ou grampo? <strong>Não dá pra embalar corretamente.</strong> Sempre fique de olho no estoque desses itens antes de precisar.</div>
+    </div>
+  </div>
+
+  <!-- TAMANHOS -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-amber"><i class="ti ti-ruler-measure"></i></div>
+      <div>
+        <h2>Escolha o tamanho certo</h2>
+        <p>Embalagem maior = mais cara. Não desperdice.</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text">Use sempre a <strong>menor embalagem que cabe o produto</strong> sem forçar. Embalagens maiores custam mais.</div>
+      </div>
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text">O saquinho com lacre e a sacola externa devem ter tamanhos <strong>compatíveis entre si</strong> — o saquinho precisa caber bem dentro da sacola.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SE ORGANIZAR COM VÁRIOS PEDIDOS -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-blue"><i class="ti ti-packages"></i></div>
+      <div>
+        <h2>Como se organizar com vários pedidos</h2>
+        <p>Faça um por vez, com calma</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">Acesse o <strong>resumo do pedido</strong> no sistema de gestão: nome do cliente, endereço e produtos. Deixe aberto na tela do computador.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">Levante, <strong>separe os produtos</strong> do pedido e embale tudo corretamente.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">Escreva no post-it: <strong>nome do cliente + rua + número + complemento</strong>. Cole na sacola e <strong>grampeie por cima</strong> — a cola é fraca e solta sem o grampo. Com todas as informações no post-it, na hora que o motoboy chegar você entrega a sacola certa sem precisar abrir nada.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text">Ao chamar o motoboy no app 99, insira o nome do cliente em <strong>LETRAS MAIÚSCULAS</strong>. Se chegarem 3 motos ao mesmo tempo, o nome em maiúsculo facilita identificar qual sacola é de qual moto rapidamente.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-text">Quando o motoboy chegar, <strong>confira o nome no post-it</strong> antes de entregar a sacola — entregue sempre a sacola certa para o motoboy certo.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-text">Só depois de concluir esse pedido completamente, passe para o próximo. <strong>Um pedido por vez.</strong></div>
+      </div>
+    </div>
+    <div class="tip">
+      <i class="ti ti-heart"></i>
+      <div class="tip-text"><strong>Tempero especial:</strong> tenha calma. Com pedidos acumulados e atraso, nunca se apresse. Se a mente estiver confusa, dê uma pausa — erros com pressa custam mais caro do que o tempo perdido.</div>
+    </div>
+  </div>
+
+  <!-- APP 99 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-teal"><i class="ti ti-scooter"></i></div>
+      <div>
+        <h2>Enviando pelo app 99</h2>
+        <p>Passo a passo do pedido</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">Abra o app 99 e selecione o menu <strong>Entrega</strong> (na barra inferior).</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">O endereço de coleta (a loja) já estará preenchido. Insira o <strong>endereço do cliente</strong> no campo de destino.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">Em detalhes do endereço, informe complemento, ponto de referência ou outras observações que facilitem para o motoboy.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text">Insira o <strong>nome e o telefone do cliente</strong> — se o motoboy não achar o local, ele pode ligar direto para o cliente.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-text">Escolha <strong>moto</strong> como tipo de veículo. Se não encontrar, use carro.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-text"><strong>Caixinha 1 (código de coleta): mantenha marcada.</strong> Em Uberlândia costuma ter vários entregadores na porta do prédio ao mesmo tempo — o código garante que o motoboy certo retire o pacote. <strong>Caixinha 2 (código do cliente): NUNCA desmarcar</strong> — garante que o pedido só é finalizado na presença do cliente.</div>
+      </div>
+    </div>
+    <div class="tip">
+      <i class="ti ti-bulb"></i>
+      <div class="tip-text">O código de 4 dígitos gerado pelo 99 é a sua segurança. O cliente passa esse código para o motoboy no ato da entrega. Sem esse código, o 99 não finaliza a corrida — o motoboy não consegue sumir com o pedido.</div>
+    </div>
+  </div>
+
+  <!-- ENDEREÇO INCORRETO -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-amber"><i class="ti ti-map-search"></i></div>
+      <div>
+        <h2>Validar o endereço antes de enviar</h2>
+        <p>Compare dois pontos antes de lançar no 99</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">Acesse o resumo do pedido no sistema e <strong>copie o nome da rua + número</strong>. Pesquise esse endereço no Google — vai aparecer um ponto no mapa.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">Abra uma <strong>segunda aba</strong> no navegador e cole o <strong>link da localização real do cliente</strong>, que está salvo nas observações do pedido no sistema. Esse link é a localização que o cliente enviou pelo WhatsApp.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>Compare os dois pontos</strong> no mapa. Estão batendo? Pode lançar no 99 normalmente, usando só o nome da rua e o número.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text">Os pontos <strong>não estão batendo?</strong> Abra o app 99, vá até o campo de endereço de entrega e <strong>arraste a tela para baixo</strong> — vai aparecer a opção de marcar o local manualmente no mapa. Posicione o ponto exatamente onde está a localização real do cliente.</div>
+      </div>
+    </div>
+    <div class="tip">
+      <i class="ti ti-bulb"></i>
+      <div class="tip-text">A localização real do cliente (link do Google Maps) sempre estará nas <strong>observações do pedido no sistema</strong> — o cliente já enviou essa localização durante o atendimento no WhatsApp e ela foi salva ali.</div>
+    </div>
+  </div>
+
+  <!-- PRÉ-ENVIO -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-pink"><i class="ti ti-message-check"></i></div>
+      <div>
+        <h2>Fluxo pré-envio</h2>
+        <p>Confirmar antes de chamar o motoboy</p>
+      </div>
+    </div>
+    <div class="alert" style="margin-bottom:14px">
+      <i class="ti ti-alert-triangle"></i>
+      <div class="alert-text"><strong>Problema muito comum:</strong> o cliente fez o pedido às 10h, você embala às 10:30 e chama o motoboy — mas nesse intervalo ele saiu, foi tomar banho ou esqueceu de avisar. O motoboy chega, ninguém atende, você liga e ele não responde. Resultado: pagar outra corrida. Para evitar isso, sempre siga o fluxo abaixo.</div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text"><strong>Antes de chamar o motoboy</strong>, sempre envie a mensagem de pré-envio para o cliente pelo Bot Conversa, perguntando se ele está online e pode receber agora.</div>
+      </div>
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text">Cliente respondeu que sim? Pode chamar o motoboy.</div>
+      </div>
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text">Cliente não respondeu? <strong>Não envie.</strong> Espere a confirmação. Se já passou muito tempo, ligue para ele pelo WhatsApp. Só envie após confirmar que ele está no endereço e vai receber.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOTOBOY PARTICULAR -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-blue"><i class="ti ti-user-check"></i></div>
+      <div>
+        <h2>Motoboy particular</h2>
+        <p>Quando e como usar</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text">Use o motoboy particular <strong>somente quando houver pedidos acumulados</strong> (ex: 5 sacolas para entregar de uma vez). Para um pedido só, use o 99 — é mais rápido e mais barato.</div>
+      </div>
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text">Consulte o <strong>cartão de contatos de motoboys</strong> na loja, ligue, passe o endereço e pergunte o valor da corrida antes de confirmar.</div>
+      </div>
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text">Quando o motoboy chegar, entregue as sacolas com o <strong>post-it de cada cliente</strong> e oriente o endereço de cada entrega.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ERROS COMUNS -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-red"><i class="ti ti-ban"></i></div>
+      <div>
+        <h2>Erros mais comuns — evite</h2>
+        <p>Cada erro gera custo extra de motoboy</p>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="alert">
+        <i class="ti ti-gift"></i>
+        <div class="alert-text"><strong>Esquecer o brinde.</strong> Sempre confira se o cliente ganhou brinde antes de lacrar. Esquecer = pagar outro motoboy só para levar o brinde.</div>
+      </div>
+      <div class="alert">
+        <i class="ti ti-color-swatch"></i>
+        <div class="alert-text"><strong>Variação errada (cor, sabor, tamanho).</strong> Sempre confirme a variação durante o atendimento e confira novamente na hora de embalar.</div>
+      </div>
+      <div class="alert">
+        <i class="ti ti-question-mark"></i>
+        <div class="alert-text"><strong>Não perguntar a variação.</strong> Se o produto tem cor, sabor ou tamanho, <strong>pergunte</strong> — mesmo que o cliente não tenha especificado.</div>
+      </div>
+      <div class="alert">
+        <i class="ti ti-hash"></i>
+        <div class="alert-text"><strong>Quantidade errada.</strong> A maioria dos pedidos é 1 unidade, mas não assuma. Sempre confira a quantidade de cada item no pedido.</div>
+      </div>
+      <div class="alert">
+        <i class="ti ti-map-2"></i>
+        <div class="alert-text"><strong>Endereço errado no 99.</strong> A mesma rua pode existir em outra cidade. Sempre confirme que o ponto no mapa é em Araguari antes de confirmar.</div>
+      </div>
+      <div class="alert">
+        <i class="ti ti-device-mobile-off"></i>
+        <div class="alert-text"><strong>Enviar produto eletrônico sem testar.</strong> Ligue, teste, confirme que funciona. Só então lacre e envie.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
