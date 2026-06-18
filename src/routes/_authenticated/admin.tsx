@@ -3,11 +3,20 @@ import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, Loader2, AlertCircle, MapPin, RotateCcw } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AppHeader } from "@/components/AppHeader";
-import { TOPICS, findSubtask } from "@/data/topics";
+import { TOPICS, findSubtask, PASSING_SCORE } from "@/data/topics";
 import { computeTopicStatuses, type ProgressRow } from "@/lib/progress";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -47,6 +56,20 @@ type PendingSubmission = {
   created_at: string;
 };
 
+type CorrectionTarget = PendingSubmission & {
+  user_id: string;
+  full_name: string | null;
+};
+
+type AnswerRow = {
+  id: string;
+  question_index: number;
+  question_text: string;
+  answer_text: string;
+  is_correct: boolean | null;
+  feedback: string | null;
+};
+
 type AttendantRow = {
   id: string;
   full_name: string | null;
@@ -55,8 +78,10 @@ type AttendantRow = {
 };
 
 function AdminPage() {
+  const { user } = Route.useRouteContext();
   const [list, setList] = useState<AttendantRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [correction, setCorrection] = useState<CorrectionTarget | null>(null);
 
   async function refresh() {
     setLoading(true);
@@ -139,10 +164,19 @@ function AdminPage() {
         ) : (
           <div className="mt-6 space-y-4">
             {list.map((att) => (
-              <AttendantCard key={att.id} att={att} />
+              <AttendantCard key={att.id} att={att} onCorrect={setCorrection} />
             ))}
           </div>
         )}
+        <CorrectionDialog
+          submission={correction}
+          reviewerId={user.id}
+          onOpenChange={(open) => !open && setCorrection(null)}
+          onReviewed={() => {
+            setCorrection(null);
+            refresh();
+          }}
+        />
       </main>
     </div>
   );
@@ -156,7 +190,13 @@ function initials(name: string | null) {
   return (a + b).toUpperCase() || "?";
 }
 
-function AttendantCard({ att }: { att: AttendantRow }) {
+function AttendantCard({
+  att,
+  onCorrect,
+}: {
+  att: AttendantRow;
+  onCorrect: (submission: CorrectionTarget) => void;
+}) {
   const statuses = useMemo(() => computeTopicStatuses(TOPICS, att.progress), [att.progress]);
   const totalTopics = TOPICS.length;
   const doneTopics = TOPICS.filter((t) => statuses[t.id] === "completed").length;
@@ -246,10 +286,13 @@ function AttendantCard({ att }: { att: AttendantRow }) {
                       {new Date(p.created_at).toLocaleString("pt-BR")}
                     </p>
                   </div>
-                  <Button asChild size="sm" className="rounded-full shrink-0">
-                    <Link to="/admin/avaliacoes" search={{ user: att.id }} hash={p.id}>
-                      Corrigir
-                    </Link>
+                  <Button
+                    type="button"
+                    size="sm"
+                    className="rounded-full shrink-0"
+                    onClick={() => onCorrect({ ...p, user_id: att.id, full_name: att.full_name })}
+                  >
+                    Corrigir
                   </Button>
                 </div>
               );
