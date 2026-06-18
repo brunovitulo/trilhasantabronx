@@ -495,9 +495,7 @@ function ResetProgressBlock({
   async function doReset() {
     if (!selectedTopic) return;
     setWorking(true);
-    const subtaskIds = TOPICS.filter((t) => t.order >= selectedTopic.order).flatMap((t) =>
-      t.subtasks.map((s) => s.id),
-    );
+    const subtaskIds = selectedTopic.subtasks.map((s) => s.id);
     if (subtaskIds.length === 0) {
       setWorking(false);
       setConfirmOpen(false);
@@ -524,12 +522,12 @@ function ResetProgressBlock({
       return;
     }
     toast.success(
-      `Progresso de ${attendantName ?? "atendente"} zerado a partir de "${selectedTopic.title}"`,
+      `Progresso de ${attendantName ?? "atendente"} zerado no tópico "${selectedTopic.title}"`,
     );
     setFromTopicId("");
-    // Atualiza a UI do painel
     if (typeof window !== "undefined") window.location.reload();
   }
+
 
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 space-y-2">
@@ -538,12 +536,13 @@ function ResetProgressBlock({
         <p className="text-sm font-medium text-foreground/90">Resetar progresso</p>
       </div>
       <p className="text-xs text-foreground/60">
-        Apaga o progresso desta atendente a partir do tópico escolhido (inclusive). Os tópicos anteriores não são afetados.
+        Apaga o progresso da atendente apenas no tópico escolhido. Os demais tópicos, anteriores ou posteriores, não são afetados.
       </p>
+
       <div className="flex flex-col sm:flex-row gap-2">
         <Select value={fromTopicId} onValueChange={setFromTopicId}>
           <SelectTrigger className="bg-white/5 border-white/10">
-            <SelectValue placeholder="Escolha o tópico inicial..." />
+            <SelectValue placeholder="Escolha o tópico..." />
           </SelectTrigger>
           <SelectContent>
             {TOPICS.map((t) => (
@@ -561,9 +560,10 @@ function ResetProgressBlock({
             className="rounded-full shrink-0"
             onClick={() => setConfirmOpen(true)}
           >
-            Resetar a partir daqui
+            Resetar este tópico
           </Button>
         )}
+
       </div>
 
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
@@ -574,18 +574,15 @@ function ResetProgressBlock({
               {selectedTopic ? (
                 <>
                   Isso vai zerar o progresso de{" "}
-                  <strong>{attendantName ?? "esta atendente"}</strong> a partir do tópico{" "}
+                  <strong>{attendantName ?? "esta atendente"}</strong> apenas no tópico{" "}
                   <strong>
                     {selectedTopic.order}. {selectedTopic.title}
-                  </strong>{" "}
-                  em diante. Os tópicos anteriores{" "}
-                  {selectedTopic.order > 1
-                    ? `(1 a ${selectedTopic.order - 1})`
-                    : "(nenhum)"}{" "}
-                  não serão afetados. Avaliações e notas a partir desse ponto também serão apagadas. Confirmar?
+                  </strong>
+                  . Os demais tópicos (anteriores e posteriores) não serão afetados. Confirmar?
                 </>
               ) : null}
             </AlertDialogDescription>
+
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={working}>Cancelar</AlertDialogCancel>
