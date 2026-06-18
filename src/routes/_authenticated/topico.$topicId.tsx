@@ -381,7 +381,7 @@ function SubtaskBody({
                   <ChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
                 )}
                 {subtask.kind === "practice" && (
-                  <PracticeSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} />
+                  <PracticeSubtask subtask={subtask} userId={userId} completed={completed} onComplete={() => onComplete()} />
                 )}
                 {subtask.kind === "evaluation" && (
                   evalLocked ? (
