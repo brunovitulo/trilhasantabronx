@@ -542,7 +542,7 @@ function ResetProgressBlock({
       <div className="flex flex-col sm:flex-row gap-2">
         <Select value={fromTopicId} onValueChange={setFromTopicId}>
           <SelectTrigger className="bg-white/5 border-white/10">
-            <SelectValue placeholder="Escolha o tópico inicial..." />
+            <SelectValue placeholder="Escolha o tópico..." />
           </SelectTrigger>
           <SelectContent>
             {TOPICS.map((t) => (
@@ -560,9 +560,10 @@ function ResetProgressBlock({
             className="rounded-full shrink-0"
             onClick={() => setConfirmOpen(true)}
           >
-            Resetar a partir daqui
+            Resetar este tópico
           </Button>
         )}
+
       </div>
 
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
