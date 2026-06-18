@@ -490,7 +490,7 @@ function ExamDialogLauncher({
           <DialogHeader>
             <DialogTitle className="text-xl">{blockTitle.replace(/^Passo \d+:\s*/, "")}</DialogTitle>
           </DialogHeader>
-          <div className="rounded-2xl border border-amber-500/40 bg-amber-500/10 p-4 text-sm leading-relaxed text-amber-100">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.06] backdrop-blur-xl p-4 text-sm leading-relaxed text-foreground/90">
             <p className="font-semibold mb-1">⚠ Antes de começar:</p>
             <p>
               Esta prova será acompanhada pelo seu gestor em tempo real. Responda com suas
