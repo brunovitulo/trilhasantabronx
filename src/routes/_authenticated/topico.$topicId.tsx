@@ -357,24 +357,22 @@ function VideoSubtask({
   const [opened, setOpened] = useState(false);
   const canMark = opened || completed;
 
-  function openVideo() {
-    window.open(subtask.url, "_blank", "noopener,noreferrer");
-    setOpened(true);
-  }
-
   return (
     <div className="space-y-3">
       <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-xs sm:text-sm text-muted-foreground break-all font-mono select-all">
         {subtask.url}
       </div>
       <div className="flex flex-wrap gap-2 items-center">
-        <Button
-          size="sm"
-          className="rounded-full"
-          onClick={openVideo}
+        <a
+          href={subtask.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => setOpened(true)}
+          className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
         >
           <ExternalLink className="h-4 w-4" /> Abrir o vídeo
-        </Button>
+        </a>
+
         {completed ? (
           <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>Desmarcar</Button>
         ) : (
