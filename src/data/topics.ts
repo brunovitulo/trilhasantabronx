@@ -540,11 +540,19 @@ export const TOPICS: Topic[] = [
         ],
       },
       {
+        id: "embalar.prova.video",
+        kind: "video",
+        title: "3. Antes da prova — assistir vídeo do Bruno",
+        description:
+          "Vídeo de alinhamento antes da prova. Recapitula o módulo, avisa que o gestor vai acompanhar a prova em tempo real e reforça a regra de 70% para passar.",
+        url: "https://www.instagram.com/stories/highlights/PLACEHOLDER_EMBALAR/",
+      },
+      {
         id: "embalar.prova.exam",
         kind: "open_evaluation",
-        title: "2. Exercício de embalar na prática — prova dissertativa (15 questões)",
+        title: "3. Antes da prova — prova dissertativa (15 questões)",
         description:
-          "Prova dissertativa corrigida pela gestora. Nota mínima 70%.",
+          "Prova dissertativa final do tópico. Nota mínima 70%.",
         passingScore: 70,
         questions: [
           { question: "Quais são os materiais necessários para embalar um pedido e por que é importante sempre verificar o estoque deles antes de precisar?", expectedAnswer: "" },
