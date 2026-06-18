@@ -188,9 +188,35 @@ export const TOPICS: Topic[] = [
           "Realize o pedido pelo site",
         ],
       },
-
+      {
+        id: "apresentacao.prova.video",
+        kind: "video",
+        title: "6. Antes da prova — assistir vídeo do Bruno",
+        description:
+          "Vídeo de alinhamento antes da prova. Recapitula o módulo, avisa que o gestor vai acompanhar a prova em tempo real e reforça a regra de 70% para passar.",
+        url: "https://www.instagram.com/stories/highlights/17958057917908256/",
+      },
+      {
+        id: "apresentacao.prova.exam",
+        kind: "open_evaluation",
+        title: "6. Prova: Apresentação da Loja",
+        description: "Prova dissertativa final do tópico. Nota mínima 70%.",
+        passingScore: 70,
+        questions: [
+          { question: "Qual o investimento inicial feito pelo Bruno pra começar o sex shop?", expectedAnswer: "" },
+          { question: "O que Bruno quer dizer ao falar que nossa empresa é uma empresa de marketing aonde o entregável é produto erótico?", expectedAnswer: "" },
+          { question: "Pra que serve a vela de massagem?", expectedAnswer: "" },
+          { question: "Qual a sensação que você sentiu na língua ao passar o Vibration nela?", expectedAnswer: "" },
+          { question: "Pra que que serve a ventosa?", expectedAnswer: "" },
+          { question: "Qual a diferença do material de cyber skin para os modelos de PVC (que é o da maioria das próteses)?", expectedAnswer: "" },
+          { question: "Explique com suas palavras como a loja deve estar organizada e por que isso é importante.", expectedAnswer: "" },
+          { question: "Qual a diferença dos botões \"Comprar via WhatsApp\" e \"Adicionar ao carrinho\" no site?", expectedAnswer: "" },
+          { question: "Cite 2 diferenciais da nossa loja (que está escrito no carrossel) do nosso site.", expectedAnswer: "" },
+        ],
+      },
     ],
   },
+
   {
     id: "embalar",
     order: 2,
