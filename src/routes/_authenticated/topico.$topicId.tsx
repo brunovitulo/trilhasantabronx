@@ -702,7 +702,9 @@ function VideoSubtask({
           <Button
             variant="outline"
             size="sm"
-            className="rounded-full border-white/15 bg-transparent hover:bg-white/5"
+            disabled={!copied}
+            title={!copied ? "Copie o link do vídeo primeiro" : undefined}
+            className="rounded-full border-white/15 bg-transparent hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={onComplete}
           >
             Já assisti
