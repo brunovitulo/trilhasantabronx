@@ -31,6 +31,7 @@ import { Label } from "@/components/ui/label";
 
 import { toast } from "sonner";
 import { ApostilaView } from "@/components/ApostilaView";
+import { useExamPermission, requestPermission } from "@/lib/examPermission";
 
 import apostilaEmbalarHtml from "@/content/embalar/apostila.html?raw";
 import checklistEmbalarHtml from "@/content/embalar/checklist.html?raw";
