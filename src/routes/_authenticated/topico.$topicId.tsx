@@ -25,6 +25,14 @@ import { Label } from "@/components/ui/label";
 
 import { toast } from "sonner";
 import { ApostilaView } from "@/components/ApostilaView";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import apostilaEmbalarHtml from "@/content/embalar/apostila.html?raw";
+import checklistEmbalarHtml from "@/content/embalar/checklist.html?raw";
+
+const INLINE_HTML_SOURCES: Record<"apostila" | "checklist", { title: string; html: string }> = {
+  apostila: { title: "Apostila — Embalar e Despachar Pedidos", html: apostilaEmbalarHtml },
+  checklist: { title: "Checklist de embalagem", html: checklistEmbalarHtml },
+};
 
 
 export const Route = createFileRoute("/_authenticated/topico/$topicId")({
