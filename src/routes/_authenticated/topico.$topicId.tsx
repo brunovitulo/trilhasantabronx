@@ -903,18 +903,35 @@ function MultiChecklistSubtask({
     <div className="space-y-3">
       {subtask.groups.map((group, gi) => {
         const done = checks[gi]?.every(Boolean);
+        const infoLines = group.subtitle
+          ? group.subtitle.split(/\s+·\s+/).map((line) => {
+              const m = line.match(/^([^:]+):\s*(.*)$/);
+              return m ? { label: m[1].trim(), value: m[2].trim() } : { label: null as string | null, value: line.trim() };
+            })
+          : [];
         return (
           <div
             key={gi}
-            className={`rounded-2xl border p-3 ${
+            className={`rounded-2xl border p-4 ${
               done ? "border-[var(--success)]/40 bg-[var(--success)]/5" : "border-border/60 bg-muted/30"
             }`}
           >
-            <p className="text-sm font-semibold">{group.title}</p>
-            {group.subtitle && (
-              <p className="text-xs text-muted-foreground mt-0.5">{group.subtitle}</p>
+            <p className="text-base font-semibold leading-tight">{group.title}</p>
+            {infoLines.length > 0 && (
+              <div className="mt-2 space-y-1">
+                {infoLines.map((line, li) => (
+                  <p key={li} className="text-sm leading-snug text-foreground/90">
+                    {line.label && (
+                      <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mr-1.5">
+                        {line.label}:
+                      </span>
+                    )}
+                    <span>{line.value}</span>
+                  </p>
+                ))}
+              </div>
             )}
-            <ul className="mt-2 space-y-1.5">
+            <ul className="mt-3 space-y-1 border-t border-border/40 pt-3">
               {group.items.map((item, ii) => (
                 <li key={ii} className="flex items-start gap-2">
                   <Checkbox
@@ -930,7 +947,7 @@ function MultiChecklistSubtask({
                   />
                   <Label
                     htmlFor={`${subtask.id}-${gi}-${ii}`}
-                    className="text-sm font-normal cursor-pointer leading-snug"
+                    className="text-xs font-normal cursor-pointer leading-snug text-muted-foreground"
                   >
                     {item}
                   </Label>
