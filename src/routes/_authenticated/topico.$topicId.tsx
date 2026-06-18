@@ -960,6 +960,7 @@ type OpenSubmission = {
   general_feedback: string | null;
   created_at: string;
   reviewed_at: string | null;
+  retry_allowed: boolean;
 };
 
 type OpenAnswerRow = {
