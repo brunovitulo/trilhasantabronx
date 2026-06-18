@@ -99,7 +99,7 @@ function AdminPage() {
 
   async function refresh() {
     setLoading(true);
-    const [{ data: profiles }, { data: progress }, { data: pendings }] = await Promise.all([
+    const [{ data: profiles }, { data: progress }, { data: pendings }, { data: perms }] = await Promise.all([
       supabase
         .from("profiles")
         .select("id, full_name")
@@ -109,6 +109,11 @@ function AdminPage() {
         .from("open_evaluation_submissions")
         .select("id, user_id, subtask_id, created_at")
         .eq("status", "pending_review")
+        .order("created_at", { ascending: true }),
+      supabase
+        .from("exam_permission_requests")
+        .select("id, user_id, subtask_id, created_at")
+        .eq("status", "pending")
         .order("created_at", { ascending: true }),
     ]);
     const grouped: AttendantRow[] = (profiles ?? []).map((p) => ({
@@ -122,6 +127,9 @@ function AdminPage() {
           score: r.score,
         })),
       pending: (pendings ?? [])
+        .filter((s) => s.user_id === p.id)
+        .map((s) => ({ id: s.id, subtask_id: s.subtask_id, created_at: s.created_at })),
+      permissionRequests: (perms ?? [])
         .filter((s) => s.user_id === p.id)
         .map((s) => ({ id: s.id, subtask_id: s.subtask_id, created_at: s.created_at })),
     }));
