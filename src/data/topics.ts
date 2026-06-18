@@ -112,29 +112,8 @@ export const TOPICS: Topic[] = [
         url: IG_APRESENTACAO,
       },
       {
-        id: "apresentacao.historia.quiz",
-        kind: "evaluation",
-        title: "1. Nossa História — quiz",
-        description: "Quiz rápido. Nota mínima 70%.",
-        questions: [
-          {
-            question: "Qual é o diferencial do atendimento da Santa Bronx?",
-            options: [
-              "Empurrar o produto mais caro",
-              "Indicar a solução certa para a dor do cliente",
-              "Falar o mínimo possível",
-            ],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual é o tom de comunicação da loja?",
-            options: ["Formal e técnico", "Descontraído e sem julgamento", "Silencioso"],
-            correctIndex: 1,
-          },
-        ],
-      },
-      {
         id: "apresentacao.organizacao.video",
+
         kind: "video",
         title: "2. Onde fica as coisas na loja — assistir destaque",
         url: "https://www.instagram.com/stories/highlights/18330806407255229/",
