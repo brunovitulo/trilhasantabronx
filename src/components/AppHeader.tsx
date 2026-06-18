@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { LogOut, Shield, Brain } from "lucide-react";
+import { LogOut, Shield, Brain, FileText } from "lucide-react";
 
 import logo from "@/assets/logo.png";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { NotificationBell } from "@/components/NotificationBell";
+import { SubmissionHistoryDialog } from "@/components/SubmissionHistoryDialog";
+import { AdminPendingBell } from "@/components/AdminPendingBell";
 
 export function AppHeader({ isAdmin }: { isAdmin: boolean }) {
   const navigate = useNavigate();
