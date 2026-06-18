@@ -100,6 +100,36 @@ export type Database = {
         }
         Relationships: []
       }
+      practice_attempts: {
+        Row: {
+          answers: Json
+          correct_count: number
+          created_at: string
+          id: string
+          subtask_id: string
+          total: number
+          user_id: string
+        }
+        Insert: {
+          answers: Json
+          correct_count: number
+          created_at?: string
+          id?: string
+          subtask_id: string
+          total: number
+          user_id: string
+        }
+        Update: {
+          answers?: Json
+          correct_count?: number
+          created_at?: string
+          id?: string
+          subtask_id?: string
+          total?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           blocked: boolean

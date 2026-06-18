@@ -1,29 +1,27 @@
 import { useState } from "react";
-import { ClipboardCheck } from "lucide-react";
+import { ClipboardCheck, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import checklistHtml from "@/content/embalar/checklist.html?raw";
 
 export function QuickChecklistDrawer() {
   const [open, setOpen] = useState(false);
-  // Force iframe to remount when reopened so checklist state resets.
   const [nonce, setNonce] = useState(0);
 
   return (
-    <Sheet
+    <Dialog
       open={open}
       onOpenChange={(o) => {
         setOpen(o);
         if (o) setNonce((n) => n + 1);
       }}
     >
-      <SheetTrigger asChild>
+      <DialogTrigger asChild>
         <Button
           type="button"
           variant="ghost"
@@ -35,18 +33,28 @@ export function QuickChecklistDrawer() {
           <ClipboardCheck className="h-4 w-4" />
           <span className="hidden sm:inline">Checklist</span>
         </Button>
-      </SheetTrigger>
-      <SheetContent side="right" className="p-0 w-full sm:max-w-md flex flex-col">
-        <SheetHeader className="px-4 py-3 border-b">
-          <SheetTitle className="text-base">Checklist de embalagem</SheetTitle>
-        </SheetHeader>
+      </DialogTrigger>
+      <DialogContent
+        className="p-0 w-[90vw] h-[90vh] max-w-[90vw] sm:max-w-[90vw] flex flex-col gap-0 [&>button]:hidden overflow-hidden"
+      >
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border/60 shrink-0">
+          <DialogTitle className="text-base">Checklist de embalagem</DialogTitle>
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            className="rounded-full p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+            aria-label="Fechar"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
         <iframe
           key={nonce}
           srcDoc={checklistHtml}
           title="Checklist de embalagem"
-          className="flex-1 w-full border-0"
+          className="flex-1 w-full border-0 bg-white"
         />
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, CheckCircle2, Circle, Copy, Loader2, Lock } from "lucide-react";
+import { ChevronLeft, CheckCircle2, Circle, Copy, Loader2, Lock, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { findTopic, type Subtask, PASSING_SCORE } from "@/data/topics";
 import { computeTopicStatuses, getSubtaskState, type ProgressRow } from "@/lib/progress";
@@ -25,7 +25,7 @@ import { Label } from "@/components/ui/label";
 
 import { toast } from "sonner";
 import { ApostilaView } from "@/components/ApostilaView";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+
 import apostilaEmbalarHtml from "@/content/embalar/apostila.html?raw";
 import checklistEmbalarHtml from "@/content/embalar/checklist.html?raw";
 
@@ -170,20 +170,25 @@ function TopicPage() {
         ) : (
           <div className="mt-6 space-y-4">
             {(() => {
-              // Final gate: video de alinhamento + prova dissertativa.
-              // Ambos só liberam quando todos os outros passos do tópico estiverem concluídos.
-              const FINAL_GATE_IDS = new Set<string>([
-                "apresentacao.prova.video",
-                "apresentacao.prova.exam",
-              ]);
-              const EXAM_ID = "apresentacao.prova.exam";
-              const GATE_VIDEO_ID = "apresentacao.prova.video";
+              // Padrão global: todo tópico pode ter um sub-assunto "Antes da prova"
+              // com um vídeo do Bruno (`*.prova.video`) + a prova dissertativa
+              // (`*.prova.exam`). Ambos só liberam quando todos os outros passos
+              // estiverem concluídos. E a prova só abre após o vídeo ser marcado.
+              const gateVideo = topic.subtasks.find((s) => /\.prova\.video$/.test(s.id));
+              const gateExam = topic.subtasks.find((s) => /\.prova\.exam$/.test(s.id));
+              const FINAL_GATE_IDS = new Set<string>(
+                [gateVideo?.id, gateExam?.id].filter(Boolean) as string[],
+              );
+              const EXAM_ID = gateExam?.id ?? null;
+              const GATE_VIDEO_ID = gateVideo?.id ?? null;
 
               const nonGateSubtasks = topic.subtasks.filter((s) => !FINAL_GATE_IDS.has(s.id));
               const gateUnlocked =
                 nonGateSubtasks.length === 0 ||
                 nonGateSubtasks.every((s) => getSubtaskState(s.id, rows).completed);
-              const gateVideoCompleted = getSubtaskState(GATE_VIDEO_ID, rows).completed;
+              const gateVideoCompleted = GATE_VIDEO_ID
+                ? getSubtaskState(GATE_VIDEO_ID, rows).completed
+                : true;
 
               return groupSubtasks(topic.subtasks).map((group) => {
                 const multi = group.items.length > 1;
@@ -376,7 +381,7 @@ function SubtaskBody({
                   <ChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />
                 )}
                 {subtask.kind === "practice" && (
-                  <PracticeSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} />
+                  <PracticeSubtask subtask={subtask} userId={userId} completed={completed} onComplete={() => onComplete()} />
                 )}
                 {subtask.kind === "evaluation" && (
                   evalLocked ? (
@@ -485,7 +490,7 @@ function ExamDialogLauncher({
           <DialogHeader>
             <DialogTitle className="text-xl">{blockTitle.replace(/^Passo \d+:\s*/, "")}</DialogTitle>
           </DialogHeader>
-          <div className="rounded-2xl border border-amber-500/40 bg-amber-500/10 p-4 text-sm leading-relaxed text-amber-100">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.06] backdrop-blur-xl p-4 text-sm leading-relaxed text-foreground/90">
             <p className="font-semibold mb-1">⚠ Antes de começar:</p>
             <p>
               Esta prova será acompanhada pelo seu gestor em tempo real. Responda com suas
@@ -801,19 +806,29 @@ function InlineHtmlSubtask({
           </Button>
         )}
       </div>
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="right" className="p-0 w-full sm:max-w-2xl flex flex-col">
-          <SheetHeader className="px-4 py-3 border-b">
-            <SheetTitle className="text-base">{source.title}</SheetTitle>
-          </SheetHeader>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent
+          className="p-0 w-[90vw] h-[90vh] max-w-[90vw] sm:max-w-[90vw] flex flex-col gap-0 [&>button]:hidden overflow-hidden"
+        >
+          <div className="flex items-center justify-between px-4 py-3 border-b border-border/60 shrink-0">
+            <DialogTitle className="text-base">{source.title}</DialogTitle>
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="rounded-full p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+              aria-label="Fechar"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
           <iframe
             key={nonce}
             srcDoc={source.html}
             title={source.title}
-            className="flex-1 w-full border-0"
+            className="flex-1 w-full border-0 bg-white"
           />
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -898,18 +913,35 @@ function MultiChecklistSubtask({
     <div className="space-y-3">
       {subtask.groups.map((group, gi) => {
         const done = checks[gi]?.every(Boolean);
+        const infoLines = group.subtitle
+          ? group.subtitle.split(/\s+·\s+/).map((line) => {
+              const m = line.match(/^([^:]+):\s*(.*)$/);
+              return m ? { label: m[1].trim(), value: m[2].trim() } : { label: null as string | null, value: line.trim() };
+            })
+          : [];
         return (
           <div
             key={gi}
-            className={`rounded-2xl border p-3 ${
+            className={`rounded-2xl border p-4 ${
               done ? "border-[var(--success)]/40 bg-[var(--success)]/5" : "border-border/60 bg-muted/30"
             }`}
           >
-            <p className="text-sm font-semibold">{group.title}</p>
-            {group.subtitle && (
-              <p className="text-xs text-muted-foreground mt-0.5">{group.subtitle}</p>
+            <p className="text-base font-semibold leading-tight">{group.title}</p>
+            {infoLines.length > 0 && (
+              <div className="mt-2 space-y-1">
+                {infoLines.map((line, li) => (
+                  <p key={li} className="text-sm leading-snug text-foreground/90">
+                    {line.label && (
+                      <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mr-1.5">
+                        {line.label}:
+                      </span>
+                    )}
+                    <span>{line.value}</span>
+                  </p>
+                ))}
+              </div>
             )}
-            <ul className="mt-2 space-y-1.5">
+            <ul className="mt-3 space-y-1 border-t border-border/40 pt-3">
               {group.items.map((item, ii) => (
                 <li key={ii} className="flex items-start gap-2">
                   <Checkbox
@@ -925,7 +957,7 @@ function MultiChecklistSubtask({
                   />
                   <Label
                     htmlFor={`${subtask.id}-${gi}-${ii}`}
-                    className="text-sm font-normal cursor-pointer leading-snug"
+                    className="text-xs font-normal cursor-pointer leading-snug text-muted-foreground"
                   >
                     {item}
                   </Label>
@@ -1035,10 +1067,12 @@ function EvaluationSubtask({
 
 function PracticeSubtask({
   subtask,
+  userId,
   completed,
   onComplete,
 }: {
   subtask: Extract<Subtask, { kind: "practice" }>;
+  userId: string;
   completed: boolean;
   onComplete: () => void;
 }) {
@@ -1053,7 +1087,18 @@ function PracticeSubtask({
     setAnswers((prev) => prev.map((a, i) => (i === qi ? oi : a)));
   }
 
-  function finish() {
+  async function finish() {
+    const correct = answers.filter(
+      (a, i) => a !== null && a === subtask.questions[i].correctIndex,
+    ).length;
+    // Persiste tentativa para a gestora ver no painel admin
+    await supabase.from("practice_attempts").insert({
+      user_id: userId,
+      subtask_id: subtask.id,
+      answers: answers as unknown as number[],
+      correct_count: correct,
+      total: subtask.questions.length,
+    });
     if (!completed) onComplete();
     setSubmitted(true);
   }
@@ -1078,13 +1123,13 @@ function PracticeSubtask({
   if (!started) {
     return (
       <div className="space-y-3">
-        <div className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm leading-relaxed text-amber-900">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.06] backdrop-blur-xl p-4 text-sm leading-relaxed text-foreground/90">
           <p className="font-semibold mb-2">⚠️ Antes de iniciar, leia com atenção:</p>
-          <ul className="list-disc pl-5 space-y-1">
-            <li>Ao iniciar, todas as <strong>{subtask.questions.length} perguntas</strong> vão aparecer.</li>
-            <li>Você precisa <strong>responder todas</strong> antes de finalizar.</li>
-            <li>Cada pergunta só pode ser respondida <strong>uma única vez</strong> — não dá para mudar a resposta depois.</li>
-            <li>Depois de finalizar, o exercício <strong>não pode ser refeito</strong>.</li>
+          <ul className="list-disc pl-5 space-y-1 text-foreground/80">
+            <li>Ao iniciar, todas as <strong className="text-foreground">{subtask.questions.length} perguntas</strong> vão aparecer.</li>
+            <li>Você precisa <strong className="text-foreground">responder todas</strong> antes de finalizar.</li>
+            <li>Cada pergunta só pode ser respondida <strong className="text-foreground">uma única vez</strong> — não dá para mudar a resposta depois.</li>
+            <li>Depois de finalizar, o exercício <strong className="text-foreground">não pode ser refeito</strong>.</li>
             <li>Este exercício precisa estar completo antes da avaliação final.</li>
           </ul>
         </div>
@@ -1100,33 +1145,33 @@ function PracticeSubtask({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-5">
       {subtask.questions.map((q, qi) => {
         const chosen = answers[qi];
         return (
-          <div key={qi} className="rounded-2xl border border-border/60 bg-muted/30 p-3">
-            <p className="text-sm font-medium mb-2">
+          <div key={qi} className="rounded-2xl border border-border/60 bg-muted/30 p-4">
+            <p className="text-[15px] sm:text-base font-semibold text-foreground leading-snug mb-4">
               {qi + 1}. {q.question}
             </p>
-            <div className="space-y-1.5">
+            <div className="space-y-2.5">
               {q.options.map((opt, oi) => {
                 const isChosen = chosen === oi;
                 const isCorrect = oi === q.correctIndex;
                 const answered = chosen != null;
                 const tone = !answered
-                  ? "border-border/60 hover:bg-muted/60"
+                  ? "border-border/60 hover:bg-muted/60 text-foreground/80"
                   : isCorrect
-                  ? "border-[var(--success)]/50 bg-[var(--success)]/10"
+                  ? "border-[var(--success)]/50 bg-[var(--success)]/10 text-foreground/90"
                   : isChosen
-                  ? "border-destructive/50 bg-destructive/10"
-                  : "border-border/40 opacity-60";
+                  ? "border-destructive/50 bg-destructive/10 text-foreground/90"
+                  : "border-border/40 opacity-60 text-foreground/70";
                 return (
                   <button
                     key={oi}
                     type="button"
                     disabled={answered}
                     onClick={() => pick(qi, oi)}
-                    className={`w-full text-left text-sm rounded-xl border px-3 py-2 transition-colors ${tone}`}
+                    className={`w-full text-left text-[13px] rounded-xl border px-3 py-2.5 transition-colors ${tone}`}
                   >
                     <span className="font-semibold mr-1">
                       {String.fromCharCode(97 + oi)})
@@ -1138,7 +1183,7 @@ function PracticeSubtask({
             </div>
             {chosen != null && (
               <p
-                className={`mt-2 text-xs font-medium ${
+                className={`mt-3 text-xs font-medium ${
                   chosen === q.correctIndex
                     ? "text-[var(--success)]"
                     : "text-destructive"
