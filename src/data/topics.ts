@@ -432,12 +432,12 @@ export const TOPICS: Topic[] = [
           {
             question: "A caixinha de \"código de coleta\" no app 99 deve estar:",
             options: [
+              "Sempre marcada, independente da cidade",
               "Sempre desmarcada para agilizar",
-              "Marcada — em Uberlândia costuma ter vários entregadores juntos, o código evita que o pacote seja retirado pelo motoboy errado",
-              "Marcada apenas quando houver mais de 2 pedidos",
-              "Tanto faz",
+              "Desmarcada em Araguari (não há vários entregadores juntos) — em outras cidades como Uberlândia, deve ficar marcada",
+              "Marcada apenas quando houver mais de 3 pedidos",
             ],
-            correctIndex: 1,
+            correctIndex: 2,
           },
           {
             question: "O que acontece se a \"caixinha 2\" (código do cliente) for desmarcada no 99?",
