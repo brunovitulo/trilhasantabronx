@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist — Fundamentos de Vendas</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(160deg,#1a1630 0%,#0f0c1e 100%);min-height:100vh;color:#fff;padding:0 0 80px}
+.header{padding:28px 20px 16px;text-align:center}
+.tag{display:inline-block;background:rgba(93,202,165,0.2);color:#9FE1CB;border:0.5px solid rgba(93,202,165,0.4);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 12px;border-radius:20px;margin-bottom:10px}
+.header h1{font-size:20px;font-weight:600;color:#fff;margin-bottom:4px}
+.header p{font-size:12px;color:rgba(255,255,255,0.5)}
+.wrap{max-width:540px;margin:0 auto;padding:0 16px}
+.block{background:rgba(255,255,255,0.05);backdrop-filter:blur(16px);border:0.5px solid rgba(255,255,255,0.1);border-radius:18px;padding:18px 16px;margin-bottom:14px}
+.block-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:0.5px solid rgba(255,255,255,0.08)}
+.block-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.bi-purple{background:rgba(127,119,221,0.25);color:#AFA9EC}
+.bi-teal{background:rgba(93,202,165,0.2);color:#9FE1CB}
+.bi-amber{background:rgba(239,159,39,0.2);color:#FAC775}
+.bi-blue{background:rgba(55,138,221,0.2);color:#85B7EB}
+.bi-pink{background:rgba(212,83,126,0.2);color:#ED93B1}
+.block-head h2{font-size:14px;font-weight:600;color:#fff}
+.block-head p{font-size:11px;color:rgba(255,255,255,0.45);margin-top:2px}
+.item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:0.5px solid rgba(255,255,255,0.06);cursor:pointer;user-select:none}
+.item:last-child{border-bottom:none;padding-bottom:0}
+.item:first-child{padding-top:0}
+.check{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all 0.15s}
+.check i{font-size:12px;opacity:0}
+.item.done .check{background:#5DCAA5;border-color:#5DCAA5}
+.item.done .check i{opacity:1;color:#04342C}
+.item.done .item-text{color:rgba(255,255,255,0.4);text-decoration:line-through;text-decoration-color:rgba(255,255,255,0.2)}
+.item-text{font-size:13px;color:rgba(255,255,255,0.85);line-height:1.5}
+.item-text strong{color:#fff;font-weight:600}
+.progress-wrap{margin-bottom:20px}
+.progress-bar{height:6px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;background:linear-gradient(90deg,#5DCAA5,#AFA9EC);border-radius:4px;transition:width 0.3s ease;width:0%}
+.progress-label{font-size:11px;color:rgba(255,255,255,0.5);text-align:right}
+.btn-reset{display:block;width:100%;margin-top:6px;padding:13px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.14);border-radius:12px;color:rgba(255,255,255,0.5);font-size:13px;cursor:pointer;text-align:center}
+.congrats{display:none;background:rgba(93,202,165,0.12);border:0.5px solid rgba(93,202,165,0.35);border-radius:14px;padding:18px;text-align:center;margin-bottom:14px}
+.congrats i{font-size:28px;color:#9FE1CB;margin-bottom:8px;display:block}
+.congrats p{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px}
+.congrats span{font-size:12px;color:rgba(255,255,255,0.55)}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="tag">Checklist de aprendizados</div>
+  <h1>Fundamentos de vendas</h1>
+  <p>Marque o que você entendeu e vai aplicar</p>
+</div>
+<div class="wrap">
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="pbar"></div></div>
+    <div class="progress-label" id="plabel">0 / 0 itens</div>
+  </div>
+  <div id="congrats" class="congrats">
+    <i class="ti ti-circle-check"></i>
+    <p>Fundamentos fixados!</p>
+    <span>Você revisou todos os aprendizados deste módulo.</span>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-pink"><i class="ti ti-mood-smile"></i></div>
+      <div><h2>Pré-requisito</h2><p>Sem isso, nada funciona</p></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Entendi que <strong>simpatia é pré-requisito</strong> — independente de como estou emocionalmente, não posso perder a leveza no atendimento</div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-amber"><i class="ti ti-clock-bolt"></i></div>
+      <div><h2>Fundamento 1 — Tempo de resposta</h2><p>Cada segundo importa</p></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Entendi que o cliente manda mensagem para várias lojas ao mesmo tempo — <strong>quem responde primeiro ganha a atenção dele</strong></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Entendi que demorar para responder faz o cliente <strong>voltar ao Google e comprar em outro lugar</strong></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou sempre responder o mais rápido possível — <strong>sem deixar nenhum cliente esperando</strong></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-teal"><i class="ti ti-heart-handshake"></i></div>
+      <div><h2>Fundamento 2 — Consultora, não vendedora</h2><p>Pessoas odeiam sentir que estão sendo empurradas</p></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Entendi a diferença entre ser <strong>consultora</strong> (ajudar de verdade) e <strong>vendedora</strong> (empurrar produto)</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou me importar de verdade com o cliente — o objetivo é ele <strong>sair satisfeito e voltar</strong></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Nunca vou dar indicações aleatórias — vou <strong>perguntar primeiro para entender o que ele precisa</strong></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-purple"><i class="ti ti-message-question"></i></div>
+      <div><h2>Fundamento 3 — Perguntar e justificar</h2><p>A indicação certa no momento certo</p></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou sempre fazer perguntas antes de indicar — para <strong>filtrar a melhor opção</strong> para aquele cliente específico</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Nunca vou enviar um produto apenas dizendo "é o melhor" — vou <strong>explicar o porquê</strong> baseado nas qualidades do produto e na necessidade do cliente</div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-blue"><i class="ti ti-shield-check"></i></div>
+      <div><h2>Fundamento 4 — Quebrar objeções</h2><p>O cliente não fala tudo que está na cabeça</p></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Entendi que o cliente muitas vezes <strong>desiste sem perguntar</strong> — e minha função é prever e quebrar esses medos antes</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Aprendi as principais objeções da nossa loja: <strong>discrição na entrega, embalagem sem identificação, loja física discreta</strong></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou <strong>antecipar objeções</strong> — sem esperar o cliente perguntar, já quebrarei os medos na hora de indicar o produto</div>
+    </div>
+  </div>
+
+  <button class="btn-reset" onclick="reset()">
+    <i class="ti ti-refresh" style="font-size:14px;vertical-align:-2px;margin-right:6px"></i>
+    Limpar checklist
+  </button>
+</div>
+<script>
+function toggle(el){el.classList.toggle('done');update();}
+function update(){
+  const all=document.querySelectorAll('.item');
+  const done=document.querySelectorAll('.item.done');
+  const pct=all.length?Math.round(done.length/all.length*100):0;
+  document.getElementById('pbar').style.width=pct+'%';
+  document.getElementById('plabel').textContent=done.length+' / '+all.length+' itens';
+  document.getElementById('congrats').style.display=(done.length===all.length&&all.length>0)?'block':'none';
+}
+function reset(){document.querySelectorAll('.item.done').forEach(el=>el.classList.remove('done'));update();}
+update();
+</script>
+</body>
+</html>

@@ -40,6 +40,8 @@ import apostilaResponsabilidadeHtml from "@/content/responsabilidade/apostila.ht
 import checklistResponsabilidadeHtml from "@/content/responsabilidade/checklist.html?raw";
 import apostilaAppPedidosHtml from "@/content/responsabilidade/app-apostila.html?raw";
 import checklistAppPedidosHtml from "@/content/responsabilidade/app-checklist.html?raw";
+import apostilaVendasHtml from "@/content/vendas/apostila.html?raw";
+import checklistVendasHtml from "@/content/vendas/checklist.html?raw";
 
 type InlineHtmlSource =
   | "apostila"
@@ -48,7 +50,9 @@ type InlineHtmlSource =
   | "responsabilidade"
   | "responsabilidade_checklist"
   | "app_apostila"
-  | "app_checklist";
+  | "app_checklist"
+  | "vendas_apostila"
+  | "vendas_checklist";
 
 const INLINE_HTML_SOURCES: Record<InlineHtmlSource, { title: string; html: string }> = {
   apostila: { title: "Apostila — Embalar e Despachar Pedidos", html: apostilaEmbalarHtml },
@@ -58,6 +62,8 @@ const INLINE_HTML_SOURCES: Record<InlineHtmlSource, { title: string; html: strin
   responsabilidade_checklist: { title: "Checklist — Responsabilidades Diárias", html: checklistResponsabilidadeHtml },
   app_apostila: { title: "Apostila — App de Pedidos", html: apostilaAppPedidosHtml },
   app_checklist: { title: "Checklist — App de Pedidos", html: checklistAppPedidosHtml },
+  vendas_apostila: { title: "Apostila — Fundamentos de Vendas", html: apostilaVendasHtml },
+  vendas_checklist: { title: "Checklist — Fundamentos de Vendas", html: checklistVendasHtml },
 };
 
 
