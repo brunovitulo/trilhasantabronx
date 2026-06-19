@@ -98,7 +98,9 @@ export type Subtask =
         | "app_apostila"
         | "app_checklist"
         | "vendas_apostila"
-        | "vendas_checklist";
+        | "vendas_checklist"
+        | "objecoes_apostila"
+        | "objecoes_checklist";
       openLabel?: string;
       helperText?: string;
       confirmLabel: string;
@@ -127,7 +129,9 @@ export type Subtask =
           | "app_apostila"
           | "app_checklist"
           | "vendas_apostila"
-          | "vendas_checklist";
+          | "vendas_checklist"
+          | "objecoes_apostila"
+          | "objecoes_checklist";
         openLabel: string;
         confirmLabel: string;
         helperText?: string;
@@ -142,7 +146,9 @@ export type Subtask =
           | "app_apostila"
           | "app_checklist"
           | "vendas_apostila"
-          | "vendas_checklist";
+          | "vendas_checklist"
+          | "objecoes_apostila"
+          | "objecoes_checklist";
         openLabel: string;
         confirmLabel: string;
         helperText?: string;
@@ -1077,9 +1083,53 @@ export const TOPICS: Topic[] = [
       {
         id: "objecoes.video",
         kind: "video",
-        title: "1. Principais objeções — assistir destaque",
-        description: "Assista o destaque 'Principais Objeções' no Instagram da loja.",
+        title: "1. Principais Objeções (Sex Shop) — assistir destaque",
+        description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: IG_OBJECOES,
+      },
+      {
+        id: "objecoes.apostila",
+        kind: "inline_html",
+        title: "2. Ler apostila — Principais Objeções (Sex Shop)",
+        description: "Leia a apostila por completo antes de fazer os exercícios.",
+        source: "objecoes_apostila",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "objecoes.fixacao",
+        kind: "practice",
+        title: "3. Exercício de fixação — Principais Objeções (Sex Shop) (15 questões)",
+        description:
+          "Múltipla escolha autocorrigido. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [],
+      },
+      {
+        id: "objecoes.checklist",
+        kind: "inline_html",
+        title: "4. Ver checklist de aprendizados — Principais Objeções (Sex Shop)",
+        description:
+          "Marque os aprendizados que você fixou neste módulo. Este checklist ficará disponível para revisão sempre que precisar.",
+        source: "objecoes_checklist",
+        openLabel: "Abrir checklist",
+        helperText: "Este checklist também fica disponível no ícone do topo do site.",
+        confirmLabel: "Marquei todos os itens do checklist.",
+      },
+      {
+        id: "objecoes.prova.video",
+        kind: "video",
+        title: "5. Antes da prova — assistir vídeo do Bruno",
+        description:
+          "Vídeo de alinhamento antes da prova. Recapitula o módulo e reforça as regras da avaliação.",
+        url: "https://www.instagram.com/stories/highlights/17958057917908256/",
+      },
+      {
+        id: "objecoes.prova.exam",
+        kind: "open_evaluation",
+        title: "5. Prova: Principais Objeções (Sex Shop)",
+        description: "Prova dissertativa final do tópico. Nota mínima 70%.",
+        passingScore: 70,
+        questions: [],
       },
     ],
   },

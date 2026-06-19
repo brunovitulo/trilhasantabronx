@@ -42,6 +42,8 @@ import apostilaAppPedidosHtml from "@/content/responsabilidade/app-apostila.html
 import checklistAppPedidosHtml from "@/content/responsabilidade/app-checklist.html?raw";
 import apostilaVendasHtml from "@/content/vendas/apostila.html?raw";
 import checklistVendasHtml from "@/content/vendas/checklist.html?raw";
+import apostilaObjecoesHtml from "@/content/objecoes/apostila.html?raw";
+import checklistObjecoesHtml from "@/content/objecoes/checklist.html?raw";
 
 type InlineHtmlSource =
   | "apostila"
@@ -52,7 +54,9 @@ type InlineHtmlSource =
   | "app_apostila"
   | "app_checklist"
   | "vendas_apostila"
-  | "vendas_checklist";
+  | "vendas_checklist"
+  | "objecoes_apostila"
+  | "objecoes_checklist";
 
 const INLINE_HTML_SOURCES: Record<InlineHtmlSource, { title: string; html: string }> = {
   apostila: { title: "Apostila — Embalar e Despachar Pedidos", html: apostilaEmbalarHtml },
@@ -64,6 +68,8 @@ const INLINE_HTML_SOURCES: Record<InlineHtmlSource, { title: string; html: strin
   app_checklist: { title: "Checklist — App de Pedidos", html: checklistAppPedidosHtml },
   vendas_apostila: { title: "Apostila — Fundamentos de Vendas", html: apostilaVendasHtml },
   vendas_checklist: { title: "Checklist — Fundamentos de Vendas", html: checklistVendasHtml },
+  objecoes_apostila: { title: "Apostila — Principais Objeções (Sex Shop)", html: apostilaObjecoesHtml },
+  objecoes_checklist: { title: "Checklist — Principais Objeções (Sex Shop)", html: checklistObjecoesHtml },
 };
 
 
