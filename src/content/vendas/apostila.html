@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apostila — Fundamentos de Vendas</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: linear-gradient(160deg, #1a1630 0%, #0f0c1e 100%); min-height: 100vh; color: #fff; padding: 0 0 60px; }
+  .hero { background: linear-gradient(135deg, rgba(127,119,221,0.25), rgba(93,202,165,0.1)); border-bottom: 0.5px solid rgba(255,255,255,0.1); padding: 48px 28px 36px; text-align: center; }
+  .hero-tag { display: inline-block; background: rgba(93,202,165,0.2); color: #9FE1CB; border: 0.5px solid rgba(93,202,165,0.4); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+  .hero h1 { font-size: 24px; font-weight: 600; line-height: 1.25; margin-bottom: 10px; }
+  .hero h1 span { color: #AFA9EC; }
+  .hero p { font-size: 14px; color: rgba(255,255,255,0.55); max-width: 400px; margin: 0 auto; line-height: 1.6; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 18px; }
+  .section { background: rgba(255,255,255,0.05); backdrop-filter: blur(16px); border: 0.5px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 24px 22px; margin-top: 20px; }
+  .section-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .section-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 22px; }
+  .icon-purple { background: rgba(127,119,221,0.25); color: #AFA9EC; }
+  .icon-teal   { background: rgba(93,202,165,0.2);  color: #9FE1CB; }
+  .icon-amber  { background: rgba(239,159,39,0.2);  color: #FAC775; }
+  .icon-red    { background: rgba(226,75,74,0.2);   color: #F09595; }
+  .icon-blue   { background: rgba(55,138,221,0.2);  color: #85B7EB; }
+  .icon-pink   { background: rgba(212,83,126,0.2);  color: #ED93B1; }
+  .section-head h2 { font-size: 17px; font-weight: 600; color: #fff; margin: 0; }
+  .section-head p { font-size: 12px; color: rgba(255,255,255,0.45); margin: 3px 0 0; }
+  .num-badge { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(175,169,236,0.25); color: #AFA9EC; font-size: 11px; font-weight: 700; flex-shrink: 0; margin-right: 4px; }
+  .steps { display: flex; flex-direction: column; gap: 12px; }
+  .step { display: flex; gap: 14px; align-items: flex-start; }
+  .step-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(93,202,165,0.25); color: #9FE1CB; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); }
+  .step-text strong { color: #fff; font-weight: 600; }
+  .tip { background: rgba(93,202,165,0.1); border: 0.5px solid rgba(93,202,165,0.3); border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; margin-top: 12px; }
+  .tip i { font-size: 18px; color: #9FE1CB; flex-shrink: 0; margin-top: 1px; }
+  .tip-text { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+  .tip-text strong { color: #fff; }
+  .alert { background: rgba(226,75,74,0.12); border: 0.5px solid rgba(226,75,74,0.3); border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; margin-top: 10px; }
+  .alert i { font-size: 18px; color: #F09595; flex-shrink: 0; margin-top: 1px; }
+  .alert-text { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+  .alert-text strong { color: #fff; }
+  .destaque { background: rgba(127,119,221,0.12); border: 0.5px solid rgba(127,119,221,0.3); border-radius: 14px; padding: 20px; text-align: center; margin-top: 20px; }
+  .destaque i { font-size: 32px; color: #AFA9EC; margin-bottom: 10px; display: block; }
+  .destaque p { font-size: 15px; font-weight: 500; color: #fff; margin-bottom: 6px; }
+  .destaque span { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6; display: block; }
+  .divider { height: 0.5px; background: rgba(255,255,255,0.08); margin: 16px 0; }
+  .exemplo { background: rgba(255,255,255,0.04); border-left: 3px solid rgba(175,169,236,0.5); border-radius: 0 10px 10px 0; padding: 12px 14px; margin-top: 10px; font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+  .exemplo strong { color: #AFA9EC; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">Apostila — Módulo 5</div>
+  <h1>Fundamentos de <span>vendas</span></h1>
+  <p>Os princípios que você nunca pode esquecer. Perca esses de mente e vai ter problema.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- PRÉ-REQUISITO -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-pink"><i class="ti ti-mood-smile"></i></div>
+      <div>
+        <h2>Pré-requisito: simpatia</h2>
+        <p>Sem isso, os demais fundamentos não funcionam</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85)">
+      Você pode dominar todos os fundamentos abaixo, mas se não conseguir ser uma pessoa simpática, esquece. Transmitir leveza, estar genuinamente disponível para ajudar e manter o bom humor — independente de como você está emocionalmente no dia — é o pré-requisito de tudo. Vai ter dia cansativo, vai ter dia estressante. <strong style="color:#fff">Mas a simpatia não pode falhar nunca.</strong>
+    </div>
+  </div>
+
+  <!-- FUNDAMENTO 1 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-amber"><i class="ti ti-clock-bolt"></i></div>
+      <div>
+        <h2><span class="num-badge">1</span> Tempo de resposta</h2>
+        <p>Cada segundo que passa é uma chance de perder o cliente</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text">Na internet, as coisas são dinâmicas. O cliente que busca um produto no Google encontra várias lojas ao mesmo tempo. Se demorar 2, 3, 4 minutos pra responder, <strong>ele volta ao Google e compra em outro lugar.</strong></div>
+      </div>
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text">O cliente normalmente manda mensagem para 3 ou 4 lojas ao mesmo tempo. <strong>Quem responde primeiro ganha a atenção dele.</strong></div>
+      </div>
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text">Mesmo que ele não esteja comparando lojas, uma demora pode fazer ele se distrair com outra coisa e esquecer a compra. <strong>Responda sempre o mais rápido possível.</strong></div>
+      </div>
+    </div>
+    <div class="alert">
+      <i class="ti ti-alert-triangle"></i>
+      <div class="alert-text"><strong>Regra:</strong> nunca deixe um cliente esperando resposta. Cada segundo que passa aumenta a chance de perder a venda.</div>
+    </div>
+  </div>
+
+  <!-- FUNDAMENTO 2 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-teal"><i class="ti ti-heart-handshake"></i></div>
+      <div>
+        <h2><span class="num-badge">2</span> Pessoas amam comprar, mas odeiam vendedor</h2>
+        <p>Seja consultora, não empurradora de produto</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85);margin-bottom:14px">
+      Quando um vendedor tenta empurrar produto em vez de ajudar, o cliente sente. E quando sente, <strong style="color:#fff">toma repulsa</strong> — pode nunca mais voltar. O objetivo não é vender por vender. É ser uma <strong style="color:#fff">consultora</strong> que o cliente sente que está ali para ajudá-lo de verdade.
+    </div>
+    <div class="divider"></div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">A</div>
+        <div class="step-text"><strong>Se importe de verdade com a pessoa.</strong> Não olhe para o cliente como alguém de quem você precisa tirar dinheiro. Olhe como alguém que você quer ajudar a resolver um problema. Se ele sair satisfeito, ele volta — e traz outros.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">B</div>
+        <div class="step-text"><strong>Nunca dê indicações vazias.</strong> Se o cliente pede indicação de vibrador e você já manda um modelo sem fazer nenhuma pergunta, fica evidente que você só quer empurrar. Primeiro pergunte, filtre, entenda o que ele precisa — depois indique.</div>
+      </div>
+    </div>
+    <div class="tip">
+      <i class="ti ti-bulb"></i>
+      <div class="tip-text">Clientes que se sentem bem atendidos <strong>voltam e recomendam</strong>. Clientes que se sentem pressionados nunca mais voltam.</div>
+    </div>
+  </div>
+
+  <!-- FUNDAMENTO 3 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-purple"><i class="ti ti-message-question"></i></div>
+      <div>
+        <h2><span class="num-badge">3</span> Perguntar antes de indicar</h2>
+        <p>E explicar o porquê da indicação</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>Faça perguntas antes de indicar qualquer produto.</strong> O cliente pediu indicação de vibrador? Antes de responder: ele quer recarregável? Pequeno ou grande? Para uso individual ou a dois? Essas perguntas mostram interesse real e filtram a melhor opção para ele.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>Explique o porquê da indicação.</strong> Nunca envie um produto com argumento de "vai nesse que é o melhor". Explique: se for um vibrador recarregável, destaque a duração da carga. Se for mais caro, destaque a qualidade. Conecte as qualidades do produto à necessidade do cliente.</div>
+      </div>
+    </div>
+    <div class="exemplo">
+      <strong>Exemplo certo:</strong> "Baseado no que você me disse, eu indicaria esse vibrador porque ele é recarregável e tem uma bateria que dura bastante, além de ser silencioso — ideal para quem tem mais privacidade limitada."
+    </div>
+    <div class="exemplo">
+      <strong>Exemplo errado:</strong> "Olha esse aqui, é o melhor que temos!" — sem nenhuma pergunta, sem nenhuma justificativa.
+    </div>
+  </div>
+
+  <!-- FUNDAMENTO 4 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-blue"><i class="ti ti-shield-check"></i></div>
+      <div>
+        <h2><span class="num-badge">4</span> Prever e quebrar objeções</h2>
+        <p>O cliente não fala tudo que está na cabeça dele</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85);margin-bottom:14px">
+      Todo cliente tem dúvidas e medos que podem impedi-lo de comprar — e muitas vezes ele <strong style="color:#fff">não pergunta</strong>. Ele simplesmente desiste. Por isso, a sua função é prever essas objeções e quebrá-las antes que elas travem a compra.
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text"><strong>Objeções comuns da nossa loja:</strong> "Vai chegar em embalagem discreta?", "O motoboy vai gritar sex shop na porta?", "O produto vai marcar na embalagem?", "A loja física é visível?"</div>
+      </div>
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text"><strong>Objeções de produto:</strong> plug anal enferruja? O excitante vai arder demais? O lubrificante que esquenta é muito intenso? Cada produto tem medos específicos — aprenda a identificá-los e quebrá-los.</div>
+      </div>
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text"><strong>Antecipe — não espere o cliente perguntar.</strong> Se você já sabe que aquele produto gera aquela dúvida, quebre a objeção na hora que indicar, sem esperar ele perguntar.</div>
+      </div>
+    </div>
+    <div class="exemplo">
+      <strong>Exemplo:</strong> Cliente pergunta "Vocês entregam?". Em vez de só responder "sim", já quebre as objeções: "Sim! A entrega é totalmente discreta — embalagem sem identificação, sem escritos, e o motoboy não anuncia nada."
+    </div>
+    <div class="tip">
+      <i class="ti ti-bulb"></i>
+      <div class="tip-text">Vendedoras que preveem objeções vendem mais. O cliente que não tem dúvidas na cabeça tem muito menos razão para hesitar.</div>
+    </div>
+  </div>
+
+  <!-- RESUMO -->
+  <div class="destaque">
+    <i class="ti ti-checklist"></i>
+    <p>Os 4 fundamentos + 1 pré-requisito</p>
+    <span>
+      Pré-requisito: simpatia — sem ela, nada funciona.<br>
+      1. Responda rápido — cada segundo perdido é uma venda perdida.<br>
+      2. Seja consultora, não vendedora — se importe de verdade.<br>
+      3. Pergunte antes de indicar — e explique o porquê.<br>
+      4. Preveja e quebre objeções — antes que elas impeçam a compra.
+    </span>
+  </div>
+
+</div>
+</body>
+</html>
