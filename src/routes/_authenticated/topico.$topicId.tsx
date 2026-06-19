@@ -418,10 +418,8 @@ function SubtaskGroupCard({
                   ) : null}
                 </span>
                 <StepIcon
-                  className={cn(
-                    "h-4 w-4 shrink-0",
-                    passed ? "text-muted-foreground" : "text-primary/80",
-                  )}
+                  className="h-4 w-4 shrink-0"
+                  style={{ color: passed ? undefined : "rgba(220, 218, 255, 1)" }}
                 />
                 <span
                   className={cn(
@@ -444,14 +442,15 @@ function SubtaskGroupCard({
                   <Badge variant={passed ? "default" : "destructive"}>{state.score}%</Badge>
                 )}
                 <span
-                  className="shrink-0 font-medium lowercase tracking-wide"
+                  className="shrink-0 lowercase tracking-wide"
                   style={{
                     fontSize: "10px",
+                    fontWeight: 500,
                     padding: "2px 9px",
                     borderRadius: "20px",
-                    background: "rgba(175, 169, 236, 0.12)",
-                    border: "0.5px solid rgba(175, 169, 236, 0.25)",
-                    color: "rgba(175, 169, 236, 0.8)",
+                    background: "rgba(220, 218, 255, 0.18)",
+                    border: "0.5px solid rgba(220, 218, 255, 0.5)",
+                    color: "rgba(220, 218, 255, 1)",
                     opacity: passed ? 0.5 : 1,
                   }}
                 >
