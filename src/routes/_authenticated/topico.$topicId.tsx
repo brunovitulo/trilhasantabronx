@@ -593,6 +593,7 @@ function SubtaskContent({
         <ExamDialogLauncher
           subtask={subtask}
           userId={userId}
+          isAdmin={isAdmin}
           completed={completed}
           blockTitle={displayTitle}
           needsVideo={examNeedsVideo}
