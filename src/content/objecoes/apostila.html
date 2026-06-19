@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apostila — Principais Objeções (Sex Shop)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: linear-gradient(160deg, #1a1630 0%, #0f0c1e 100%); min-height: 100vh; color: #fff; padding: 0 0 60px; }
+  .hero { background: linear-gradient(135deg, rgba(127,119,221,0.25), rgba(93,202,165,0.1)); border-bottom: 0.5px solid rgba(255,255,255,0.1); padding: 48px 28px 36px; text-align: center; }
+  .hero-tag { display: inline-block; background: rgba(93,202,165,0.2); color: #9FE1CB; border: 0.5px solid rgba(93,202,165,0.4); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+  .hero h1 { font-size: 24px; font-weight: 600; line-height: 1.25; margin-bottom: 10px; }
+  .hero h1 span { color: #AFA9EC; }
+  .hero p { font-size: 14px; color: rgba(255,255,255,0.55); max-width: 440px; margin: 0 auto; line-height: 1.6; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 18px; }
+  .section { background: rgba(255,255,255,0.05); backdrop-filter: blur(16px); border: 0.5px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 24px 22px; margin-top: 20px; }
+  .section-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .section-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 22px; }
+  .icon-purple { background: rgba(127,119,221,0.25); color: #AFA9EC; }
+  .icon-teal   { background: rgba(93,202,165,0.2);  color: #9FE1CB; }
+  .icon-amber  { background: rgba(239,159,39,0.2);  color: #FAC775; }
+  .icon-red    { background: rgba(226,75,74,0.2);   color: #F09595; }
+  .icon-blue   { background: rgba(55,138,221,0.2);  color: #85B7EB; }
+  .icon-pink   { background: rgba(212,83,126,0.2);  color: #ED93B1; }
+  .section-head h2 { font-size: 17px; font-weight: 600; color: #fff; margin: 0; }
+  .section-head p { font-size: 12px; color: rgba(255,255,255,0.45); margin: 3px 0 0; }
+  .num-badge { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(175,169,236,0.25); color: #AFA9EC; font-size: 11px; font-weight: 700; flex-shrink: 0; margin-right: 4px; }
+  .steps { display: flex; flex-direction: column; gap: 12px; }
+  .step { display: flex; gap: 14px; align-items: flex-start; }
+  .step-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(93,202,165,0.25); color: #9FE1CB; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); }
+  .step-text strong { color: #fff; font-weight: 600; }
+  .tip { background: rgba(93,202,165,0.1); border: 0.5px solid rgba(93,202,165,0.3); border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; margin-top: 12px; }
+  .tip i { font-size: 18px; color: #9FE1CB; flex-shrink: 0; margin-top: 1px; }
+  .tip-text { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+  .tip-text strong { color: #fff; }
+  .alert { background: rgba(226,75,74,0.12); border: 0.5px solid rgba(226,75,74,0.3); border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; margin-top: 10px; }
+  .alert i { font-size: 18px; color: #F09595; flex-shrink: 0; margin-top: 1px; }
+  .alert-text { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+  .alert-text strong { color: #fff; }
+  .destaque { background: rgba(127,119,221,0.12); border: 0.5px solid rgba(127,119,221,0.3); border-radius: 14px; padding: 20px; text-align: center; margin-top: 20px; }
+  .destaque i { font-size: 32px; color: #AFA9EC; margin-bottom: 10px; display: block; }
+  .destaque p { font-size: 15px; font-weight: 500; color: #fff; margin-bottom: 6px; }
+  .destaque span { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6; display: block; }
+  .divider { height: 0.5px; background: rgba(255,255,255,0.08); margin: 16px 0; }
+  .exemplo { background: rgba(255,255,255,0.04); border-left: 3px solid rgba(175,169,236,0.5); border-radius: 0 10px 10px 0; padding: 12px 14px; margin-top: 10px; font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+  .exemplo strong { color: #AFA9EC; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">Apostila — Módulo 5</div>
+  <h1>Principais <span>objeções</span></h1>
+  <p>Aprenda quais medos impedem o cliente de comprar em um sex shop e como quebrar essas objeções com naturalidade.</p>
+</div>
+
+<div class="wrap">
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-purple"><i class="ti ti-message-question"></i></div>
+      <div>
+        <h2>O que é uma objeção?</h2>
+        <p>O medo que trava a compra antes do cliente decidir</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85)">
+      Objeção é tudo aquilo que impede o cliente de comprar. No nicho de sex shop, muitas pessoas querem comprar, mas sentem vergonha, medo ou insegurança. Às vezes o cliente pergunta diretamente. Outras vezes, ele não fala nada: apenas some, demora para responder ou desiste.
+      <br><br>
+      O papel da consultora é entender esses receios e <strong>quebrar a objeção antes que ela vire desistência</strong>.
+    </div>
+    <div class="tip">
+      <i class="ti ti-bulb"></i>
+      <div class="tip-text"><strong>Importante:</strong> nem toda objeção é falada. Muitas ficam apenas na cabeça do cliente.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-amber"><i class="ti ti-bolt"></i></div>
+      <div>
+        <h2><span class="num-badge">1</span> Não espere o cliente perguntar</h2>
+        <p>Antecipe o medo antes que ele trave a venda</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text">Uma atendente comum espera o cliente perguntar. Uma consultora boa <strong>antecipa as dúvidas mais comuns</strong>.</div>
+      </div>
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text">Se o cliente perguntou sobre entrega, não responda só “entregamos”. Já explique que a entrega é <strong>sigilosa, discreta, lacrada e sem identificação</strong>.</div>
+      </div>
+      <div class="step">
+        <div class="step-num"><i class="ti ti-check" style="font-size:13px"></i></div>
+        <div class="step-text">Se o cliente demonstrou interesse em ir à loja, explique que o atendimento é <strong>leve, tranquilo e sem julgamento</strong>.</div>
+      </div>
+    </div>
+    <div class="exemplo">
+      <strong>Exemplo errado:</strong> “Sim, entregamos.”
+    </div>
+    <div class="exemplo">
+      <strong>Exemplo certo:</strong> “Entregamos sim. A entrega é totalmente discreta, com embalagem sem identificação da loja, bem lacrada e sem nada que mostre o conteúdo.”
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-teal"><i class="ti ti-truck-delivery"></i></div>
+      <div>
+        <h2><span class="num-badge">2</span> Objeção sobre entrega</h2>
+        <p>A principal objeção do nicho sex shop</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85);margin-bottom:14px">
+      A maior parte dos clientes tem receio da entrega. A pessoa pode pensar: “Será que o motoboy vai chegar com algo escrito sex shop?”, “Será que alguém vai descobrir?”, “Será que o pacote vai mostrar o que tem dentro?”.
+      <br><br>
+      Como sexualidade ainda gera vergonha para muitas pessoas, a entrega precisa ser tratada como ponto de segurança.
+    </div>
+    <div class="alert">
+      <i class="ti ti-alert-triangle"></i>
+      <div class="alert-text"><strong>Regra:</strong> quando o assunto entrega aparecer, quebre a objeção de cara. Não espere o cliente perguntar todos os detalhes.</div>
+    </div>
+    <div class="exemplo">
+      <strong>Resposta recomendada:</strong> “A entrega é totalmente discreta. A embalagem vai sem identificação da loja, bem lacrada, sem transparência e sem nada que mostre o conteúdo.”
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-blue"><i class="ti ti-package"></i></div>
+      <div>
+        <h2><span class="num-badge">3</span> Embalagem sem identificação</h2>
+        <p>O cliente não quer passar vergonha</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">A</div>
+        <div class="step-text">A embalagem <strong>não pode ter nome da loja</strong>, logo, adesivo ou qualquer informação que revele ser de sex shop.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">B</div>
+        <div class="step-text">Ela precisa estar <strong>bem lacrada</strong>, para o cliente sentir que ninguém terá acesso ao conteúdo.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">C</div>
+        <div class="step-text">Ela não pode ser transparente e não pode deixar o produto visível ou com formato evidente.</div>
+      </div>
+    </div>
+    <div class="exemplo">
+      <strong>Resposta recomendada:</strong> “Pode ficar tranquila. A embalagem não vai com nome da loja, não é transparente, vai bem lacrada e não dá para identificar o que tem dentro.”
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-pink"><i class="ti ti-eye-off"></i></div>
+      <div>
+        <h2><span class="num-badge">4</span> Formato do produto aparecer</h2>
+        <p>Alguns produtos exigem cuidado extra na embalagem</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85)">
+      Alguns produtos têm formato mais evidente, como próteses. O cliente pode ter medo de receber um pacote com formato perceptível. Essa objeção precisa ser quebrada explicando que o pedido é embalado de forma discreta para não mostrar o formato do produto.
+    </div>
+    <div class="exemplo">
+      <strong>Resposta recomendada:</strong> “A gente embala de forma discreta para não mostrar o formato do produto. O pacote chega neutro, sem dar para identificar o que tem dentro.”
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-red"><i class="ti ti-user-shield"></i></div>
+      <div>
+        <h2><span class="num-badge">5</span> Discrição do motoboy</h2>
+        <p>O comportamento da entrega também gera medo</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85)">
+      O cliente pode imaginar que o motoboy vai chegar falando alto, com camisa da loja ou anunciando que é pedido de sex shop. Mesmo que ele não pergunte, esse medo pode estar na cabeça dele.
+    </div>
+    <div class="exemplo">
+      <strong>Resposta recomendada:</strong> “O entregador não anuncia nada, não fala sobre o conteúdo e a embalagem também não tem identificação. É uma entrega comum e discreta.”
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-purple"><i class="ti ti-credit-card"></i></div>
+      <div>
+        <h2><span class="num-badge">6</span> Nome na fatura do cartão</h2>
+        <p>Alguns clientes usam cartão compartilhado</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85)">
+      Alguns clientes têm medo do nome que aparece na fatura, principalmente quando usam cartão do marido, dos pais ou de outra pessoa. Quando essa preocupação aparecer, explique a alternativa com link de pagamento.
+    </div>
+    <div class="exemplo">
+      <strong>Resposta recomendada:</strong> “Se preferir, posso te enviar um link de pagamento. Na fatura não aparece escrito sex shop, aparece apenas Santa Bronx.”
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-teal"><i class="ti ti-building-store"></i></div>
+      <div>
+        <h2><span class="num-badge">7</span> Vergonha de ir à loja</h2>
+        <p>O atendimento presencial precisa transmitir segurança</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85);margin-bottom:14px">
+      Muitas pessoas têm vergonha de visitar uma loja de sex shop. Elas podem achar que vão ficar sem jeito, que serão julgadas ou que o atendimento será pesado por tratar de sexualidade.
+      <br><br>
+      Quando o cliente demonstrar interesse em ir à loja, quebre essa objeção com leveza.
+    </div>
+    <div class="exemplo">
+      <strong>Resposta recomendada:</strong> “Pode vir tranquila. Nosso atendimento é super leve, discreto e sem julgamento. A gente te orienta com calma para você se sentir confortável.”
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-amber"><i class="ti ti-heart-handshake"></i></div>
+      <div>
+        <h2><span class="num-badge">8</span> Atendimento leve e consultivo</h2>
+        <p>O cliente só se abre quando se sente confortável</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>Faça perguntas.</strong> Pergunte se é para uso individual ou em casal, se já usou algo parecido, se quer algo discreto ou mais potente.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>Crie conexão.</strong> Uma conversa leve ajuda o cliente a relaxar e confiar mais em você.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>Não seja uma vendedora chata.</strong> O cliente percebe quando você quer apenas empurrar produto.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text"><strong>Explique o motivo da indicação.</strong> Depois de entender o cliente, indique o produto e explique por que ele faz sentido.</div>
+      </div>
+    </div>
+    <div class="tip">
+      <i class="ti ti-bulb"></i>
+      <div class="tip-text">O cliente precisa sentir que você está ali para ajudar, não apenas para vender.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-blue"><i class="ti ti-mood-smile"></i></div>
+      <div>
+        <h2><span class="num-badge">9</span> A leveza começa em você</h2>
+        <p>Seu estado influencia o atendimento</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85)">
+      Para o cliente ficar leve, a atendente precisa transmitir leveza. Se você está mal-humorada, impaciente ou estressada, o cliente sente.
+      <br><br>
+      Mesmo em um dia difícil, quando o cliente entra na loja ou chama no WhatsApp, você precisa exercer o papel profissional. A simpatia não é opcional: ela faz parte do atendimento.
+    </div>
+    <div class="alert">
+      <i class="ti ti-alert-triangle"></i>
+      <div class="alert-text"><strong>Regra:</strong> você pode estar cansada ou estressada, mas o cliente não pode receber um atendimento pesado por causa disso.</div>
+    </div>
+  </div>
+
+  <div class="destaque">
+    <i class="ti ti-shield-check"></i>
+    <p>Resumo das principais objeções</p>
+    <span>
+      Entrega discreta, embalagem sem identificação, pacote lacrado, embalagem sem transparência, formato do produto escondido, motoboy discreto, nome na fatura e vergonha do atendimento presencial.<br><br>
+      A consultora precisa antecipar esses medos, responder com segurança e fazer o cliente se sentir confortável para comprar.
+    </span>
+  </div>
+
+</div>
+</body>
+</html>

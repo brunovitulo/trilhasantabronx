@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist — Principais Objeções (Sex Shop)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(160deg,#1a1630 0%,#0f0c1e 100%);min-height:100vh;color:#fff;padding:0 0 80px}
+.header{padding:28px 20px 16px;text-align:center}
+.tag{display:inline-block;background:rgba(93,202,165,0.2);color:#9FE1CB;border:0.5px solid rgba(93,202,165,0.4);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 12px;border-radius:20px;margin-bottom:10px}
+.header h1{font-size:20px;font-weight:600;color:#fff;margin-bottom:4px}
+.header p{font-size:12px;color:rgba(255,255,255,0.5)}
+.wrap{max-width:540px;margin:0 auto;padding:0 16px}
+.block{background:rgba(255,255,255,0.05);backdrop-filter:blur(16px);border:0.5px solid rgba(255,255,255,0.1);border-radius:18px;padding:18px 16px;margin-bottom:14px}
+.block-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:0.5px solid rgba(255,255,255,0.08)}
+.block-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.bi-purple{background:rgba(127,119,221,0.25);color:#AFA9EC}
+.bi-teal{background:rgba(93,202,165,0.2);color:#9FE1CB}
+.bi-amber{background:rgba(239,159,39,0.2);color:#FAC775}
+.bi-blue{background:rgba(55,138,221,0.2);color:#85B7EB}
+.bi-pink{background:rgba(212,83,126,0.2);color:#ED93B1}
+.bi-red{background:rgba(226,75,74,0.2);color:#F09595}
+.block-head h2{font-size:14px;font-weight:600;color:#fff}
+.block-head p{font-size:11px;color:rgba(255,255,255,0.45);margin-top:2px}
+.item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:0.5px solid rgba(255,255,255,0.06);cursor:pointer;user-select:none}
+.item:last-child{border-bottom:none;padding-bottom:0}
+.item:first-child{padding-top:0}
+.check{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all 0.15s}
+.check i{font-size:12px;opacity:0}
+.item.done .check{background:#5DCAA5;border-color:#5DCAA5}
+.item.done .check i{opacity:1;color:#04342C}
+.item.done .item-text{color:rgba(255,255,255,0.4);text-decoration:line-through;text-decoration-color:rgba(255,255,255,0.2)}
+.item-text{font-size:13px;color:rgba(255,255,255,0.85);line-height:1.5}
+.item-text strong{color:#fff;font-weight:600}
+.progress-wrap{margin-bottom:20px}
+.progress-bar{height:6px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;background:linear-gradient(90deg,#5DCAA5,#AFA9EC);border-radius:4px;transition:width 0.3s ease;width:0%}
+.progress-label{font-size:11px;color:rgba(255,255,255,0.5);text-align:right}
+.btn-reset{display:block;width:100%;margin-top:6px;padding:13px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.14);border-radius:12px;color:rgba(255,255,255,0.5);font-size:13px;cursor:pointer;text-align:center}
+.btn-reset:hover{background:rgba(255,255,255,0.1);color:#fff}
+.congrats{display:none;background:rgba(93,202,165,0.12);border:0.5px solid rgba(93,202,165,0.35);border-radius:14px;padding:18px;text-align:center;margin-bottom:14px}
+.congrats i{font-size:28px;color:#9FE1CB;margin-bottom:8px;display:block}
+.congrats p{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px}
+.congrats span{font-size:12px;color:rgba(255,255,255,0.55)}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="tag">Checklist de aprendizados</div>
+  <h1>Principais Objeções</h1>
+  <p>Marque o que você entendeu e vai aplicar</p>
+</div>
+<div class="wrap">
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="pbar"></div></div>
+    <div class="progress-label" id="plabel">0 / 0 itens</div>
+  </div>
+  <div id="congrats" class="congrats">
+    <i class="ti ti-circle-check"></i>
+    <p>Objeções fixadas!</p>
+    <span>Você revisou todos os aprendizados deste módulo.</span>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-purple"><i class="ti ti-message-question"></i></div>
+      <div><h2>Entendimento principal</h2><p>O que trava a compra</p></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Entendi que objeção é uma <strong>dúvida, medo ou insegurança</strong> que impede o cliente de comprar</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Entendi que muitas objeções <strong>não são faladas</strong> — o cliente pode simplesmente sumir ou desistir</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou <strong>antecipar as objeções</strong> sem esperar o cliente perguntar tudo</div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-teal"><i class="ti ti-truck-delivery"></i></div>
+      <div><h2>Entrega discreta</h2><p>A objeção mais comum do nicho</p></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Entendi que o cliente pode ter medo da entrega chegar com <strong>identificação de sex shop</strong></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou explicar que a entrega é <strong>totalmente discreta</strong>, sem identificação da loja</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou reforçar que o entregador <strong>não anuncia o conteúdo</strong> e trata como uma entrega comum</div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-blue"><i class="ti ti-package"></i></div>
+      <div><h2>Embalagem</h2><p>Lacre, opacidade e formato</p></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Entendi que a embalagem não pode ter <strong>nome da loja, logo ou qualquer identificação</strong></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Entendi que a embalagem precisa estar <strong>bem lacrada</strong> para passar confiança</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Entendi que a embalagem não pode ser <strong>transparente</strong> nem deixar o conteúdo visível</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou lembrar que produtos com formato evidente precisam ser embalados para <strong>não mostrar o formato</strong></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-amber"><i class="ti ti-credit-card"></i></div>
+      <div><h2>Pagamento e fatura</h2><p>Sigilo também na cobrança</p></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Entendi que alguns clientes têm medo do <strong>nome que aparece na fatura</strong></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou explicar, quando necessário, que é possível enviar <strong>link de pagamento</strong></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou orientar que na fatura não aparece escrito sex shop, aparece apenas <strong>Santa Bronx</strong></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-pink"><i class="ti ti-building-store"></i></div>
+      <div><h2>Loja presencial</h2><p>Vergonha e medo de julgamento</p></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Entendi que o cliente pode ter <strong>vergonha de ir à loja</strong> por se tratar de sexualidade</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou explicar que o atendimento presencial é <strong>leve, discreto e sem julgamento</strong></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou transmitir segurança para o cliente se sentir confortável para falar o que precisa</div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-red"><i class="ti ti-heart-handshake"></i></div>
+      <div><h2>Postura da consultora</h2><p>Leveza, perguntas e conexão</p></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou fazer perguntas antes de indicar para o cliente perceber que quero <strong>ajudar de verdade</strong></div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou evitar parecer uma <strong>vendedora chata</strong> que só quer empurrar produto</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou manter um atendimento <strong>leve, simpático e tranquilo</strong>, mesmo em dias difíceis</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Entendi que a leveza da consultora ajuda o cliente a se abrir e confiar mais</div>
+    </div>
+  </div>
+
+  <button class="btn-reset" onclick="reset()">
+    <i class="ti ti-refresh" style="font-size:14px;vertical-align:-2px;margin-right:6px"></i>
+    Limpar checklist
+  </button>
+</div>
+<script>
+function toggle(el){el.classList.toggle('done');update();}
+function update(){
+  const all=document.querySelectorAll('.item');
+  const done=document.querySelectorAll('.item.done');
+  const pct=all.length?Math.round(done.length/all.length*100):0;
+  document.getElementById('pbar').style.width=pct+'%';
+  document.getElementById('plabel').textContent=done.length+' / '+all.length+' itens';
+  document.getElementById('congrats').style.display=(done.length===all.length&&all.length>0)?'block':'none';
+}
+function reset(){document.querySelectorAll('.item.done').forEach(el=>el.classList.remove('done'));update();}
+update();
+</script>
+</body>
+</html>
