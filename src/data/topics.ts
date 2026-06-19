@@ -100,7 +100,9 @@ export type Subtask =
         | "vendas_apostila"
         | "vendas_checklist"
         | "objecoes_apostila"
-        | "objecoes_checklist";
+        | "objecoes_checklist"
+        | "dores_apostila"
+        | "dores_checklist";
       openLabel?: string;
       helperText?: string;
       confirmLabel: string;
@@ -131,7 +133,9 @@ export type Subtask =
           | "vendas_apostila"
           | "vendas_checklist"
           | "objecoes_apostila"
-          | "objecoes_checklist";
+          | "objecoes_checklist"
+          | "dores_apostila"
+          | "dores_checklist";
         openLabel: string;
         confirmLabel: string;
         helperText?: string;
@@ -148,7 +152,9 @@ export type Subtask =
           | "vendas_apostila"
           | "vendas_checklist"
           | "objecoes_apostila"
-          | "objecoes_checklist";
+          | "objecoes_checklist"
+          | "dores_apostila"
+          | "dores_checklist";
         openLabel: string;
         confirmLabel: string;
         helperText?: string;
