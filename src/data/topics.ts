@@ -89,10 +89,58 @@ export type Subtask =
       title: string;
       kind: "inline_html";
       description?: string;
-      source: "apostila" | "checklist" | "organizacao" | "responsabilidade";
+      source:
+        | "apostila"
+        | "checklist"
+        | "organizacao"
+        | "responsabilidade"
+        | "responsabilidade_checklist"
+        | "app_apostila"
+        | "app_checklist";
       openLabel?: string;
       helperText?: string;
       confirmLabel: string;
+    }
+  | {
+      id: string;
+      title: string;
+      kind: "credentials";
+      description?: string;
+      url: string;
+      stores: { name: string; user: string; pass: string }[];
+      confirmLabel: string;
+    }
+  | {
+      id: string;
+      title: string;
+      kind: "dual_inline_html";
+      description?: string;
+      first: {
+        source:
+          | "apostila"
+          | "checklist"
+          | "organizacao"
+          | "responsabilidade"
+          | "responsabilidade_checklist"
+          | "app_apostila"
+          | "app_checklist";
+        openLabel: string;
+        confirmLabel: string;
+        helperText?: string;
+      };
+      second: {
+        source:
+          | "apostila"
+          | "checklist"
+          | "organizacao"
+          | "responsabilidade"
+          | "responsabilidade_checklist"
+          | "app_apostila"
+          | "app_checklist";
+        openLabel: string;
+        confirmLabel: string;
+        helperText?: string;
+      };
     }
   | {
       id: string;
@@ -595,9 +643,67 @@ export const TOPICS: Topic[] = [
     accent: "from-amber-500 to-orange-600",
     subtasks: [
       {
+        id: "responsabilidade.app.video",
+        kind: "video",
+        title: "1. App de pedidos — assistir destaque",
+        description:
+          "Conhecer o app onde aparecem os pedidos com produtos, cliente e endereço.",
+        url: IG,
+      },
+      {
+        id: "responsabilidade.app.login",
+        kind: "credentials",
+        title: "1. App de pedidos — acessar a plataforma de pedidos",
+        description: "Acesse o link abaixo e faça login com as suas credenciais.",
+        url: "https://santabronx.com.br/pedidos/",
+        stores: [
+          { name: "Santa Bronx Araguari", user: "atendentearaguari", pass: "santa12345" },
+          { name: "Santa Bronx Uberlândia", user: "atendenteuberlandia", pass: "santa12345" },
+        ],
+        confirmLabel: "Já fiz login na plataforma com sucesso.",
+      },
+      {
+        id: "responsabilidade.app.materiais",
+        kind: "dual_inline_html",
+        title: "1. App de pedidos — ler apostila e checklist do app de pedidos",
+        description:
+          "Antes de praticar, leia a apostila e o checklist para entender o fluxo completo.",
+        first: {
+          source: "app_apostila",
+          openLabel: "Abrir apostila",
+          confirmLabel: "Li a apostila por completo.",
+        },
+        second: {
+          source: "app_checklist",
+          openLabel: "Ver checklist",
+          confirmLabel: "Vi o checklist e sei onde acessá-lo.",
+          helperText:
+            "Este checklist estará disponível no ícone do topo para usar sempre que for processar um pedido.",
+        },
+      },
+      {
+        id: "responsabilidade.app.pratica",
+        kind: "external_html",
+        title: "1. App de pedidos — praticar no app de pedidos",
+        description:
+          "Agora acesse a plataforma e siga o que foi mostrado no destaque. Abra um pedido fechado, leia o resumo, identifique os produtos, quantidades e endereço. Quando terminar de explorar, marque como concluído.",
+        url: "https://santabronx.com.br/pedidos/",
+        openLabel: "Abrir plataforma",
+        confirmLabel:
+          "Pratiquei na plataforma e entendo como funciona o fluxo de pedidos.",
+      },
+
+      {
+        id: "responsabilidade.expectativas.video",
+        kind: "video",
+        title: "2. O que é esperado — assistir destaque",
+        description: "Copie o link, cole em outra aba, assista o destaque por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094983292984570/",
+      },
+      {
         id: "responsabilidade.expectativas.apostila",
         kind: "inline_html",
-        title: "1. O que é esperado (atrasos, erros) — ler apostila de responsabilidades",
+        title: "2. O que é esperado — ler apostila de responsabilidades",
         description:
           "Leia com atenção — esta apostila resume o que é esperado de você a partir de agora na loja.",
         source: "responsabilidade",
@@ -607,7 +713,7 @@ export const TOPICS: Topic[] = [
       {
         id: "responsabilidade.expectativas.fixacao",
         kind: "practice",
-        title: "1. O que é esperado (atrasos, erros) — exercício de fixação (10 questões)",
+        title: "2. O que é esperado — exercício de fixação (10 questões)",
         description:
           "Responda as questões abaixo para fixar o que você leu. Sem nota mínima — apenas fixação.",
         questions: [
@@ -714,23 +820,16 @@ export const TOPICS: Topic[] = [
         ],
       },
       {
-        id: "responsabilidade.app.video",
-        kind: "video",
-        title: "2. App de pedidos — assistir destaque",
+        id: "responsabilidade.expectativas.checklist",
+        kind: "inline_html",
+        title: "2. O que é esperado — ver checklist de responsabilidades",
         description:
-          "Conhecer o app onde aparecem os pedidos com produtos, cliente e endereço.",
-        url: IG,
-      },
-      {
-        id: "responsabilidade.app.checklist",
-        kind: "checklist",
-        title: "2. Navegar pelo app de pedidos",
-        items: [
-          "Fazer login no app",
-          "Localizar a lista de pedidos do dia",
-          "Abrir um pedido e identificar produtos, cliente e endereço",
-          "Marcar um pedido teste como 'despachado'",
-        ],
+          "Este checklist resume tudo que é esperado de você no dia a dia. Leia com atenção e marque cada item — ele estará disponível nas suas tarefas diárias toda vez que você entrar na loja.",
+        source: "responsabilidade_checklist",
+        openLabel: "Abrir checklist",
+        helperText:
+          "Este checklist também fica sempre disponível na aba de tarefas do dia no topo do site.",
+        confirmLabel: "Li e marquei todos os itens do checklist por completo.",
       },
     ],
   },

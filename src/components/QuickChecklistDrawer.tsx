@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ClipboardCheck, Package, LayoutGrid, X } from "lucide-react";
+import { ClipboardCheck, Package, LayoutGrid, FileText, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,12 +13,14 @@ import {
 } from "@/components/ui/popover";
 import checklistEmbalarHtml from "@/content/embalar/checklist.html?raw";
 import checklistOrganizacaoHtml from "@/content/organizacao/checklist.html?raw";
+import checklistAppPedidosHtml from "@/content/responsabilidade/app-checklist.html?raw";
 
-type ChecklistKey = "embalar" | "organizacao";
+type ChecklistKey = "embalar" | "organizacao" | "app_pedidos";
 
-const CHECKLISTS: Record<ChecklistKey, { title: string; html: string }> = {
-  embalar: { title: "Checklist de embalagem", html: checklistEmbalarHtml },
-  organizacao: { title: "Checklist — Organização da loja", html: checklistOrganizacaoHtml },
+const CHECKLISTS: Record<ChecklistKey, { title: string; html: string; label: string; Icon: typeof Package }> = {
+  embalar: { title: "Checklist de embalagem", label: "Checklist de embalagem", html: checklistEmbalarHtml, Icon: Package },
+  organizacao: { title: "Checklist — Organização da loja", label: "Checklist de organização da loja", html: checklistOrganizacaoHtml, Icon: LayoutGrid },
+  app_pedidos: { title: "Checklist — App de Pedidos", label: "Checklist do app de pedidos", html: checklistAppPedidosHtml, Icon: FileText },
 };
 
 export function QuickChecklistDrawer() {
@@ -51,26 +53,22 @@ export function QuickChecklistDrawer() {
           </Button>
         </PopoverTrigger>
         <PopoverContent align="end" className="w-64 p-2">
-          <button
-            type="button"
-            onClick={() => pick("embalar")}
-            className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-left hover:bg-accent transition-colors"
-          >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
-              <Package className="h-4 w-4" />
-            </span>
-            <span className="text-sm font-medium">Checklist de embalagem</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => pick("organizacao")}
-            className="mt-1 w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-left hover:bg-accent transition-colors"
-          >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
-              <LayoutGrid className="h-4 w-4" />
-            </span>
-            <span className="text-sm font-medium">Checklist de organização da loja</span>
-          </button>
+          {(Object.keys(CHECKLISTS) as ChecklistKey[]).map((key) => {
+            const { label, Icon } = CHECKLISTS[key];
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => pick(key)}
+                className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-left hover:bg-accent transition-colors mt-1 first:mt-0"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
+                  <Icon className="h-4 w-4" />
+                </span>
+                <span className="text-sm font-medium">{label}</span>
+              </button>
+            );
+          })}
         </PopoverContent>
       </Popover>
 
