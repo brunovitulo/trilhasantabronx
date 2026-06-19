@@ -617,6 +617,7 @@ function SubtaskContent({
 function ExamDialogLauncher({
   subtask,
   userId,
+  isAdmin = false,
   completed,
   blockTitle,
   needsVideo,
@@ -624,6 +625,7 @@ function ExamDialogLauncher({
 }: {
   subtask: Extract<Subtask, { kind: "open_evaluation" }>;
   userId: string;
+  isAdmin?: boolean;
   completed: boolean;
   blockTitle: string;
   needsVideo: boolean;
@@ -659,12 +661,13 @@ function ExamDialogLauncher({
 
   const canRequest =
     !needsVideo &&
+    !isAdmin &&
     (permStatus === "none" ||
       permStatus === "expired" ||
       permStatus === "rejected" ||
       permStatus === "consumed");
-  const isPending = permStatus === "pending";
-  const isApproved = permStatus === "approved";
+  const isPending = !isAdmin && permStatus === "pending";
+  const isApproved = !isAdmin && permStatus === "approved";
   const isRejected = permStatus === "rejected";
   const isExpired = permStatus === "expired";
 
