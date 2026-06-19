@@ -523,6 +523,7 @@ function SubtaskGroupCard({
 function SubtaskContent({
   subtask,
   userId,
+  isAdmin = false,
   displayTitle,
   completed,
   score,
@@ -534,6 +535,7 @@ function SubtaskContent({
 }: {
   subtask: Subtask;
   userId: string;
+  isAdmin?: boolean;
   displayTitle: string;
   completed: boolean;
   score: number | null;
