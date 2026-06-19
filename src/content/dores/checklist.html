@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist — Principais Dores e Soluções</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(160deg,#1a1630 0%,#0f0c1e 100%);min-height:100vh;color:#fff;padding:0 0 80px}
+.header{padding:28px 20px 16px;text-align:center}
+.tag{display:inline-block;background:rgba(93,202,165,0.2);color:#9FE1CB;border:0.5px solid rgba(93,202,165,0.4);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 12px;border-radius:20px;margin-bottom:10px}
+.header h1{font-size:20px;font-weight:600;color:#fff;margin-bottom:4px}
+.header p{font-size:12px;color:rgba(255,255,255,0.5)}
+.wrap{max-width:540px;margin:0 auto;padding:0 16px}
+.block{background:rgba(255,255,255,0.05);backdrop-filter:blur(16px);border:0.5px solid rgba(255,255,255,0.1);border-radius:18px;padding:18px 16px;margin-bottom:14px}
+.block-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:0.5px solid rgba(255,255,255,0.08)}
+.block-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.bi-purple{background:rgba(127,119,221,0.25);color:#AFA9EC}
+.bi-teal{background:rgba(93,202,165,0.2);color:#9FE1CB}
+.bi-amber{background:rgba(239,159,39,0.2);color:#FAC775}
+.bi-blue{background:rgba(55,138,221,0.2);color:#85B7EB}
+.bi-pink{background:rgba(212,83,126,0.2);color:#ED93B1}
+.bi-red{background:rgba(226,75,74,0.2);color:#F09595}
+.block-head h2{font-size:14px;font-weight:600;color:#fff}
+.block-head p{font-size:11px;color:rgba(255,255,255,0.45);margin-top:2px}
+.item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:0.5px solid rgba(255,255,255,0.06);cursor:pointer;user-select:none}
+.item:last-child{border-bottom:none;padding-bottom:0}
+.item:first-child{padding-top:0}
+.check{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all 0.15s}
+.check i{font-size:12px;opacity:0}
+.item.done .check{background:#5DCAA5;border-color:#5DCAA5}
+.item.done .check i{opacity:1;color:#04342C}
+.item.done .item-text{color:rgba(255,255,255,0.4);text-decoration:line-through;text-decoration-color:rgba(255,255,255,0.2)}
+.item-text{font-size:13px;color:rgba(255,255,255,0.85);line-height:1.5}
+.item-text strong{color:#fff;font-weight:600}
+.progress-wrap{margin-bottom:20px}
+.progress-bar{height:6px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;background:linear-gradient(90deg,#5DCAA5,#AFA9EC);border-radius:4px;transition:width 0.3s ease;width:0%}
+.progress-label{font-size:11px;color:rgba(255,255,255,0.5);text-align:right}
+.btn-reset{display:block;width:100%;margin-top:6px;padding:13px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.14);border-radius:12px;color:rgba(255,255,255,0.5);font-size:13px;cursor:pointer;text-align:center}
+.btn-reset:hover{background:rgba(255,255,255,0.1);color:#fff}
+.congrats{display:none;background:rgba(93,202,165,0.12);border:0.5px solid rgba(93,202,165,0.35);border-radius:14px;padding:18px;text-align:center;margin-bottom:14px}
+.congrats i{font-size:28px;color:#9FE1CB;margin-bottom:8px;display:block}
+.congrats p{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px}
+.congrats span{font-size:12px;color:rgba(255,255,255,0.55)}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="tag">Checklist de aprendizados</div>
+  <h1>Principais Dores e Soluções</h1>
+  <p>Marque o que você entendeu e vai aplicar</p>
+</div>
+<div class="wrap">
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="pbar"></div></div>
+    <div class="progress-label" id="plabel">0 / 0 itens</div>
+  </div>
+  <div id="congrats" class="congrats">
+    <i class="ti ti-circle-check"></i>
+    <p>Dores e soluções fixadas!</p>
+    <span>Você revisou todos os aprendizados deste módulo.</span>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><div class="block-icon bi-purple"><i class="ti ti-stethoscope"></i></div><div><h2>Raciocínio consultivo</h2><p>Primeiro a dor, depois o produto</p></div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Entendi que o cliente procura a loja para <strong>resolver uma dor</strong>, não apenas para comprar qualquer produto</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Vou perguntar e entender o problema antes de indicar uma solução</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Vou orientar com responsabilidade, sem prometer cura e sem diagnosticar</div></div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><div class="block-icon bi-red"><i class="ti ti-heart-broken"></i></div><div><h2>Dores masculinas</h2><p>Ereção, ejaculação e desempenho</p></div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Entendi que disfunção erétil é dificuldade de <strong>ter ou manter ereção</strong></div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Se for falta de energia/disposição, posso explicar cápsulas ou sachês estimulantes</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Se a dificuldade for mais avançada, posso explicar a bomba peniana como solução mecânica</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Entendi que ejaculação precoce é quando o homem chega ao orgasmo rápido demais</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Vou explicar que o spray retardante reduz a sensibilidade da glande para ajudar a durar mais</div></div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><div class="block-icon bi-pink"><i class="ti ti-flame"></i></div><div><h2>Libido e orgasmo</h2><p>Desejo, excitação e prazer</p></div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Entendi que falta de libido pode estar ligada a cansaço, estresse, rotina ou baixa disposição</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Vou diferenciar cápsulas de uso contínuo, sachês de efeito mais imediato e energéticos afrodisíacos</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Entendi que excitantes podem aquecer, esfriar, formigar/vibrar ou aumentar a sensibilidade local</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Vou perguntar se a cliente sente mais prazer no clitóris, na penetração ou nos dois antes de indicar vibrador</div></div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><div class="block-icon bi-blue"><i class="ti ti-droplet"></i></div><div><h2>Dor na penetração</h2><p>Vaginal e anal</p></div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Entendi que dor vaginal pode estar ligada à falta de lubrificação ou vaginismo</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Vou diferenciar lubrificante de uso no ato e hidratante vaginal como tratamento para ressecamento</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Entendi que dilatadores vaginais têm uso gradual e geralmente envolvem necessidade específica</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Entendi que no sexo anal o lubrificante é fundamental porque o ânus não lubrifica sozinho</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Vou explicar que anestésico anal reduz desconforto, mas não substitui lubrificante</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Entendi que plug anal pode ajudar na preparação gradual antes da penetração</div></div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><div class="block-icon bi-teal"><i class="ti ti-sparkles"></i></div><div><h2>Inovação e estímulos</h2><p>Produtos para variar a experiência</p></div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Entendi que o anel peniano ajuda a segurar sangue na região e alguns modelos têm vibrador</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Entendi que anestésico de garganta ajuda a reduzir ânsia no oral profundo</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Entendi a proposta do perfume com feromônio para despertar desejo e provocar</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Entendi que bolinhas explosivas liberam óleo com sensação durante a penetração</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Vou lembrar que a vela para massagem vira óleo beijável e não deve queimar como vela comum</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Entendi que o colar de pérolas serve para estímulo manual no homem e na mulher</div></div>
+  </div>
+
+  <div class="block">
+    <div class="block-head"><div class="block-icon bi-amber"><i class="ti ti-ruler-measure"></i></div><div><h2>Capa peniana</h2><p>Volume, tamanho e objeções</p></div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Entendi que óleos e remédios que prometem aumento real do pênis são enganosos</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Vou explicar que a capa peniana aumenta volume/tamanho apenas durante o uso</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Entendi que capa peniana <strong>não é camisinha</strong> e não garante proteção</div></div>
+    <div class="item" onclick="toggle(this)"><div class="check"><i class="ti ti-check"></i></div><div class="item-text">Vou quebrar a vergonha do cliente explicando que o acessório pode ser usado para proporcionar mais prazer</div></div>
+  </div>
+
+  <button class="btn-reset" onclick="reset()">
+    <i class="ti ti-refresh" style="font-size:14px;vertical-align:-2px;margin-right:6px"></i>
+    Limpar checklist
+  </button>
+</div>
+<script>
+function toggle(el){el.classList.toggle('done');update();}
+function update(){
+  const all=document.querySelectorAll('.item');
+  const done=document.querySelectorAll('.item.done');
+  const pct=all.length?Math.round(done.length/all.length*100):0;
+  document.getElementById('pbar').style.width=pct+'%';
+  document.getElementById('plabel').textContent=done.length+' / '+all.length+' itens';
+  document.getElementById('congrats').style.display=(done.length===all.length&&all.length>0)?'block':'none';
+}
+function reset(){document.querySelectorAll('.item.done').forEach(el=>el.classList.remove('done'));update();}
+update();
+</script>
+</body>
+</html>

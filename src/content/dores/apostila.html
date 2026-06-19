@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apostila — Principais Dores e Soluções</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: linear-gradient(160deg, #1a1630 0%, #0f0c1e 100%); min-height: 100vh; color: #fff; padding: 0 0 60px; }
+  .hero { background: linear-gradient(135deg, rgba(127,119,221,0.25), rgba(93,202,165,0.1)); border-bottom: 0.5px solid rgba(255,255,255,0.1); padding: 48px 28px 36px; text-align: center; }
+  .hero-tag { display: inline-block; background: rgba(93,202,165,0.2); color: #9FE1CB; border: 0.5px solid rgba(93,202,165,0.4); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+  .hero h1 { font-size: 24px; font-weight: 600; line-height: 1.25; margin-bottom: 10px; }
+  .hero h1 span { color: #AFA9EC; }
+  .hero p { font-size: 14px; color: rgba(255,255,255,0.55); max-width: 470px; margin: 0 auto; line-height: 1.6; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 18px; }
+  .section { background: rgba(255,255,255,0.05); backdrop-filter: blur(16px); border: 0.5px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 24px 22px; margin-top: 20px; }
+  .section-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .section-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 22px; }
+  .icon-purple { background: rgba(127,119,221,0.25); color: #AFA9EC; }
+  .icon-teal   { background: rgba(93,202,165,0.2);  color: #9FE1CB; }
+  .icon-amber  { background: rgba(239,159,39,0.2);  color: #FAC775; }
+  .icon-red    { background: rgba(226,75,74,0.2);   color: #F09595; }
+  .icon-blue   { background: rgba(55,138,221,0.2);  color: #85B7EB; }
+  .icon-pink   { background: rgba(212,83,126,0.2);  color: #ED93B1; }
+  .section-head h2 { font-size: 17px; font-weight: 600; color: #fff; margin: 0; }
+  .section-head p { font-size: 12px; color: rgba(255,255,255,0.45); margin: 3px 0 0; }
+  .num-badge { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(175,169,236,0.25); color: #AFA9EC; font-size: 11px; font-weight: 700; flex-shrink: 0; margin-right: 4px; }
+  .steps { display: flex; flex-direction: column; gap: 12px; }
+  .step { display: flex; gap: 14px; align-items: flex-start; }
+  .step-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(93,202,165,0.25); color: #9FE1CB; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); }
+  .step-text strong { color: #fff; font-weight: 600; }
+  .tip { background: rgba(93,202,165,0.1); border: 0.5px solid rgba(93,202,165,0.3); border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; margin-top: 12px; }
+  .tip i { font-size: 18px; color: #9FE1CB; flex-shrink: 0; margin-top: 1px; }
+  .tip-text { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+  .tip-text strong { color: #fff; }
+  .alert { background: rgba(226,75,74,0.12); border: 0.5px solid rgba(226,75,74,0.3); border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; margin-top: 10px; }
+  .alert i { font-size: 18px; color: #F09595; flex-shrink: 0; margin-top: 1px; }
+  .alert-text { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+  .alert-text strong { color: #fff; }
+  .destaque { background: rgba(127,119,221,0.12); border: 0.5px solid rgba(127,119,221,0.3); border-radius: 14px; padding: 20px; text-align: center; margin-top: 20px; }
+  .destaque i { font-size: 32px; color: #AFA9EC; margin-bottom: 10px; display: block; }
+  .destaque p { font-size: 15px; font-weight: 500; color: #fff; margin-bottom: 6px; }
+  .destaque span { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6; display: block; }
+  .divider { height: 0.5px; background: rgba(255,255,255,0.08); margin: 16px 0; }
+  .exemplo { background: rgba(255,255,255,0.04); border-left: 3px solid rgba(175,169,236,0.5); border-radius: 0 10px 10px 0; padding: 12px 14px; margin-top: 10px; font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+  .exemplo strong { color: #AFA9EC; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">Apostila — Módulo 6</div>
+  <h1>Principais dores e <span>soluções</span></h1>
+  <p>Aprenda a identificar a dor do cliente e indicar o produto certo com explicação simples, consultiva e segura.</p>
+</div>
+
+<div class="wrap">
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-purple"><i class="ti ti-stethoscope"></i></div>
+      <div>
+        <h2>Antes de decorar produtos, entenda a dor</h2>
+        <p>A venda começa no problema que o cliente quer resolver</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85)">
+      O cliente não procura a loja apenas porque quer comprar “alguma coisa”. Na maioria das vezes, ele quer resolver uma dor individual ou uma dificuldade no relacionamento.
+      <br><br>
+      O papel da consultora é parecido com o raciocínio de um consultório: primeiro entender o problema, depois indicar a solução mais adequada. Antes de decorar modos de vibração, sabores, tamanhos ou detalhes técnicos, o primeiro passo é entender <strong>quais dores existem e quais produtos ajudam em cada uma delas</strong>.
+    </div>
+    <div class="tip">
+      <i class="ti ti-bulb"></i>
+      <div class="tip-text"><strong>Regra:</strong> primeiro entenda a dor. Depois indique o produto. Produto sem contexto vira empurro; produto conectado à dor vira solução.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-blue"><i class="ti ti-alert-triangle"></i></div>
+      <div>
+        <h2>Postura responsável da consultora</h2>
+        <p>Orientar sem prometer cura e sem diagnosticar</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85)">
+      Alguns assuntos envolvem saúde, sensibilidade, dor, disfunção, libido e bem-estar íntimo. A consultora pode explicar o produto, orientar o modo de uso básico e ajudar o cliente a escolher melhor, mas não deve diagnosticar, prometer cura ou substituir médico, psicólogo, fisioterapeuta ou outro profissional.
+    </div>
+    <div class="alert">
+      <i class="ti ti-shield-check"></i>
+      <div class="alert-text"><strong>Importante:</strong> dor persistente, disfunção intensa, vaginismo, queda severa de libido ou dificuldade recorrente devem ser avaliados por profissional de saúde. A loja orienta produtos, mas não faz diagnóstico.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-red"><i class="ti ti-heart-broken"></i></div>
+      <div>
+        <h2><span class="num-badge">1</span> Disfunção erétil</h2>
+        <p>Dificuldade de ter ou manter ereção</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-text">A disfunção erétil acontece quando o homem tem dificuldade para deixar o pênis ereto ou manter a ereção por tempo suficiente.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text">Pode ter origem psicológica ou fisiológica. Quando for algo psicológico, a loja não resolve: o ideal é orientação profissional.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text">Quando a questão está ligada à disposição, energia ou fluxo sanguíneo, alguns produtos podem ajudar como apoio.</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="steps">
+      <div class="step"><div class="step-num">A</div><div class="step-text"><strong>Testo Viril:</strong> cápsula de uso diário, indicada no treinamento como opção para aumentar disposição sexual de forma mais constante após alguns dias.</div></div>
+      <div class="step"><div class="step-num">B</div><div class="step-text"><strong>Sachê estimulante:</strong> opção de efeito mais imediato, usada antes da relação para ajudar na disposição e energia sexual.</div></div>
+      <div class="step"><div class="step-num">C</div><div class="step-text"><strong>Bomba peniana:</strong> solução mecânica que ajuda a puxar sangue para a região do pênis, podendo ser indicada quando a dificuldade é mais avançada.</div></div>
+    </div>
+    <div class="exemplo"><strong>Como explicar:</strong> “Se é mais falta de energia e disposição, podemos pensar em cápsula ou sachê. Se a dificuldade de ereção está mais intensa, existe a bomba peniana, que funciona de forma mecânica ajudando o fluxo de sangue na região.”</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-amber"><i class="ti ti-clock-bolt"></i></div>
+      <div>
+        <h2><span class="num-badge">2</span> Ejaculação precoce</h2>
+        <p>Quando o homem chega ao orgasmo rápido demais</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85)">
+      A ejaculação precoce pode afetar a autoestima do homem e a satisfação do casal. No treinamento, o produto principal para essa dor é o <strong>spray retardante</strong>.
+      <br><br>
+      Ele é aplicado na glande para reduzir a sensibilidade da região. Como o homem fica menos sensível, tende a durar mais tempo na penetração. O efeito é rápido e pode durar cerca de 20 a 30 minutos.
+    </div>
+    <div class="alert">
+      <i class="ti ti-alert-triangle"></i>
+      <div class="alert-text"><strong>Objeção comum:</strong> o cliente pode pensar que, por reduzir a sensibilidade, o produto pode fazer brochar. Explique que ele não tira 100% da sensibilidade e que o objetivo é reduzir o excesso de sensibilidade, não eliminar o prazer.</div>
+    </div>
+    <div class="exemplo"><strong>Como explicar:</strong> “Ele diminui a sensibilidade da glande, então ajuda o homem a durar mais. Não é para parar de sentir tudo, é para reduzir aquela sensibilidade excessiva que faz chegar rápido demais.”</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-pink"><i class="ti ti-flame"></i></div>
+      <div>
+        <h2><span class="num-badge">3</span> Falta de libido</h2>
+        <p>Queda de desejo, energia ou disposição sexual</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-text">A falta de libido pode aparecer por cansaço, estresse, rotina, queda de vitaminas ou vários outros fatores.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Cápsulas masculinas ou femininas:</strong> funcionam como suplemento com vitaminas relacionadas à libido.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Sachês estimulantes:</strong> têm efeito mais imediato e normalmente são usados antes da relação.</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-text"><strong>Energéticos afrodisíacos:</strong> ajudam mais na energia e disposição. Alguns têm composição mais interessante, como catuaba e maca peruana.</div></div>
+    </div>
+    <div class="tip">
+      <i class="ti ti-bulb"></i>
+      <div class="tip-text">Se o cliente comparar com multivitamínico de farmácia, explique que esses produtos são focados em vitaminas e compostos ligados à libido, não um multivitamínico geral.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-purple"><i class="ti ti-sparkles"></i></div>
+      <div>
+        <h2><span class="num-badge">4</span> Dificuldade de chegar ao orgasmo</h2>
+        <p>Principalmente em mulheres, mas não exclusivamente</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">A</div><div class="step-text"><strong>Excitantes em gel ou pomada:</strong> ajudam a aumentar a sensibilidade na região aplicada, podendo aquecer, esfriar, vibrar/formigar ou intensificar a circulação local.</div></div>
+      <div class="step"><div class="step-num">B</div><div class="step-text"><strong>Vibradores:</strong> mantêm estímulo constante e podem facilitar orgasmos mais intensos e, em algumas pessoas, sequenciais.</div></div>
+      <div class="step"><div class="step-num">C</div><div class="step-text"><strong>Sugador de clitóris:</strong> indicado quando a mulher sente mais prazer no clitóris.</div></div>
+      <div class="step"><div class="step-num">D</div><div class="step-text"><strong>Vibradores de penetração ou duplo estímulo:</strong> indicados quando a mulher gosta de penetração ou de estímulo interno junto com estímulo no clitóris.</div></div>
+    </div>
+    <div class="exemplo"><strong>Perguntas essenciais:</strong> “Você sente mais prazer no clitóris, na penetração ou nos dois?” e “Até qual valor você quer investir?”</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-blue"><i class="ti ti-droplet"></i></div>
+      <div>
+        <h2><span class="num-badge">5</span> Dor na penetração vaginal</h2>
+        <p>Lubrificação, ressecamento ou vaginismo</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Lubrificante:</strong> indicado para uso no ato da relação, quando a dor está ligada à falta de lubrificação momentânea.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Hidratante vaginal:</strong> indicado como tratamento para mulheres com grande ressecamento ou baixa lubrificação natural. No treinamento, o exemplo usa aplicações por 10 dias antes de dormir.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Dilatadores vaginais:</strong> usados em situações específicas, como preparo orientado para cirurgia ou casos de vaginismo, com introdução gradual de tamanhos.</div></div>
+    </div>
+    <div class="alert"><i class="ti ti-alert-triangle"></i><div class="alert-text"><strong>Atenção:</strong> dor na penetração e vaginismo precisam de cuidado. A loja pode explicar produtos, mas dor persistente deve ser acompanhada por profissional.</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-red"><i class="ti ti-circle-dashed"></i></div>
+      <div>
+        <h2><span class="num-badge">6</span> Dor na penetração anal</h2>
+        <p>Preparação, lubrificação e conforto</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">A</div><div class="step-text"><strong>Anestésico anal:</strong> ajuda a reduzir dor e desconforto na entrada do ânus, sem anestesiar 100%.</div></div>
+      <div class="step"><div class="step-num">B</div><div class="step-text"><strong>Lubrificante de qualidade:</strong> é fundamental, porque o ânus não tem lubrificação própria. Saliva seca rápido e lubrifica pouco.</div></div>
+      <div class="step"><div class="step-num">C</div><div class="step-text"><strong>Plug anal:</strong> ajuda na preparação gradual, pois o formato facilita a introdução e auxilia na dilatação antes da penetração.</div></div>
+    </div>
+    <div class="tip"><i class="ti ti-bulb"></i><div class="tip-text">A combinação ideal costuma ser: lubrificante + anestésico anal + paciência. O plug pode ajudar como preparação antes da penetração.</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-teal"><i class="ti ti-ring"></i></div>
+      <div>
+        <h2><span class="num-badge">7</span> Anel peniano</h2>
+        <p>Inchaço, ereção mais firme e estímulo extra</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85)">
+      O anel peniano é colocado no pênis e aperta levemente a região, ajudando a segurar o sangue. Isso pode dar sensação de inchaço, contribuir para uma ereção mais firme e retardar um pouco a ejaculação.
+      <br><br>
+      Alguns modelos possuem vibrador. Nesses casos, além da função do anel, o vibrador pode estimular o clitóris da parceira durante a penetração, dependendo da posição.
+    </div>
+    <div class="exemplo"><strong>Como explicar:</strong> “O modelo sem vibrador ajuda mais o homem. O modelo com vibrador pode ajudar os dois, porque estimula o clitóris durante a penetração.”</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-amber"><i class="ti ti-spray"></i></div>
+      <div>
+        <h2><span class="num-badge">8</span> Anestésico de garganta</h2>
+        <p>Para reduzir desconforto no oral profundo</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85)">
+      O anestésico de garganta é um spray aplicado no fundo da garganta. A função é reduzir o desconforto e a ânsia de vômito em práticas de oral mais profundo.
+    </div>
+    <div class="exemplo"><strong>Como explicar:</strong> “É como um spray aplicado no fundo da garganta. Ele anestesia levemente a região e ajuda a diminuir a ânsia no oral profundo.”</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-pink"><i class="ti ti-bottle"></i></div>
+      <div>
+        <h2><span class="num-badge">9</span> Perfume com feromônio</h2>
+        <p>Para inovar, provocar e despertar desejo</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85)">
+      O perfume com feromônio é usado como um perfume comum, mas possui compostos que remetem ao cheiro natural que pode despertar atração. Existe versão masculina e feminina.
+    </div>
+    <div class="exemplo"><strong>Como explicar:</strong> “É um perfume para usar no corpo, mas com a proposta de despertar mais desejo no parceiro ou parceira.”</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-purple"><i class="ti ti-candy"></i></div>
+      <div>
+        <h2><span class="num-badge">10</span> Bolinhas explosivas</h2>
+        <p>Para gerar surpresa e sensação diferente na relação</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85)">
+      As bolinhas são introduzidas no canal vaginal ou anal. Durante a penetração, elas estouram e liberam um óleo que pode gerar sensação de esquentar, esfriar, choque, vibração ou outras sensações.
+    </div>
+    <div class="tip"><i class="ti ti-bulb"></i><div class="tip-text">Uma forma de tornar o produto mais interessante é sugerir usar como surpresa para o parceiro, quando fizer sentido para o cliente.</div></div>
+    <div class="exemplo"><strong>Dúvida comum:</strong> a bolinha não fica presa no canal. O corpo dissolve e elimina com o tempo.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-red"><i class="ti ti-candle"></i></div>
+      <div>
+        <h2><span class="num-badge">11</span> Vela para massagem</h2>
+        <p>Massagem, sabor e inovação</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85)">
+      A vela para massagem é acesa e derrete, formando um óleo para passar no corpo. Esse óleo pode ser usado na massagem e também é beijável, ou seja, pode ser lambido por ter sabor.
+    </div>
+    <div class="exemplo"><strong>Dúvida comum:</strong> ela não queima como vela comum, porque não contém parafina e o óleo não fica quente a ponto de machucar.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-blue"><i class="ti ti-pearl"></i></div>
+      <div>
+        <h2><span class="num-badge">12</span> Colar de pérolas</h2>
+        <p>Estímulo manual para homem e mulher</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85)">
+      O colar de pérolas é um acessório usado para estimular regiões íntimas. Pode ser enrolado no pênis para masturbação ou enrolado na mão para gerar um estímulo diferente. Também pode ser usado na região do clitóris.
+    </div>
+    <div class="exemplo"><strong>Como explicar:</strong> “Ele serve para dar um estímulo diferente do toque comum, tanto no homem quanto na mulher.”</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-teal"><i class="ti ti-ruler-measure"></i></div>
+      <div>
+        <h2><span class="num-badge">13</span> Capa peniana</h2>
+        <p>Para quem busca mais volume ou tamanho na relação</p>
+      </div>
+    </div>
+    <div class="step-text" style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85)">
+      Muitos homens procuram soluções para aumentar o pênis, mas é importante não prometer milagres. Óleos e remédios que prometem aumento real costumam ser enganosos. Na loja, a solução prática é a <strong>capa peniana</strong>.
+      <br><br>
+      Ela funciona como uma capa de silicone colocada sobre o pênis, aumentando volume e comprimento durante o uso.
+    </div>
+    <div class="alert"><i class="ti ti-alert-triangle"></i><div class="alert-text"><strong>Atenção:</strong> capa peniana não substitui camisinha e não garante a proteção de um preservativo.</div></div>
+    <div class="tip"><i class="ti ti-bulb"></i><div class="tip-text">Uma objeção comum é vergonha de usar. Explique que o acessório pode ser visto como uma forma de querer proporcionar mais prazer, não como algo vergonhoso.</div></div>
+  </div>
+
+  <div class="destaque">
+    <i class="ti ti-checklist"></i>
+    <p>Resumo do módulo</p>
+    <span>
+      A consultora precisa identificar a dor do cliente antes de indicar produto.<br><br>
+      Para cada dor existe uma solução mais adequada: disfunção erétil, ejaculação precoce, falta de libido, dificuldade de orgasmo, dor vaginal, dor anal, inovação na relação, estímulos diferentes e aumento de volume com capa peniana.<br><br>
+      O segredo é perguntar, entender, explicar e indicar com responsabilidade.
+    </span>
+  </div>
+
+</div>
+</body>
+</html>
