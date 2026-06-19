@@ -1293,671 +1293,107 @@ export const TOPICS: Topic[] = [
   {
     id: "dores",
     order: 6,
-    title: "Principais Dores x Soluções",
+    title: "Principais Dores e Soluções",
     summary:
-      "Pense como médico: o cliente vem resolver uma dor. Entenda a dor antes de decorar produtos.",
+      "Aprender a identificar as principais dores dos clientes e indicar as soluções/produtos corretos.",
     accent: "from-violet-500 to-purple-700",
     subtasks: [
       {
         id: "dores.video",
         kind: "video",
-        title: "1. Assistir destaque — Dores dos clientes",
-        description: "Assista o destaque '10. Dores' no Instagram da loja antes de ler a apostila.",
+        title: "1. Principais Dores e Soluções — Assistir vídeo",
+        description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: IG_DORES,
       },
       {
         id: "dores.apostila",
-        kind: "apostila",
-        title: "2. Ler apostila — Dores x Soluções",
-        description:
-          "Conceito-base + cada dor com as soluções da loja. Leia tudo antes do exercício.",
-
-        intro:
-          "Pense como médico: o cliente não vem comprar um produto — vem resolver uma dor. Sua função é entender o problema e indicar a solução certa. Entenda as dores antes de decorar funções de produtos.",
-        sections: [
-          {
-            icon: "💊",
-            iconBg: "#fde8ec",
-            title: "Disfunção erétil",
-            subtitle: "Dificuldade de ereção ou de manutenção",
-            items: [
-              {
-                badge: "Tratamento",
-                badgeColor: "purple",
-                title: "Testo Viril (cápsula diária)",
-                description:
-                  "1 cápsula/dia. Efeito em 7–14 dias. Para indisposição sexual constante no dia a dia.",
-              },
-              {
-                badge: "Imediato",
-                badgeColor: "orange",
-                title: "Sachê estimulante (mel)",
-                description:
-                  "Tomar 2h antes. Efeito rápido de energia e disposição sexual.",
-              },
-              {
-                badge: "Avançado",
-                badgeColor: "blue",
-                title: "Bomba peniana",
-                description:
-                  "Sucção mecânica que puxa sangue para a região. Indicar apenas nos casos severos (fisiológicos) — inclusive por fisioterapeutas.",
-              },
-            ],
-            tip: {
-              label: "⚠ Atenção",
-              text: "Se a causa for psicológica (pornografia, ansiedade), nenhum produto resolve — indicar psicólogo.",
-            },
-          },
-          {
-            icon: "⏱",
-            iconBg: "#e6f0fb",
-            title: "Ejaculação precoce",
-            subtitle: "Orgasmo rápido, afeta autoestima e satisfação da parceira",
-            items: [
-              {
-                badge: "Principal",
-                badgeColor: "blue",
-                title: "Spray retardante",
-                description:
-                  "Aplicar na glande. Reduz sensibilidade parcialmente. Efeito em 5–10 seg, dura 20–30 min. Pode reaplicar. Tem vasodilatador — não faz broxar.",
-              },
-            ],
-            tip: {
-              label: 'Objeção comum — "vou broxar?"',
-              text: "Não. O homem é visual e se mantém excitado. O vasodilatador do spray compensa a redução de sensibilidade.",
-            },
-          },
-          {
-            icon: "🔋",
-            iconBg: "#e6f5ed",
-            title: "Falta de libido",
-            subtitle: "Cansaço, estresse, queda de vitaminas",
-            items: [
-              {
-                badge: "Tratamento",
-                badgeColor: "green",
-                title: "Cápsulas vitamínicas (masc./fem.)",
-                description:
-                  "Só vitaminas ligadas à libido. Sem 'extras' genéricos como vitamina C da farmácia.",
-              },
-              {
-                badge: "Imediato",
-                badgeColor: "orange",
-                title: "Sachê estimulante (versão fem.)",
-                description: "Tomar 2h antes. Efeito rápido para a noite.",
-              },
-              {
-                badge: "Recomendado",
-                badgeColor: "purple",
-                title: "Energético com Catuaba + Maca Peruana",
-                description:
-                  "Afrodisíaco natural. Melhor que tesão de vaca/touro, que tem resultado mais fraco na prática.",
-              },
-            ],
-          },
-          {
-            icon: "🌸",
-            iconBg: "#fde8ec",
-            title: "Dificuldade de orgasmo (feminino)",
-            subtitle: "Muito comum — parte nunca chegou ao orgasmo",
-            items: [
-              {
-                badge: "Gel/pomada",
-                badgeColor: "pink",
-                title: "Excitante vasodilatador",
-                description:
-                  "Aplicar no clitóris e vulva. Mais fluxo sanguíneo → mais sensibilidade. Efeitos possíveis: calor, frio ou vibração (formigamento).",
-              },
-              {
-                badge: "Acessório",
-                badgeColor: "purple",
-                title: "Vibrador",
-                description:
-                  "Perguntar sempre: clitóris, penetração ou ambos? → indica o modelo certo. Quanto maior o preço, melhor a qualidade e a vibração. Para clitóris, o sugador é o campeão.",
-              },
-            ],
-          },
-          {
-            icon: "💧",
-            iconBg: "#EEEDFE",
-            title: "Dor na penetração vaginal",
-            subtitle: "Falta de lubrificação ou vaginismo",
-            items: [
-              {
-                badge: "Uso no ato",
-                badgeColor: "purple",
-                title: "Lubrificante",
-                description: "Preferir versões que demoram mais para secar.",
-              },
-              {
-                badge: "Tratamento",
-                badgeColor: "green",
-                title: "Hidratante vaginal (pomada + tubinhos)",
-                description:
-                  "10 tubinhos, 1 por noite antes de dormir. Restaura a lubrificação natural. Para ressecamento severo.",
-              },
-              {
-                badge: "Específico",
-                badgeColor: "gray",
-                title: "Kit dilatadores vaginais",
-                description:
-                  "7 próteses progressivas. Para vaginismo forte ou preparo pré-cirúrgico.",
-              },
-            ],
-          },
-          {
-            icon: "🔑",
-            iconBg: "#fef0e3",
-            title: "Dor na penetração anal",
-            subtitle: "Falta de lubrificação e tensão muscular",
-            items: [
-              {
-                badge: "Essencial",
-                badgeColor: "orange",
-                title: "Lubrificante de qualidade",
-                description:
-                  "O ânus não tem lubrificação própria. Saliva seca rápido — lubrificante é o item mais importante.",
-              },
-              {
-                badge: "Complemento",
-                badgeColor: "blue",
-                title: "Anestésico anal (gel)",
-                description:
-                  "Aplicar por fora e na entrada. Esperar 1 min. Não lubrifica — usar junto com lubrificante.",
-              },
-              {
-                badge: "Preparação",
-                badgeColor: "purple",
-                title: "Plug anal",
-                description:
-                  "Formato cônico dilata os esfíncteres gradualmente. Torna a penetração muito mais confortável.",
-              },
-            ],
-          },
-          {
-            icon: "📏",
-            iconBg: "#EEEDFE",
-            title: "Tamanho do pênis",
-            subtitle: "Homem querendo aumentar o volume",
-            items: [
-              {
-                badge: "Única solução",
-                badgeColor: "pink",
-                title: "Capa peniana",
-                description:
-                  "Capa de silicone que aumenta grossura e tamanho. Não substitui camisinha. Tranquilizar o cliente: a parceira geralmente aprova o acessório.",
-              },
-            ],
-            tip: {
-              label: "⚠ Atenção",
-              text: "Óleos, comprimidos e 'fórmulas' que prometem aumentar o pênis são enganação. Só cirurgia e ácido hialurônico funcionam — ambos médicos.",
-            },
-          },
-        ],
-        extrasTitle: "Outros produtos importantes",
-        extras: [
-          {
-            badge: "Homem",
-            badgeColor: "blue",
-            title: "Anel peniano",
-            description:
-              "Prende sangue → sensação de inchaço + retarda ejaculação. Modelos com vibrador estimulam o clitóris durante a penetração.",
-          },
-          {
-            badge: "Oral",
-            badgeColor: "gray",
-            title: "Anestésico de garganta (spray)",
-            description:
-              "Spritar no fundo da garganta. Reduz ânsia no oral profundo.",
-          },
-          {
-            badge: "Inovação",
-            badgeColor: "purple",
-            title: "Bolinhas explosivas",
-            description:
-              "Introduzidas no canal vaginal — estouram na penetração com efeito (frio, calor, choque, vibração). O corpo dissolve naturalmente. Dica de venda: sugerir surpresa ao parceiro.",
-          },
-          {
-            badge: "Sensorial",
-            badgeColor: "orange",
-            title: "Vela para massagem",
-            description:
-              "Derrete em óleo beijável com sabor. Sem parafina — não queima. Para massagem ou sexo oral.",
-          },
-          {
-            badge: "Atração",
-            badgeColor: "green",
-            title: "Perfume com feromônio",
-            description:
-              "Moléculas do cheiro natural de cada gênero que atraem o sexo oposto.",
-          },
-          {
-            badge: "Clássico",
-            badgeColor: "gray",
-            title: "Colar de pérolas",
-            description:
-              "Enrolar no pênis ou na mão para masturbação. Também estimula o clitóris.",
-          },
-        ],
-        faq: [
-          {
-            question: "Diferença entre indicar o mel e o Testo Viril para disfunção erétil?",
-            answer:
-              "Mel: efeito imediato (2h antes). Testo Viril: tratamento diário com resultado constante em 7–14 dias.",
-          },
-          {
-            question: "Quando indicar a bomba peniana?",
-            answer:
-              "Apenas em disfunção erétil severa e fisiológica — quando a ereção simplesmente não ocorre. Indicada até por fisioterapeutas.",
-          },
-          {
-            question: "O spray retardante faz o homem broxar?",
-            answer:
-              "Não. O homem é visual e se mantém excitado. O spray tem vasodilatador que compensa a redução de sensibilidade.",
-          },
-          {
-            question: "Quais perguntas fazer antes de indicar um vibrador?",
-            answer:
-              "1) Ela sente mais no clitóris, na penetração ou em ambos? 2) Qual o valor que está disposta a investir?",
-          },
-          {
-            question: "Diferença do excitante em gel para o vibrador?",
-            answer:
-              "Excitante age quimicamente (vasodilatação, calor, frio, vibração). Vibrador estimula mecanicamente de forma contínua, gerando orgasmos mais fortes.",
-          },
-          {
-            question: "Por que a saliva não basta para o sexo anal?",
-            answer:
-              "Seca muito rápido. O ânus não tem lubrificação própria — lubrificante de qualidade é indispensável.",
-          },
-          {
-            question: "Diferença entre hidratante vaginal e lubrificante?",
-            answer:
-              "Lubrificante é para o ato. Hidratante é um tratamento de 10 dias que restaura a lubrificação natural para ressecamento severo.",
-          },
-          {
-            question: "Por que a capa peniana não substitui a camisinha?",
-            answer:
-              "Não oferece proteção contra ISTs nem evita gravidez. É só um acessório de volume — não é contraceptivo.",
-          },
-          {
-            question: "Como funciona e como vender a bolinha explosiva?",
-            answer:
-              "Introduzida no canal vaginal, estoura na penetração soltando óleo com efeito. Dica: sugerir inserir escondida para surpreender o parceiro.",
-          },
-          {
-            question:
-              "Por que o energético com Catuaba é melhor que tesão de vaca/touro?",
-            answer:
-              "Tem compostos afrodisíacos comprovados (catuaba e maca peruana). O tesão de vaca/touro vende pelo nome mas tem resultado mais fraco.",
-          },
-          {
-            question: "Para que serve o plug anal antes da penetração?",
-            answer:
-              "Dilata os esfíncteres gradualmente com seu formato cônico. Facilita muito a penetração posterior, tornando a experiência mais confortável.",
-          },
-          {
-            question: "Diferencial do multivitamínico da loja frente ao da farmácia?",
-            answer:
-              "Contém apenas vitaminas diretamente ligadas à libido. O da farmácia mistura vitaminas genéricas que não têm relação com desejo sexual.",
-          },
-          {
-            question: "Como abordar uma cliente que diz ter dor na penetração?",
-            answer:
-              "Antes de produto, identifique a causa: ressecamento → hidratante vaginal + lubrificante; falta de excitação → preliminares + excitante feminino; canal estreito ou pós-parto/menopausa → kit de dilatadores. Nunca empurre só lubrificante se a dor for estrutural.",
-          },
-          {
-            question: "Qual a diferença entre lubrificante à base de água, silicone e óleo?",
-            answer:
-              "Água: leve, seca rápido, compatível com brinquedos e camisinha. Silicone: dura muito mais, ótimo para anal e para o chuveiro, mas não usar com brinquedos de silicone. Óleo: deslizamento intenso, mas DANIFICA a camisinha de látex — só para sexo sem preservativo.",
-          },
-          {
-            question: "Quando indicar o anel peniano e quando indicar o spray retardante?",
-            answer:
-              "Anel peniano: ajuda a manter a ereção firme por mais tempo (segura o sangue no pênis). Spray retardante: reduz a sensibilidade para retardar a ejaculação precoce. Problemas diferentes: o anel ajuda a manter, o spray ajuda a durar mais antes de gozar.",
-          },
-          {
-            question: "Cliente diz que perdeu o tesão pelo parceiro — o que sugerir primeiro?",
-            answer:
-              "Foque em quebrar a rotina antes de vender estímulo químico: jogos eróticos, fantasias, cartas de desejo, lingerie nova. Excitantes e energéticos com catuaba entram como reforço, não como solução isolada — desejo se recupera com novidade, não só com produto.",
-          },
-          {
-            question: "Como apresentar brinquedos para casais que nunca usaram?",
-            answer:
-              "Comece pelos mais leves e de uso conjunto: anel peniano com vibração, vibrador de clitóris pequeno (formato discreto), óleo comestível ou gel beijável. Evite começar por plugs anais, vibradores grandes ou produtos BDSM — assusta e fecha a venda.",
-          },
-          {
-            question: "Diferença entre vibrador de ponto G, sugador de clitóris e varinha mágica?",
-            answer:
-              "Ponto G: curvado, estimula internamente. Sugador (pressure wave): cria pulsos de ar/sucção direto no clitóris — orgasmo rápido e intenso. Varinha mágica: vibração potente e ampla, ótima para quem nunca teve orgasmo ou tem sensibilidade reduzida. Pergunte ONDE ela sente mais antes de indicar.",
-          },
-          {
-            question: "Cliente está envergonhada e não fala a dor — como conduzir?",
-            answer:
-              "Tire o peso da conversa: fale você primeiro de forma técnica e natural (\"a maioria das clientes que chega aqui tem alguma dessas três situações...\"). Dê opções múltiplas em vez de pedir para ela descrever. Use linguagem médica/profissional, nunca chula. Vergonha some quando ela vê que pra você é assunto normal.",
-          },
-          {
-            question: "Como justificar o preço de um produto mais caro frente a um similar barato?",
-            answer:
-              "Foque no resultado, não no produto. Ex.: \"a versão mais simples cumpre, mas essa aqui tem motor mais silencioso, bateria que dura X horas e material médico — você compra uma vez e dura anos\". Compare custo por uso, não preço de etiqueta. E sempre pergunte o orçamento antes de mostrar, para não constranger.",
-          },
-        ],
-
+        kind: "inline_html",
+        title: "2. Ler apostila — Ler apostila",
+        description: "Leia a apostila por completo antes de fazer os exercícios.",
+        source: "dores_apostila",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
       },
       {
-        id: "dores.pratica",
+        id: "dores.fixacao",
         kind: "practice",
-        title: "3. Exercício de fixação — 20 perguntas",
+        title: "3. Exercício de fixação — Exercício de fixação",
         description:
-          "Treino com correção imediata. Não bloqueia o avanço — é só para fixar.",
+          "Múltipla escolha autocorrigido. 26 questões. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
-          {
-            question:
-              "Um cliente diz que tem disfunção erétil avançada e já tentou outras opções. Qual produto é o mais indicado?",
-            options: ["Sachê de mel", "Testo Viril", "Bomba peniana", "Spray retardante"],
-            correctIndex: 2,
-          },
-          {
-            question:
-              "Qual é a diferença principal entre o sachê de mel e o Testo Viril para disfunção erétil?",
-            options: [
-              "Um é fisiológico e outro psicológico",
-              "O mel tem efeito imediato (2h antes); o Testo Viril é um tratamento contínuo de 7-14 dias",
-              "Não há diferença, são o mesmo produto",
-              "O Testo Viril só serve para mulheres",
-            ],
-            correctIndex: 1,
-          },
-          {
-            question:
-              "Se a causa da disfunção erétil for psicológica, qual a conduta correta?",
-            options: [
-              "Indicar a bomba peniana mesmo assim",
-              "Indicar o Testo Viril em dose dobrada",
-              "Nenhum produto resolve — encaminhar para acompanhamento psicológico",
-              "Indicar o spray retardante",
-            ],
-            correctIndex: 2,
-          },
-          {
-            question:
-              "Por que o spray retardante não faz o homem perder a ereção, mesmo anestesiando a glande?",
-            options: [
-              "Porque o efeito dura só 5 segundos",
-              "Porque ele tem vasodilatador, que compensa a menor sensibilidade com mais fluxo sanguíneo",
-              "Porque ele não anestesia de verdade",
-              "Porque o homem nem sente o produto",
-            ],
-            correctIndex: 1,
-          },
-          {
-            question: "Quanto tempo dura o efeito do spray retardante depois de aplicado?",
-            options: ["5 minutos", "20 a 30 minutos", "2 horas", "O dia inteiro"],
-            correctIndex: 1,
-          },
-          {
-            question:
-              "Qual a vantagem da cápsula vitamínica vendida na loja em relação a um multivitamínico comum de farmácia?",
-            options: [
-              "É mais barata",
-              "Tem sabor melhor",
-              "Contém especificamente vitaminas ligadas à libido, em vez de vitaminas genéricas",
-              "Serve só para homens",
-            ],
-            correctIndex: 2,
-          },
-          {
-            question:
-              "Por que o energético com catuaba e maca peruana é considerado melhor que o tesão de vaca/touro?",
-            options: [
-              "Porque é mais barato",
-              "Porque tem registro do governo",
-              "Porque tem compostos afrodisíacos reais para homem e mulher, enquanto os outros têm resultado mais fraco na prática",
-              "Porque dura mais tempo na prateleira",
-            ],
-            correctIndex: 2,
-          },
-          {
-            question:
-              "Uma cliente diz que sente mais prazer no clitóris e tem dificuldade de chegar ao orgasmo. Qual vibrador é mais indicado?",
-            options: [
-              "Modelo de penetração",
-              "Sugador de clitóris",
-              "Anel peniano",
-              "Plug anal",
-            ],
-            correctIndex: 1,
-          },
-          {
-            question:
-              "Além de saber onde a cliente sente mais prazer, qual a segunda pergunta importante antes de indicar um vibrador?",
-            options: [
-              "Se ela já usou vibrador antes",
-              "Quanto ela está disposta a investir (preço geralmente reflete qualidade, silêncio e bateria)",
-              "Qual a cor preferida",
-              "Se o parceiro aprova",
-            ],
-            correctIndex: 1,
-          },
-          {
-            question:
-              "Quais efeitos um excitante em gel pode ter, além de vasodilatar?",
-            options: [
-              "Apenas hidratar",
-              "Esquentar, esfriar ou dar sensação de vibração (formigamento)",
-              "Anestesiar completamente",
-              "Colorir a pele",
-            ],
-            correctIndex: 1,
-          },
-          {
-            question:
-              "Uma cliente relata ressecamento vaginal severo e quer um tratamento, não só algo pontual. Qual produto é o indicado?",
-            options: [
-              "Lubrificante comum",
-              "Hidratante vaginal, tratamento de 10 dias",
-              "Kit dilatador",
-              "Excitante em gel",
-            ],
-            correctIndex: 1,
-          },
-          {
-            question: "Como se usa o hidratante vaginal?",
-            options: [
-              "Um tubinho por semana",
-              "Um tubinho por dia, à noite, por 10 dias",
-              "Aplicação única",
-              "Três vezes ao dia por 3 dias",
-            ],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual é a função do kit dilatador vaginal?",
-            options: [
-              "Lubrificar durante o ato sexual",
-              "Tratar ressecamento em 10 dias",
-              "Dilatar gradualmente a vagina em casos de vaginismo forte ou preparo pré-cirúrgico",
-              "Aumentar a sensibilidade do clitóris",
-            ],
-            correctIndex: 2,
-          },
-          {
-            question:
-              "Por que sempre se deve indicar anestésico anal junto com lubrificante, e nunca um sem o outro?",
-            options: [
-              "Porque são vendidos no mesmo kit",
-              "Porque o anestésico não lubrifica, e o ânus não tem lubrificação própria",
-              "Porque juntos ficam mais baratos",
-              "Porque a lei exige a venda conjunta",
-            ],
-            correctIndex: 1,
-          },
-          {
-            question:
-              "Qual é a função do plug anal antes da penetração principal?",
-            options: [
-              "Substituir o lubrificante",
-              "Dilatar gradualmente os esfíncteres, preparando a região",
-              "Anestesiar a região",
-              "Aumentar o volume do pênis",
-            ],
-            correctIndex: 1,
-          },
-          {
-            question:
-              "Um cliente pergunta se existe algum remédio ou pílula que realmente aumenta o tamanho do pênis. Qual a resposta correta?",
-            options: [
-              "Sim, vendemos esse remédio na loja",
-              "Não existe nenhuma forma real de aumentar",
-              "Só cirurgia ou ácido hialurônico funcionam de verdade — não vendemos nenhum dos dois, mas vendemos a capa peniana, que aumenta o volume percebido",
-              "Apenas exercícios físicos funcionam",
-            ],
-            correctIndex: 2,
-          },
-          {
-            question: "Quais são as duas funções principais do anel peniano?",
-            options: [
-              "Lubrificar e aquecer",
-              "Prender sangue (sensação de inchaço) e retardar a ejaculação",
-              "Aumentar o tamanho permanentemente",
-              "Substituir a camisinha",
-            ],
-            correctIndex: 1,
-          },
-          {
-            question: "Para que serve o anestésico de garganta?",
-            options: [
-              "Para tratar dor de garganta comum",
-              "Para reduzir a ânsia de vômito durante sexo oral profundo",
-              "Para aumentar a libido",
-              "Para tratar afta",
-            ],
-            correctIndex: 1,
-          },
-          {
-            question:
-              "O que acontece com a bolinha explosiva depois de usada no canal vaginal?",
-            options: [
-              "Precisa ser removida manualmente depois",
-              "O corpo dissolve naturalmente, não fica retida",
-              "Ela derrete em poucos segundos sem efeito",
-              "Precisa de receita médica para comprar",
-            ],
-            correctIndex: 1,
-          },
-          {
-            question:
-              "Por que a vela de massagem não queima a pele ao ser usada?",
-            options: [
-              "Porque tem muito pouca cera",
-              "Porque não contém parafina, então o óleo não fica quente o suficiente para queimar",
-              "Porque é feita de gelo",
-              "Porque precisa ser diluída em água antes",
-            ],
-            correctIndex: 1,
-          },
+          { question: "O que é disfunção erétil?", options: ["Quando o homem sente desejo sexual excessivo.", "Quando o homem tem dificuldade de ter ou manter o pênis ereto.", "Quando a mulher tem dificuldade de chegar ao orgasmo.", "Quando o casal quer inovar na relação."], correctIndex: 1 },
+          { question: "Quando a dificuldade de ereção parece estar mais avançada, qual produto foi apresentado como solução mecânica?", options: ["Perfume com feromônio.", "Bolinha explosiva.", "Bomba peniana.", "Vela para massagem."], correctIndex: 2 },
+          { question: "O que caracteriza a ejaculação precoce?", options: ["Falta de lubrificação vaginal.", "O homem chegar ao orgasmo rápido demais.", "Dificuldade de sentir cheiro do perfume.", "Necessidade de usar capa peniana."], correctIndex: 1 },
+          { question: "Como o spray retardante ajuda o homem a durar mais?", options: ["Aumentando o tamanho do pênis.", "Esquentando a garganta.", "Reduzindo a sensibilidade da glande.", "Lubrificando o ânus."], correctIndex: 2 },
+          { question: "A falta de libido pode estar ligada a quais fatores?", options: ["Apenas ao preço dos produtos.", "Cansaço, estresse, rotina, queda de vitaminas ou falta de energia.", "Apenas ao uso de vibrador.", "Apenas ao formato da embalagem."], correctIndex: 1 },
+          { question: "Qual é a diferença básica entre cápsulas de libido e sachês estimulantes?", options: ["Cápsulas são mais ligadas a uso contínuo; sachês têm proposta mais imediata.", "Sachês são apenas para massagem.", "Cápsulas servem como camisinha.", "Não existe diferença."], correctIndex: 0 },
+          { question: "Por que excitantes podem ajudar na dificuldade de chegar ao orgasmo?", options: ["Porque podem aumentar sensibilidade e gerar sensações como aquecer, esfriar ou formigar.", "Porque substituem todos os vibradores.", "Porque funcionam como preservativo.", "Porque anestesiam totalmente a região."], correctIndex: 0 },
+          { question: "Antes de indicar um vibrador para uma mulher, qual pergunta é essencial?", options: ["Se ela quer uma embalagem transparente.", "Se ela sente mais prazer no clitóris, na penetração ou nos dois.", "Se ela quer usar cartão de outra pessoa.", "Se ela gosta de vela decorativa."], correctIndex: 1 },
+          { question: "Quais são duas causas citadas para dor na penetração vaginal?", options: ["Falta de lubrificação e vaginismo.", "Perfume e colar de pérolas.", "Excesso de embalagem.", "Discrição do motoboy."], correctIndex: 0 },
+          { question: "Qual produto foi apresentado como tratamento para grande ressecamento vaginal?", options: ["Spray retardante.", "Hidratante vaginal.", "Anel peniano.", "Capa peniana."], correctIndex: 1 },
+          { question: "Por que o lubrificante é fundamental no sexo anal?", options: ["Porque o ânus não possui lubrificação própria.", "Porque substitui qualquer cuidado.", "Porque serve para aumentar o pênis.", "Porque impede o uso de plug anal."], correctIndex: 0 },
+          { question: "Qual é a função do plug anal no contexto de preparação?", options: ["Lubrificar sozinho a região.", "Preparar e ajudar na dilatação gradual antes da penetração.", "Substituir camisinha.", "Aumentar libido por vitaminas."], correctIndex: 1 },
+          { question: "Qual é a função básica do anel peniano?", options: ["Apertar levemente o pênis para ajudar a segurar sangue na região.", "Dissolver dentro do canal vaginal.", "Anestesiar a garganta.", "Substituir lubrificante."], correctIndex: 0 },
+          { question: "Qual diferencial alguns modelos de anel peniano possuem?", options: ["Tampa de spray.", "Vibrador para estimular o clitóris durante a penetração.", "Óleo beijável.", "Aplicador vaginal."], correctIndex: 1 },
+          { question: "Para que serve o anestésico de garganta?", options: ["Reduzir desconforto e ânsia no oral profundo.", "Aumentar o tamanho do pênis.", "Lubrificar a vagina.", "Estimular o clitóris por vibração."], correctIndex: 0 },
+          { question: "Como o anestésico de garganta normalmente é aplicado?", options: ["Em cápsula diária.", "Como spray no fundo da garganta.", "Como plug anal.", "Como colar de pérolas."], correctIndex: 1 },
+          { question: "Qual é a proposta do perfume com feromônio?", options: ["Ser um perfume com apelo de atração e desejo.", "Funcionar como lubrificante anal.", "Anestesiar a glande.", "Tratar ressecamento vaginal."], correctIndex: 0 },
+          { question: "Como a consultora pode explicar de forma simples o perfume com feromônio?", options: ["“É uma capa de silicone para aumentar volume.”", "“É um perfume para usar no corpo com proposta de despertar mais desejo.”", "“É um spray para o fundo da garganta.”", "“É uma bolinha que dissolve na boca.”"], correctIndex: 1 },
+          { question: "Como funcionam as bolinhas explosivas?", options: ["São aplicadas na glande para reduzir sensibilidade.", "São introduzidas no canal e liberam óleo com sensação durante a penetração.", "São colocadas no cartão para mudar a fatura.", "São usadas para prender sangue no pênis."], correctIndex: 1 },
+          { question: "Qual dúvida comum sobre bolinhas explosivas a consultora deve saber responder?", options: ["Se a bolinha fica presa no canal.", "Se ela serve como camisinha.", "Se ela substitui médico.", "Se ela aumenta o tamanho do pênis permanentemente."], correctIndex: 0 },
+          { question: "O que acontece quando a vela para massagem é acesa?", options: ["Ela vira óleo para massagem.", "Ela vira comprimido.", "Ela vira plug.", "Ela vira bomba peniana."], correctIndex: 0 },
+          { question: "Qual é uma dúvida comum sobre vela para massagem?", options: ["Se ela vai queimar a pele como vela comum.", "Se ela aparece na fatura.", "Se ela serve para segurar sangue.", "Se ela aumenta libido por vitamina."], correctIndex: 0 },
+          { question: "Para que serve o colar de pérolas no contexto íntimo?", options: ["Estimular regiões íntimas com toque diferente.", "Anestesiar a garganta.", "Tratar vaginismo.", "Substituir lubrificante."], correctIndex: 0 },
+          { question: "Uma forma de usar o colar de pérolas é:", options: ["Enrolar no pênis ou na mão para masturbação.", "Tomar duas horas antes da relação.", "Aplicar no fundo da garganta.", "Colocar na fatura do cartão."], correctIndex: 0 },
+          { question: "O que a capa peniana faz?", options: ["Aumenta volume/tamanho durante o uso.", "Aumenta o pênis permanentemente.", "Funciona como lubrificante.", "É um perfume com feromônio."], correctIndex: 0 },
+          { question: "Qual informação importante deve ser dita sobre capa peniana?", options: ["Ela substitui camisinha.", "Ela não substitui camisinha e não garante proteção.", "Ela é um tratamento médico.", "Ela dissolve com o tempo."], correctIndex: 1 },
         ],
       },
       {
-        id: "dores.avaliacao_final",
-        kind: "open_evaluation",
-        title: "4. Avaliação final — 15 perguntas dissertativas",
+        id: "dores.checklist",
+        kind: "inline_html",
+        title: "4. Ver checklist de aprendizados — Ver checklist de aprendizados",
         description:
-          "Responda com suas palavras. A gestora corrige depois — o próximo tópico é liberado assim que você enviar.",
+          "Marque os aprendizados que você fixou neste módulo. Este checklist ficará disponível para revisão sempre que precisar.",
+        source: "dores_checklist",
+        openLabel: "Abrir checklist",
+        helperText: "Este checklist também fica disponível no ícone do topo do site.",
+        confirmLabel: "Marquei todos os itens do checklist.",
+      },
+      {
+        id: "dores.prova.video",
+        kind: "video",
+        title: "5. Antes da prova — Assistir vídeo do Bruno",
+        description:
+          "Vídeo de alinhamento antes da prova. Recapitula o módulo e reforça as regras da avaliação.",
+        url: "https://www.instagram.com/stories/highlights/17958057917908256/",
+      },
+      {
+        id: "dores.prova.exam",
+        kind: "open_evaluation",
+        title: "5. Antes da prova — Prova: Principais Dores e Soluções",
+        description: "Prova dissertativa final do tópico. Nota mínima 70%.",
         passingScore: 70,
         questions: [
-          {
-            question:
-              "Um cliente chega na loja com queixa de disfunção erétil, mas diz que o problema começou depois de uma fase de muita ansiedade no trabalho. O que você faria nesse atendimento?",
-            expectedAnswer:
-              "Identificar se a causa é psicológica ou fisiológica. Se psicológica (ansiedade, estresse), nenhum produto resolve — orientar a buscar acompanhamento psicológico, sem tentar vender um produto que não vai funcionar.",
-          },
-          {
-            question:
-              "Explique, com suas palavras, quando você indicaria o sachê de mel e quando indicaria o Testo Viril para um cliente com disfunção erétil.",
-            expectedAnswer:
-              "Mel para efeito imediato/pontual (2h antes da relação); Testo Viril para tratamento contínuo, efeito gradual em 7-14 dias, para indisposição constante.",
-          },
-          {
-            question:
-              "Uma cliente pergunta por que o spray retardante não vai fazer o parceiro dela 'broxar' durante a relação. Como você explicaria isso para ela?",
-            expectedAnswer:
-              "O spray reduz a sensibilidade sem anestesiar 100%, e tem vasodilatador, que aumenta o fluxo de sangue na região, compensando a perda de sensibilidade; o homem também se mantém excitado pelo estímulo visual.",
-          },
-          {
-            question:
-              "Um cliente quer saber a diferença entre as cápsulas vitamínicas da loja e um multivitamínico comprado em farmácia. O que você responderia?",
-            expectedAnswer:
-              "O multivitamínico de farmácia tem vitaminas genéricas sem relação direta com a libido; a cápsula da loja é formulada especificamente com vitaminas ligadas ao desejo sexual.",
-          },
-          {
-            question:
-              "Por que a loja vende tesão de vaca e tesão de touro mesmo considerando que o resultado real desses produtos é fraco?",
-            expectedAnswer:
-              "Porque são produtos muito conhecidos e procurados pelo nome forte; se a loja não vender, o cliente compra em outro lugar. O ideal é recomendar o energético com catuaba e maca peruana como opção mais eficaz.",
-          },
-          {
-            question:
-              "Uma cliente diz que tem dificuldade de chegar ao orgasmo. Quais perguntas você faria para indicar o melhor produto para ela?",
-            expectedAnswer:
-              "Perguntar onde sente mais prazer (clitóris, penetração ou ambos) para indicar entre excitante, sugador de clitóris, vibrador de penetração ou modelo combinado, e também a faixa de preço que está disposta a investir.",
-          },
-          {
-            question:
-              "Explique a diferença entre o excitante em gel e o vibrador como soluções para dificuldade de orgasmo feminino.",
-            expectedAnswer:
-              "O excitante age quimicamente (vasodilatação, calor, frio, vibração); o vibrador estimula mecanicamente de forma contínua, podendo gerar orgasmos mais fortes ou sequenciais.",
-          },
-          {
-            question:
-              "Uma cliente relata ressecamento vaginal forte e recorrente, não apenas um desconforto pontual. Que produto você indicaria e como explicaria o uso para ela?",
-            expectedAnswer:
-              "Hidratante vaginal, tratamento de 10 dias (não lubrificante pontual); um tubinho por dia, à noite, durante 10 dias, restaurando a lubrificação natural.",
-          },
-          {
-            question:
-              "Qual é a diferença entre lubrificante, hidratante vaginal e kit dilatador? Em que situação cada um é indicado?",
-            expectedAnswer:
-              "Lubrificante é de uso pontual; hidratante vaginal é tratamento de 10 dias para ressecamento severo; kit dilatador é para vaginismo forte ou preparo pré-cirúrgico, com introdução gradual de tamanhos.",
-          },
-          {
-            question:
-              "Por que nunca se deve vender apenas o anestésico anal sem o lubrificante?",
-            expectedAnswer:
-              "O anestésico não lubrifica, só reduz dor/desconforto. O ânus não tem lubrificação própria, então sem lubrificante a penetração pode causar lesão mesmo com a região anestesiada.",
-          },
-          {
-            question:
-              "Explique para que serve o plug anal e por que ele é recomendado antes da penetração principal.",
-            expectedAnswer:
-              "O ânus dilata gradualmente em 'anéis' (esfíncteres). O plug, por ter formato cônico, prepara e dilata essa região progressivamente antes da penetração com o pênis, tornando o processo mais confortável.",
-          },
-          {
-            question:
-              "Um cliente pergunta sobre opções para aumentar o tamanho do pênis e menciona ter visto anúncios de pílulas milagrosas. Como você orientaria esse cliente?",
-            expectedAnswer:
-              "Explicar que pílulas, óleos e fórmulas desse tipo são enganação. As únicas formas reais são cirurgia ou ácido hialurônico, procedimentos médicos que a loja não realiza. A loja vende a capa peniana, que aumenta o volume percebido, sem ser permanente.",
-          },
-          {
-            question:
-              "Um cliente tem vergonha de comprar a capa peniana, com medo de que a parceira ache estranho ou feio. Como você lidaria com essa objeção durante o atendimento?",
-            expectedAnswer:
-              "Explicar que, em geral, a parceira não se incomoda — ao contrário, costuma valorizar que ele esteja buscando satisfazê-la mais.",
-          },
-          {
-            question:
-              "Explique a diferença entre o anel peniano com vibrador e o anel peniano sem vibrador.",
-            expectedAnswer:
-              "Ambos prendem o sangue na base do pênis (sensação de inchaço e retardo da ejaculação). O modelo com vibrador também estimula o clitóris da parceira durante a penetração; o sem vibrador serve apenas para retenção de sangue.",
-          },
-          {
-            question:
-              "Um cliente pergunta se a bolinha explosiva pode ficar presa dentro do corpo depois do uso. O que você responderia, e que dica extra de venda você daria?",
-            expectedAnswer:
-              "O material é dissolvido naturalmente pelo corpo, não fica retido. Dica de venda: sugerir introduzir a bolinha escondida do parceiro, para criar uma surpresa durante a relação.",
-          },
+          { question: "Explique por que a consultora deve entender a dor do cliente antes de indicar qualquer produto.", expectedAnswer: "A consultora age como médica do prazer: precisa entender a dor real do cliente antes de indicar um produto, para oferecer a solução certa e gerar confiança." },
+          { question: "O que é disfunção erétil e quais soluções foram apresentadas no treinamento para diferentes níveis de dificuldade?", expectedAnswer: "Disfunção erétil é a dificuldade de ter ou manter o pênis ereto. Para casos leves, cápsulas/sachês estimulantes; para casos mais avançados, bomba peniana como solução mecânica." },
+          { question: "Explique a diferença entre indicar cápsulas, sachês estimulantes e bomba peniana para um cliente com dificuldade de ereção ou disposição sexual.", expectedAnswer: "Cápsulas: uso contínuo, ajudam libido e disposição. Sachês: efeito mais imediato e pontual. Bomba peniana: solução mecânica para casos mais avançados de disfunção erétil." },
+          { question: "O que é ejaculação precoce e como o spray retardante ajuda nessa dor?", expectedAnswer: "É quando o homem chega ao orgasmo rápido demais. O spray retardante reduz a sensibilidade da glande para que ele dure mais durante a relação." },
+          { question: "Qual objeção um cliente pode ter sobre o spray retardante e como a consultora deve explicar isso?", expectedAnswer: "Medo de perder totalmente a sensibilidade ou broxar. Explicar que ele apenas reduz a sensibilidade da glande, sem anular, e que o efeito é controlado." },
+          { question: "Explique a diferença entre cápsulas para libido, sachês estimulantes e energéticos afrodisíacos.", expectedAnswer: "Cápsulas: uso contínuo para libido baixa. Sachês: efeito imediato/pontual. Energéticos afrodisíacos: combinam estímulo energético com ingredientes que ajudam o desejo." },
+          { question: "Como os excitantes podem ajudar uma pessoa com dificuldade de chegar ao orgasmo?", expectedAnswer: "Aumentam sensibilidade e geram sensações (aquecer, esfriar, formigar) na região, facilitando estímulo e chegada ao orgasmo." },
+          { question: "Quais perguntas a consultora deve fazer antes de indicar um vibrador para uma mulher?", expectedAnswer: "Se ela sente mais prazer no clitóris, na penetração ou nos dois; experiência prévia com vibrador; faixa de investimento." },
+          { question: "Diferencie lubrificante, hidratante vaginal e dilatadores vaginais.", expectedAnswer: "Lubrificante: uso pontual durante a relação. Hidratante vaginal: tratamento contínuo para ressecamento. Dilatadores: para vaginismo, ajudam a dilatar gradualmente." },
+          { question: "Por que o lubrificante é fundamental na penetração anal e por que saliva não é suficiente?", expectedAnswer: "O ânus não tem lubrificação própria. Saliva seca rápido e não protege o tecido; sem lubrificante adequado pode causar dor e lesão." },
+          { question: "Explique como anestésico anal e plug anal ajudam a tornar a penetração anal mais confortável.", expectedAnswer: "Anestésico anal reduz desconforto inicial. Plug anal prepara e dilata gradualmente a região antes da penetração principal." },
+          { question: "O que é anel peniano e qual a diferença entre modelos com e sem vibrador?", expectedAnswer: "Anel peniano aperta levemente para segurar sangue, ajudando ereção e duração. Modelos com vibrador adicionam estímulo ao clitóris da parceira durante a penetração." },
+          { question: "Explique a função do anestésico de garganta e em qual situação ele pode ser indicado.", expectedAnswer: "Reduz reflexo de ânsia e desconforto no oral profundo, indicado para quem quer praticar garganta profunda com mais conforto." },
+          { question: "Escolha três produtos de inovação na relação — perfume com feromônio, bolinhas explosivas, vela para massagem ou colar de pérolas — e explique como cada um funciona.", expectedAnswer: "Resposta livre cobrindo três dos quatro: perfume com feromônio (atração/desejo), bolinhas explosivas (liberam óleo no canal), vela para massagem (vira óleo morno), colar de pérolas (estímulo íntimo)." },
+          { question: "O que é capa peniana, o que ela resolve e quais cuidados a consultora precisa explicar ao cliente?", expectedAnswer: "Capa peniana aumenta volume/tamanho durante o uso. Importante avisar que ela não substitui camisinha e não oferece proteção contra ISTs/gravidez." },
         ],
       },
+    ],
+  },
 
     ],
   },
