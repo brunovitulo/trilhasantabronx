@@ -1394,9 +1394,6 @@ export const TOPICS: Topic[] = [
       },
     ],
   },
-
-    ],
-  },
   {
     id: "produtos",
     order: 7,
