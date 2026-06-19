@@ -412,7 +412,7 @@ function SubtaskGroupCard({
           const hasDownload = "downloadAs" in sub && !!(sub as { downloadAs?: string }).downloadAs;
           const StepIcon = pickStepIcon(sub.kind, hasDownload);
           const isOpen = openId === sub.id && !isLocked;
-          const baseLabel = total > 1 ? entry.stepLabel : group.title;
+          const baseLabel = total > 1 ? entry.stepLabel : (entry.stepLabel || group.title);
           const label = `Passo ${idx + 1}: ${baseLabel}`;
           const isEvalLike = sub.kind === "evaluation" || sub.kind === "open_evaluation";
 
