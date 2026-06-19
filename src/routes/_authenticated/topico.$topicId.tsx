@@ -500,6 +500,7 @@ function SubtaskGroupCard({
                   <SubtaskContent
                     subtask={sub}
                     userId={userId}
+                    isAdmin={isAdmin}
                     displayTitle={label}
                     completed={state.completed}
                     score={state.score}
