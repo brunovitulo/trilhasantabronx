@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apostila — App de Pedidos</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: linear-gradient(160deg, #1a1630 0%, #0f0c1e 100%); min-height: 100vh; color: #fff; padding: 0 0 60px; }
+  .hero { background: linear-gradient(135deg, rgba(127,119,221,0.25), rgba(93,202,165,0.1)); border-bottom: 0.5px solid rgba(255,255,255,0.1); padding: 48px 28px 36px; text-align: center; }
+  .hero-tag { display: inline-block; background: rgba(93,202,165,0.2); color: #9FE1CB; border: 0.5px solid rgba(93,202,165,0.4); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+  .hero h1 { font-size: 24px; font-weight: 600; line-height: 1.25; margin-bottom: 10px; }
+  .hero h1 span { color: #AFA9EC; }
+  .hero p { font-size: 14px; color: rgba(255,255,255,0.55); max-width: 400px; margin: 0 auto; line-height: 1.6; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 18px; }
+  .section { background: rgba(255,255,255,0.05); backdrop-filter: blur(16px); border: 0.5px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 24px 22px; margin-top: 20px; }
+  .section-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .section-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 22px; }
+  .icon-purple { background: rgba(127,119,221,0.25); color: #AFA9EC; }
+  .icon-teal   { background: rgba(93,202,165,0.2);  color: #9FE1CB; }
+  .icon-amber  { background: rgba(239,159,39,0.2);  color: #FAC775; }
+  .icon-red    { background: rgba(226,75,74,0.2);   color: #F09595; }
+  .icon-blue   { background: rgba(55,138,221,0.2);  color: #85B7EB; }
+  .section-head h2 { font-size: 17px; font-weight: 600; color: #fff; margin: 0; }
+  .section-head p { font-size: 12px; color: rgba(255,255,255,0.45); margin: 3px 0 0; }
+  .steps { display: flex; flex-direction: column; gap: 12px; }
+  .step { display: flex; gap: 14px; align-items: flex-start; }
+  .step-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(93,202,165,0.25); color: #9FE1CB; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); }
+  .step-text strong { color: #fff; font-weight: 600; }
+  .tip { background: rgba(93,202,165,0.1); border: 0.5px solid rgba(93,202,165,0.3); border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; margin-top: 12px; }
+  .tip i { font-size: 18px; color: #9FE1CB; flex-shrink: 0; margin-top: 1px; }
+  .tip-text { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+  .tip-text strong { color: #fff; }
+  .alert { background: rgba(226,75,74,0.12); border: 0.5px solid rgba(226,75,74,0.3); border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; margin-top: 10px; }
+  .alert i { font-size: 18px; color: #F09595; flex-shrink: 0; margin-top: 1px; }
+  .alert-text { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+  .alert-text strong { color: #fff; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 4px; }
+  @media(max-width:480px){ .cols { grid-template-columns: 1fr; } }
+  .col-card { background: rgba(255,255,255,0.06); border: 0.5px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px; text-align: center; }
+  .col-card i { font-size: 22px; margin-bottom: 8px; display: block; }
+  .col-card strong { font-size: 12px; color: #fff; display: block; margin-bottom: 4px; }
+  .col-card span { font-size: 11px; color: rgba(255,255,255,0.5); line-height: 1.4; display: block; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">Apostila — Módulo 3</div>
+  <h1>App de <span>pedidos</span></h1>
+  <p>Aprenda a usar a plataforma onde você vai gerenciar e despachar os pedidos da loja.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- VISÃO GERAL -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-purple"><i class="ti ti-layout-columns"></i></div>
+      <div>
+        <h2>Visão geral da plataforma</h2>
+        <p>Como está organizada a tela principal</p>
+      </div>
+    </div>
+    <div class="cols">
+      <div class="col-card">
+        <i class="ti ti-messages" style="color:#AFA9EC"></i>
+        <strong>Em atendimento</strong>
+        <span>Pedidos que ainda estão sendo negociados</span>
+      </div>
+      <div class="col-card">
+        <i class="ti ti-circle-check" style="color:#9FE1CB"></i>
+        <strong>Pedido fechado</strong>
+        <span>Pedidos prontos para embalar e enviar — é aqui que você trabalha</span>
+      </div>
+      <div class="col-card">
+        <i class="ti ti-truck" style="color:#FAC775"></i>
+        <strong>Enviado</strong>
+        <span>Pedidos que já foram despachados pelo motoboy</span>
+      </div>
+    </div>
+    <div class="tip">
+      <i class="ti ti-bulb"></i>
+      <div class="tip-text">Inicialmente, você vai acessar <strong>apenas a coluna "Pedido fechado"</strong> — é lá que chegam os pedidos que precisam ser embalados e enviados por você.</div>
+    </div>
+  </div>
+
+  <!-- COMO LER O RESUMO DO PEDIDO -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-teal"><i class="ti ti-file-text"></i></div>
+      <div>
+        <h2>Como ler o resumo do pedido</h2>
+        <p>Tudo que você precisa ver antes de embalar</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">Na coluna "Pedido fechado", clique no <strong>ícone de resumo</strong> do pedido para abrir os detalhes.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">No resumo você vai encontrar: <strong>nome do cliente, telefone, bairro, rua, complemento</strong> (apartamento, bloco, etc.) e o <strong>link do Google Maps</strong> com a localização real do cliente.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">Para ver a imagem do produto, clique na <strong>foto do produto</strong> dentro do resumo — útil se tiver dúvida sobre qual produto é.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text">A <strong>quantidade</strong> de cada produto aparece ao lado dele (ex: "2x" = 2 unidades; "1x" = 1 unidade). Sempre confira.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-text">Se o produto tem <strong>tamanho</strong>, o tamanho estará escrito no resumo. Confirme antes de separar o produto.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLUXO COMPLETO -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-amber"><i class="ti ti-route"></i></div>
+      <div>
+        <h2>Fluxo completo de um pedido</h2>
+        <p>Do resumo ao despacho</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">Abra o resumo do pedido na coluna <strong>"Pedido fechado"</strong> e leia todos os dados: nome, endereço, produtos, quantidades e tamanhos.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>Separe os produtos</strong> da loja conforme o resumo. Se o produto tem formato de pênis, envolva em plástico bolha antes de embalar.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>Embale</strong> corretamente (saquinho com lacre → sacola → dois grampos → adesivo lacre → post-it com nome e endereço).</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text"><strong>Chame o motoboy</strong> no app 99 e despache o pedido.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-text">Após o motoboy sair, volte ao app de pedidos e clique no <strong>ícone de caminhão verde</strong> para marcar o pedido como enviado. O pedido vai para a coluna "Enviado" e registra se foi no prazo ou atrasou.</div>
+      </div>
+    </div>
+    <div class="alert">
+      <i class="ti ti-alert-triangle"></i>
+      <div class="alert-text"><strong>Não marque o pedido como enviado antes do motoboy sair.</strong> Só clique no caminhão verde após o despacho de fato ter acontecido.</div>
+    </div>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-blue"><i class="ti ti-login"></i></div>
+      <div>
+        <h2>Acesso à plataforma</h2>
+        <p>Como entrar no sistema de pedidos</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">Acesse: <strong>santabronx.com.br/pedidos</strong></div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">Use as credenciais que foram passadas para você no passo anterior da trilha.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">Após logar, você verá as colunas de pedidos. Sempre vá direto para <strong>"Pedido fechado"</strong>.</div>
+      </div>
+    </div>
+    <div class="tip">
+      <i class="ti ti-bulb"></i>
+      <div class="tip-text">Inicialmente as atendentes de Uberlândia fecham os pedidos e você apenas embala e envia. Com o tempo, você vai começar a atender também.</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

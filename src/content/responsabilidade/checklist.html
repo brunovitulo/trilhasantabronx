@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist — Responsabilidades Diárias</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(160deg,#1a1630 0%,#0f0c1e 100%);min-height:100vh;color:#fff;padding:0 0 80px}
+.header{padding:28px 20px 16px;text-align:center}
+.tag{display:inline-block;background:rgba(127,119,221,0.2);color:#AFA9EC;border:0.5px solid rgba(127,119,221,0.4);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 12px;border-radius:20px;margin-bottom:10px}
+.header h1{font-size:20px;font-weight:600;color:#fff;margin-bottom:4px}
+.header p{font-size:12px;color:rgba(255,255,255,0.5)}
+.wrap{max-width:540px;margin:0 auto;padding:0 16px}
+.block{background:rgba(255,255,255,0.05);backdrop-filter:blur(16px);border:0.5px solid rgba(255,255,255,0.1);border-radius:18px;padding:18px 16px;margin-bottom:14px}
+.block-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:0.5px solid rgba(255,255,255,0.08)}
+.block-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.bi-purple{background:rgba(127,119,221,0.25);color:#AFA9EC}
+.bi-teal{background:rgba(93,202,165,0.2);color:#9FE1CB}
+.bi-amber{background:rgba(239,159,39,0.2);color:#FAC775}
+.bi-red{background:rgba(226,75,74,0.2);color:#F09595}
+.bi-blue{background:rgba(55,138,221,0.2);color:#85B7EB}
+.block-head h2{font-size:14px;font-weight:600;color:#fff}
+.block-head p{font-size:11px;color:rgba(255,255,255,0.45);margin-top:2px}
+.item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:0.5px solid rgba(255,255,255,0.06);cursor:pointer;user-select:none}
+.item:last-child{border-bottom:none;padding-bottom:0}
+.item:first-child{padding-top:0}
+.check{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all 0.15s}
+.check i{font-size:12px;opacity:0}
+.item.done .check{background:#5DCAA5;border-color:#5DCAA5}
+.item.done .check i{opacity:1;color:#04342C}
+.item.done .item-text{color:rgba(255,255,255,0.4);text-decoration:line-through;text-decoration-color:rgba(255,255,255,0.2)}
+.item-text{font-size:13px;color:rgba(255,255,255,0.85);line-height:1.5}
+.item-text strong{color:#fff;font-weight:600}
+.progress-wrap{margin-bottom:20px}
+.progress-bar{height:6px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;background:linear-gradient(90deg,#AFA9EC,#5DCAA5);border-radius:4px;transition:width 0.3s ease;width:0%}
+.progress-label{font-size:11px;color:rgba(255,255,255,0.5);text-align:right}
+.btn-reset{display:block;width:100%;margin-top:6px;padding:13px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.14);border-radius:12px;color:rgba(255,255,255,0.5);font-size:13px;cursor:pointer;text-align:center}
+.btn-reset:hover{background:rgba(255,255,255,0.1);color:#fff}
+.congrats{display:none;background:rgba(127,119,221,0.12);border:0.5px solid rgba(127,119,221,0.35);border-radius:14px;padding:18px;text-align:center;margin-bottom:14px}
+.congrats i{font-size:28px;color:#AFA9EC;margin-bottom:8px;display:block}
+.congrats p{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px}
+.congrats span{font-size:12px;color:rgba(255,255,255,0.55)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="tag">Leitura diária</div>
+  <h1>Minhas responsabilidades</h1>
+  <p>Leia e marque cada item ao entrar na loja</p>
+</div>
+
+<div class="wrap">
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="pbar"></div></div>
+    <div class="progress-label" id="plabel">0 / 0 itens</div>
+  </div>
+
+  <div id="congrats" class="congrats">
+    <i class="ti ti-circle-check"></i>
+    <p>Pronta para o dia!</p>
+    <span>Você revisou todas as suas responsabilidades. Bom trabalho!</span>
+  </div>
+
+  <!-- BLOCO 1 — Pilares -->
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-purple"><i class="ti ti-star"></i></div>
+      <div>
+        <h2>Meus 3 pilares</h2>
+        <p>O que define meu trabalho aqui</p>
+      </div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Sou <strong>comprometida</strong> — a loja pode contar comigo hoje</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Estou <strong>disposta a ouvir feedbacks</strong> com atenção e colocar em prática o que for alinhado</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou ser <strong>trabalhadora</strong> hoje — focada e produtiva durante todo o expediente</div>
+    </div>
+  </div>
+
+  <!-- BLOCO 2 — Responsabilidades -->
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-teal"><i class="ti ti-clipboard-check"></i></div>
+      <div>
+        <h2>Minhas responsabilidades do dia</h2>
+        <p>O que é esperado de mim hoje</p>
+      </div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Manter a <strong>loja organizada e bonita</strong> durante todo o dia — não deixar bagunçar</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text"><strong>Nenhum pedido vai atrasar</strong> por descuido meu — vou ficar de olho nos pedidos abertos no sistema</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou <strong>conferir cada pedido antes de embalar</strong> — variação, quantidade e brinde</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou <strong>testar todo produto eletrônico</strong> antes de lacrar e enviar</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou <strong>validar o endereço e enviar o pré-envio</strong> antes de chamar qualquer motoboy</div>
+    </div>
+  </div>
+
+  <!-- BLOCO 3 — Postura -->
+  <div class="block">
+    <div class="block-head">
+      <div class="block-icon bi-amber"><i class="ti ti-heart"></i></div>
+      <div>
+        <h2>Minha postura hoje</h2>
+        <p>Como vou me comportar durante o expediente</p>
+      </div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Vou ter <strong>calma</strong> — mesmo com pedidos acumulados, não vou me apressar a ponto de errar</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Em caso de dúvida, vou <strong>perguntar ao gestor no Discord</strong> antes de tomar uma decisão errada</div>
+    </div>
+    <div class="item" onclick="toggle(this)">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <div class="item-text">Estou ciente de que o gestor pode estar <strong>acompanhando por câmera e tela</strong> — e isso não muda minha forma de trabalhar</div>
+    </div>
+  </div>
+
+  <button class="btn-reset" onclick="reset()">
+    <i class="ti ti-refresh" style="font-size:14px;vertical-align:-2px;margin-right:6px"></i>
+    Limpar para amanhã
+  </button>
+</div>
+
+<script>
+function toggle(el){el.classList.toggle('done');update();}
+function update(){
+  const all=document.querySelectorAll('.item');
+  const done=document.querySelectorAll('.item.done');
+  const pct=all.length?Math.round(done.length/all.length*100):0;
+  document.getElementById('pbar').style.width=pct+'%';
+  document.getElementById('plabel').textContent=done.length+' / '+all.length+' itens';
+  document.getElementById('congrats').style.display=(done.length===all.length&&all.length>0)?'block':'none';
+}
+function reset(){document.querySelectorAll('.item.done').forEach(el=>el.classList.remove('done'));update();}
+update();
+</script>
+</body>
+</html>
