@@ -276,13 +276,15 @@ function pickStepIcon(kind: Subtask["kind"], hasDownload?: boolean) {
     case "video": return Play;
     case "reading":
     case "apostila":
-    case "inline_html": return BookOpen;
+    case "inline_html":
+    case "dual_inline_html": return BookOpen;
     case "checklist":
     case "multi_checklist": return ListChecks;
     case "practice": return ClipboardCheck;
     case "evaluation":
     case "open_evaluation": return FilePen;
-    case "external_html": return hasDownload ? Download : BookOpen;
+    case "external_html": return hasDownload ? Download : Globe;
+    case "credentials": return Lock;
     default: return BookOpen;
   }
 }
