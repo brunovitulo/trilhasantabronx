@@ -412,7 +412,7 @@ function SubtaskGroupCard({
           const hasDownload = "downloadAs" in sub && !!(sub as { downloadAs?: string }).downloadAs;
           const StepIcon = pickStepIcon(sub.kind, hasDownload);
           const isOpen = openId === sub.id && !isLocked;
-          const baseLabel = total > 1 ? entry.stepLabel : group.title;
+          const baseLabel = total > 1 ? entry.stepLabel : (entry.stepLabel || group.title);
           const label = `Passo ${idx + 1}: ${baseLabel}`;
           const isEvalLike = sub.kind === "evaluation" || sub.kind === "open_evaluation";
 
@@ -500,6 +500,7 @@ function SubtaskGroupCard({
                   <SubtaskContent
                     subtask={sub}
                     userId={userId}
+                    isAdmin={isAdmin}
                     displayTitle={label}
                     completed={state.completed}
                     score={state.score}
@@ -522,6 +523,7 @@ function SubtaskGroupCard({
 function SubtaskContent({
   subtask,
   userId,
+  isAdmin = false,
   displayTitle,
   completed,
   score,
@@ -533,6 +535,7 @@ function SubtaskContent({
 }: {
   subtask: Subtask;
   userId: string;
+  isAdmin?: boolean;
   displayTitle: string;
   completed: boolean;
   score: number | null;
@@ -590,6 +593,7 @@ function SubtaskContent({
         <ExamDialogLauncher
           subtask={subtask}
           userId={userId}
+          isAdmin={isAdmin}
           completed={completed}
           blockTitle={displayTitle}
           needsVideo={examNeedsVideo}
@@ -613,6 +617,7 @@ function SubtaskContent({
 function ExamDialogLauncher({
   subtask,
   userId,
+  isAdmin = false,
   completed,
   blockTitle,
   needsVideo,
@@ -620,6 +625,7 @@ function ExamDialogLauncher({
 }: {
   subtask: Extract<Subtask, { kind: "open_evaluation" }>;
   userId: string;
+  isAdmin?: boolean;
   completed: boolean;
   blockTitle: string;
   needsVideo: boolean;
@@ -655,12 +661,13 @@ function ExamDialogLauncher({
 
   const canRequest =
     !needsVideo &&
+    !isAdmin &&
     (permStatus === "none" ||
       permStatus === "expired" ||
       permStatus === "rejected" ||
       permStatus === "consumed");
-  const isPending = permStatus === "pending";
-  const isApproved = permStatus === "approved";
+  const isPending = !isAdmin && permStatus === "pending";
+  const isApproved = !isAdmin && permStatus === "approved";
   const isRejected = permStatus === "rejected";
   const isExpired = permStatus === "expired";
 
@@ -671,10 +678,21 @@ function ExamDialogLauncher({
 
   return (
     <div className="space-y-2">
-      {needsVideo && (
+      {needsVideo && !isAdmin && (
         <p className="text-xs text-foreground/80">
           Assista o vídeo acima e marque como visto para liberar o botão de iniciar a prova.
         </p>
+      )}
+
+      {isAdmin && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="rounded-full border-emerald-400/50 bg-emerald-500/20 text-foreground hover:bg-emerald-500/30"
+          onClick={() => setOpen(true)}
+        >
+          Realizar prova
+        </Button>
       )}
 
       {canRequest && (

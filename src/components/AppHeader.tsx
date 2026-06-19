@@ -48,7 +48,7 @@ export function AppHeader({ isAdmin }: { isAdmin: boolean }) {
         <div className="ml-auto flex items-center gap-2">
           {userId && <NotificationBell userId={userId} />}
           {isAdmin && <AdminPendingBell />}
-          {userId && !isAdmin && <DailyTasksButton />}
+          {userId && <DailyTasksButton />}
           <QuickChecklistDrawer />
           {userId && !isAdmin && (
             <Button
