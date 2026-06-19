@@ -15,14 +15,16 @@ import checklistEmbalarHtml from "@/content/embalar/checklist.html?raw";
 import checklistOrganizacaoHtml from "@/content/organizacao/checklist.html?raw";
 import checklistAppPedidosHtml from "@/content/responsabilidade/app-checklist.html?raw";
 import checklistObjecoesHtml from "@/content/objecoes/checklist.html?raw";
+import checklistDoresHtml from "@/content/dores/checklist.html?raw";
 
-type ChecklistKey = "embalar" | "organizacao" | "app_pedidos" | "objecoes";
+type ChecklistKey = "embalar" | "organizacao" | "app_pedidos" | "objecoes" | "dores";
 
 const CHECKLISTS: Record<ChecklistKey, { title: string; html: string; label: string; Icon: typeof Package }> = {
   embalar: { title: "Checklist de embalagem", label: "Checklist de embalagem", html: checklistEmbalarHtml, Icon: Package },
   organizacao: { title: "Checklist — Organização da loja", label: "Checklist de organização da loja", html: checklistOrganizacaoHtml, Icon: LayoutGrid },
   app_pedidos: { title: "Checklist — App de Pedidos", label: "Checklist do app de pedidos", html: checklistAppPedidosHtml, Icon: FileText },
   objecoes: { title: "Checklist — Principais Objeções (Sex Shop)", label: "Checklist de principais objeções", html: checklistObjecoesHtml, Icon: FileText },
+  dores: { title: "Checklist — Principais Dores e Soluções", label: "Checklist de principais dores e soluções", html: checklistDoresHtml, Icon: FileText },
 };
 
 export function QuickChecklistDrawer() {
