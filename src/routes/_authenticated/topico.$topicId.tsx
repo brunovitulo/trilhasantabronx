@@ -1105,6 +1105,241 @@ function InlineHtmlSubtask({
 }
 
 
+function DualInlineHtmlSubtask({
+  subtask,
+  completed,
+  onComplete,
+  onUncheck,
+}: {
+  subtask: Extract<Subtask, { kind: "dual_inline_html" }>;
+  completed: boolean;
+  onComplete: () => void;
+  onUncheck: () => void;
+}) {
+  const [openKey, setOpenKey] = useState<"first" | "second" | null>(null);
+  const [nonce, setNonce] = useState(0);
+  const [confirm1, setConfirm1] = useState(completed);
+  const [confirm2, setConfirm2] = useState(completed);
+  useEffect(() => {
+    setConfirm1(completed);
+    setConfirm2(completed);
+  }, [completed]);
+
+  const current =
+    openKey === "first"
+      ? INLINE_HTML_SOURCES[subtask.first.source]
+      : openKey === "second"
+        ? INLINE_HTML_SOURCES[subtask.second.source]
+        : null;
+
+  function renderBlock(
+    cfg: { source: InlineHtmlSource; openLabel: string; confirmLabel: string; helperText?: string },
+    key: "first" | "second",
+    value: boolean,
+    setValue: (v: boolean) => void,
+  ) {
+    return (
+      <div className="space-y-2">
+        <Button
+          variant="outline"
+          type="button"
+          size="sm"
+          className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25"
+          onClick={() => {
+            setNonce((n) => n + 1);
+            setOpenKey(key);
+          }}
+        >
+          {cfg.openLabel}
+        </Button>
+        {cfg.helperText && (
+          <p className="text-xs text-muted-foreground leading-snug">{cfg.helperText}</p>
+        )}
+        <div className="flex items-start gap-2 rounded-2xl border border-border/60 bg-muted/40 p-3">
+          <Checkbox
+            id={`${subtask.id}-${key}-confirm`}
+            checked={value}
+            disabled={completed}
+            onCheckedChange={(v) => setValue(!!v)}
+          />
+          <Label htmlFor={`${subtask.id}-${key}-confirm`} className="text-sm font-normal cursor-pointer leading-snug">
+            {cfg.confirmLabel}
+          </Label>
+        </div>
+      </div>
+    );
+  }
+
+  const bothConfirmed = confirm1 && confirm2;
+
+  return (
+    <div className="space-y-4">
+      {renderBlock(subtask.first, "first", confirm1, setConfirm1)}
+      {renderBlock(subtask.second, "second", confirm2, setConfirm2)}
+      <div className="flex flex-wrap gap-2">
+        {completed ? (
+          <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>
+            Desmarcar
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25"
+            disabled={!bothConfirmed}
+            onClick={onComplete}
+          >
+            Concluir passo
+          </Button>
+        )}
+      </div>
+      <Dialog open={openKey !== null} onOpenChange={(o) => !o && setOpenKey(null)}>
+        <DialogContent className="p-0 w-[90vw] h-[90vh] max-w-[90vw] sm:max-w-[90vw] flex flex-col gap-0 [&>button]:hidden overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-border/60 shrink-0">
+            <DialogTitle className="text-base">{current?.title ?? ""}</DialogTitle>
+            <button
+              type="button"
+              onClick={() => setOpenKey(null)}
+              className="rounded-full p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+              aria-label="Fechar"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+          {current && (
+            <iframe
+              key={nonce}
+              srcDoc={current.html}
+              title={current.title}
+              className="flex-1 w-full border-0 bg-white"
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+
+function CredentialsSubtask({
+  subtask,
+  completed,
+  onComplete,
+  onUncheck,
+}: {
+  subtask: Extract<Subtask, { kind: "credentials" }>;
+  completed: boolean;
+  onComplete: () => void;
+  onUncheck: () => void;
+}) {
+  const [storeIdx, setStoreIdx] = useState<number | null>(null);
+  const [confirmed, setConfirmed] = useState(completed);
+  useEffect(() => setConfirmed(completed), [completed]);
+  const store = storeIdx != null ? subtask.stores[storeIdx] : null;
+
+  async function copy(value: string, label: string) {
+    try {
+      await navigator.clipboard.writeText(value);
+      toast.success(`${label} copiado`);
+    } catch {
+      window.prompt(`Copie ${label}:`, value);
+    }
+  }
+
+  return (
+    <div className="space-y-3">
+      <a
+        href={subtask.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/15 px-4 py-1.5 text-sm text-foreground hover:bg-primary/25"
+      >
+        <Globe className="h-4 w-4" /> {subtask.url}
+      </a>
+
+      <div>
+        <p className="text-xs font-medium text-muted-foreground mb-2">
+          Selecione a sua loja para ver as credenciais:
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {subtask.stores.map((s, i) => (
+            <Button
+              key={s.name}
+              type="button"
+              variant="outline"
+              size="sm"
+              className={cn(
+                "rounded-full",
+                storeIdx === i
+                  ? "border-primary bg-primary/25 text-foreground"
+                  : "border-white/15 bg-transparent hover:bg-white/5",
+              )}
+              onClick={() => setStoreIdx(i)}
+            >
+              {s.name}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      {store && (
+        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0">
+              <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Usuário</p>
+              <p className="text-sm font-mono break-all">{store.user}</p>
+            </div>
+            <Button size="sm" variant="ghost" className="rounded-full" onClick={() => copy(store.user, "Usuário")}>
+              <Copy className="h-3.5 w-3.5" /> Copiar
+            </Button>
+          </div>
+          <div className="flex items-center justify-between gap-2 border-t border-white/5 pt-2">
+            <div className="min-w-0">
+              <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Senha</p>
+              <p className="text-sm font-mono break-all">{store.pass}</p>
+            </div>
+            <Button size="sm" variant="ghost" className="rounded-full" onClick={() => copy(store.pass, "Senha")}>
+              <Copy className="h-3.5 w-3.5" /> Copiar
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <div className="flex items-start gap-2 rounded-2xl border border-border/60 bg-muted/40 p-3">
+        <Checkbox
+          id={`${subtask.id}-confirm`}
+          checked={confirmed}
+          disabled={completed}
+          onCheckedChange={(v) => setConfirmed(!!v)}
+        />
+        <Label htmlFor={`${subtask.id}-confirm`} className="text-sm font-normal cursor-pointer leading-snug">
+          {subtask.confirmLabel}
+        </Label>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {completed ? (
+          <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>
+            Desmarcar
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25"
+            disabled={!confirmed}
+            onClick={onComplete}
+          >
+            Concluir passo
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+
+
+
 function ExternalHtmlSubtask({
   subtask,
   completed,
