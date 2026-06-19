@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ClipboardCheck, Package, LayoutGrid, X } from "lucide-react";
+import { ClipboardCheck, Package, LayoutGrid, FileText, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,12 +13,14 @@ import {
 } from "@/components/ui/popover";
 import checklistEmbalarHtml from "@/content/embalar/checklist.html?raw";
 import checklistOrganizacaoHtml from "@/content/organizacao/checklist.html?raw";
+import checklistAppPedidosHtml from "@/content/responsabilidade/app-checklist.html?raw";
 
-type ChecklistKey = "embalar" | "organizacao";
+type ChecklistKey = "embalar" | "organizacao" | "app_pedidos";
 
-const CHECKLISTS: Record<ChecklistKey, { title: string; html: string }> = {
-  embalar: { title: "Checklist de embalagem", html: checklistEmbalarHtml },
-  organizacao: { title: "Checklist — Organização da loja", html: checklistOrganizacaoHtml },
+const CHECKLISTS: Record<ChecklistKey, { title: string; html: string; label: string; Icon: typeof Package }> = {
+  embalar: { title: "Checklist de embalagem", label: "Checklist de embalagem", html: checklistEmbalarHtml, Icon: Package },
+  organizacao: { title: "Checklist — Organização da loja", label: "Checklist de organização da loja", html: checklistOrganizacaoHtml, Icon: LayoutGrid },
+  app_pedidos: { title: "Checklist — App de Pedidos", label: "Checklist do app de pedidos", html: checklistAppPedidosHtml, Icon: FileText },
 };
 
 export function QuickChecklistDrawer() {
