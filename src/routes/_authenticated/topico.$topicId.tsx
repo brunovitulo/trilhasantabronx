@@ -678,10 +678,21 @@ function ExamDialogLauncher({
 
   return (
     <div className="space-y-2">
-      {needsVideo && (
+      {needsVideo && !isAdmin && (
         <p className="text-xs text-foreground/80">
           Assista o vídeo acima e marque como visto para liberar o botão de iniciar a prova.
         </p>
+      )}
+
+      {isAdmin && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="rounded-full border-emerald-400/50 bg-emerald-500/20 text-foreground hover:bg-emerald-500/30"
+          onClick={() => setOpen(true)}
+        >
+          Realizar prova
+        </Button>
       )}
 
       {canRequest && (
