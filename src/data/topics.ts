@@ -1083,14 +1083,14 @@ export const TOPICS: Topic[] = [
       {
         id: "objecoes.video",
         kind: "video",
-        title: "1. Principais Objeções (Sex Shop) — assistir destaque",
+        title: "1. Principais Objeções (Sex Shop) — Assistir vídeo",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: IG_OBJECOES,
       },
       {
         id: "objecoes.apostila",
         kind: "inline_html",
-        title: "2. Ler apostila — Principais Objeções (Sex Shop)",
+        title: "2. Ler apostila — Ler apostila",
         description: "Leia a apostila por completo antes de fazer os exercícios.",
         source: "objecoes_apostila",
         openLabel: "Abrir apostila",
@@ -1099,15 +1099,166 @@ export const TOPICS: Topic[] = [
       {
         id: "objecoes.fixacao",
         kind: "practice",
-        title: "3. Exercício de fixação — Principais Objeções (Sex Shop) (15 questões)",
+        title: "3. Exercício de fixação — Exercício de fixação",
         description:
-          "Múltipla escolha autocorrigido. Sem nota mínima — você vê quantas acertou ao final.",
-        questions: [],
+          "Múltipla escolha autocorrigido. 15 questões. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "O que é uma objeção no atendimento de sex shop?",
+            options: [
+              "Um desconto que o cliente pede antes de comprar.",
+              "Uma dúvida, medo ou insegurança que pode impedir o cliente de comprar.",
+              "Um tipo de produto vendido apenas no atendimento presencial.",
+              "Uma regra interna da loja sobre embalagem.",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "Por que a consultora não deve esperar o cliente perguntar sobre todas as objeções?",
+            options: [
+              "Porque o cliente sempre fala tudo o que está pensando.",
+              "Porque algumas objeções ficam apenas na cabeça do cliente e podem fazer ele desistir.",
+              "Porque objeções não influenciam na venda.",
+              "Porque o cliente não se importa com discrição.",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual é uma das principais objeções do cliente no nicho sex shop?",
+            options: [
+              "Medo da entrega não ser discreta.",
+              "Medo de receber desconto.",
+              "Medo de o produto chegar rápido demais.",
+              "Medo de a loja ter muitas opções.",
+            ],
+            correctIndex: 0,
+          },
+          {
+            question: "Quando o cliente pergunta se a loja entrega, qual é a melhor resposta?",
+            options: [
+              "“Entregamos.”",
+              "“Sim, mas só explicamos os detalhes depois da compra.”",
+              "“Entregamos sim. A entrega é totalmente discreta, com embalagem sem identificação, lacrada e sem mostrar o conteúdo.”",
+              "“Entregamos, mas o motoboy sabe o que está levando.”",
+            ],
+            correctIndex: 2,
+          },
+          {
+            question: "Por que a embalagem não deve ter nome, logo ou identificação da loja?",
+            options: [
+              "Para deixar o pedido mais barato.",
+              "Para preservar a privacidade do cliente e evitar constrangimento.",
+              "Para dificultar a entrega do motoboy.",
+              "Para o cliente não saber de onde veio o pedido.",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual cuidado é importante em relação ao lacre da embalagem?",
+            options: [
+              "A embalagem pode ir aberta se o produto for pequeno.",
+              "A embalagem deve ir bem lacrada para passar confiança e proteger a privacidade do cliente.",
+              "O lacre só importa em pedidos presenciais.",
+              "O lacre deve ser feito pelo motoboy.",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "Por que a embalagem não pode ser transparente?",
+            options: [
+              "Porque pode deixar o conteúdo visível e gerar constrangimento ao cliente.",
+              "Porque embalagens transparentes são sempre mais caras.",
+              "Porque o cliente precisa adivinhar o que comprou.",
+              "Porque o motoboy exige embalagem colorida.",
+            ],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é o cuidado necessário com produtos que têm formato mais evidente, como próteses?",
+            options: [
+              "Enviar sem embalagem para não marcar.",
+              "Embalar de forma que o formato do produto não fique aparente.",
+              "Avisar o motoboy sobre o formato do produto.",
+              "Usar embalagem transparente para o cliente conferir.",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual medo o cliente pode ter em relação ao motoboy?",
+            options: [
+              "Que o motoboy entregue rápido demais.",
+              "Que o motoboy não encontre a loja.",
+              "Que o motoboy anuncie o conteúdo, use identificação da loja ou não seja discreto.",
+              "Que o motoboy cobre mais caro pelo produto.",
+            ],
+            correctIndex: 2,
+          },
+          {
+            question: "Quando o cliente tem receio sobre o nome que aparece na fatura do cartão, qual orientação pode ser dada?",
+            options: [
+              "Dizer que não existe nenhuma alternativa.",
+              "Explicar que pode ser enviado um link de pagamento e que na fatura aparece apenas Santa Bronx.",
+              "Dizer que sempre aparece escrito sex shop.",
+              "Pedir para o cliente desistir da compra.",
+            ],
+            correctIndex: 1,
+          },
+          {
+            question: "Por que algumas pessoas têm vergonha de ir à loja presencial?",
+            options: [
+              "Porque acham que o atendimento pode ser pesado, constrangedor ou com julgamento.",
+              "Porque lojas físicas não vendem produtos de sex shop.",
+              "Porque a loja não pode orientar clientes.",
+              "Porque o cliente sempre prefere comprar sem atendimento.",
+            ],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual resposta ajuda a quebrar a objeção de vergonha de ir à loja?",
+            options: [
+              "“Se tiver vergonha, melhor comprar em outro lugar.”",
+              "“O atendimento é rápido e não fazemos perguntas.”",
+              "“Pode vir tranquila. Nosso atendimento é leve, discreto e sem julgamento.”",
+              "“Você precisa saber exatamente o que quer antes de vir.”",
+            ],
+            correctIndex: 2,
+          },
+          {
+            question: "Por que a consultora deve fazer perguntas antes de indicar um produto?",
+            options: [
+              "Para enrolar o atendimento.",
+              "Para parecer curiosa sobre a vida do cliente.",
+              "Para entender melhor a necessidade do cliente e indicar com mais segurança.",
+              "Para evitar vender.",
+            ],
+            correctIndex: 2,
+          },
+          {
+            question: "O que pode acontecer se a consultora parecer uma “vendedora chata” que só quer empurrar produto?",
+            options: [
+              "O cliente se sente pressionado, perde confiança e pode desistir.",
+              "O cliente sempre compra mais rápido.",
+              "O cliente não percebe.",
+              "O atendimento fica automaticamente melhor.",
+            ],
+            correctIndex: 0,
+          },
+          {
+            question: "Por que a leveza da atendente é importante?",
+            options: [
+              "Porque o cliente precisa sentir naturalidade, simpatia e segurança para se abrir.",
+              "Porque o produto vende sozinho e o atendimento não importa.",
+              "Porque a atendente não precisa explicar nada.",
+              "Porque objeções só existem no atendimento online.",
+            ],
+            correctIndex: 0,
+          },
+        ],
       },
       {
         id: "objecoes.checklist",
         kind: "inline_html",
-        title: "4. Ver checklist de aprendizados — Principais Objeções (Sex Shop)",
+        title: "4. Ver checklist de aprendizados — Ver checklist de aprendizados",
         description:
           "Marque os aprendizados que você fixou neste módulo. Este checklist ficará disponível para revisão sempre que precisar.",
         source: "objecoes_checklist",
@@ -1118,7 +1269,7 @@ export const TOPICS: Topic[] = [
       {
         id: "objecoes.prova.video",
         kind: "video",
-        title: "5. Antes da prova — assistir vídeo do Bruno",
+        title: "5. Antes da prova — Assistir vídeo do Bruno",
         description:
           "Vídeo de alinhamento antes da prova. Recapitula o módulo e reforça as regras da avaliação.",
         url: "https://www.instagram.com/stories/highlights/17958057917908256/",
@@ -1126,7 +1277,7 @@ export const TOPICS: Topic[] = [
       {
         id: "objecoes.prova.exam",
         kind: "open_evaluation",
-        title: "5. Prova: Principais Objeções (Sex Shop)",
+        title: "5. Antes da prova — Prova: Principais Objeções (Sex Shop)",
         description: "Prova dissertativa final do tópico. Nota mínima 70%.",
         passingScore: 70,
         questions: [],
