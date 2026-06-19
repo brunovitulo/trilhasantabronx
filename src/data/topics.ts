@@ -96,7 +96,9 @@ export type Subtask =
         | "responsabilidade"
         | "responsabilidade_checklist"
         | "app_apostila"
-        | "app_checklist";
+        | "app_checklist"
+        | "vendas_apostila"
+        | "vendas_checklist";
       openLabel?: string;
       helperText?: string;
       confirmLabel: string;
@@ -123,7 +125,9 @@ export type Subtask =
           | "responsabilidade"
           | "responsabilidade_checklist"
           | "app_apostila"
-          | "app_checklist";
+          | "app_checklist"
+          | "vendas_apostila"
+          | "vendas_checklist";
         openLabel: string;
         confirmLabel: string;
         helperText?: string;
@@ -136,7 +140,9 @@ export type Subtask =
           | "responsabilidade"
           | "responsabilidade_checklist"
           | "app_apostila"
-          | "app_checklist";
+          | "app_checklist"
+          | "vendas_apostila"
+          | "vendas_checklist";
         openLabel: string;
         confirmLabel: string;
         helperText?: string;
