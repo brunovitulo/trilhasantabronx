@@ -567,6 +567,10 @@ function SubtaskContent({
       return <ExternalHtmlSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
     case "inline_html":
       return <InlineHtmlSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
+    case "dual_inline_html":
+      return <DualInlineHtmlSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
+    case "credentials":
+      return <CredentialsSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
     case "multi_checklist":
       return <MultiChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
     case "open_evaluation":
