@@ -89,10 +89,58 @@ export type Subtask =
       title: string;
       kind: "inline_html";
       description?: string;
-      source: "apostila" | "checklist" | "organizacao" | "responsabilidade";
+      source:
+        | "apostila"
+        | "checklist"
+        | "organizacao"
+        | "responsabilidade"
+        | "responsabilidade_checklist"
+        | "app_apostila"
+        | "app_checklist";
       openLabel?: string;
       helperText?: string;
       confirmLabel: string;
+    }
+  | {
+      id: string;
+      title: string;
+      kind: "credentials";
+      description?: string;
+      url: string;
+      stores: { name: string; user: string; pass: string }[];
+      confirmLabel: string;
+    }
+  | {
+      id: string;
+      title: string;
+      kind: "dual_inline_html";
+      description?: string;
+      first: {
+        source:
+          | "apostila"
+          | "checklist"
+          | "organizacao"
+          | "responsabilidade"
+          | "responsabilidade_checklist"
+          | "app_apostila"
+          | "app_checklist";
+        openLabel: string;
+        confirmLabel: string;
+        helperText?: string;
+      };
+      second: {
+        source:
+          | "apostila"
+          | "checklist"
+          | "organizacao"
+          | "responsabilidade"
+          | "responsabilidade_checklist"
+          | "app_apostila"
+          | "app_checklist";
+        openLabel: string;
+        confirmLabel: string;
+        helperText?: string;
+      };
     }
   | {
       id: string;
