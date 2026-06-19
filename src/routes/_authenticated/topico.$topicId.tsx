@@ -44,6 +44,8 @@ import apostilaVendasHtml from "@/content/vendas/apostila.html?raw";
 import checklistVendasHtml from "@/content/vendas/checklist.html?raw";
 import apostilaObjecoesHtml from "@/content/objecoes/apostila.html?raw";
 import checklistObjecoesHtml from "@/content/objecoes/checklist.html?raw";
+import apostilaDoresHtml from "@/content/dores/apostila.html?raw";
+import checklistDoresHtml from "@/content/dores/checklist.html?raw";
 
 type InlineHtmlSource =
   | "apostila"
@@ -56,7 +58,9 @@ type InlineHtmlSource =
   | "vendas_apostila"
   | "vendas_checklist"
   | "objecoes_apostila"
-  | "objecoes_checklist";
+  | "objecoes_checklist"
+  | "dores_apostila"
+  | "dores_checklist";
 
 const INLINE_HTML_SOURCES: Record<InlineHtmlSource, { title: string; html: string }> = {
   apostila: { title: "Apostila — Embalar e Despachar Pedidos", html: apostilaEmbalarHtml },
@@ -70,6 +74,8 @@ const INLINE_HTML_SOURCES: Record<InlineHtmlSource, { title: string; html: strin
   vendas_checklist: { title: "Checklist — Fundamentos de Vendas", html: checklistVendasHtml },
   objecoes_apostila: { title: "Apostila — Principais Objeções (Sex Shop)", html: apostilaObjecoesHtml },
   objecoes_checklist: { title: "Checklist — Principais Objeções (Sex Shop)", html: checklistObjecoesHtml },
+  dores_apostila: { title: "Apostila — Principais Dores e Soluções", html: apostilaDoresHtml },
+  dores_checklist: { title: "Checklist — Principais Dores e Soluções", html: checklistDoresHtml },
 };
 
 
