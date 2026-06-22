@@ -193,6 +193,113 @@ export type Database = {
         }
         Relationships: []
       }
+      review_answers: {
+        Row: {
+          answer: string | null
+          answered_at: string
+          correct_answer: string | null
+          id: string
+          is_correct: boolean
+          is_critical: boolean
+          module_id: string
+          question_id: string
+          question_type: string
+          review_id: string
+          tags: string[]
+          theme: string | null
+          user_id: string
+        }
+        Insert: {
+          answer?: string | null
+          answered_at?: string
+          correct_answer?: string | null
+          id?: string
+          is_correct?: boolean
+          is_critical?: boolean
+          module_id: string
+          question_id: string
+          question_type?: string
+          review_id: string
+          tags?: string[]
+          theme?: string | null
+          user_id: string
+        }
+        Update: {
+          answer?: string | null
+          answered_at?: string
+          correct_answer?: string | null
+          id?: string
+          is_correct?: boolean
+          is_critical?: boolean
+          module_id?: string
+          question_id?: string
+          question_type?: string
+          review_id?: string
+          tags?: string[]
+          theme?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_answers_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "scheduled_reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      scheduled_reviews: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          due_date: string
+          estimated_minutes: number
+          id: string
+          module_id: string
+          module_name: string
+          question_count: number
+          reason: string
+          score_percent: number | null
+          status: string
+          updated_at: string
+          user_id: string
+          weight: number
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          due_date: string
+          estimated_minutes?: number
+          id?: string
+          module_id: string
+          module_name: string
+          question_count?: number
+          reason: string
+          score_percent?: number | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          weight: number
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          due_date?: string
+          estimated_minutes?: number
+          id?: string
+          module_id?: string
+          module_name?: string
+          question_count?: number
+          reason?: string
+          score_percent?: number | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          weight?: number
+        }
+        Relationships: []
+      }
       subtask_progress: {
         Row: {
           completed: boolean
@@ -221,6 +328,51 @@ export type Database = {
           id?: string
           score?: number | null
           subtask_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      theme_performance: {
+        Row: {
+          accuracy: number
+          created_at: string
+          id: string
+          last_reviewed_at: string | null
+          last_wrong_at: string | null
+          module_id: string
+          theme: string
+          total_answered: number
+          total_correct: number
+          total_wrong: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accuracy?: number
+          created_at?: string
+          id?: string
+          last_reviewed_at?: string | null
+          last_wrong_at?: string | null
+          module_id: string
+          theme: string
+          total_answered?: number
+          total_correct?: number
+          total_wrong?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accuracy?: number
+          created_at?: string
+          id?: string
+          last_reviewed_at?: string | null
+          last_wrong_at?: string | null
+          module_id?: string
+          theme?: string
+          total_answered?: number
+          total_correct?: number
+          total_wrong?: number
           updated_at?: string
           user_id?: string
         }
