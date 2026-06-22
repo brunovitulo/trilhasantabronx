@@ -110,7 +110,10 @@ function HomePage() {
             Siga a trilha de tópicos em ordem. Cada tópico desbloqueia o próximo quando você concluir tudo.
           </p>
           <div className="mt-4 flex items-center gap-3">
-            <Progress value={overallPercent} className="h-2" />
+            <Progress
+              value={overallPercent}
+              className="h-2 bg-white/10 [&>div]:!bg-[#14b8a6]"
+            />
             <span className="text-xs text-muted-foreground whitespace-nowrap">
               {totalDone}/{TOPICS.length} concluídos
             </span>

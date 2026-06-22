@@ -164,11 +164,9 @@ export function AdminPendingBell() {
                 {rows.map((r) => {
                   const meta = findSubtask(r.subtask_id);
                   return (
-                    <button
+                    <div
                       key={r.id}
-                      type="button"
-                      onClick={() => handleOpenCorrection(r)}
-                      className="w-full text-left rounded-lg px-2 py-2 hover:bg-muted/60 transition"
+                      className="rounded-lg px-2 py-2 bg-amber-500/5 border border-amber-400/20"
                     >
                       <p className="text-sm font-medium truncate">
                         {r.full_name ?? "Sem nome"}
@@ -179,7 +177,15 @@ export function AdminPendingBell() {
                       <p className="text-[11px] text-muted-foreground">
                         {new Date(r.created_at).toLocaleString("pt-BR")}
                       </p>
-                    </button>
+                      <Button
+                        type="button"
+                        size="sm"
+                        className="mt-2 w-full rounded-full bg-emerald-600 hover:bg-emerald-700 text-white h-8 text-xs"
+                        onClick={() => handleOpenCorrection(r)}
+                      >
+                        Corrigir prova
+                      </Button>
+                    </div>
                   );
                 })}
               </div>

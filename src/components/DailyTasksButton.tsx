@@ -8,12 +8,6 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
 import apostilaResponsabilidadeHtml from "@/content/responsabilidade/apostila.html?raw";
 import checklistOrganizacaoHtml from "@/content/organizacao/checklist.html?raw";
 
@@ -127,17 +121,17 @@ export function DailyTasksButton() {
         )}
       </Button>
 
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="right" className="w-full sm:max-w-md p-0 flex flex-col">
-          <SheetHeader className="px-5 py-4 border-b">
-            <SheetTitle className="flex items-center gap-2">
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="p-0 w-[92vw] max-w-md max-h-[85vh] flex flex-col gap-0 overflow-hidden">
+          <div className="px-5 py-4 border-b border-border/60 shrink-0">
+            <DialogTitle className="flex items-center gap-2 text-base">
               <CalendarCheck className="h-4 w-4 text-primary" />
               Tarefas do dia
-            </SheetTitle>
-            <p className="text-xs text-muted-foreground">
+            </DialogTitle>
+            <p className="text-xs text-muted-foreground mt-1">
               Lista de uso diário — reinicia todo dia. Marque conforme for fazendo.
             </p>
-          </SheetHeader>
+          </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {TASKS.map((task, idx) => {
               const checked = !!done[task.id];
@@ -203,8 +197,9 @@ export function DailyTasksButton() {
               );
             })}
           </div>
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
+
 
       <Dialog open={active !== null} onOpenChange={(o) => !o && setActive(null)}>
         <DialogContent className="p-0 w-[90vw] h-[90vh] max-w-[90vw] sm:max-w-[90vw] flex flex-col gap-0 [&>button]:hidden overflow-hidden">

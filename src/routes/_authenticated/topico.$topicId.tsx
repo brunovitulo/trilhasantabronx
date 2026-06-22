@@ -185,9 +185,20 @@ function TopicPage() {
           const L = 0.74 - t * 0.32;
           const Ldark = Math.max(L - 0.10, 0.30);
           const gradient = `linear-gradient(135deg, oklch(${L.toFixed(3)} 0.18 295), oklch(${Ldark.toFixed(3)} 0.19 295))`;
+          const totalSteps = topic.subtasks.length;
+          const doneSteps = topic.subtasks.filter((s) => getSubtaskState(s.id, rows).completed).length;
+          const pct = totalSteps > 0 ? Math.round((doneSteps / totalSteps) * 100) : 0;
           return (
             <>
-              <div className="h-1.5 w-full rounded-full mb-4" style={{ background: gradient }} />
+              <div className="h-2 w-full rounded-full mb-4 bg-white/10 overflow-hidden">
+                <div
+                  className="h-full rounded-full transition-all duration-500"
+                  style={{ width: `${pct}%`, background: "#14b8a6" }}
+                />
+              </div>
+              <p className="text-[11px] text-muted-foreground mb-3">
+                {doneSteps} de {totalSteps} {totalSteps === 1 ? "passo concluído" : "passos concluídos"} · {pct}%
+              </p>
               <div className="flex items-center gap-3 mb-2">
                 <div
                   className="flex h-11 w-11 items-center justify-center rounded-2xl text-white font-bold shadow-lg"
@@ -213,18 +224,27 @@ function TopicPage() {
           </Card>
         ) : (
           <div className="mt-6 space-y-4">
-            {groupSubtasks(topic.subtasks).map((group) => (
-              <SubtaskGroupCard
-                key={group.key}
-                group={group}
-                topic={topic}
-                rows={rows}
-                userId={user.id}
-                isAdmin={isAdmin}
-                onComplete={markCompleted}
-                onUncheck={unmark}
-              />
-            ))}
+            {(() => {
+              const groups = groupSubtasks(topic.subtasks);
+              let offset = 0;
+              return groups.map((group) => {
+                const startIndex = offset;
+                offset += group.items.length;
+                return (
+                  <SubtaskGroupCard
+                    key={group.key}
+                    group={group}
+                    topic={topic}
+                    rows={rows}
+                    userId={user.id}
+                    isAdmin={isAdmin}
+                    startIndex={startIndex}
+                    onComplete={markCompleted}
+                    onUncheck={unmark}
+                  />
+                );
+              });
+            })()}
           </div>
 
         )}
@@ -313,6 +333,7 @@ function SubtaskGroupCard({
   rows,
   userId,
   isAdmin,
+  startIndex = 0,
   onComplete,
   onUncheck,
 }: {
@@ -321,6 +342,7 @@ function SubtaskGroupCard({
   rows: ProgressRow[];
   userId: string;
   isAdmin: boolean;
+  startIndex?: number;
   onComplete: (subtask: Subtask, score?: number) => void;
   onUncheck: (subtaskId: string) => void;
 }) {
@@ -483,13 +505,13 @@ function SubtaskGroupCard({
                     fontWeight: 500,
                     padding: "2px 9px",
                     borderRadius: "20px",
-                    background: "rgba(220, 218, 255, 0.18)",
-                    border: "0.5px solid rgba(220, 218, 255, 0.5)",
-                    color: "rgba(220, 218, 255, 1)",
+                    background: "rgba(20, 184, 166, 0.18)",
+                    border: "0.5px solid rgba(20, 184, 166, 0.6)",
+                    color: "#5eead4",
                     opacity: passed ? 0.5 : 1,
                   }}
                 >
-                  passo {idx + 1}
+                  passo {startIndex + idx + 1}
                 </span>
                 <ChevronDown
                   className={cn(
