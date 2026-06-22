@@ -7,7 +7,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { NotificationBell } from "@/components/NotificationBell";
 import { SubmissionHistoryDialog } from "@/components/SubmissionHistoryDialog";
-import { AdminPendingBell } from "@/components/AdminPendingBell";
+import {
+  AdminPendingBell,
+  ADMIN_OPEN_CORRECTION_EVENT,
+  type AdminOpenCorrectionDetail,
+} from "@/components/AdminPendingBell";
+import { CorrectionDialog, type CorrectionTarget } from "@/components/CorrectionDialog";
 import { QuickChecklistDrawer } from "@/components/QuickChecklistDrawer";
 import { DailyTasksButton } from "@/components/DailyTasksButton";
 
@@ -15,10 +20,28 @@ export function AppHeader({ isAdmin }: { isAdmin: boolean }) {
   const navigate = useNavigate();
   const [userId, setUserId] = useState<string | null>(null);
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [correction, setCorrection] = useState<CorrectionTarget | null>(null);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
   }, []);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    const onOpen = (e: Event) => {
+      const detail = (e as CustomEvent<AdminOpenCorrectionDetail>).detail;
+      if (!detail) return;
+      setCorrection({
+        id: detail.submissionId,
+        user_id: detail.userId,
+        subtask_id: detail.subtaskId,
+        created_at: detail.createdAt,
+        full_name: detail.fullName,
+      });
+    };
+    window.addEventListener(ADMIN_OPEN_CORRECTION_EVENT, onOpen);
+    return () => window.removeEventListener(ADMIN_OPEN_CORRECTION_EVENT, onOpen);
+  }, [isAdmin]);
 
   async function handleSignOut() {
     await supabase.auth.signOut();

@@ -47,22 +47,14 @@ import checklistObjecoesHtml from "@/content/objecoes/checklist.html?raw";
 import apostilaDoresHtml from "@/content/dores/apostila.html?raw";
 import checklistDoresHtml from "@/content/dores/checklist.html?raw";
 
-type InlineHtmlSource =
-  | "apostila"
-  | "checklist"
-  | "organizacao"
-  | "responsabilidade"
-  | "responsabilidade_checklist"
-  | "app_apostila"
-  | "app_checklist"
-  | "vendas_apostila"
-  | "vendas_checklist"
-  | "objecoes_apostila"
-  | "objecoes_checklist"
-  | "dores_apostila"
-  | "dores_checklist";
+// Apostilas do módulo 7 (Decorar Principais Produtos) — carregadas via glob.
+const PRODUTOS_APOSTILAS = import.meta.glob("@/content/produtos/*.html", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+}) as Record<string, string>;
 
-const INLINE_HTML_SOURCES: Record<InlineHtmlSource, { title: string; html: string }> = {
+const INLINE_HTML_SOURCES: Record<string, { title: string; html: string }> = {
   apostila: { title: "Apostila — Embalar e Despachar Pedidos", html: apostilaEmbalarHtml },
   checklist: { title: "Checklist de embalagem", html: checklistEmbalarHtml },
   organizacao: { title: "Checklist — Organização da loja", html: checklistOrganizacaoHtml },
@@ -77,6 +69,18 @@ const INLINE_HTML_SOURCES: Record<InlineHtmlSource, { title: string; html: strin
   dores_apostila: { title: "Apostila — Principais Dores e Soluções", html: apostilaDoresHtml },
   dores_checklist: { title: "Checklist — Principais Dores e Soluções", html: checklistDoresHtml },
 };
+
+// Auto-register Decorar Principais Produtos apostilas as "produtos_<slug>" sources.
+for (const [path, html] of Object.entries(PRODUTOS_APOSTILAS)) {
+  const m = path.match(/apostila_(.+)\.html$/);
+  if (!m) continue;
+  const slug = m[1].replace(/-/g, "_");
+  const pretty = m[1].replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  INLINE_HTML_SOURCES[`produtos_${slug}`] = {
+    title: `Apostila — ${pretty}`,
+    html,
+  };
+}
 
 
 export const Route = createFileRoute("/_authenticated/topico/$topicId")({
@@ -322,6 +326,7 @@ function pickStepIcon(kind: Subtask["kind"], hasDownload?: boolean) {
     case "evaluation":
     case "open_evaluation": return FilePen;
     case "external_html": return hasDownload ? Download : Globe;
+    case "product_links": return Globe;
     case "credentials": return Lock;
     default: return BookOpen;
   }
@@ -476,7 +481,7 @@ function SubtaskGroupCard({
                 </span>
                 <StepIcon
                   className="h-4 w-4 shrink-0"
-                  style={{ color: passed ? undefined : "rgba(220, 218, 255, 1)" }}
+                  style={{ color: passed ? undefined : "#5eead4" }}
                 />
                 <span
                   className={cn(
@@ -616,6 +621,8 @@ function SubtaskContent({
       return <CredentialsSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
     case "multi_checklist":
       return <MultiChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
+    case "product_links":
+      return <ProductLinksSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
     case "open_evaluation":
       return useExamDialog ? (
         <ExamDialogLauncher
@@ -1191,7 +1198,7 @@ function DualInlineHtmlSubtask({
         : null;
 
   function renderBlock(
-    cfg: { source: InlineHtmlSource; openLabel: string; confirmLabel: string; helperText?: string },
+    cfg: { source: string; openLabel: string; confirmLabel: string; helperText?: string },
     key: "first" | "second",
     value: boolean,
     setValue: (v: boolean) => void,

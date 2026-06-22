@@ -89,22 +89,17 @@ export type Subtask =
       title: string;
       kind: "inline_html";
       description?: string;
-      source:
-        | "apostila"
-        | "checklist"
-        | "organizacao"
-        | "responsabilidade"
-        | "responsabilidade_checklist"
-        | "app_apostila"
-        | "app_checklist"
-        | "vendas_apostila"
-        | "vendas_checklist"
-        | "objecoes_apostila"
-        | "objecoes_checklist"
-        | "dores_apostila"
-        | "dores_checklist";
+      source: string;
       openLabel?: string;
       helperText?: string;
+      confirmLabel: string;
+    }
+  | {
+      id: string;
+      title: string;
+      kind: "product_links";
+      description?: string;
+      links: { label: string; url: string }[];
       confirmLabel: string;
     }
   | {
@@ -122,39 +117,13 @@ export type Subtask =
       kind: "dual_inline_html";
       description?: string;
       first: {
-        source:
-          | "apostila"
-          | "checklist"
-          | "organizacao"
-          | "responsabilidade"
-          | "responsabilidade_checklist"
-          | "app_apostila"
-          | "app_checklist"
-          | "vendas_apostila"
-          | "vendas_checklist"
-          | "objecoes_apostila"
-          | "objecoes_checklist"
-          | "dores_apostila"
-          | "dores_checklist";
+        source: string;
         openLabel: string;
         confirmLabel: string;
         helperText?: string;
       };
       second: {
-        source:
-          | "apostila"
-          | "checklist"
-          | "organizacao"
-          | "responsabilidade"
-          | "responsabilidade_checklist"
-          | "app_apostila"
-          | "app_checklist"
-          | "vendas_apostila"
-          | "vendas_checklist"
-          | "objecoes_apostila"
-          | "objecoes_checklist"
-          | "dores_apostila"
-          | "dores_checklist";
+        source: string;
         openLabel: string;
         confirmLabel: string;
         helperText?: string;
@@ -1398,10 +1367,1599 @@ export const TOPICS: Topic[] = [
     id: "produtos",
     order: 7,
     title: "Decorar Principais Produtos",
-    summary:
-      "Conhecer e decorar os produtos mais indicados por categoria. (Em breve)",
+    summary: "Estudar e decorar cada categoria de produto: função, indicação, fala pronta, cuidados e produtos reais no site.",
     accent: "from-indigo-500 to-blue-700",
-    subtasks: [],
+    subtasks: [
+      {
+        id: "produtos.perfumes_feromonios.video",
+        kind: "video",
+        title: "1. Perfumes Feromônios — Assistir destaque",
+        description: "Copie o link, cole em outra aba e assista o destaque por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.perfumes_feromonios.produtos",
+        kind: "product_links",
+        title: "1. Perfumes Feromônios — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Perfume Com Feromonio Selvage", url: "https://sexshopsantabronx.com.br/produto/perfume-com-feromonio-selvage/" },
+          { label: "Perfume Com Feromonio Feminino Lady Femme", url: "https://sexshopsantabronx.com.br/produto/perfume-com-feromonio-feminino-lady-femme/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.perfumes_feromonios.fixacao",
+        kind: "practice",
+        title: "1. Perfumes Feromônios — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Perfumes Feromônios. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Perfumes Feromônios?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Função principal: potencializar presença, atração, sedução e autoconfiança.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Perfumes Feromônios para um cliente?",
+            options: ["Quando o cliente busca exatamente o que perfumes feromônios se propõe a oferecer: perfumes com proposta de potencializar atração, presença e autoconfiança.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Perfumes Feromônios ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Ele não é milagroso, mas ajuda a potencializar a atração, deixando sua presença mais marcante e aumentando a autoconfiança.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Perfumes Feromônios, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Não prometer que alguém vai desejar a pessoa automaticamente.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Perfumes Feromônios, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Não é milagroso e não garante conquista.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Perfumes Feromônios?",
+            options: ["Ignorar a orientação: Explicar como perfume de presença, não como promessa de conquista.", "Seguir a orientação: Explicar como perfume de presença, não como promessa de conquista.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Perfumes Feromônios?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Existem versões masculinas e femininas.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.perfumes_feromonios.apostila",
+        kind: "inline_html",
+        title: "1. Perfumes Feromônios — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_perfumes_feromonios",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.excitantes.video",
+        kind: "video",
+        title: "2. Excitantes — Assistir destaque",
+        description: "Copie o link, cole em outra aba e assista o destaque por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.excitantes.produtos",
+        kind: "product_links",
+        title: "2. Excitantes — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Excitante Unissex Pico Pulse Suga Vibra Pulsa E Refresca Sabor Melancia", url: "https://sexshopsantabronx.com.br/produto/excitante-unissex-pico-pulse-suga-vibra-pulsa-e-refresca-sabor-melancia/" },
+          { label: "Excitante Unissex Vibration Morango Gel Vibrante Intt Facilita E Potencializa O Orgasmo...", url: "https://sexshopsantabronx.com.br/produto/excitante-unissex-vibration-morango-gel-vibrante-intt-facilita-e-potencializa-o-orgasmo-vibra-aumenta-sensibilidade-e-aquece-estimula-o-clitoris-e-glande-deixa/" },
+          { label: "Meltesao Excitante Unissex Intt", url: "https://sexshopsantabronx.com.br/produto/meltesao-excitante-unissex-intt/" },
+          { label: "Excitante Feminino Beijavel Extra Forte Clito Em Gotas Facilita E Potencializa O Orgasmo...", url: "https://sexshopsantabronx.com.br/produto/excitante-feminino-beijavel-extra-forte-clito-em-gotas-facilita-e-potencializa-o-orgasmo-efeito-de-shock-refrescancia-aquecimento-e-sensacao-de-inchaco-aumenta-sensibilidade-estimula-o-clito/" },
+          { label: "Excitante Feminino Goze", url: "https://sexshopsantabronx.com.br/produto/excitante-feminino-goze/" },
+          { label: "Excitante Feminino Xana Loka", url: "https://sexshopsantabronx.com.br/produto/excitante-feminino-xana-loka/" },
+          { label: "Excitante Masculino Super Macho", url: "https://sexshopsantabronx.com.br/produto/excitante-masculino-super-macho/" },
+          { label: "Excitante Masculino Em Spray", url: "https://sexshopsantabronx.com.br/produto/excitante-masculino-em-spray/" },
+          { label: "Excitante Masculino Pau De Cavalo", url: "https://sexshopsantabronx.com.br/produto/excitante-masculino-pau-de-cavalo/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.excitantes.fixacao",
+        kind: "practice",
+        title: "2. Excitantes — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Excitantes. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Excitantes?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Femininos costumam ser usados no clitóris/vulva.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Excitantes para um cliente?",
+            options: ["Quando o cliente busca exatamente o que excitantes se propõe a oferecer: géis, gotas e sprays para aumentar sensibilidade, prazer e excitação.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Excitantes ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Esse tipo de produto aumenta as sensações na região e ajuda a deixar o estímulo mais intenso. Alguns esquentam, vibram, refrescam ou aumentam a sensibilidade.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Excitantes, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Perguntar se a pessoa quer uso oral/beijável ou só estímulo íntimo.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Excitantes, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Alguns são beijáveis e podem ser usados no beijo ou sexo oral.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Excitantes?",
+            options: ["Ignorar a orientação: Não exagerar na quantidade, especialmente nos extra fortes.", "Seguir a orientação: Não exagerar na quantidade, especialmente nos extra fortes.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Excitantes?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Alguns são unissex e também podem ser usados na glande.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.excitantes.apostila",
+        kind: "inline_html",
+        title: "2. Excitantes — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_excitantes",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.adstringente.video",
+        kind: "video",
+        title: "3. Adstringente — Assistir destaque",
+        description: "Copie o link, cole em outra aba e assista o destaque por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.adstringente.produtos",
+        kind: "product_links",
+        title: "3. Adstringente — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Adstringente Feminino Lacradinha", url: "https://sexshopsantabronx.com.br/produto/adstringente-feminino-lacradinha/" },
+          { label: "Bolinha Explosiva Adstringente", url: "https://sexshopsantabronx.com.br/produto/bolinha-explosiva-adstringente/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.adstringente.fixacao",
+        kind: "practice",
+        title: "3. Adstringente — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Adstringente. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Adstringente?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Pode ser em gel ou bolinha efervescente.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Adstringente para um cliente?",
+            options: ["Quando o cliente busca exatamente o que adstringente se propõe a oferecer: produtos para sensação de canal vaginal mais apertado.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Adstringente ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Ele ajuda a dar uma sensação de canal mais apertado, aumentando o atrito e a percepção de prazer durante a penetração.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Adstringente, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Não prometer resultado permanente.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Adstringente, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Hamamélis é um ativo comum associado à contração leve dos tecidos.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Adstringente?",
+            options: ["Ignorar a orientação: Orientar uso conforme produto.", "Seguir a orientação: Orientar uso conforme produto.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Adstringente?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Pode beneficiar os dois pela maior sensação de atrito.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.adstringente.apostila",
+        kind: "inline_html",
+        title: "3. Adstringente — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_adstringente",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.capas_penianas.video",
+        kind: "video",
+        title: "4. Capas Penianas — Assistir destaque",
+        description: "Copie o link, cole em outra aba e assista o destaque por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.capas_penianas.produtos",
+        kind: "product_links",
+        title: "4. Capas Penianas — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Capa Peniana 4", url: "https://sexshopsantabronx.com.br/produto/capa-peniana-4/" },
+          { label: "Masturbador Capa Peniana 2 Em 1", url: "https://sexshopsantabronx.com.br/produto/masturbador-capa-peniana-2-em-1/" },
+          { label: "Capa Peniana Vazada Com Alca", url: "https://sexshopsantabronx.com.br/produto/capa-peniana-vazada-com-alca/" },
+          { label: "Capa Peniana 3", url: "https://sexshopsantabronx.com.br/produto/capa-peniana-3/" },
+          { label: "Capa Peniana Transparente Super Macia Possui Cerdas Massageadoras Aumenta O Tamanho Do...", url: "https://sexshopsantabronx.com.br/produto/capa-peniana-transparente-super-macia-possui-cerdas-massageadoras-aumenta-o-tamanho-do-penis-aumenta-o-prazer-na-penetracao-retarda-a-ejaculacao-glande-bem-destacada/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.capas_penianas.fixacao",
+        kind: "practice",
+        title: "4. Capas Penianas — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Capas Penianas. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Capas Penianas?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Modelos com alça escrotal ficam mais firmes.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Capas Penianas para um cliente?",
+            options: ["Quando o cliente busca exatamente o que capas penianas se propõe a oferecer: acessórios para aumentar volume/tamanho durante o uso e intensificar estímulos.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Capas Penianas ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "A capa aumenta o volume durante o uso e pode dar mais estímulo na penetração. Os modelos com alça costumam ficar mais firmes.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Capas Penianas, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Nunca dizer que substitui camisinha.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Capas Penianas, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Modelos vazados preservam mais sensibilidade para o homem.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Capas Penianas?",
+            options: ["Ignorar a orientação: Orientar pênis seco por dentro da capa para não sair fácil.", "Seguir a orientação: Orientar pênis seco por dentro da capa para não sair fácil.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Capas Penianas?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Texturas, cerdas e relevos aumentam estímulo.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.capas_penianas.apostila",
+        kind: "inline_html",
+        title: "4. Capas Penianas — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_capas_penianas",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.plug_anal.video",
+        kind: "video",
+        title: "5. Plug Anal — Assistir destaque",
+        description: "Copie o link, cole em outra aba e assista o destaque por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.plug_anal.produtos",
+        kind: "product_links",
+        title: "5. Plug Anal — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Plug Anal Com Joia Em Metal P", url: "https://sexshopsantabronx.com.br/produto/plug-anal-com-joia-em-metal-p/" },
+          { label: "Plug Anal Com Joia Em Metal M", url: "https://sexshopsantabronx.com.br/produto/plug-anal-com-joia-em-metal-m/" },
+          { label: "Plug Anal Com Joia Em Metal G", url: "https://sexshopsantabronx.com.br/produto/plug-anal-com-joia-em-metal-g/" },
+          { label: "Plug Anal P Em Silicone Macio", url: "https://sexshopsantabronx.com.br/produto/plug-anal-p-em-silicone-macio/" },
+          { label: "Plug Anal Com Joia Em Coracao", url: "https://sexshopsantabronx.com.br/produto/plug-anal-com-joia-em-coracao/" },
+          { label: "Plug Anal Em Plastico Com Pedra Em Formato De Coracao", url: "https://sexshopsantabronx.com.br/produto/plug-anal-em-plastico-com-pedra-em-formato-de-coracao/" },
+          { label: "Plug Anal Vibrador 2", url: "https://sexshopsantabronx.com.br/produto/plug-anal-vibrador-2/" },
+          { label: "Plug Anal Vibratorio Feito Em Silicone Controlado Por Aplicativo 10 Modos De Vibracao...", url: "https://sexshopsantabronx.com.br/produto/plug-anal-vibratorio-feito-em-silicone-controlado-por-aplicativo-10-modos-de-vibracao-recarregavel-resistente-a-agua-controlado-de-qualquer-distanci/" },
+          { label: "Vib Estimulador De Prostata360", url: "https://sexshopsantabronx.com.br/produto/vib-estimulador-de-prostata360/" },
+          { label: "Plug Anal De Vidro Temperado Rosa Tamanho M 8Cm X 5Cm", url: "https://sexshopsantabronx.com.br/produto/plug-anal-de-vidro-temperado-rosa-tamanho-m-8cm-x-5cm/" },
+          { label: "Plug Anal De Vidro Temperado Modelo Transparente Com Detalhe Em Coracao Possui Revelos...", url: "https://sexshopsantabronx.com.br/produto/plug-anal-de-vidro-temperado-modelo-transparente-com-detalhe-em-coracao-possui-revelos-massageadores-17cm-comprimento-x-5cm-espessura/" },
+          { label: "Kit Plug Anal Em Silicone", url: "https://sexshopsantabronx.com.br/produto/kit-plug-anal-em-silicone/" },
+          { label: "Plug Anal De Silicone Grande Gg", url: "https://sexshopsantabronx.com.br/produto/plug-anal-de-silicone-grande-gg/" },
+          { label: "Estimulador De Prostata 5", url: "https://sexshopsantabronx.com.br/produto/estimulador-de-prostata-5/" },
+          { label: "Plug Anal Inflavel", url: "https://sexshopsantabronx.com.br/produto/plug-anal-inflavel/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.plug_anal.fixacao",
+        kind: "practice",
+        title: "5. Plug Anal — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Plug Anal. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Plug Anal?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Começar por tamanhos menores é mais seguro para iniciantes.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Plug Anal para um cliente?",
+            options: ["Quando o cliente busca exatamente o que plug anal se propõe a oferecer: acessórios para preparação e dilatação anal.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Plug Anal ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "O plug prepara a região anal, ajudando a dilatar aos poucos para a penetração ser mais confortável.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Plug Anal, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Nunca usar item sem base segura.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Plug Anal, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Sempre usar lubrificante.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Plug Anal?",
+            options: ["Ignorar a orientação: Não indicar tamanho grande para iniciante sem explicar cuidado.", "Seguir a orientação: Não indicar tamanho grande para iniciante sem explicar cuidado.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Plug Anal?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "A base do plug deve ficar para fora.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.plug_anal.apostila",
+        kind: "inline_html",
+        title: "5. Plug Anal — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_plug_anal",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.estimulantes_sexuais.video",
+        kind: "video",
+        title: "6. Estimulantes Sexuais — Assistir destaque",
+        description: "Copie o link, cole em outra aba e assista o destaque por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.estimulantes_sexuais.produtos",
+        kind: "product_links",
+        title: "6. Estimulantes Sexuais — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Mel Power Honey Original Melzinho Do Amor", url: "https://sexshopsantabronx.com.br/produto/mel-power-honey-original-melzinho-do-amor/" },
+          { label: "Energetico Estimulante Unissex Mo Molhada Revoada Com Maca Peruana 355Ml", url: "https://sexshopsantabronx.com.br/produto/energetico-estimulante-unissex-mo-molhada-revoada-com-maca-peruana-355ml/" },
+          { label: "Energetico Estimulante Sexual Masculino Mozao Mo Molhada Com Maca Peruana 355Ml Sabor De...", url: "https://sexshopsantabronx.com.br/produto/energetico-estimulante-sexual-masculino-mozao-mo-molhada-com-maca-peruana-355ml-sabor-de-blueberry/" },
+          { label: "Potencializador Masculino", url: "https://sexshopsantabronx.com.br/produto/potencializador-masculino/" },
+          { label: "Excitante Feminino Sex Femme", url: "https://sexshopsantabronx.com.br/produto/excitante-feminino-sex-femme/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.estimulantes_sexuais.fixacao",
+        kind: "practice",
+        title: "6. Estimulantes Sexuais — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Estimulantes Sexuais. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Estimulantes Sexuais?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Sachês e energéticos costumam ser usados 1 a 2 horas antes.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Estimulantes Sexuais para um cliente?",
+            options: ["Quando o cliente busca exatamente o que estimulantes sexuais se propõe a oferecer: sachês, energéticos e cápsulas para vontade, energia e libido.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Estimulantes Sexuais ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Você quer algo para usar hoje antes da relação ou algo de uso contínuo para melhorar libido e disposição?", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Estimulantes Sexuais, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Não comparar como medicamento sem cuidado.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Estimulantes Sexuais, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Cápsulas funcionam como rotina/tratamento e precisam de uso contínuo.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Estimulantes Sexuais?",
+            options: ["Ignorar a orientação: Orientar diferença entre dose única e cápsula contínua.", "Seguir a orientação: Orientar diferença entre dose única e cápsula contínua.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Estimulantes Sexuais?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Existem opções masculinas, femininas e unissex.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.estimulantes_sexuais.apostila",
+        kind: "inline_html",
+        title: "6. Estimulantes Sexuais — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_estimulantes_sexuais",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.retardante.video",
+        kind: "video",
+        title: "7. Retardante — Assistir destaque",
+        description: "Copie o link, cole em outra aba e assista o destaque por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.retardante.produtos",
+        kind: "product_links",
+        title: "7. Retardante — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Retardante Masculino", url: "https://sexshopsantabronx.com.br/produto/retardante-masculino/" },
+          { label: "Excitante Masculino Em Spray", url: "https://sexshopsantabronx.com.br/produto/excitante-masculino-em-spray/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.retardante.fixacao",
+        kind: "practice",
+        title: "7. Retardante — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Retardante. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Retardante?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Aplicado principalmente na glande.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Retardante para um cliente?",
+            options: ["Quando o cliente busca exatamente o que retardante se propõe a oferecer: produtos para durar mais e controlar ejaculação precoce.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Retardante ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Esse é para ajudar a segurar a ejaculação. Ele reduz um pouco a sensibilidade, mas a proposta é continuar com ereção e durar mais.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Retardante, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Não prometer tempo exato para todo mundo.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Retardante, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Ajuda a reduzir sensibilidade, não a tirar prazer completamente.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Retardante?",
+            options: ["Ignorar a orientação: Diferenciar retardante de produto para ereção.", "Seguir a orientação: Diferenciar retardante de produto para ereção.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Retardante?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Pode ser combinado com vasodilatador masculino quando há preocupação com ereção.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.retardante.apostila",
+        kind: "inline_html",
+        title: "7. Retardante — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_retardante",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.anel_peniano.video",
+        kind: "video",
+        title: "8. Anel Peniano — Assistir destaque",
+        description: "Copie o link, cole em outra aba e assista o destaque por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.anel_peniano.produtos",
+        kind: "product_links",
+        title: "8. Anel Peniano — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Anel Peniano Com Vibrador Luvkis", url: "https://sexshopsantabronx.com.br/produto/anel-peniano-com-vibrador-luvkis/" },
+          { label: "Anel Peniano Com Vibrador", url: "https://sexshopsantabronx.com.br/produto/anel-peniano-com-vibrador/" },
+          { label: "Anel Peniano Em Silicone Cirurgico Com Estimulador Vibratorio Estimula O Clitoris Baterias...", url: "https://sexshopsantabronx.com.br/produto/anel-peniano-em-silicone-cirurgico-com-estimulador-vibratorio-estimula-o-clitoris-baterias-inclusas/" },
+          { label: "Anel Peniano Vibratorio", url: "https://sexshopsantabronx.com.br/produto/anel-peniano-vibratorio/" },
+          { label: "Kit Com 03 Aneis Penianos", url: "https://sexshopsantabronx.com.br/produto/kit-com-03-aneis-penianos/" },
+          { label: "Kit 03 Aneis Penianos Borracha Com 03 Opcoes De Medida", url: "https://sexshopsantabronx.com.br/produto/kit-03-aneis-penianos-borracha-com-03-opcoes-de-medida/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.anel_peniano.fixacao",
+        kind: "practice",
+        title: "8. Anel Peniano — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Anel Peniano. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Anel Peniano?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Ajuda o homem a manter ereção mais firme.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Anel Peniano para um cliente?",
+            options: ["Quando o cliente busca exatamente o que anel peniano se propõe a oferecer: anéis para ereção mais firme, retardar ejaculação e estimular clitóris.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Anel Peniano ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Ele ajuda o pênis a ficar mais firme e, se for vibratório, ainda estimula o clitóris durante a penetração.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Anel Peniano, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Explicar diferença entre simples e vibratório.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Anel Peniano, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Pode retardar a ejaculação por segurar a circulação.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Anel Peniano?",
+            options: ["Ignorar a orientação: Não apertar excessivamente por tempo prolongado.", "Seguir a orientação: Não apertar excessivamente por tempo prolongado.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Anel Peniano?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Modelos vibratórios estimulam a parceira.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.anel_peniano.apostila",
+        kind: "inline_html",
+        title: "8. Anel Peniano — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_anel_peniano",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.sado.video",
+        kind: "video",
+        title: "9. Sado — Assistir destaque",
+        description: "Copie o link, cole em outra aba e assista o destaque por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.sado.produtos",
+        kind: "product_links",
+        title: "9. Sado — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Algema De Luxo", url: "https://sexshopsantabronx.com.br/produto/algema-de-luxo/" },
+          { label: "Algema Metal Pelucia", url: "https://sexshopsantabronx.com.br/produto/algema-metal-pelucia/" },
+          { label: "Kit Sado Bdsm Black Wolf Acompanha 10 Pecas Material Em Alta Qualidade", url: "https://sexshopsantabronx.com.br/produto/kit-sado-bdsm-black-wolf-acompanha-10-pecas-material-em-alta-qualidade/" },
+          { label: "Arreio Do Pecado", url: "https://sexshopsantabronx.com.br/produto/arreio-do-pecado/" },
+          { label: "Chicote", url: "https://sexshopsantabronx.com.br/produto/chicote/" },
+          { label: "Chibata Reforcada De 40Cm 1", url: "https://sexshopsantabronx.com.br/produto/chibata-reforcada-de-40cm-1/" },
+          { label: "Corda Bondage De 10 Metros", url: "https://sexshopsantabronx.com.br/produto/corda-bondage-de-10-metros/" },
+          { label: "Corda Bondage Shibari 5 Metros", url: "https://sexshopsantabronx.com.br/produto/corda-bondage-shibari-5-metros/" },
+          { label: "Mordaca Erotica", url: "https://sexshopsantabronx.com.br/produto/mordaca-erotica/" },
+          { label: "Venda Tapa Olhos", url: "https://sexshopsantabronx.com.br/produto/venda-tapa-olhos/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.sado.fixacao",
+        kind: "practice",
+        title: "9. Sado — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Sado. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Sado?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Algemas de couro sintético costumam ser mais confortáveis e resistentes.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Sado para um cliente?",
+            options: ["Quando o cliente busca exatamente o que sado se propõe a oferecer: acessórios para dominação, contenção, sensações e fantasia.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Sado ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Tem opções mais leves para brincadeira casual e opções mais resistentes para quem quer algo mais completo.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Sado, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Falar sempre de consentimento e segurança.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Sado, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Algema de metal com pelúcia é mais casual.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Sado?",
+            options: ["Ignorar a orientação: Diferenciar resistência dos materiais.", "Seguir a orientação: Diferenciar resistência dos materiais.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Sado?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Kits completos ajudam quem quer variedade.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.sado.apostila",
+        kind: "inline_html",
+        title: "9. Sado — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_sado",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.lubrificante.video",
+        kind: "video",
+        title: "10. Lubrificante — Assistir destaque",
+        description: "Copie o link, cole em outra aba e assista o destaque por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.lubrificante.produtos",
+        kind: "product_links",
+        title: "10. Lubrificante — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Lubrificante Intimo Lubrisex Luxo", url: "https://sexshopsantabronx.com.br/produto/lubrificante-intimo-lubrisex-luxo/" },
+          { label: "Lubrificante Intimo Hidranal", url: "https://sexshopsantabronx.com.br/produto/lubrificante-intimo-hidranal/" },
+          { label: "Lubrificante Intimo Siliconado D4", url: "https://sexshopsantabronx.com.br/produto/lubrificante-intimo-siliconado-d4/" },
+          { label: "Lubrificante Intimo Beijavel D4 Sabor Morango A Base De Agua Nao Gorduroso Deixa O Sexo...", url: "https://sexshopsantabronx.com.br/produto/lubrificante-intimo-beijavel-d4-sabor-morango-a-base-de-agua-nao-gorduroso-deixa-o-sexo-oral-mais-saboroso-60g/" },
+          { label: "Lubrificante Intimo K Med 100G", url: "https://sexshopsantabronx.com.br/produto/lubrificante-intimo-k-med-100g/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.lubrificante.fixacao",
+        kind: "practice",
+        title: "10. Lubrificante — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Lubrificante. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Lubrificante?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Base água é mais versátil e compatível com preservativo/sex toy.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Lubrificante para um cliente?",
+            options: ["Quando o cliente busca exatamente o que lubrificante se propõe a oferecer: produtos para reduzir atrito, aumentar conforto e melhorar a relação.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Lubrificante ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Para te indicar certo, você quer usar com preservativo, sex toy, anal, oral ou no banho?", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Lubrificante, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Não indicar silicone sem perguntar se vai usar com preservativo/sex toy.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Lubrificante, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Base silicone dura mais e resiste à água, mas exige cuidado com preservativo e sex toy.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Lubrificante?",
+            options: ["Ignorar a orientação: Diferenciar base água de silicone.", "Seguir a orientação: Diferenciar base água de silicone.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Lubrificante?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Lubrificante anal precisa de maior conforto e hidratação.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.lubrificante.apostila",
+        kind: "inline_html",
+        title: "10. Lubrificante — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_lubrificante",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.masturbador_masculino.video",
+        kind: "video",
+        title: "11. Masturbador Masculino — Assistir destaque",
+        description: "Copie o link, cole em outra aba e assista o destaque por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.masturbador_masculino.produtos",
+        kind: "product_links",
+        title: "11. Masturbador Masculino — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Masturbador Vagina E Anus Bumbum2", url: "https://sexshopsantabronx.com.br/produto/masturbador-vagina-e-anus-bumbum2/" },
+          { label: "Masturbador Vagina E Anus Ral", url: "https://sexshopsantabronx.com.br/produto/masturbador-vagina-e-anus-ral/" },
+          { label: "Masturbador Vagina C Vibracao", url: "https://sexshopsantabronx.com.br/produto/masturbador-vagina-c-vibracao/" },
+          { label: "Masturbador Vagina 4", url: "https://sexshopsantabronx.com.br/produto/masturbador-vagina-4/" },
+          { label: "Masturbador Vagina 2", url: "https://sexshopsantabronx.com.br/produto/masturbador-vagina-2/" },
+          { label: "Ovinho Masturbador Realistico", url: "https://sexshopsantabronx.com.br/produto/ovinho-masturbador-realistico/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.masturbador_masculino.fixacao",
+        kind: "practice",
+        title: "11. Masturbador Masculino — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Masturbador Masculino. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Masturbador Masculino?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Textura interna é o principal diferencial.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Masturbador Masculino para um cliente?",
+            options: ["Quando o cliente busca exatamente o que masturbador masculino se propõe a oferecer: produtos para masturbação masculina com textura e realismo.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Masturbador Masculino ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Você prefere algo mais discreto, mais realístico ou um modelo automático com mais tecnologia?", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Masturbador Masculino, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Orientar uso com lubrificante.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Masturbador Masculino, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Lubrificante melhora muito a experiência.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Masturbador Masculino?",
+            options: ["Ignorar a orientação: Explicar higienização após o uso.", "Seguir a orientação: Explicar higienização após o uso.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Masturbador Masculino?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Alguns simulam vagina, boca ou ânus.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.masturbador_masculino.apostila",
+        kind: "inline_html",
+        title: "11. Masturbador Masculino — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_masturbador_masculino",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.roupas.video",
+        kind: "video",
+        title: "12. Roupas — Assistir destaque",
+        description: "Copie o link, cole em outra aba e assista o destaque por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.roupas.produtos",
+        kind: "product_links",
+        title: "12. Roupas — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Body Stocking Macacao Sexy Detalhe Na Barriga Abertura Intima Tamanho Unico Veste Do 34 Ao 44", url: "https://sexshopsantabronx.com.br/produto/body-stocking-macacao-sexy-detalhe-na-barriga-abertura-intima-tamanho-unico-veste-do-34-ao-44/" },
+          { label: "Body C Manga", url: "https://sexshopsantabronx.com.br/produto/body-c-manga/" },
+          { label: "Body Stocking Inteiro 1", url: "https://sexshopsantabronx.com.br/produto/body-stocking-inteiro-1/" },
+          { label: "Body Stocking Manga Com Strass", url: "https://sexshopsantabronx.com.br/produto/body-stocking-manga-com-strass/" },
+          { label: "Body Stocking Mini Vestido", url: "https://sexshopsantabronx.com.br/produto/body-stocking-mini-vestido/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.roupas.fixacao",
+        kind: "practice",
+        title: "12. Roupas — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Roupas. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Roupas?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Vende emoção, autoestima e provocação.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Roupas para um cliente?",
+            options: ["Quando o cliente busca exatamente o que roupas se propõe a oferecer: fantasias, lingeries e peças para provocar desejo.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Roupas ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Você quer algo mais elegante, provocante, fantasia ou uma peça mais surpresa?", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Roupas, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Não focar só no tamanho; entender estilo.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Roupas, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Perguntar estilo desejado ajuda na indicação.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Roupas?",
+            options: ["Ignorar a orientação: Explicar cuidado com troca/higiene quando necessário.", "Seguir a orientação: Explicar cuidado com troca/higiene quando necessário.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Roupas?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Existem peças mais discretas e mais ousadas.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.roupas.apostila",
+        kind: "inline_html",
+        title: "12. Roupas — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_roupas",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.anestesicos.video",
+        kind: "video",
+        title: "13. Anestésicos — Assistir destaque",
+        description: "Copie o link, cole em outra aba e assista o destaque por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.anestesicos.produtos",
+        kind: "product_links",
+        title: "13. Anestésicos — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Anestesico Anal Cliv Intt Gold", url: "https://sexshopsantabronx.com.br/produto/anestesico-anal-cliv-intt-gold/" },
+          { label: "Anestesico Anal Cliv Intt", url: "https://sexshopsantabronx.com.br/produto/anestesico-anal-cliv-intt/" },
+          { label: "Anestesico Anal Analdor", url: "https://sexshopsantabronx.com.br/produto/anestesico-anal-analdor/" },
+          { label: "Anestesico Anal Sete Sensacoes", url: "https://sexshopsantabronx.com.br/produto/anestesico-anal-sete-sensacoes/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.anestesicos.fixacao",
+        kind: "practice",
+        title: "13. Anestésicos — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Anestésicos. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Anestésicos?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Anestésico anal não substitui lubrificante.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Anestésicos para um cliente?",
+            options: ["Quando o cliente busca exatamente o que anestésicos se propõe a oferecer: produtos para reduzir desconforto em práticas específicas.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Anestésicos ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Ele ajuda a reduzir o desconforto, mas ainda precisa usar com calma, lubrificação e cuidado.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Anestésicos, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Não prometer ausência total de dor.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Anestésicos, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "O objetivo é reduzir desconforto, não tirar 100% da sensibilidade.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Anestésicos?",
+            options: ["Ignorar a orientação: Reforçar lubrificante no anal.", "Seguir a orientação: Reforçar lubrificante no anal.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Anestésicos?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Spray de garganta ajuda a reduzir ânsia no oral profundo.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.anestesicos.apostila",
+        kind: "inline_html",
+        title: "13. Anestésicos — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_anestesicos",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.vibrador_rabbit.video",
+        kind: "video",
+        title: "14. Vibrador Rabbit — Assistir destaque",
+        description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.vibrador_rabbit.produtos",
+        kind: "product_links",
+        title: "14. Vibrador Rabbit — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Vibrador Rabbit Ponto G E Clitoris Recarregavel 9 Modos De Vibracao", url: "https://sexshopsantabronx.com.br/produto/vibrador-rabbit-ponto-g-e-clitoris-recarregavel-9-modos-de-vibracao/" },
+          { label: "Vibrador Rabbit Recarregavel", url: "https://sexshopsantabronx.com.br/produto/vibrador-rabbit-recarregavel/" },
+          { label: "Vibrador Rabbit Pilha Realistico", url: "https://sexshopsantabronx.com.br/produto/vibrador-rabbit-pilha-realistico/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.vibrador_rabbit.fixacao",
+        kind: "practice",
+        title: "14. Vibrador Rabbit — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Vibrador Rabbit. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Vibrador Rabbit?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Tem estímulo duplo.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Vibrador Rabbit para um cliente?",
+            options: ["Quando o cliente busca exatamente o que vibrador rabbit se propõe a oferecer: vibrador de estímulo duplo: ponto g e clitóris.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Vibrador Rabbit ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Esse é indicado para quem quer sentir penetração e estímulo no clitóris ao mesmo tempo.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Vibrador Rabbit, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Perguntar se a cliente gosta de penetração.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Vibrador Rabbit, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Pode ajudar em orgasmos mais intensos.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Vibrador Rabbit?",
+            options: ["Ignorar a orientação: Não indicar tamanho grande sem considerar experiência.", "Seguir a orientação: Não indicar tamanho grande sem considerar experiência.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Vibrador Rabbit?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "O formato externo estimula o clitóris.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.vibrador_rabbit.apostila",
+        kind: "inline_html",
+        title: "14. Vibrador Rabbit — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_vibrador_rabbit",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.sugador_de_clitoris.video",
+        kind: "video",
+        title: "15. Sugador de Clitóris — Assistir destaque",
+        description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.sugador_de_clitoris.produtos",
+        kind: "product_links",
+        title: "15. Sugador de Clitóris — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Sugador De Clitoris Duplo", url: "https://sexshopsantabronx.com.br/produto/sugador-de-clitoris-duplo/" },
+          { label: "Sugador De Clitoris Recarregavel", url: "https://sexshopsantabronx.com.br/produto/sugador-de-clitoris-recarregavel/" },
+          { label: "Sugador De Clitoris Recarregavel 2", url: "https://sexshopsantabronx.com.br/produto/sugador-de-clitoris-recarregavel-2/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.sugador_de_clitoris.fixacao",
+        kind: "practice",
+        title: "15. Sugador de Clitóris — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Sugador de Clitóris. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Sugador de Clitóris?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Foco principal é o clitóris.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Sugador de Clitóris para um cliente?",
+            options: ["Quando o cliente busca exatamente o que sugador de clitóris se propõe a oferecer: estímulo focado no clitóris por sucção/vibração.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Sugador de Clitóris ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Esse é ideal para quem sente mais prazer no clitóris e quer um estímulo mais intenso e direto.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Sugador de Clitóris, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Perguntar se ela gosta de estímulo externo.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Sugador de Clitóris, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Pode gerar orgasmo rápido e intenso.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Sugador de Clitóris?",
+            options: ["Ignorar a orientação: Explicar diferença entre sucção e vibração.", "Seguir a orientação: Explicar diferença entre sucção e vibração.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Sugador de Clitóris?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Existem modelos de entrada, intermediários e completos.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.sugador_de_clitoris.apostila",
+        kind: "inline_html",
+        title: "15. Sugador de Clitóris — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_sugador_de_clitoris",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.vibrador_de_calcinha.video",
+        kind: "video",
+        title: "16. Vibrador de Calcinha — Assistir destaque",
+        description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.vibrador_de_calcinha.produtos",
+        kind: "product_links",
+        title: "16. Vibrador de Calcinha — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Calcinha Vibratoria Recarregavel Com Ima E Controle Sem Fio", url: "https://sexshopsantabronx.com.br/produto/calcinha-vibratoria-recarregavel-com-ima-e-controle-sem-fio/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.vibrador_de_calcinha.fixacao",
+        kind: "practice",
+        title: "16. Vibrador de Calcinha — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Vibrador de Calcinha. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Vibrador de Calcinha?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Discrição é o principal diferencial.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Vibrador de Calcinha para um cliente?",
+            options: ["Quando o cliente busca exatamente o que vibrador de calcinha se propõe a oferecer: vibrador discreto para usar fixado na calcinha.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Vibrador de Calcinha ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Esse é legal para casal brincar com controle à distância, de forma discreta e provocante.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Vibrador de Calcinha, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Explicar como fixa na calcinha.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Vibrador de Calcinha, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Controle sem fio permite brincadeira a dois.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Vibrador de Calcinha?",
+            options: ["Ignorar a orientação: Verificar bateria/controle.", "Seguir a orientação: Verificar bateria/controle.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Vibrador de Calcinha?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Pode ser usado em casa ou em saídas discretas.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.vibrador_de_calcinha.apostila",
+        kind: "inline_html",
+        title: "16. Vibrador de Calcinha — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_vibrador_de_calcinha",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.maquina_de_sexo.video",
+        kind: "video",
+        title: "17. Máquina de Sexo — Assistir destaque",
+        description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.maquina_de_sexo.produtos",
+        kind: "product_links",
+        title: "17. Máquina de Sexo — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Maquina De Sexo Uberlandia", url: "https://sexshopsantabronx.com.br/produto/maquina-de-sexo-uberlandia/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.maquina_de_sexo.fixacao",
+        kind: "practice",
+        title: "17. Máquina de Sexo — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Máquina de Sexo. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Máquina de Sexo?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Movimento automático é o principal diferencial.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Máquina de Sexo para um cliente?",
+            options: ["Quando o cliente busca exatamente o que máquina de sexo se propõe a oferecer: produto automático que simula movimento de penetração.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Máquina de Sexo ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Essa é para quem quer uma experiência automática, com movimento de penetração e mais intensidade.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Máquina de Sexo, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Explicar tamanho e potência.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Máquina de Sexo, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Pode ter velocidades diferentes.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Máquina de Sexo?",
+            options: ["Ignorar a orientação: Orientar uso de lubrificante.", "Seguir a orientação: Orientar uso de lubrificante.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Máquina de Sexo?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Algumas vibram e aquecem.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.maquina_de_sexo.apostila",
+        kind: "inline_html",
+        title: "17. Máquina de Sexo — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_maquina_de_sexo",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.vibrador_de_casal.video",
+        kind: "video",
+        title: "18. Vibrador de Casal — Assistir destaque",
+        description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.vibrador_de_casal.produtos",
+        kind: "product_links",
+        title: "18. Vibrador de Casal — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Vibrador Para Casal Com Controle Sem Fio", url: "https://sexshopsantabronx.com.br/produto/vibrador-para-casal-com-controle-sem-fio/" },
+          { label: "Vibrador Para Casal Com Relevos", url: "https://sexshopsantabronx.com.br/produto/vibrador-para-casal-com-relevos/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.vibrador_de_casal.fixacao",
+        kind: "practice",
+        title: "18. Vibrador de Casal — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Vibrador de Casal. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Vibrador de Casal?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Feito para o casal usar junto.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Vibrador de Casal para um cliente?",
+            options: ["Quando o cliente busca exatamente o que vibrador de casal se propõe a oferecer: vibrador para usar durante a penetração a dois.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Vibrador de Casal ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Ele é feito para usar durante a relação, então os dois sentem estímulo ao mesmo tempo.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Vibrador de Casal, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Explicar posicionamento correto.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Vibrador de Casal, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Parte interna estimula a mulher por dentro.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Vibrador de Casal?",
+            options: ["Ignorar a orientação: Não confundir com vibrador individual comum.", "Seguir a orientação: Não confundir com vibrador individual comum.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Vibrador de Casal?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Parte externa estimula clitóris.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.vibrador_de_casal.apostila",
+        kind: "inline_html",
+        title: "18. Vibrador de Casal — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_vibrador_de_casal",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.vibrador_de_aplicativo.video",
+        kind: "video",
+        title: "19. Vibrador de Aplicativo — Assistir destaque",
+        description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.vibrador_de_aplicativo.produtos",
+        kind: "product_links",
+        title: "19. Vibrador de Aplicativo — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Vibrador Por Aplicativo Lola", url: "https://sexshopsantabronx.com.br/produto/vibrador-por-aplicativo-lola/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.vibrador_de_aplicativo.fixacao",
+        kind: "practice",
+        title: "19. Vibrador de Aplicativo — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Vibrador de Aplicativo. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Vibrador de Aplicativo?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Controle por aplicativo é o diferencial.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Vibrador de Aplicativo para um cliente?",
+            options: ["Quando o cliente busca exatamente o que vibrador de aplicativo se propõe a oferecer: vibrador controlado pelo celular, inclusive à distância.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Vibrador de Aplicativo ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Esse dá para o parceiro controlar pelo celular, até de longe dependendo do modelo.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Vibrador de Aplicativo, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Explicar necessidade de aplicativo.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Vibrador de Aplicativo, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Pode permitir controle de longa distância.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Vibrador de Aplicativo?",
+            options: ["Ignorar a orientação: Verificar bateria e conexão.", "Seguir a orientação: Verificar bateria e conexão.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Vibrador de Aplicativo?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Muito usado por casais.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.vibrador_de_aplicativo.apostila",
+        kind: "inline_html",
+        title: "19. Vibrador de Aplicativo — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_vibrador_de_aplicativo",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.varinha_magica.video",
+        kind: "video",
+        title: "20. Varinha Mágica — Assistir destaque",
+        description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.varinha_magica.produtos",
+        kind: "product_links",
+        title: "20. Varinha Mágica — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Vibrador Varinha Magica Luxo", url: "https://sexshopsantabronx.com.br/produto/vibrador-varinha-magica-luxo/" },
+          { label: "Mini Vibrador Varinha Magica 3", url: "https://sexshopsantabronx.com.br/produto/mini-vibrador-varinha-magica-3/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.varinha_magica.fixacao",
+        kind: "practice",
+        title: "20. Varinha Mágica — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Varinha Mágica. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Varinha Mágica?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Foco é estímulo externo.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Varinha Mágica para um cliente?",
+            options: ["Quando o cliente busca exatamente o que varinha mágica se propõe a oferecer: vibrador externo potente para zonas erógenas.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Varinha Mágica ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "A varinha é para quem quer vibração forte e fácil de usar no clitóris ou em outras áreas sensíveis.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Varinha Mágica, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Explicar que não é o foco para penetração profunda.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Varinha Mágica, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Vibração costuma ser forte.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Varinha Mágica?",
+            options: ["Ignorar a orientação: Orientar começar em intensidade baixa.", "Seguir a orientação: Orientar começar em intensidade baixa.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Varinha Mágica?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Cabeça maior facilita contato com a região.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.varinha_magica.apostila",
+        kind: "inline_html",
+        title: "20. Varinha Mágica — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_varinha_magica",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.mini_vibrador.video",
+        kind: "video",
+        title: "21. Mini Vibrador — Assistir destaque",
+        description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.mini_vibrador.produtos",
+        kind: "product_links",
+        title: "21. Mini Vibrador — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Vibrador Bullet Recarregavel Com 10 Vibracoes", url: "https://sexshopsantabronx.com.br/produto/vibrador-bullet-recarregavel-com-10-vibracoes/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.mini_vibrador.fixacao",
+        kind: "practice",
+        title: "21. Mini Vibrador — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Mini Vibrador. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Mini Vibrador?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Pequeno e fácil de esconder/guardar.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Mini Vibrador para um cliente?",
+            options: ["Quando o cliente busca exatamente o que mini vibrador se propõe a oferecer: vibrador pequeno, discreto e potente para estímulo externo.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Mini Vibrador ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Esse é pequeno, discreto e ótimo para estímulo externo, principalmente clitóris.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Mini Vibrador, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Explicar limite de uso por tamanho.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Mini Vibrador, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Ideal para estímulo externo.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Mini Vibrador?",
+            options: ["Ignorar a orientação: Falar sobre bateria/recarregável.", "Seguir a orientação: Falar sobre bateria/recarregável.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Mini Vibrador?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Pode ser forte mesmo sendo mini.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.mini_vibrador.apostila",
+        kind: "inline_html",
+        title: "21. Mini Vibrador — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_mini_vibrador",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
+        id: "produtos.penis_realistico.video",
+        kind: "video",
+        title: "22. Pênis Realístico — Assistir destaque",
+        description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "produtos.penis_realistico.produtos",
+        kind: "product_links",
+        title: "22. Pênis Realístico — Ver produtos reais no site",
+        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
+        links: [
+          { label: "Penis De Borracha 22Cm X 4Cm 10 Modos De Vibracoes Rotacao 360 Graus Vai E Vem Aquecimento...", url: "https://sexshopsantabronx.com.br/produto/penis-de-borracha-22cm-x-4cm-10-modos-de-vibracoes-rotacao-360-graus-vai-e-vem-aquecimento-material-semelhante-a-pele-controle-sem-fio-recarregavel/" },
+          { label: "Penis De Borracha 20 Cm X 4Cm 10 Modos De Vibracoes 10 Movimentos De Vai E Vem E Rotacao...", url: "https://sexshopsantabronx.com.br/produto/penis-de-borracha-20-cm-x-4cm-10-modos-de-vibracoes-10-movimentos-de-vai-e-vem-e-rotacao-aquecimento-simula-a-temperatura-humana-material-semelhante-a-pele-controle-sem-fio-recarregavel/" },
+          { label: "Penis Realistico Com Vibro Vai E Vem Com Rotacao Controlado Por Aplicativo 9 Modos 215Cm X 4Cm", url: "https://sexshopsantabronx.com.br/produto/penis-realistico-com-vibro-vai-e-vem-com-rotacao-controlado-por-aplicativo-9-modos-215cm-x-4cm/" }
+        ],
+        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+      },
+      {
+        id: "produtos.penis_realistico.fixacao",
+        kind: "practice",
+        title: "22. Pênis Realístico — Exercício de fixação (7 questões)",
+        description: "Múltipla escolha autocorrigido. 7 perguntas sobre Pênis Realístico. Sem nota mínima — você vê quantas acertou ao final.",
+        questions: [
+          {
+            question: "Qual é a função principal do produto Pênis Realístico?",
+            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Ventosa permite fixar em superfícies lisas.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar Pênis Realístico para um cliente?",
+            options: ["Quando o cliente busca exatamente o que pênis realístico se propõe a oferecer: próteses realísticas vibratórias com ventosa, aquecimento ou vai e vem.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é uma boa forma de a atendente apresentar Pênis Realístico ao cliente?",
+            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Você procura algo mais realístico simples, com ventosa, com vibração ou com movimento automático?", "“Compra que você vai gostar, todo mundo aprova.”"],
+            correctIndex: 2,
+          },
+          {
+            question: "Sobre Pênis Realístico, qual cuidado a atendente precisa lembrar no atendimento?",
+            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Perguntar experiência/tamanho desejado.", "Vender sempre o produto mais caro como única opção."],
+            correctIndex: 2,
+          },
+          {
+            question: "Em relação aos modelos de Pênis Realístico, o que a atendente precisa saber?",
+            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Alguns têm vibração e aquecimento.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é correta da atendente ao vender Pênis Realístico?",
+            options: ["Ignorar a orientação: Orientar lubrificante e higienização.", "Seguir a orientação: Orientar lubrificante e higienização.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual destes pontos a atendente precisa decorar sobre Pênis Realístico?",
+            options: ["Não há diferença alguma — é só ligar e usar.", "Modelos avançados têm vai e vem ou rotação.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            correctIndex: 1,
+          },
+        ],
+      },
+      {
+        id: "produtos.penis_realistico.apostila",
+        kind: "inline_html",
+        title: "22. Pênis Realístico — Ler apostila",
+        description: "Leia a apostila desta categoria como material de revisão.",
+        source: "produtos_penis_realistico",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+    ],
   },
   {
     id: "presencial",
