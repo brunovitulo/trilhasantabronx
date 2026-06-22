@@ -134,12 +134,15 @@ function TopicPage() {
     };
   }, [user.id]);
 
-  const statuses = useMemo(() => computeTopicStatuses(TOPICS, rows), [rows]);
-  const accessLocked = statuses[topic.id] === "locked";
+  const statuses = useMemo(
+    () => computeTopicStatuses(TOPICS, rows, { isAdmin }),
+    [rows, isAdmin],
+  );
+  const accessLocked = !isAdmin && statuses[topic.id] === "locked";
 
   useEffect(() => {
     if (!loading && accessLocked) {
-      toast.error("Este tópico ainda está bloqueado");
+      toast.error("Conclua o tópico anterior para liberar este conteúdo.");
       navigate({ to: "/" });
     }
   }, [accessLocked, loading, navigate]);
