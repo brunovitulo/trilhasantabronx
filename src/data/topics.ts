@@ -830,6 +830,7 @@ export const TOPICS: Topic[] = [
     title: "Fundamentos de Vendas",
     summary: "Abordagem, escuta, oferta e fechamento.",
     accent: "from-emerald-500 to-teal-600",
+    audioUrl: "/audio/audio_guia_fundamentos_de_vendas.mp3",
     subtasks: [
       {
         id: "vendas.video",
