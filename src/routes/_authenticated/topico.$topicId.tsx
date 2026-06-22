@@ -430,15 +430,21 @@ function SubtaskGroupCard({
   void firstPendingIdx;
 
   const GroupIcon = pickGroupIcon(group.title);
+  const isCardLocked = !isAdmin && !previousGroupComplete;
 
   return (
-    <Card className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.06] backdrop-blur-xl shadow-[0_8px_32px_-12px_rgba(0,0,0,0.45)]">
+    <Card
+      className={cn(
+        "overflow-hidden rounded-3xl border border-white/10 bg-white/[0.06] backdrop-blur-xl shadow-[0_8px_32px_-12px_rgba(0,0,0,0.45)]",
+        isCardLocked && "opacity-70",
+      )}
+    >
       <div className="p-4 sm:p-5 flex items-start gap-3">
         <div
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/[0.08] border border-white/10"
-          style={{ color: "#A78BFA" }}
+          style={{ color: isCardLocked ? "#94a3b8" : "#A78BFA" }}
         >
-          <GroupIcon className="h-5 w-5" />
+          {isCardLocked ? <Lock className="h-5 w-5" /> : <GroupIcon className="h-5 w-5" />}
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="text-[15px] sm:text-base font-medium text-foreground leading-tight">
@@ -458,7 +464,9 @@ function SubtaskGroupCard({
           </div>
         </div>
         <div className="mt-0.5 shrink-0">
-          {allDone ? (
+          {isCardLocked ? (
+            <Lock className="h-6 w-6 text-white/40" />
+          ) : allDone ? (
             <CheckCircle2 className="h-6 w-6 text-[var(--success)]" />
           ) : (
             <Circle className="h-6 w-6 text-white/25" />
@@ -466,7 +474,17 @@ function SubtaskGroupCard({
         </div>
       </div>
 
+      {isCardLocked && (
+        <div className="mx-4 sm:mx-5 mb-3 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 flex items-center gap-2">
+          <Lock className="h-3.5 w-3.5 shrink-0 text-white/50" />
+          <p className="text-[12px] text-muted-foreground leading-snug">
+            Conclua o tópico anterior para liberar esta etapa.
+          </p>
+        </div>
+      )}
+
       <div className="border-t border-white/5 divide-y divide-white/5">
+
         {group.items.map((entry, idx) => {
           const sub = entry.subtask;
           const { state, passed } = itemStates[idx];
