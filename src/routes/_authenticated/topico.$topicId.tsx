@@ -2037,3 +2037,75 @@ function OpenEvaluationSubtask({
     </div>
   );
 }
+
+function ProductLinksSubtask({
+  subtask,
+  completed,
+  onComplete,
+  onUncheck,
+}: {
+  subtask: Extract<Subtask, { kind: "product_links" }>;
+  completed: boolean;
+  onComplete: () => void;
+  onUncheck: () => void;
+}) {
+  const [confirmed, setConfirmed] = useState(completed);
+  useEffect(() => setConfirmed(completed), [completed]);
+
+  return (
+    <div className="space-y-3">
+      <p className="text-xs text-foreground/80">
+        Abra cada link em uma aba nova e observe nome, imagem, descrição e preço atualizado.
+        Esses são os produtos reais desta categoria no site da loja.
+      </p>
+      <div className="grid gap-2">
+        {subtask.links.map((l, i) => (
+          <a
+            key={i}
+            href={l.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-sm hover:bg-white/[0.07] transition-colors"
+          >
+            <Globe className="h-4 w-4 shrink-0 mt-0.5" style={{ color: "#5eead4" }} />
+            <div className="min-w-0 flex-1">
+              <p className="font-medium text-foreground leading-snug">{l.label}</p>
+              <p className="text-[11px] text-muted-foreground break-all mt-0.5">{l.url}</p>
+            </div>
+          </a>
+        ))}
+        {subtask.links.length === 0 && (
+          <p className="text-xs text-muted-foreground">Nenhum link cadastrado para esta categoria.</p>
+        )}
+      </div>
+      <div className="flex items-start gap-2 rounded-2xl border border-border/60 bg-muted/40 p-3">
+        <Checkbox
+          id={`${subtask.id}-confirm`}
+          checked={confirmed}
+          disabled={completed}
+          onCheckedChange={(v) => setConfirmed(!!v)}
+        />
+        <Label htmlFor={`${subtask.id}-confirm`} className="text-sm font-normal cursor-pointer leading-snug">
+          {subtask.confirmLabel}
+        </Label>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {completed ? (
+          <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>
+            Desmarcar
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25"
+            disabled={!confirmed}
+            onClick={onComplete}
+          >
+            Concluir passo
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
