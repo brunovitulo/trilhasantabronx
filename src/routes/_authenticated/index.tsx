@@ -94,7 +94,7 @@ function HomePage() {
     };
   }, [user.id]);
 
-  const statuses = computeTopicStatuses(TOPICS, rows);
+  const statuses = computeTopicStatuses(TOPICS, rows, { isAdmin });
   const totalDone = Object.values(statuses).filter((s) => s === "completed").length;
   const overallPercent = Math.round((totalDone / TOPICS.length) * 100);
 
