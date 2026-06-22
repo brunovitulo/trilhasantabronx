@@ -12,8 +12,8 @@ import { findTopic, type Subtask, type Topic, PASSING_SCORE } from "@/data/topic
 import { computeTopicStatuses, getSubtaskState, isTopicComplete, type ProgressRow } from "@/lib/progress";
 import { TOPICS } from "@/data/topics";
 import { useServerFn } from "@tanstack/react-start";
-import { scheduleReviewsForModule } from "@/lib/reviews.functions";
-import { MODULE_REVIEW } from "@/lib/reviews";
+import { scheduleReviewsForModule, scheduleExtraReview } from "@/lib/reviews.functions";
+import { MODULE_REVIEW, inferQuestionMeta } from "@/lib/reviews";
 import { AppHeader } from "@/components/AppHeader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
