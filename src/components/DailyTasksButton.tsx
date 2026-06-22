@@ -8,12 +8,6 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
 import apostilaResponsabilidadeHtml from "@/content/responsabilidade/apostila.html?raw";
 import checklistOrganizacaoHtml from "@/content/organizacao/checklist.html?raw";
 
