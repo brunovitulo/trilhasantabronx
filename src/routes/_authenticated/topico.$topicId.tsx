@@ -505,13 +505,13 @@ function SubtaskGroupCard({
                     fontWeight: 500,
                     padding: "2px 9px",
                     borderRadius: "20px",
-                    background: "rgba(220, 218, 255, 0.18)",
-                    border: "0.5px solid rgba(220, 218, 255, 0.5)",
-                    color: "rgba(220, 218, 255, 1)",
+                    background: "rgba(20, 184, 166, 0.18)",
+                    border: "0.5px solid rgba(20, 184, 166, 0.6)",
+                    color: "#5eead4",
                     opacity: passed ? 0.5 : 1,
                   }}
                 >
-                  passo {idx + 1}
+                  passo {startIndex + idx + 1}
                 </span>
                 <ChevronDown
                   className={cn(
