@@ -1,8 +1,7 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, Loader2, AlertCircle, MapPin, RotateCcw, FileText, KeyRound, Download } from "lucide-react";
-import { exportProjectSnapshot } from "@/lib/exportProject.functions";
-import { useServerFn } from "@tanstack/react-start";
+import { generateProjectSnapshotForChatGPT } from "@/lib/projectSnapshot";
 import { approvePermission, rejectPermission } from "@/lib/examPermission";
 import { supabase } from "@/integrations/supabase/client";
 import { AppHeader } from "@/components/AppHeader";
@@ -205,19 +204,28 @@ function AdminPage() {
 }
 
 function ExportChatButton() {
-  const exportFn = useServerFn(exportProjectSnapshot);
   const [loading, setLoading] = useState(false);
 
   async function handleExport() {
     setLoading(true);
     try {
-      const result = await exportFn();
+      // pequeno yield pra UI atualizar o spinner antes do trabalho pesado
+      await new Promise((r) => setTimeout(r, 10));
+      const result = generateProjectSnapshotForChatGPT();
+      if (result.fileCount === 0) {
+        toast.error("Não foi possível gerar o snapshot", {
+          description: "Nenhum arquivo foi encontrado para exportação.",
+        });
+        return;
+      }
       const blob = new Blob([result.markdown], { type: "text/markdown;charset=utf-8" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      const stamp = new Date().toISOString().slice(0, 10);
+      const d = new Date();
+      const pad = (n: number) => String(n).padStart(2, "0");
+      const stamp = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}-${pad(d.getHours())}-${pad(d.getMinutes())}`;
       a.href = url;
-      a.download = `projeto-santabronx-${stamp}.md`;
+      a.download = `projeto-santabronx-snapshot-${stamp}.md`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -235,20 +243,24 @@ function ExportChatButton() {
   }
 
   return (
-    <Button
-      type="button"
-      variant="outline"
-      onClick={handleExport}
-      disabled={loading}
-      className="rounded-full border-white/15 bg-white/[0.06] hover:bg-white/[0.1]"
-    >
-      {loading ? (
-        <Loader2 className="h-4 w-4 animate-spin" />
-      ) : (
-        <Download className="h-4 w-4" />
-      )}
-      Baixar snapshot pro ChatGPT
-    </Button>
+    <div className="rounded-2xl border border-white/10 bg-white/[0.06] backdrop-blur-xl p-3 max-w-xs">
+      <Button
+        type="button"
+        onClick={handleExport}
+        disabled={loading}
+        className="w-full rounded-full bg-[var(--success)] hover:bg-[var(--success)]/90 text-[oklch(0.18_0.02_180)] font-semibold gap-2"
+      >
+        {loading ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <Download className="h-4 w-4" />
+        )}
+        Baixar snapshot para ChatGPT
+      </Button>
+      <p className="text-[11px] text-muted-foreground mt-2 leading-snug">
+        Gera um arquivo atualizado com estrutura, configurações, módulos, provas, tarefas, conteúdos e lógica principal do app.
+      </p>
+    </div>
   );
 }
 
