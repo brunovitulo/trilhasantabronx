@@ -112,7 +112,7 @@ function HomePage() {
           <div className="mt-4 flex items-center gap-3">
             <Progress
               value={overallPercent}
-              className="h-2 bg-white/10 [&>div]:bg-[#14b8a6]"
+              className="h-2 bg-white/10 [&>div]:!bg-[#14b8a6]"
             />
             <span className="text-xs text-muted-foreground whitespace-nowrap">
               {totalDone}/{TOPICS.length} concluídos
