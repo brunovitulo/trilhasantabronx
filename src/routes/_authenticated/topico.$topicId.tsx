@@ -370,6 +370,7 @@ function SubtaskGroupCard({
   userId,
   isAdmin,
   startIndex = 0,
+  previousGroupComplete = true,
   onComplete,
   onUncheck,
 }: {
@@ -379,6 +380,7 @@ function SubtaskGroupCard({
   userId: string;
   isAdmin: boolean;
   startIndex?: number;
+  previousGroupComplete?: boolean;
   onComplete: (subtask: Subtask, score?: number) => void;
   onUncheck: (subtaskId: string) => void;
 }) {
