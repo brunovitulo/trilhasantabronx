@@ -9,8 +9,11 @@ import {
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { findTopic, type Subtask, type Topic, PASSING_SCORE } from "@/data/topics";
-import { computeTopicStatuses, getSubtaskState, type ProgressRow } from "@/lib/progress";
+import { computeTopicStatuses, getSubtaskState, isTopicComplete, type ProgressRow } from "@/lib/progress";
 import { TOPICS } from "@/data/topics";
+import { useServerFn } from "@tanstack/react-start";
+import { scheduleReviewsForModule } from "@/lib/reviews.functions";
+import { MODULE_REVIEW } from "@/lib/reviews";
 import { AppHeader } from "@/components/AppHeader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -141,6 +144,8 @@ function TopicPage() {
     }
   }, [accessLocked, loading, navigate]);
 
+  const scheduleReviews = useServerFn(scheduleReviewsForModule);
+
   async function markCompleted(subtask: Subtask, score?: number) {
     const payload = {
       user_id: user.id,
@@ -156,11 +161,19 @@ function TopicPage() {
       toast.error("Não consegui salvar", { description: error.message });
       return;
     }
-    setRows((prev) => {
-      const others = prev.filter((r) => r.subtask_id !== subtask.id);
+    const nextRows = (() => {
+      const others = rows.filter((r) => r.subtask_id !== subtask.id);
       return [...others, { subtask_id: subtask.id, completed: true, score: score ?? null }];
-    });
+    })();
+    setRows(nextRows);
     toast.success("Salvo!");
+
+    // Gatilho: se o módulo ficou completo agora, agenda revisões espaçadas.
+    if (topic && MODULE_REVIEW[topic.id] && isTopicComplete(topic, nextRows)) {
+      scheduleReviews({ data: { moduleId: topic.id } }).catch((err) => {
+        console.error("scheduleReviews failed", err);
+      });
+    }
   }
 
   async function unmark(subtaskId: string) {
