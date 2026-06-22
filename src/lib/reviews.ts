@@ -179,6 +179,319 @@ export type ReviewQuestion = QuizQuestion & {
   wrongAnswerExplanation?: string;
 };
 
+// ---------------------------------------------------------------------------
+// Inferência automática de tema / tags / crítica / dicas a partir do texto.
+// Roda sobre as perguntas existentes para não exigir anotação manual de
+// 200+ questões. Pode ser sobrescrita por valores explícitos na própria
+// QuizQuestion (theme/tags/isCritical/...) quando vierem definidos.
+// ---------------------------------------------------------------------------
+type ThemeRule = {
+  theme: string;
+  tags: string[];
+  keywords: RegExp;
+  critical?: boolean;
+  memoryTip?: string;
+  wrongAnswerExplanation?: string;
+};
+
+const RULES: Record<string, ThemeRule[]> = {
+  produtos: [
+    {
+      theme: "Capa peniana",
+      tags: ["capa peniana", "promessa indevida"],
+      keywords: /capa\s+peniana|capinha\s+peniana/i,
+      critical: true,
+      memoryTip:
+        "Capa peniana é acessório de estímulo. NUNCA substitui camisinha — não protege contra gravidez nem ISTs.",
+      wrongAnswerExplanation:
+        "Capa peniana adiciona volume ou textura, mas não tem função contraceptiva nem protetora. Quando o cliente quer proteção, a orientação é preservativo.",
+    },
+    {
+      theme: "Perfume com feromônio",
+      tags: ["perfume com feromônio", "promessa indevida"],
+      keywords: /feromôn|feromon|perfume/i,
+      memoryTip:
+        "Feromônio ajuda na presença e autoconfiança. Não garante desejo automático — evite promessa milagrosa.",
+      wrongAnswerExplanation:
+        "A venda correta é sobre atração e presença, sem prometer efeito automático. Não é excitante e não se aplica em região íntima.",
+    },
+    {
+      theme: "Anestésico",
+      tags: ["anestésico", "promessa indevida"],
+      keywords: /anest[eé]sico|dessensibiliz/i,
+      critical: true,
+      memoryTip:
+        "Anestésico é uso pontual e específico. Não substitui lubrificante nem deve mascarar dor recorrente.",
+      wrongAnswerExplanation:
+        "Anestésico reduz sensibilidade. Indicar para 'aguentar dor' é errado — dor pede lubrificação adequada e cuidado, não anestesia.",
+    },
+    {
+      theme: "Retardante",
+      tags: ["retardante"],
+      keywords: /retardante/i,
+    },
+    {
+      theme: "Lubrificante",
+      tags: ["lubrificante"],
+      keywords: /lubrificante/i,
+      memoryTip:
+        "Lubrificante base água é o mais versátil. Silicone dura mais mas não usa com brinquedo de silicone.",
+    },
+    {
+      theme: "Excitante",
+      tags: ["excitante"],
+      keywords: /excitante|estimulante\s+sexual/i,
+      memoryTip:
+        "Excitante íntimo aumenta sensibilidade da região, mas não funciona igual para todo mundo.",
+    },
+    {
+      theme: "Adstringente",
+      tags: ["adstringente"],
+      keywords: /adstringente/i,
+    },
+    {
+      theme: "Plug anal",
+      tags: ["plug anal"],
+      keywords: /plug\s+anal|plug/i,
+      memoryTip:
+        "Plug anal precisa de lubrificante base água em abundância e progressão de tamanho.",
+    },
+    {
+      theme: "Anel peniano",
+      tags: ["anel peniano"],
+      keywords: /anel\s+peniano/i,
+    },
+    {
+      theme: "Vibrador rabbit",
+      tags: ["vibrador", "rabbit"],
+      keywords: /rabbit/i,
+    },
+    {
+      theme: "Sugador de clitóris",
+      tags: ["vibrador", "sugador"],
+      keywords: /sugador|cl[ií]toris/i,
+    },
+    {
+      theme: "Varinha mágica",
+      tags: ["vibrador", "varinha"],
+      keywords: /varinha/i,
+    },
+    {
+      theme: "Mini vibrador",
+      tags: ["vibrador", "mini vibrador"],
+      keywords: /mini\s+vibrador/i,
+    },
+    {
+      theme: "Vibrador de casal",
+      tags: ["vibrador", "casal"],
+      keywords: /vibrador\s+de\s+casal/i,
+    },
+    {
+      theme: "Vibrador de calcinha",
+      tags: ["vibrador", "calcinha"],
+      keywords: /vibrador\s+de\s+calcinha/i,
+    },
+    {
+      theme: "Vibrador de aplicativo",
+      tags: ["vibrador", "aplicativo"],
+      keywords: /aplicativo/i,
+    },
+    {
+      theme: "Masturbador masculino",
+      tags: ["masturbador masculino"],
+      keywords: /masturbador/i,
+    },
+    {
+      theme: "Pênis realístico",
+      tags: ["pênis realístico", "prótese"],
+      keywords: /real[ií]stico|pr[oó]tese/i,
+    },
+    {
+      theme: "Máquina de sexo",
+      tags: ["máquina de sexo"],
+      keywords: /m[aá]quina\s+de\s+sexo/i,
+    },
+    {
+      theme: "Sado",
+      tags: ["sado"],
+      keywords: /sado|algema|chicote|venda/i,
+    },
+    {
+      theme: "Roupas",
+      tags: ["roupas"],
+      keywords: /lingerie|roupa/i,
+    },
+  ],
+  objecoes: [
+    {
+      theme: "Entrega discreta",
+      tags: ["entrega discreta", "embalagem"],
+      keywords: /discreta|discri[çc][aã]o|embalagem|lacrada/i,
+      memoryTip:
+        "Embalagem lacrada, sem nome da loja, motoboy não sabe o conteúdo. Sempre reforce isso.",
+    },
+    {
+      theme: "Nome na fatura",
+      tags: ["nome na fatura"],
+      keywords: /fatura|cart[aã]o|cobran[çc]a/i,
+      memoryTip:
+        "Explique exatamente como aparece na fatura antes de o cliente perguntar de novo.",
+    },
+    {
+      theme: "Vergonha do cliente",
+      tags: ["vergonha", "atendimento sem julgamento"],
+      keywords: /vergonha|julgar|julgament/i,
+      memoryTip: "Linguagem neutra, sem julgar. O cliente já está vulnerável.",
+    },
+    {
+      theme: "Segurança",
+      tags: ["segurança", "sigilo"],
+      keywords: /seguran[çc]a|sigilo/i,
+    },
+  ],
+  dores: [
+    {
+      theme: "Disfunção erétil",
+      tags: ["disfunção erétil", "promessa indevida"],
+      keywords: /disfun[çc][aã]o|er[eé]til|impot[eê]ncia/i,
+      critical: true,
+      memoryTip:
+        "Disfunção erétil pede acompanhamento profissional. Produto ajuda, não cura.",
+      wrongAnswerExplanation:
+        "Indicar produto como solução de disfunção é promessa indevida. O correto é dar apoio e sugerir buscar profissional.",
+    },
+    {
+      theme: "Ejaculação precoce",
+      tags: ["ejaculação precoce", "promessa indevida"],
+      keywords: /ejacula[çc][aã]o|precoce/i,
+      critical: true,
+      memoryTip:
+        "Ejaculação precoce tem mil causas. Retardante ajuda pontualmente, não resolve sozinho.",
+    },
+    {
+      theme: "Libido baixa",
+      tags: ["libido"],
+      keywords: /libido|desejo/i,
+    },
+    {
+      theme: "Dor na relação",
+      tags: ["dor vaginal", "dor anal", "lubrificante"],
+      keywords: /dor\s+(vaginal|anal|na\s+rela)|dor[ií]a/i,
+      memoryTip:
+        "Dor pede lubrificação adequada e cuidado, NÃO anestésico solto.",
+    },
+    {
+      theme: "Orgasmo",
+      tags: ["orgasmo"],
+      keywords: /orgasmo|cl[ií]max/i,
+    },
+  ],
+  embalar: [
+    {
+      theme: "Marcar enviado",
+      tags: ["marcar enviado", "status do pedido"],
+      keywords: /marcar\s+(como\s+)?enviad|status.*envi/i,
+      critical: true,
+      memoryTip:
+        "Só marca enviado quando o motoboy realmente sai com o pedido. Marcar antes é mentir para o cliente.",
+    },
+    {
+      theme: "Endereço",
+      tags: ["endereço", "Google Maps"],
+      keywords: /endere[çc]o|mapa|google\s+maps/i,
+      critical: true,
+      memoryTip:
+        "Valide o endereço no mapa ANTES de chamar a corrida. Endereço errado = pedido perdido.",
+    },
+    {
+      theme: "Teste de eletrônico",
+      tags: ["eletrônico", "conferência"],
+      keywords: /eletr[oô]nico|testar|teste|pilha|bateria/i,
+      critical: true,
+      memoryTip: "Todo eletrônico é testado antes de embalar. Sem exceção.",
+    },
+    {
+      theme: "Motoboy",
+      tags: ["motoboy", "envio"],
+      keywords: /motoboy|99|corrida/i,
+    },
+    {
+      theme: "Embalagem",
+      tags: ["embalagem", "discrição"],
+      keywords: /embalar|embalagem|lacrar|caixa/i,
+    },
+  ],
+  responsabilidade: [
+    {
+      theme: "Status do pedido",
+      tags: ["status do pedido", "marcar enviado"],
+      keywords: /status|marcar\s+enviad/i,
+      critical: true,
+    },
+    {
+      theme: "Endereço",
+      tags: ["endereço"],
+      keywords: /endere[çc]o|valid/i,
+    },
+    {
+      theme: "App de pedidos",
+      tags: ["fluxo operacional"],
+      keywords: /app|aplicativo|plataforma/i,
+    },
+  ],
+  vendas: [
+    {
+      theme: "Perguntar antes de indicar",
+      tags: ["perguntar antes de indicar", "consultoria"],
+      keywords: /perguntar|necessidade|entender/i,
+      critical: true,
+      memoryTip: "Antes de indicar, pergunte. Nunca venda no automático.",
+    },
+    {
+      theme: "Quebra de objeção",
+      tags: ["objeção"],
+      keywords: /obje[çc][aã]o|caro|pre[çc]o/i,
+    },
+    {
+      theme: "Fechamento",
+      tags: ["fechamento"],
+      keywords: /fechament|finaliz|fechar\s+venda/i,
+    },
+    {
+      theme: "Simpatia e agilidade",
+      tags: ["simpatia", "agilidade"],
+      keywords: /simpatia|agilidade|atendiment/i,
+    },
+  ],
+};
+
+function inferQuestionMeta(moduleId: string, q: QuizQuestion): Partial<ReviewQuestion> {
+  if (q.theme || q.tags || q.isCritical) {
+    return {
+      theme: q.theme,
+      tags: q.tags,
+      isCritical: q.isCritical,
+      memoryTip: q.memoryTip,
+      wrongAnswerExplanation: q.wrongAnswerExplanation,
+    };
+  }
+  const rules = RULES[moduleId];
+  if (!rules) return {};
+  const haystack = [q.question, ...q.options].join(" ");
+  for (const rule of rules) {
+    if (rule.keywords.test(haystack)) {
+      return {
+        theme: rule.theme,
+        tags: rule.tags,
+        isCritical: rule.critical,
+        memoryTip: rule.memoryTip,
+        wrongAnswerExplanation: rule.wrongAnswerExplanation,
+      };
+    }
+  }
+  return {};
+}
+
 // Coleta perguntas disponíveis em um módulo a partir dos subtasks practice/evaluation.
 export function collectModuleQuestions(moduleId: string): ReviewQuestion[] {
   const topic: Topic | undefined = TOPICS.find((t) => t.id === moduleId);
@@ -187,8 +500,10 @@ export function collectModuleQuestions(moduleId: string): ReviewQuestion[] {
   for (const s of topic.subtasks) {
     if (s.kind !== "practice" && s.kind !== "evaluation") continue;
     s.questions.forEach((q, i) => {
+      const meta = inferQuestionMeta(moduleId, q);
       out.push({
         ...q,
+        ...meta,
         questionId: `${s.id}#${i}`,
         moduleId,
       });
