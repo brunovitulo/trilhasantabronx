@@ -1,6 +1,8 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, Loader2, AlertCircle, MapPin, RotateCcw, FileText, KeyRound } from "lucide-react";
+import { ChevronLeft, Loader2, AlertCircle, MapPin, RotateCcw, FileText, KeyRound, Download } from "lucide-react";
+import { exportProjectSnapshot } from "@/lib/exportProject.functions";
+import { useServerFn } from "@tanstack/react-start";
 import { approvePermission, rejectPermission } from "@/lib/examPermission";
 import { supabase } from "@/integrations/supabase/client";
 import { AppHeader } from "@/components/AppHeader";
@@ -150,10 +152,15 @@ function AdminPage() {
         >
           <ChevronLeft className="h-4 w-4" /> Voltar à trilha
         </Link>
-        <h1 className="text-2xl font-bold tracking-tight">Painel da gestora</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          Acompanhe o avanço de cada atendente e corrija as provas dissertativas pendentes diretamente no card delas.
-        </p>
+        <div className="flex items-start justify-between gap-3 flex-wrap">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Painel da gestora</h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              Acompanhe o avanço de cada atendente e corrija as provas dissertativas pendentes diretamente no card delas.
+            </p>
+          </div>
+          <ExportChatButton />
+        </div>
 
         {loading ? (
           <div className="flex justify-center py-10">
