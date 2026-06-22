@@ -118,6 +118,14 @@ export function AppHeader({ isAdmin }: { isAdmin: boolean }) {
           userId={userId}
         />
       )}
+      {isAdmin && userId && (
+        <CorrectionDialog
+          submission={correction}
+          reviewerId={userId}
+          onOpenChange={(open) => !open && setCorrection(null)}
+          onReviewed={() => setCorrection(null)}
+        />
+      )}
     </header>
   );
 }
