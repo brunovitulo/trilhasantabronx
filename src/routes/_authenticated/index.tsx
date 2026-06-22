@@ -197,13 +197,32 @@ function HomePage() {
                         )}
                       </div>
                     </div>
+                    {locked && !profile?.blocked && status === "locked" && (
+                      <div className="mt-3 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 flex items-center gap-2">
+                        <Lock className="h-3.5 w-3.5 shrink-0 text-white/50" />
+                        <p className="text-[12px] text-muted-foreground leading-snug">
+                          Conclua o tópico anterior para liberar este módulo.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </Card>
               );
               return (
                 <li key={topic.id}>
                   {locked || isEmpty ? (
-                    <div aria-disabled className="cursor-not-allowed">{card}</div>
+                    <button
+                      type="button"
+                      aria-disabled
+                      onClick={() => {
+                        if (status === "locked") {
+                          toast.info("Conclua o tópico anterior para liberar este módulo.");
+                        }
+                      }}
+                      className="block w-full text-left cursor-not-allowed"
+                    >
+                      {card}
+                    </button>
                   ) : (
                     <Link
                       to="/topico/$topicId"
