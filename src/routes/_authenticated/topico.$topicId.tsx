@@ -47,22 +47,14 @@ import checklistObjecoesHtml from "@/content/objecoes/checklist.html?raw";
 import apostilaDoresHtml from "@/content/dores/apostila.html?raw";
 import checklistDoresHtml from "@/content/dores/checklist.html?raw";
 
-type InlineHtmlSource =
-  | "apostila"
-  | "checklist"
-  | "organizacao"
-  | "responsabilidade"
-  | "responsabilidade_checklist"
-  | "app_apostila"
-  | "app_checklist"
-  | "vendas_apostila"
-  | "vendas_checklist"
-  | "objecoes_apostila"
-  | "objecoes_checklist"
-  | "dores_apostila"
-  | "dores_checklist";
+// Apostilas do módulo 7 (Decorar Principais Produtos) — carregadas via glob.
+const PRODUTOS_APOSTILAS = import.meta.glob("@/content/produtos/*.html", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+}) as Record<string, string>;
 
-const INLINE_HTML_SOURCES: Record<InlineHtmlSource, { title: string; html: string }> = {
+const INLINE_HTML_SOURCES: Record<string, { title: string; html: string }> = {
   apostila: { title: "Apostila — Embalar e Despachar Pedidos", html: apostilaEmbalarHtml },
   checklist: { title: "Checklist de embalagem", html: checklistEmbalarHtml },
   organizacao: { title: "Checklist — Organização da loja", html: checklistOrganizacaoHtml },
@@ -77,6 +69,18 @@ const INLINE_HTML_SOURCES: Record<InlineHtmlSource, { title: string; html: strin
   dores_apostila: { title: "Apostila — Principais Dores e Soluções", html: apostilaDoresHtml },
   dores_checklist: { title: "Checklist — Principais Dores e Soluções", html: checklistDoresHtml },
 };
+
+// Auto-register Decorar Principais Produtos apostilas as "produtos_<slug>" sources.
+for (const [path, html] of Object.entries(PRODUTOS_APOSTILAS)) {
+  const m = path.match(/apostila_(.+)\.html$/);
+  if (!m) continue;
+  const slug = m[1].replace(/-/g, "_");
+  const pretty = m[1].replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  INLINE_HTML_SOURCES[`produtos_${slug}`] = {
+    title: `Apostila — ${pretty}`,
+    html,
+  };
+}
 
 
 export const Route = createFileRoute("/_authenticated/topico/$topicId")({
@@ -322,6 +326,7 @@ function pickStepIcon(kind: Subtask["kind"], hasDownload?: boolean) {
     case "evaluation":
     case "open_evaluation": return FilePen;
     case "external_html": return hasDownload ? Download : Globe;
+    case "product_links": return Globe;
     case "credentials": return Lock;
     default: return BookOpen;
   }
@@ -396,7 +401,14 @@ function SubtaskGroupCard({
   return (
     <Card className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.06] backdrop-blur-xl shadow-[0_8px_32px_-12px_rgba(0,0,0,0.45)]">
       <div className="p-4 sm:p-5 flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-primary/30 bg-primary/15 text-primary">
+        <div
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+          style={{
+            background: "rgba(20, 184, 166, 0.18)",
+            border: "1px solid rgba(20, 184, 166, 0.45)",
+            color: "#5eead4",
+          }}
+        >
           <GroupIcon className="h-5 w-5" />
         </div>
         <div className="flex-1 min-w-0">
@@ -476,7 +488,7 @@ function SubtaskGroupCard({
                 </span>
                 <StepIcon
                   className="h-4 w-4 shrink-0"
-                  style={{ color: passed ? undefined : "rgba(220, 218, 255, 1)" }}
+                  style={{ color: passed ? undefined : "#5eead4" }}
                 />
                 <span
                   className={cn(
@@ -616,6 +628,8 @@ function SubtaskContent({
       return <CredentialsSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
     case "multi_checklist":
       return <MultiChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
+    case "product_links":
+      return <ProductLinksSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
     case "open_evaluation":
       return useExamDialog ? (
         <ExamDialogLauncher
@@ -1191,7 +1205,7 @@ function DualInlineHtmlSubtask({
         : null;
 
   function renderBlock(
-    cfg: { source: InlineHtmlSource; openLabel: string; confirmLabel: string; helperText?: string },
+    cfg: { source: string; openLabel: string; confirmLabel: string; helperText?: string },
     key: "first" | "second",
     value: boolean,
     setValue: (v: boolean) => void,
@@ -2027,6 +2041,78 @@ function OpenEvaluationSubtask({
       <Button variant="outline" onClick={submit} disabled={sending} className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25">
         {sending ? "Enviando..." : "Enviar para revisão"}
       </Button>
+    </div>
+  );
+}
+
+function ProductLinksSubtask({
+  subtask,
+  completed,
+  onComplete,
+  onUncheck,
+}: {
+  subtask: Extract<Subtask, { kind: "product_links" }>;
+  completed: boolean;
+  onComplete: () => void;
+  onUncheck: () => void;
+}) {
+  const [confirmed, setConfirmed] = useState(completed);
+  useEffect(() => setConfirmed(completed), [completed]);
+
+  return (
+    <div className="space-y-3">
+      <p className="text-xs text-foreground/80">
+        Abra cada link em uma aba nova e observe nome, imagem, descrição e preço atualizado.
+        Esses são os produtos reais desta categoria no site da loja.
+      </p>
+      <div className="grid gap-2">
+        {subtask.links.map((l, i) => (
+          <a
+            key={i}
+            href={l.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-sm hover:bg-white/[0.07] transition-colors"
+          >
+            <Globe className="h-4 w-4 shrink-0 mt-0.5" style={{ color: "#5eead4" }} />
+            <div className="min-w-0 flex-1">
+              <p className="font-medium text-foreground leading-snug">{l.label}</p>
+              <p className="text-[11px] text-muted-foreground break-all mt-0.5">{l.url}</p>
+            </div>
+          </a>
+        ))}
+        {subtask.links.length === 0 && (
+          <p className="text-xs text-muted-foreground">Nenhum link cadastrado para esta categoria.</p>
+        )}
+      </div>
+      <div className="flex items-start gap-2 rounded-2xl border border-border/60 bg-muted/40 p-3">
+        <Checkbox
+          id={`${subtask.id}-confirm`}
+          checked={confirmed}
+          disabled={completed}
+          onCheckedChange={(v) => setConfirmed(!!v)}
+        />
+        <Label htmlFor={`${subtask.id}-confirm`} className="text-sm font-normal cursor-pointer leading-snug">
+          {subtask.confirmLabel}
+        </Label>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {completed ? (
+          <Button variant="ghost" size="sm" className="rounded-full" onClick={onUncheck}>
+            Desmarcar
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25"
+            disabled={!confirmed}
+            onClick={onComplete}
+          >
+            Concluir passo
+          </Button>
+        )}
+      </div>
     </div>
   );
 }

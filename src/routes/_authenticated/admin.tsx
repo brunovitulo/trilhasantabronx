@@ -4,25 +4,13 @@ import { ChevronLeft, Loader2, AlertCircle, MapPin, RotateCcw, FileText, KeyRoun
 import { approvePermission, rejectPermission } from "@/lib/examPermission";
 import { supabase } from "@/integrations/supabase/client";
 import { AppHeader } from "@/components/AppHeader";
-import { TOPICS, findSubtask, PASSING_SCORE } from "@/data/topics";
+import { TOPICS, findSubtask } from "@/data/topics";
 import { computeTopicStatuses, type ProgressRow } from "@/lib/progress";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { SubmissionHistoryDialog } from "@/components/SubmissionHistoryDialog";
-import {
-  ADMIN_OPEN_CORRECTION_EVENT,
-  type AdminOpenCorrectionDetail,
-} from "@/components/AdminPendingBell";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { CorrectionDialog, type CorrectionTarget } from "@/components/CorrectionDialog";
 import {
   Select,
   SelectContent,
@@ -62,19 +50,6 @@ type PendingSubmission = {
   created_at: string;
 };
 
-type CorrectionTarget = PendingSubmission & {
-  user_id: string;
-  full_name: string | null;
-};
-
-type AnswerRow = {
-  id: string;
-  question_index: number;
-  question_text: string;
-  answer_text: string;
-  is_correct: boolean | null;
-  feedback: string | null;
-};
 
 type PermissionRequest = {
   id: string;
@@ -159,22 +134,9 @@ function AdminPage() {
       .subscribe();
     const onFocus = () => refresh();
     window.addEventListener("focus", onFocus);
-    const onOpenCorrection = (e: Event) => {
-      const detail = (e as CustomEvent<AdminOpenCorrectionDetail>).detail;
-      if (!detail) return;
-      setCorrection({
-        id: detail.submissionId,
-        user_id: detail.userId,
-        subtask_id: detail.subtaskId,
-        created_at: detail.createdAt,
-        full_name: detail.fullName,
-      });
-    };
-    window.addEventListener(ADMIN_OPEN_CORRECTION_EVENT, onOpenCorrection);
     return () => {
       supabase.removeChannel(ch);
       window.removeEventListener("focus", onFocus);
-      window.removeEventListener(ADMIN_OPEN_CORRECTION_EVENT, onOpenCorrection);
     };
   }, []);
 
@@ -435,184 +397,6 @@ function AttendantCard({
   );
 }
 
-function CorrectionDialog({
-  submission,
-  reviewerId,
-  onOpenChange,
-  onReviewed,
-}: {
-  submission: CorrectionTarget | null;
-  reviewerId: string;
-  onOpenChange: (open: boolean) => void;
-  onReviewed: () => void;
-}) {
-  const [answers, setAnswers] = useState<AnswerRow[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [general, setGeneral] = useState("");
-
-  const sub = submission ? findSubtask(submission.subtask_id) : null;
-  const topicTitle = sub?.topic.title ?? "Prova";
-  const subtaskTitle = sub?.subtask.title ?? "Avaliação";
-  const marked = answers.filter((a) => a.is_correct !== null).length;
-
-  useEffect(() => {
-    if (!submission) {
-      setAnswers([]);
-      setGeneral("");
-      return;
-    }
-    (async () => {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from("open_evaluation_answers")
-        .select("id, question_index, question_text, answer_text, is_correct, feedback")
-        .eq("submission_id", submission.id)
-        .order("question_index", { ascending: true });
-      if (error) toast.error("Erro ao carregar a prova", { description: error.message });
-      setAnswers((data ?? []) as AnswerRow[]);
-      setLoading(false);
-    })();
-  }, [submission]);
-
-  async function updateAnswer(id: string, patch: Partial<AnswerRow>) {
-    setAnswers((prev) => prev.map((a) => (a.id === id ? { ...a, ...patch } : a)));
-    const { error } = await supabase.from("open_evaluation_answers").update(patch).eq("id", id);
-    if (error) toast.error("Não consegui salvar a marcação", { description: error.message });
-  }
-
-  async function finalize() {
-    if (!submission) return;
-    if (answers.length === 0 || answers.some((a) => a.is_correct === null)) {
-      toast.error(`Marque certa ou errada em todas as ${answers.length} questões antes de finalizar`);
-      return;
-    }
-    setSaving(true);
-    const correct = answers.filter((a) => a.is_correct === true).length;
-    const score = Math.round((correct / answers.length) * 100);
-    const status = score >= PASSING_SCORE ? "approved" : "rejected";
-    const { error } = await supabase
-      .from("open_evaluation_submissions")
-      .update({
-        status,
-        score,
-        general_feedback: general || null,
-        reviewer_id: reviewerId,
-        reviewed_at: new Date().toISOString(),
-      })
-      .eq("id", submission.id);
-    setSaving(false);
-    if (error) {
-      toast.error("Erro ao finalizar avaliação", { description: error.message });
-      return;
-    }
-    toast.success(status === "approved" ? `Avaliação aprovada (${score}%)` : `Avaliação reprovada (${score}%)`);
-    onReviewed();
-  }
-
-  return (
-    <Dialog open={Boolean(submission)} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[88vh] overflow-y-auto border-white/10 bg-background sm:max-w-3xl">
-        <DialogHeader>
-          <DialogTitle>Corrigir prova</DialogTitle>
-          <DialogDescription>
-            {submission?.full_name ?? "Atendente"} · {topicTitle} · {subtaskTitle}
-          </DialogDescription>
-        </DialogHeader>
-
-        {loading ? (
-          <div className="flex justify-center py-10">
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-          </div>
-        ) : answers.length === 0 ? (
-          <Card className="p-4 text-center text-sm text-muted-foreground">
-            Nenhuma resposta encontrada para esta prova.
-          </Card>
-        ) : (
-          <div className="space-y-4">
-            {answers.map((answer) => (
-              <div key={answer.id} className="rounded-2xl border bg-muted/30 p-4">
-                <p className="text-sm font-semibold">
-                  {answer.question_index + 1}. {answer.question_text}
-                </p>
-                <p className="mt-3 whitespace-pre-wrap rounded-xl bg-background/70 p-3 text-sm leading-relaxed text-foreground/90">
-                  {answer.answer_text}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <Button
-                    type="button"
-                    size="sm"
-                    className={
-                      answer.is_correct === true
-                        ? "rounded-full bg-emerald-600 hover:bg-emerald-700 text-white border-0"
-                        : "rounded-full border border-emerald-500/60 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20"
-                    }
-                    onClick={() => updateAnswer(answer.id, { is_correct: true })}
-                  >
-                    Está certa
-                  </Button>
-                  <Button
-                    type="button"
-                    size="sm"
-                    className={
-                      answer.is_correct === false
-                        ? "rounded-full bg-rose-600 hover:bg-rose-700 text-white border-0"
-                        : "rounded-full border border-rose-500/60 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20"
-                    }
-                    onClick={() => updateAnswer(answer.id, { is_correct: false })}
-                  >
-                    Está errada
-                  </Button>
-                </div>
-                <div className="mt-3">
-                  <Label htmlFor={`answer-feedback-${answer.id}`} className="text-xs">
-                    Feedback desta questão (opcional)
-                  </Label>
-                  <Textarea
-                    id={`answer-feedback-${answer.id}`}
-                    rows={2}
-                    defaultValue={answer.feedback ?? ""}
-                    onBlur={(event) => {
-                      const value = event.target.value || null;
-                      if (value !== (answer.feedback ?? null)) updateAnswer(answer.id, { feedback: value });
-                    }}
-                    className="mt-1 bg-background"
-                  />
-                </div>
-              </div>
-            ))}
-
-            <div>
-              <Label htmlFor="general-feedback" className="text-xs">
-                Feedback geral (opcional)
-              </Label>
-              <Textarea
-                id="general-feedback"
-                rows={3}
-                value={general}
-                onChange={(event) => setGeneral(event.target.value)}
-                className="mt-1 bg-background"
-              />
-            </div>
-
-            <div className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
-              <span className="text-xs text-muted-foreground">
-                {marked} de {answers.length} questões marcadas
-              </span>
-              <Button
-                type="button"
-                onClick={finalize}
-                disabled={saving || answers.length === 0 || answers.some((a) => a.is_correct === null)}
-              >
-                {saving ? "Finalizando..." : "Finalizar avaliação"}
-              </Button>
-            </div>
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
-  );
-}
 
 function ResetProgressBlock({
   attendantId,
