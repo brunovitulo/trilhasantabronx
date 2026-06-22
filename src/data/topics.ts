@@ -166,6 +166,7 @@ export const TOPICS: Topic[] = [
     summary:
       "Conhecer a Santa Bronx: história, organização, produtos e site de pedidos.",
     accent: "from-fuchsia-500 to-purple-600",
+    audioUrl: "/audio/audio_guia_organizacao_da_loja.mp3",
     subtasks: [
       {
         id: "apresentacao.historia.video",
