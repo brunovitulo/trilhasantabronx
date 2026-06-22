@@ -465,7 +465,7 @@ const RULES: Record<string, ThemeRule[]> = {
   ],
 };
 
-function inferQuestionMeta(moduleId: string, q: QuizQuestion): Partial<ReviewQuestion> {
+export function inferQuestionMeta(moduleId: string, q: QuizQuestion): Partial<ReviewQuestion> {
   if (q.theme || q.tags || q.isCritical) {
     return {
       theme: q.theme,
