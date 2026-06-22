@@ -542,8 +542,11 @@ function CorrectionDialog({
                   <Button
                     type="button"
                     size="sm"
-                    variant={answer.is_correct === true ? "default" : "outline"}
-                    className="rounded-full"
+                    className={
+                      answer.is_correct === true
+                        ? "rounded-full bg-emerald-600 hover:bg-emerald-700 text-white border-0"
+                        : "rounded-full border border-emerald-500/60 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20"
+                    }
                     onClick={() => updateAnswer(answer.id, { is_correct: true })}
                   >
                     Está certa
@@ -551,8 +554,11 @@ function CorrectionDialog({
                   <Button
                     type="button"
                     size="sm"
-                    variant={answer.is_correct === false ? "destructive" : "outline"}
-                    className="rounded-full"
+                    className={
+                      answer.is_correct === false
+                        ? "rounded-full bg-rose-600 hover:bg-rose-700 text-white border-0"
+                        : "rounded-full border border-rose-500/60 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20"
+                    }
                     onClick={() => updateAnswer(answer.id, { is_correct: false })}
                   >
                     Está errada
