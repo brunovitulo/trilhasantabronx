@@ -204,6 +204,54 @@ function AdminPage() {
   );
 }
 
+function ExportChatButton() {
+  const exportFn = useServerFn(exportProjectSnapshot);
+  const [loading, setLoading] = useState(false);
+
+  async function handleExport() {
+    setLoading(true);
+    try {
+      const result = await exportFn();
+      const blob = new Blob([result.markdown], { type: "text/markdown;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const stamp = new Date().toISOString().slice(0, 10);
+      a.href = url;
+      a.download = `projeto-santabronx-${stamp}.md`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      toast.success("Snapshot baixado", {
+        description: `${result.fileCount} arquivos · ${result.sizeKb} KB`,
+      });
+    } catch (err) {
+      toast.error("Não consegui exportar", {
+        description: err instanceof Error ? err.message : "Tente novamente",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      onClick={handleExport}
+      disabled={loading}
+      className="rounded-full border-white/15 bg-white/[0.06] hover:bg-white/[0.1]"
+    >
+      {loading ? (
+        <Loader2 className="h-4 w-4 animate-spin" />
+      ) : (
+        <Download className="h-4 w-4" />
+      )}
+      Baixar snapshot pro ChatGPT
+    </Button>
+  );
+}
+
 function initials(name: string | null) {
   if (!name) return "?";
   const parts = name.trim().split(/\s+/);
