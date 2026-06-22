@@ -472,9 +472,10 @@ function SubtaskGroupCard({
           const { state, passed } = itemStates[idx];
           const inFinalGate = FINAL_GATE_IDS.has(sub.id);
           const gateLocked = inFinalGate && !gateUnlocked && !isAdmin;
+          const cardLocked = !isAdmin && !previousGroupComplete;
           const sequentialLocked =
             !isAdmin && idx > 0 && !itemStates[idx - 1].passed;
-          const isLocked = gateLocked || sequentialLocked;
+          const isLocked = gateLocked || cardLocked || sequentialLocked;
           const examNeedsVideo =
             sub.id === EXAM_ID && gateUnlocked && !gateVideoCompleted && !isAdmin;
           const useExamDialog = sub.id === EXAM_ID;
