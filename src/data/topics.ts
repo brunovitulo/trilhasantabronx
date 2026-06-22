@@ -1272,6 +1272,7 @@ export const TOPICS: Topic[] = [
     summary:
       "Aprender a identificar as principais dores dos clientes e indicar as soluções/produtos corretos.",
     accent: "from-violet-500 to-purple-700",
+    audioUrl: "/audio/audio_guia_principais_dores_e_solucoes.mp3",
     subtasks: [
       {
         id: "dores.video",
