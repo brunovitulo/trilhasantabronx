@@ -166,6 +166,7 @@ export const TOPICS: Topic[] = [
     summary:
       "Conhecer a Santa Bronx: história, organização, produtos e site de pedidos.",
     accent: "from-fuchsia-500 to-purple-600",
+    audioUrl: "/audio/audio_guia_organizacao_da_loja.mp3",
     subtasks: [
       {
         id: "apresentacao.historia.video",
@@ -299,6 +300,7 @@ export const TOPICS: Topic[] = [
     summary:
       "Aprender como embalar, chamar o 99 Entregas e evitar os principais erros.",
     accent: "from-rose-500 to-pink-600",
+    audioUrl: "/audio/audio_guia_embalar_pedidos.mp3",
     subtasks: [
       {
         id: "embalar.intro.video",
@@ -629,6 +631,7 @@ export const TOPICS: Topic[] = [
     summary:
       "Alinhar expectativas (atrasos, erros) e conhecer o app de pedidos do dia a dia.",
     accent: "from-amber-500 to-orange-600",
+    audioUrl: "/audio/audio_guia_primeira_responsabilidade.mp3",
     subtasks: [
       {
         id: "responsabilidade.app.video",
@@ -827,6 +830,7 @@ export const TOPICS: Topic[] = [
     title: "Fundamentos de Vendas",
     summary: "Abordagem, escuta, oferta e fechamento.",
     accent: "from-emerald-500 to-teal-600",
+    audioUrl: "/audio/audio_guia_fundamentos_de_vendas.mp3",
     subtasks: [
       {
         id: "vendas.video",
@@ -1055,6 +1059,7 @@ export const TOPICS: Topic[] = [
     summary:
       "Aprender as principais objeções do nicho e como respondê-las.",
     accent: "from-sky-500 to-blue-600",
+    audioUrl: "/audio/audio_guia_principais_objecoes.mp3",
     subtasks: [
       {
         id: "objecoes.video",
@@ -1267,6 +1272,7 @@ export const TOPICS: Topic[] = [
     summary:
       "Aprender a identificar as principais dores dos clientes e indicar as soluções/produtos corretos.",
     accent: "from-violet-500 to-purple-700",
+    audioUrl: "/audio/audio_guia_principais_dores_e_solucoes.mp3",
     subtasks: [
       {
         id: "dores.video",
@@ -1370,6 +1376,7 @@ export const TOPICS: Topic[] = [
     title: "Decorar Principais Produtos",
     summary: "Estudar e decorar cada categoria de produto: função, indicação, fala pronta, cuidados e produtos reais no site.",
     accent: "from-indigo-500 to-blue-700",
+    audioUrl: "/audio/audio_guia_decorar_principais_produtos.mp3",
     subtasks: [
       {
         id: "produtos.perfumes_feromonios.video",

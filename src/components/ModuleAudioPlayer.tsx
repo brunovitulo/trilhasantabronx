@@ -14,6 +14,7 @@ export function ModuleAudioPlayer({ src }: { src: string }) {
   const [playing, setPlaying] = useState(false);
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     const a = audioRef.current;
@@ -21,15 +22,21 @@ export function ModuleAudioPlayer({ src }: { src: string }) {
     const onTime = () => setCurrent(a.currentTime);
     const onMeta = () => setDuration(a.duration);
     const onEnd = () => setPlaying(false);
+    const onErr = () => setFailed(true);
     a.addEventListener("timeupdate", onTime);
     a.addEventListener("loadedmetadata", onMeta);
     a.addEventListener("ended", onEnd);
+    a.addEventListener("error", onErr);
     return () => {
       a.removeEventListener("timeupdate", onTime);
       a.removeEventListener("loadedmetadata", onMeta);
       a.removeEventListener("ended", onEnd);
+      a.removeEventListener("error", onErr);
     };
   }, []);
+
+  if (failed) return null;
+
 
   function toggle() {
     const a = audioRef.current;
