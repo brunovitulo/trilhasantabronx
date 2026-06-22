@@ -631,6 +631,7 @@ export const TOPICS: Topic[] = [
     summary:
       "Alinhar expectativas (atrasos, erros) e conhecer o app de pedidos do dia a dia.",
     accent: "from-amber-500 to-orange-600",
+    audioUrl: "/audio/audio_guia_primeira_responsabilidade.mp3",
     subtasks: [
       {
         id: "responsabilidade.app.video",
