@@ -1,6 +1,8 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, Loader2, AlertCircle, MapPin, RotateCcw, FileText, KeyRound } from "lucide-react";
+import { ChevronLeft, Loader2, AlertCircle, MapPin, RotateCcw, FileText, KeyRound, Download } from "lucide-react";
+import { exportProjectSnapshot } from "@/lib/exportProject.functions";
+import { useServerFn } from "@tanstack/react-start";
 import { approvePermission, rejectPermission } from "@/lib/examPermission";
 import { supabase } from "@/integrations/supabase/client";
 import { AppHeader } from "@/components/AppHeader";
@@ -150,10 +152,15 @@ function AdminPage() {
         >
           <ChevronLeft className="h-4 w-4" /> Voltar à trilha
         </Link>
-        <h1 className="text-2xl font-bold tracking-tight">Painel da gestora</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          Acompanhe o avanço de cada atendente e corrija as provas dissertativas pendentes diretamente no card delas.
-        </p>
+        <div className="flex items-start justify-between gap-3 flex-wrap">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Painel da gestora</h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              Acompanhe o avanço de cada atendente e corrija as provas dissertativas pendentes diretamente no card delas.
+            </p>
+          </div>
+          <ExportChatButton />
+        </div>
 
         {loading ? (
           <div className="flex justify-center py-10">
@@ -194,6 +201,54 @@ function AdminPage() {
         />
       </main>
     </div>
+  );
+}
+
+function ExportChatButton() {
+  const exportFn = useServerFn(exportProjectSnapshot);
+  const [loading, setLoading] = useState(false);
+
+  async function handleExport() {
+    setLoading(true);
+    try {
+      const result = await exportFn();
+      const blob = new Blob([result.markdown], { type: "text/markdown;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const stamp = new Date().toISOString().slice(0, 10);
+      a.href = url;
+      a.download = `projeto-santabronx-${stamp}.md`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      toast.success("Snapshot baixado", {
+        description: `${result.fileCount} arquivos · ${result.sizeKb} KB`,
+      });
+    } catch (err) {
+      toast.error("Não consegui exportar", {
+        description: err instanceof Error ? err.message : "Tente novamente",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      onClick={handleExport}
+      disabled={loading}
+      className="rounded-full border-white/15 bg-white/[0.06] hover:bg-white/[0.1]"
+    >
+      {loading ? (
+        <Loader2 className="h-4 w-4 animate-spin" />
+      ) : (
+        <Download className="h-4 w-4" />
+      )}
+      Baixar snapshot pro ChatGPT
+    </Button>
   );
 }
 
