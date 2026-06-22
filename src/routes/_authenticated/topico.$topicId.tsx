@@ -1896,7 +1896,11 @@ function OpenEvaluationSubtask({
   }, [userId, subtask.id]);
 
   async function submit() {
-    if (drafts.some((d) => d.trim().length === 0)) {
+    const missing = subtask.questions.some((q, i) => {
+      const isMC = Array.isArray(q.options) && q.options.length > 0;
+      return drafts[i].trim().length === 0 && !isMC ? true : isMC && drafts[i] === "" ? true : false;
+    });
+    if (missing) {
       toast.error(`Responda todas as ${subtask.questions.length} perguntas antes de enviar`);
       return;
     }
@@ -1915,12 +1919,28 @@ function OpenEvaluationSubtask({
       toast.error("Não consegui enviar", { description: subErr?.message });
       return;
     }
-    const rows = subtask.questions.map((q, i) => ({
-      submission_id: sub.id,
-      question_index: i,
-      question_text: q.question,
-      answer_text: drafts[i].trim(),
-    }));
+    const rows = subtask.questions.map((q, i) => {
+      const isMC = Array.isArray(q.options) && q.options.length > 0;
+      if (isMC) {
+        const idx = parseInt(drafts[i], 10);
+        const chosen = q.options![idx] ?? "";
+        const correct = idx === q.correctIndex;
+        return {
+          submission_id: sub.id,
+          question_index: i,
+          question_text: q.question,
+          answer_text: chosen,
+          is_correct: correct,
+          feedback: correct ? null : `Resposta correta: ${q.options![q.correctIndex ?? 0]}`,
+        };
+      }
+      return {
+        submission_id: sub.id,
+        question_index: i,
+        question_text: q.question,
+        answer_text: drafts[i].trim(),
+      };
+    });
     const { error: ansErr } = await supabase
       .from("open_evaluation_answers")
       .insert(rows);
@@ -1930,7 +1950,7 @@ function OpenEvaluationSubtask({
       return;
     }
     onSubmitted();
-    toast.success("Avaliação enviada para revisão");
+    toast.success("Prova enviada. Objetivas corrigidas automaticamente; abertas vão para o gestor.");
     await load();
     setSending(false);
   }
@@ -1944,6 +1964,16 @@ function OpenEvaluationSubtask({
   }
 
   if (submission) {
+    const mcRows = answerRows.filter((r) => {
+      const q = subtask.questions[r.question_index];
+      return q && Array.isArray(q.options) && q.options.length > 0;
+    });
+    const mcCorrect = mcRows.filter((r) => r.is_correct === true).length;
+    const pendingOpens = answerRows.filter((r) => {
+      const q = subtask.questions[r.question_index];
+      return q && !(Array.isArray(q.options) && q.options.length > 0) && r.is_correct == null;
+    }).length;
+
     const statusLabel =
       submission.status === "pending_review"
         ? "Pendente revisão"
@@ -1962,6 +1992,18 @@ function OpenEvaluationSubtask({
         <div className={`rounded-2xl border px-3 py-2 text-sm font-medium ${statusTone}`}>
           Status: {statusLabel}
         </div>
+        {mcRows.length > 0 && (
+          <div className="rounded-2xl border border-teal-500/30 bg-teal-500/10 px-3 py-2 text-sm">
+            <span className="font-semibold text-teal-300">Objetivas:</span>{" "}
+            {mcCorrect}/{mcRows.length} corretas
+            {pendingOpens > 0 && (
+              <>
+                {" · "}
+                <span className="text-amber-300">{pendingOpens} aberta(s) aguardando correção do gestor</span>
+              </>
+            )}
+          </div>
+        )}
         {submission.general_feedback && (
           <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-sm">
             <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
@@ -2027,26 +2069,48 @@ function OpenEvaluationSubtask({
   return (
     <div className="space-y-3">
       <p className="text-xs text-foreground/80">
-        Responda com suas próprias palavras. Ao enviar, o próximo tópico é liberado e a gestora corrige depois.
+        Responda as objetivas (correção automática) e as abertas (correção do gestor). Ao enviar, o próximo tópico é liberado.
       </p>
-      {subtask.questions.map((q, i) => (
-        <div key={i} className="rounded-2xl border border-border/60 bg-muted/20 p-3">
-          <label className="block text-sm font-medium mb-2">
-            {i + 1}. {q.question}
-          </label>
-          <Textarea
-            value={drafts[i]}
-            onChange={(e) =>
-              setDrafts((prev) => prev.map((d, idx) => (idx === i ? e.target.value : d)))
-            }
-            placeholder="Escreva sua resposta aqui..."
-            rows={3}
-            className="bg-background"
-          />
-        </div>
-      ))}
+      {subtask.questions.map((q, i) => {
+        const isMC = Array.isArray(q.options) && q.options.length > 0;
+        return (
+          <div key={i} className="rounded-2xl border border-border/60 bg-muted/20 p-3">
+            <label className="block text-sm font-medium mb-2">
+              {i + 1}. {q.question}
+            </label>
+            {isMC ? (
+              <RadioGroup
+                value={drafts[i]}
+                onValueChange={(v) =>
+                  setDrafts((prev) => prev.map((d, idx) => (idx === i ? v : d)))
+                }
+                className="space-y-2"
+              >
+                {q.options!.map((opt, oi) => (
+                  <div key={oi} className="flex items-start gap-2">
+                    <RadioGroupItem value={oi.toString()} id={`${subtask.id}-${i}-${oi}`} className="mt-0.5" />
+                    <Label htmlFor={`${subtask.id}-${i}-${oi}`} className="text-sm font-normal cursor-pointer leading-snug">
+                      {opt}
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            ) : (
+              <Textarea
+                value={drafts[i]}
+                onChange={(e) =>
+                  setDrafts((prev) => prev.map((d, idx) => (idx === i ? e.target.value : d)))
+                }
+                placeholder="Escreva sua resposta aqui..."
+                rows={3}
+                className="bg-background"
+              />
+            )}
+          </div>
+        );
+      })}
       <Button variant="outline" onClick={submit} disabled={sending} className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25">
-        {sending ? "Enviando..." : "Enviar para revisão"}
+        {sending ? "Enviando..." : "Enviar prova"}
       </Button>
     </div>
   );
