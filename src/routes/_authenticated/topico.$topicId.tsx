@@ -169,7 +169,7 @@ function TopicPage() {
     toast.success("Salvo!");
 
     // Gatilho: se o módulo ficou completo agora, agenda revisões espaçadas.
-    if (MODULE_REVIEW[topic.id] && isTopicComplete(topic, nextRows)) {
+    if (topic && MODULE_REVIEW[topic.id] && isTopicComplete(topic, nextRows)) {
       scheduleReviews({ data: { moduleId: topic.id } }).catch((err) => {
         console.error("scheduleReviews failed", err);
       });
