@@ -144,6 +144,7 @@ export type Topic = {
   title: string;
   summary: string;
   accent: string;
+  audioUrl?: string;
   subtasks: Subtask[];
 };
 
