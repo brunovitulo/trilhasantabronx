@@ -523,7 +523,7 @@ function SubtaskGroupCard({
                     opacity: passed ? 0.5 : 1,
                   }}
                 >
-                  passo {startIndex + idx + 1}
+                  passo {idx + 1}
                 </span>
                 <ChevronDown
                   className={cn(
