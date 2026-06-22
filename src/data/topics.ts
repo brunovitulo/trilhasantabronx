@@ -300,6 +300,7 @@ export const TOPICS: Topic[] = [
     summary:
       "Aprender como embalar, chamar o 99 Entregas e evitar os principais erros.",
     accent: "from-rose-500 to-pink-600",
+    audioUrl: "/audio/audio_guia_embalar_pedidos.mp3",
     subtasks: [
       {
         id: "embalar.intro.video",
