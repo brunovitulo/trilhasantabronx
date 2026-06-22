@@ -36,9 +36,15 @@ export function isTopicComplete(topic: Topic, rows: ProgressRow[]): boolean {
 export function computeTopicStatuses(
   topics: Topic[],
   rows: ProgressRow[],
+  opts: { isAdmin?: boolean } = {},
 ): Record<string, TopicStatus> {
   const result: Record<string, TopicStatus> = {};
-  // DEV: gating sequencial desativado — todos os tópicos liberados enquanto configuramos conteúdo
+  const { isAdmin = false } = opts;
+  // Bloqueio sequencial entre tópicos principais: usuário comum só desbloqueia o
+  // próximo tópico após concluir 100% do anterior. Admin tem acesso livre.
+  // Tópicos sem subtarefas (em construção) são marcados como "empty" e
+  // não interrompem a sequência.
+  let previousCompleted = true;
   for (const topic of topics) {
     if (topic.subtasks.length === 0) {
       result[topic.id] = "empty";
@@ -47,12 +53,18 @@ export function computeTopicStatuses(
     const done = isTopicComplete(topic, rows);
     if (done) {
       result[topic.id] = "completed";
-    } else {
-      const anyCompleted = topic.subtasks.some(
-        (s) => getSubtaskState(s.id, rows).completed,
-      );
-      result[topic.id] = anyCompleted ? "in_progress" : "available";
+      previousCompleted = true;
+      continue;
     }
+    if (!isAdmin && !previousCompleted) {
+      result[topic.id] = "locked";
+      continue;
+    }
+    const anyCompleted = topic.subtasks.some(
+      (s) => getSubtaskState(s.id, rows).completed,
+    );
+    result[topic.id] = anyCompleted ? "in_progress" : "available";
+    previousCompleted = false;
   }
   return result;
 }
