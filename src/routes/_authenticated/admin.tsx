@@ -4,22 +4,13 @@ import { ChevronLeft, Loader2, AlertCircle, MapPin, RotateCcw, FileText, KeyRoun
 import { approvePermission, rejectPermission } from "@/lib/examPermission";
 import { supabase } from "@/integrations/supabase/client";
 import { AppHeader } from "@/components/AppHeader";
-import { TOPICS, findSubtask, PASSING_SCORE } from "@/data/topics";
+import { TOPICS, findSubtask } from "@/data/topics";
 import { computeTopicStatuses, type ProgressRow } from "@/lib/progress";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { SubmissionHistoryDialog } from "@/components/SubmissionHistoryDialog";
 import { CorrectionDialog, type CorrectionTarget } from "@/components/CorrectionDialog";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
