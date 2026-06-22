@@ -224,6 +224,47 @@ export function DailyTasksButton() {
                 </div>
               );
             })}
+
+            {hasReviews && (
+              <div
+                className={`rounded-2xl border p-4 transition-colors ${
+                  reviewDone
+                    ? "border-emerald-300/50 bg-emerald-500/5"
+                    : "border-primary/40 bg-primary/5"
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+                    <Brain className="h-3.5 w-3.5" />
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p
+                      className={`text-sm font-semibold leading-snug ${
+                        reviewDone ? "text-muted-foreground line-through" : ""
+                      }`}
+                    >
+                      Revisão do dia
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1 leading-snug">
+                      {reviewDone
+                        ? "Você concluiu todas as revisões de hoje."
+                        : `Você tem ${reviews.length} revisão${reviews.length > 1 ? "ões" : ""} pendente${reviews.length > 1 ? "s" : ""}. Motivo: ${reviews[0].reason}. ~${reviews.reduce((s, r) => s + r.estimated_minutes, 0)} min · ${reviews.reduce((s, r) => s + r.question_count, 0)} perguntas.`}
+                    </p>
+                    {!reviewDone && (
+                      <div className="mt-3">
+                        <Link
+                          to="/revisao-do-dia"
+                          onClick={() => setOpen(false)}
+                          className="inline-flex items-center justify-center rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:opacity-90"
+                        >
+                          Iniciar revisão
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
