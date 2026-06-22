@@ -248,10 +248,22 @@ function TopicPage() {
           <div className="mt-6 space-y-4">
             {(() => {
               const groups = groupSubtasks(topic.subtasks);
+              const groupCompleted = groups.map((g) =>
+                g.items.every(({ subtask }) => {
+                  const st = getSubtaskState(subtask.id, rows);
+                  if (subtask.kind === "evaluation") {
+                    const p =
+                      (subtask as Extract<Subtask, { kind: "evaluation" }>).passingScore ?? PASSING_SCORE;
+                    return st.completed && (st.score ?? 0) >= p;
+                  }
+                  return st.completed;
+                }),
+              );
               let offset = 0;
-              return groups.map((group) => {
+              return groups.map((group, gIdx) => {
                 const startIndex = offset;
                 offset += group.items.length;
+                const previousGroupComplete = gIdx === 0 || groupCompleted[gIdx - 1];
                 return (
                   <SubtaskGroupCard
                     key={group.key}
@@ -261,6 +273,7 @@ function TopicPage() {
                     userId={user.id}
                     isAdmin={isAdmin}
                     startIndex={startIndex}
+                    previousGroupComplete={previousGroupComplete}
                     onComplete={markCompleted}
                     onUncheck={unmark}
                   />
@@ -357,6 +370,7 @@ function SubtaskGroupCard({
   userId,
   isAdmin,
   startIndex = 0,
+  previousGroupComplete = true,
   onComplete,
   onUncheck,
 }: {
@@ -366,6 +380,7 @@ function SubtaskGroupCard({
   userId: string;
   isAdmin: boolean;
   startIndex?: number;
+  previousGroupComplete?: boolean;
   onComplete: (subtask: Subtask, score?: number) => void;
   onUncheck: (subtaskId: string) => void;
 }) {
@@ -457,9 +472,10 @@ function SubtaskGroupCard({
           const { state, passed } = itemStates[idx];
           const inFinalGate = FINAL_GATE_IDS.has(sub.id);
           const gateLocked = inFinalGate && !gateUnlocked && !isAdmin;
+          const cardLocked = !isAdmin && !previousGroupComplete;
           const sequentialLocked =
             !isAdmin && idx > 0 && !itemStates[idx - 1].passed;
-          const isLocked = gateLocked || sequentialLocked;
+          const isLocked = gateLocked || cardLocked || sequentialLocked;
           const examNeedsVideo =
             sub.id === EXAM_ID && gateUnlocked && !gateVideoCompleted && !isAdmin;
           const useExamDialog = sub.id === EXAM_ID;
