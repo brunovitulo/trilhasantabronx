@@ -218,7 +218,7 @@ function TopicPage() {
         })()}
         <p className="text-muted-foreground">{topic.summary}</p>
 
-        {topic.audioUrl && <div className="mt-5"><ModuleAudioPlayer src={topic.audioUrl} /></div>}
+        
 
 
 
