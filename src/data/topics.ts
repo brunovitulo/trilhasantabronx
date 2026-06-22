@@ -5,6 +5,14 @@ export type QuizQuestion = {
   question: string;
   options: string[];
   correctIndex: number;
+  // Campos opcionais usados pela Revisão Inteligente.
+  // Quando ausentes, são inferidos automaticamente por palavras-chave
+  // em `src/lib/reviews.ts` (inferQuestionMeta).
+  theme?: string;
+  tags?: string[];
+  isCritical?: boolean;
+  memoryTip?: string;
+  wrongAnswerExplanation?: string;
 };
 
 export type ApostilaBadgeColor =
