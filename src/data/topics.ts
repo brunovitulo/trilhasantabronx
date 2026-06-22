@@ -33,7 +33,12 @@ export type ApostilaSection = {
 
 export type OpenQuestion = {
   question: string;
-  expectedAnswer: string;
+  expectedAnswer?: string;
+  // Quando preenchidos, a questão é tratada como múltipla escolha
+  // (corrigida automaticamente). Quando ausentes, é tratada como aberta
+  // (vai para correção do gestor).
+  options?: string[];
+  correctIndex?: number;
 };
 
 export type Subtask =
