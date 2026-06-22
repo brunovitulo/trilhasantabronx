@@ -17,6 +17,8 @@ const modules = import.meta.glob(
     "/components.json",
     "/AGENTS.md",
     "/eslint.config.js",
+    "!/src/routeTree.gen.ts",
+    "!/src/integrations/supabase/types.ts",
   ],
   { eager: true, query: "?raw", import: "default" },
 ) as Record<string, string>;
