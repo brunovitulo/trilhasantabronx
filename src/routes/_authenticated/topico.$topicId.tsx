@@ -144,6 +144,8 @@ function TopicPage() {
     }
   }, [accessLocked, loading, navigate]);
 
+  const scheduleReviews = useServerFn(scheduleReviewsForModule);
+
   async function markCompleted(subtask: Subtask, score?: number) {
     const payload = {
       user_id: user.id,
@@ -159,11 +161,19 @@ function TopicPage() {
       toast.error("Não consegui salvar", { description: error.message });
       return;
     }
-    setRows((prev) => {
-      const others = prev.filter((r) => r.subtask_id !== subtask.id);
+    const nextRows = (() => {
+      const others = rows.filter((r) => r.subtask_id !== subtask.id);
       return [...others, { subtask_id: subtask.id, completed: true, score: score ?? null }];
-    });
+    })();
+    setRows(nextRows);
     toast.success("Salvo!");
+
+    // Gatilho: se o módulo ficou completo agora, agenda revisões espaçadas.
+    if (MODULE_REVIEW[topic.id] && isTopicComplete(topic, nextRows)) {
+      scheduleReviews({ data: { moduleId: topic.id } }).catch((err) => {
+        console.error("scheduleReviews failed", err);
+      });
+    }
   }
 
   async function unmark(subtaskId: string) {
