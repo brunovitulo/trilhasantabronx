@@ -78,19 +78,40 @@ export function DailyTasksButton() {
   const [done, setDone] = useState<Record<string, boolean>>({});
   const [active, setActive] = useState<DailyTask | null>(null);
   const [nonce, setNonce] = useState(0);
+  const [reviews, setReviews] = useState<ScheduledReview[]>([]);
+  const fetchReviews = useServerFn(listTodayReviews);
+  const ensureOnboarding = useServerFn(ensureOnboardingReview);
 
   useEffect(() => {
     setDone(loadDone());
-    // Refresh when window regains focus (handles day rollover)
     const onFocus = () => setDone(loadDone());
     window.addEventListener("focus", onFocus);
     return () => window.removeEventListener("focus", onFocus);
   }, []);
 
-  const pending = useMemo(
-    () => TASKS.filter((t) => !done[t.id]).length,
-    [done],
-  );
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        await ensureOnboarding().catch(() => null);
+        const data = await fetchReviews();
+        if (active) setReviews((data ?? []) as ScheduledReview[]);
+      } catch {
+        /* ignore */
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [fetchReviews, ensureOnboarding]);
+
+  const hasReviews = reviews.length > 0;
+  const reviewDone = hasReviews && reviews.every((r) => r.status === "completed");
+  const pending = useMemo(() => {
+    const base = TASKS.filter((t) => !done[t.id]).length;
+    const rev = hasReviews && !reviewDone ? 1 : 0;
+    return base + rev;
+  }, [done, hasReviews, reviewDone]);
 
   function toggle(id: string, value: boolean) {
     setDone((prev) => {
