@@ -1376,6 +1376,7 @@ export const TOPICS: Topic[] = [
     title: "Decorar Principais Produtos",
     summary: "Estudar e decorar cada categoria de produto: função, indicação, fala pronta, cuidados e produtos reais no site.",
     accent: "from-indigo-500 to-blue-700",
+    audioUrl: "/audio/audio_guia_decorar_principais_produtos.mp3",
     subtasks: [
       {
         id: "produtos.perfumes_feromonios.video",
