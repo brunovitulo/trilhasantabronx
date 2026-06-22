@@ -144,7 +144,6 @@ export type Topic = {
   title: string;
   summary: string;
   accent: string;
-  audioUrl?: string;
   subtasks: Subtask[];
 };
 
@@ -166,7 +165,6 @@ export const TOPICS: Topic[] = [
     summary:
       "Conhecer a Santa Bronx: história, organização, produtos e site de pedidos.",
     accent: "from-fuchsia-500 to-purple-600",
-    audioUrl: "/audio/audio_guia_organizacao_da_loja.mp3",
     subtasks: [
       {
         id: "apresentacao.historia.video",
@@ -300,7 +298,6 @@ export const TOPICS: Topic[] = [
     summary:
       "Aprender como embalar, chamar o 99 Entregas e evitar os principais erros.",
     accent: "from-rose-500 to-pink-600",
-    audioUrl: "/audio/audio_guia_embalar_pedidos.mp3",
     subtasks: [
       {
         id: "embalar.intro.video",
@@ -631,7 +628,6 @@ export const TOPICS: Topic[] = [
     summary:
       "Alinhar expectativas (atrasos, erros) e conhecer o app de pedidos do dia a dia.",
     accent: "from-amber-500 to-orange-600",
-    audioUrl: "/audio/audio_guia_primeira_responsabilidade.mp3",
     subtasks: [
       {
         id: "responsabilidade.app.video",
@@ -830,7 +826,6 @@ export const TOPICS: Topic[] = [
     title: "Fundamentos de Vendas",
     summary: "Abordagem, escuta, oferta e fechamento.",
     accent: "from-emerald-500 to-teal-600",
-    audioUrl: "/audio/audio_guia_fundamentos_de_vendas.mp3",
     subtasks: [
       {
         id: "vendas.video",
@@ -1059,7 +1054,6 @@ export const TOPICS: Topic[] = [
     summary:
       "Aprender as principais objeções do nicho e como respondê-las.",
     accent: "from-sky-500 to-blue-600",
-    audioUrl: "/audio/audio_guia_principais_objecoes.mp3",
     subtasks: [
       {
         id: "objecoes.video",
@@ -1272,7 +1266,6 @@ export const TOPICS: Topic[] = [
     summary:
       "Aprender a identificar as principais dores dos clientes e indicar as soluções/produtos corretos.",
     accent: "from-violet-500 to-purple-700",
-    audioUrl: "/audio/audio_guia_principais_dores_e_solucoes.mp3",
     subtasks: [
       {
         id: "dores.video",
@@ -1376,7 +1369,6 @@ export const TOPICS: Topic[] = [
     title: "Decorar Principais Produtos",
     summary: "Estudar e decorar cada categoria de produto: função, indicação, fala pronta, cuidados e produtos reais no site.",
     accent: "from-indigo-500 to-blue-700",
-    audioUrl: "/audio/audio_guia_decorar_principais_produtos.mp3",
     subtasks: [
       {
         id: "produtos.perfumes_feromonios.video",
@@ -1403,39 +1395,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Perfumes Feromônios. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Perfumes Feromônios?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Função principal: potencializar presença, atração, sedução e autoconfiança.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a proposta principal de um perfume com feromônio?",
+            options: ["Curar problemas de libido e disfunção sexual.", "Aumentar a atratividade percebida e reforçar a presença/autoconfiança de quem usa.", "Substituir desodorante e suor durante o dia inteiro.", "Provocar excitação instantânea em qualquer pessoa próxima."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Perfumes Feromônios para um cliente?",
-            options: ["Quando o cliente busca exatamente o que perfumes feromônios se propõe a oferecer: perfumes com proposta de potencializar atração, presença e autoconfiança.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
-            correctIndex: 0,
+            question: "Quando faz mais sentido indicar perfume com feromônio para o cliente?",
+            options: ["Quando o cliente quer um produto que aja por dentro do corpo, como um excitante.", "Quando o cliente quer reforçar a presença e a sedução em encontros, baladas ou no dia a dia.", "Quando o cliente quer algo que aumente o tamanho do pênis.", "Quando o cliente busca um lubrificante para a relação."],
+            correctIndex: 1,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Perfumes Feromônios ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Ele não é milagroso, mas ajuda a potencializar a atração, deixando sua presença mais marcante e aumentando a autoconfiança.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "Qual fala é mais adequada para apresentar um perfume com feromônio?",
+            options: ["“Esse perfume garante que qualquer pessoa vai querer ficar com você.”", "“É um perfume com feromônios que ajuda a deixar sua presença mais marcante e a aumentar sua autoconfiança — não é milagroso, mas potencializa a atração.”", "“Esse aqui resolve qualquer problema sexual do casal.”", "“Não sei explicar muito, mas é o mais vendido, pode levar.”"],
+            correctIndex: 1,
+          },
+          {
+            question: "O que a atendente NÃO deve prometer ao vender perfume com feromônio?",
+            options: ["Que o aroma é agradável e pode ser usado no dia a dia.", "Que ajuda a reforçar a presença e a autoconfiança.", "Que vai fazer a pessoa desejada se apaixonar ou desejar automaticamente o cliente.", "Que existem versões masculina e feminina."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Perfumes Feromônios, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Não prometer que alguém vai desejar a pessoa automaticamente.", "Vender sempre o produto mais caro como única opção."],
+            question: "Qual é a diferença correta entre perfume com feromônio e excitante?",
+            options: ["Os dois são iguais, só muda a embalagem.", "Perfume com feromônio age externamente, na atração; excitante é aplicado no corpo para aumentar sensações durante o ato.", "Perfume é mais forte que excitante.", "Excitante é só para uso oral; perfume é só para uso íntimo."],
+            correctIndex: 1,
+          },
+          {
+            question: "Um cliente diz que quer ‘algo para deixar a esposa mais atraída por ele em um jantar’. Qual é a abordagem mais consultiva?",
+            options: ["Oferecer um retardante para durar mais à noite.", "Oferecer um anestésico para a parceira.", "Apresentar o perfume com feromônio masculino, explicando que ajuda na presença e na atração ao longo do encontro.", "Indicar um plug anal porque é novidade."],
             correctIndex: 2,
           },
           {
-            question: "Em relação aos modelos de Perfumes Feromônios, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Não é milagroso e não garante conquista.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Perfumes Feromônios?",
-            options: ["Ignorar a orientação: Explicar como perfume de presença, não como promessa de conquista.", "Seguir a orientação: Explicar como perfume de presença, não como promessa de conquista.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Perfumes Feromônios?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Existem versões masculinas e femininas.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
+            question: "Qual erro deve ser evitado ao vender perfume com feromônio?",
+            options: ["Mostrar versões masculina e feminina.", "Deixar claro que não é milagroso e que potencializa a atração, sem garantir conquista.", "Vender prometendo resultado garantido de conquista, como se fosse uma ‘poção do amor’.", "Perguntar a preferência de aroma do cliente."],
+            correctIndex: 2,
           },
         ],
       },
@@ -1480,38 +1472,38 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Excitantes. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Excitantes?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Femininos costumam ser usados no clitóris/vulva.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a função principal de um excitante (gel, gotas ou spray)?",
+            options: ["Anestesiar a região para reduzir a sensibilidade.", "Aumentar a sensibilidade e o estímulo na região onde é aplicado (clitóris, vulva, glande), com efeitos como esquentar, esfriar, vibrar ou formigar.", "Aumentar o tamanho do pênis de forma permanente.", "Servir como lubrificante principal para penetração."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Excitantes para um cliente?",
-            options: ["Quando o cliente busca exatamente o que excitantes se propõe a oferecer: géis, gotas e sprays para aumentar sensibilidade, prazer e excitação.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            question: "Quando é mais adequado indicar um excitante feminino beijável?",
+            options: ["Quando a cliente quer um produto só para passar e não ter contato oral.", "Quando o casal quer incrementar o sexo oral, podendo lamber e sentir o efeito juntos.", "Quando a cliente busca um produto para aumentar o canal vaginal.", "Quando o cliente quer durar mais tempo na penetração."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual cuidado a atendente precisa ter ao indicar excitantes ‘extra fortes’?",
+            options: ["Recomendar usar a maior quantidade possível para garantir efeito.", "Avisar para começar com pouca quantidade, porque exagerar pode incomodar/arder mais que prazer.", "Garantir que não causa nenhuma reação em ninguém.", "Dizer que pode ser usado dentro do canal vaginal sem restrição."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual é a diferença correta entre excitante e adstringente?",
+            options: ["Excitante aumenta sensações e estímulo; adstringente dá sensação de canal mais apertado.", "Excitante e adstringente fazem exatamente a mesma coisa.", "Adstringente é só para homem; excitante é só para mulher.", "Excitante é usado depois e adstringente antes da relação."],
             correctIndex: 0,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Excitantes ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Esse tipo de produto aumenta as sensações na região e ajuda a deixar o estímulo mais intenso. Alguns esquentam, vibram, refrescam ou aumentam a sensibilidade.", "“Compra que você vai gostar, todo mundo aprova.”"],
-            correctIndex: 2,
-          },
-          {
-            question: "Sobre Excitantes, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Perguntar se a pessoa quer uso oral/beijável ou só estímulo íntimo.", "Vender sempre o produto mais caro como única opção."],
-            correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Excitantes, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Alguns são beijáveis e podem ser usados no beijo ou sexo oral.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
+            question: "Cliente pergunta: ‘esse excitante vai me fazer ter orgasmo na hora?’ Qual a melhor resposta?",
+            options: ["“Sim, com certeza, é garantido.”", "“Ele potencializa as sensações na região, mas o orgasmo depende do conjunto: estímulo, conexão e momento.”", "“Não funciona, é só marketing.”", "“Só funciona se você tomar junto com um remédio.”"],
             correctIndex: 1,
           },
           {
-            question: "Qual postura é correta da atendente ao vender Excitantes?",
-            options: ["Ignorar a orientação: Não exagerar na quantidade, especialmente nos extra fortes.", "Seguir a orientação: Não exagerar na quantidade, especialmente nos extra fortes.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
+            question: "Qual erro de venda deve ser evitado com excitante?",
+            options: ["Perguntar se a pessoa prefere efeito esquenta, esfria ou vibratório.", "Mostrar que existem versões femininas, masculinas e unissex.", "Prometer ao cliente que o produto vai resolver falta de libido ou problema de ereção.", "Mostrar os sabores disponíveis nos beijáveis."],
+            correctIndex: 2,
           },
           {
-            question: "Qual destes pontos a atendente precisa decorar sobre Excitantes?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Alguns são unissex e também podem ser usados na glande.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
+            question: "Um cliente quer ‘algo para esquentar e formigar no clitóris’. Qual indicação faz mais sentido?",
+            options: ["Lubrificante neutro à base de água.", "Excitante feminino com efeito esquenta/formiga aplicado no clitóris.", "Retardante masculino em spray.", "Capa peniana com cerdas massageadoras."],
             correctIndex: 1,
           },
         ],
@@ -1550,39 +1542,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Adstringente. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Adstringente?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Pode ser em gel ou bolinha efervescente.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a proposta do adstringente íntimo feminino?",
+            options: ["Aumentar permanentemente o tamanho do canal vaginal.", "Provocar sensação temporária de canal mais apertado, aumentando o atrito durante a penetração.", "Substituir o lubrificante na relação.", "Tratar infecções e problemas ginecológicos."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Adstringente para um cliente?",
-            options: ["Quando o cliente busca exatamente o que adstringente se propõe a oferecer: produtos para sensação de canal vaginal mais apertado.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
-            correctIndex: 0,
+            question: "Quando faz sentido indicar adstringente?",
+            options: ["Para qualquer cliente, sempre, sem entender a necessidade.", "Quando a cliente ou o casal quer mais sensação de aperto/atrito durante a relação.", "Quando o cliente quer durar mais tempo na penetração.", "Quando a cliente busca algo para o sexo oral."],
+            correctIndex: 1,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Adstringente ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Ele ajuda a dar uma sensação de canal mais apertado, aumentando o atrito e a percepção de prazer durante a penetração.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "O que NÃO se deve prometer ao vender adstringente?",
+            options: ["Que dá uma sensação temporária de aperto.", "Que existe em versão gel e em versão bolinha efervescente.", "Que o efeito é permanente e ‘reconstrói’ o canal vaginal.", "Que pode beneficiar os dois pelo maior atrito."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Adstringente, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Não prometer resultado permanente.", "Vender sempre o produto mais caro como única opção."],
+            question: "Qual é a diferença correta entre adstringente em gel e bolinha efervescente?",
+            options: ["São produtos completamente diferentes que não têm relação.", "O gel é aplicado e espalhado; a bolinha é inserida e libera o ativo conforme se dissolve.", "A bolinha é para uso anal e o gel para uso vaginal.", "Os dois precisam ser ingeridos para fazer efeito."],
+            correctIndex: 1,
+          },
+          {
+            question: "Cliente pergunta: ‘adstringente combina com excitante?’ Qual a melhor resposta?",
+            options: ["“Não pode usar nada com nada, é perigoso.”", "“Pode-se combinar com excitante: o adstringente dá a sensação de aperto e o excitante intensifica o estímulo. Recomendo testar com pouco no primeiro uso.”", "“Combinam, e quanto mais quantidade, melhor o resultado.”", "“Só funciona junto com retardante masculino.”"],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual postura é mais consultiva ao oferecer adstringente?",
+            options: ["Insistir mesmo quando a cliente diz que não tem essa necessidade.", "Apresentar como opção quando o casal demonstra interesse em mais atrito/sensação de aperto, explicando que o efeito é temporário.", "Vender empurrando, dizendo que toda mulher precisa.", "Dizer que é um produto médico que ‘arruma’ o corpo da cliente."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual erro de venda evitar com adstringente?",
+            options: ["Explicar o tempo aproximado do efeito.", "Sugerir começar com pouca quantidade.", "Vender como se ‘consertasse’ um problema da cliente, como pós-parto.", "Mostrar opções em gel e em bolinha."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Adstringente, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Hamamélis é um ativo comum associado à contração leve dos tecidos.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Adstringente?",
-            options: ["Ignorar a orientação: Orientar uso conforme produto.", "Seguir a orientação: Orientar uso conforme produto.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Adstringente?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Pode beneficiar os dois pela maior sensação de atrito.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },
@@ -1623,39 +1615,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Capas Penianas. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Capas Penianas?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Modelos com alça escrotal ficam mais firmes.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a proposta de uma capa peniana?",
+            options: ["Substituir totalmente o pênis durante a relação.", "Encaixar sobre o pênis para aumentar volume, comprimento, textura e/ou tempo, intensificando o prazer da parceira.", "Funcionar como anticoncepcional substituindo o preservativo.", "Servir apenas como item decorativo, sem uso real."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Capas Penianas para um cliente?",
-            options: ["Quando o cliente busca exatamente o que capas penianas se propõe a oferecer: acessórios para aumentar volume/tamanho durante o uso e intensificar estímulos.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            question: "Quando é mais adequado indicar uma capa peniana?",
+            options: ["Quando o casal quer aumentar volume/tempo na penetração ou explorar diferentes texturas.", "Quando a cliente quer um produto para usar sozinha sem o parceiro.", "Quando o cliente quer apenas um lubrificante.", "Quando o objetivo é tratar disfunção erétil de forma médica."],
             correctIndex: 0,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Capas Penianas ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "A capa aumenta o volume durante o uso e pode dar mais estímulo na penetração. Os modelos com alça costumam ficar mais firmes.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "Qual é a diferença correta entre uma capa peniana e um pênis realístico?",
+            options: ["Os dois são iguais e usados da mesma forma.", "A capa é encaixada sobre o pênis durante a relação; o pênis realístico é uma prótese usada sem necessidade de pênis ereto.", "Pênis realístico é usado por cima do pênis e a capa é independente.", "Capa peniana é só para uso solo e pênis realístico só para casal."],
+            correctIndex: 1,
+          },
+          {
+            question: "Sobre a capa peniana vazada com alça, o que é correto dizer?",
+            options: ["Substitui a ereção completamente, mesmo sem pênis ereto.", "É indicada quando o cliente tem ereção e quer aumentar volume/comprimento, fixando-se melhor pela alça.", "Funciona apenas como masturbador masculino.", "Não pode ser usada com lubrificante."],
+            correctIndex: 1,
+          },
+          {
+            question: "O que a atendente NÃO deve prometer ao vender capa peniana?",
+            options: ["Que aumenta o volume e a sensação de cheio durante a penetração.", "Que existem modelos com cerdas, relevos e diferentes tamanhos.", "Que cura disfunção erétil ou aumenta o pênis de forma permanente.", "Que pode retardar a ejaculação pelo efeito de menor sensibilidade."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Capas Penianas, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Nunca dizer que substitui camisinha.", "Vender sempre o produto mais caro como única opção."],
+            question: "Cliente diz: ‘minha esposa reclama que é fininho’. Qual a indicação mais consultiva?",
+            options: ["Vender um anel peniano simples.", "Indicar excitante feminino apenas.", "Apresentar capa peniana que aumente a circunferência, explicando que dá mais sensação de volume sem alterar o pênis do cliente.", "Indicar um plug anal."],
             correctIndex: 2,
           },
           {
-            question: "Em relação aos modelos de Capas Penianas, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Modelos vazados preservam mais sensibilidade para o homem.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Capas Penianas?",
-            options: ["Ignorar a orientação: Orientar pênis seco por dentro da capa para não sair fácil.", "Seguir a orientação: Orientar pênis seco por dentro da capa para não sair fácil.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Capas Penianas?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Texturas, cerdas e relevos aumentam estímulo.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
+            question: "Qual erro de venda evitar com capa peniana?",
+            options: ["Recomendar uso com lubrificante para conforto.", "Explicar que algumas capas também ajudam a retardar a ejaculação.", "Prometer aumento permanente do pênis ou cura de problemas de ereção.", "Mostrar opções com diferentes texturas."],
+            correctIndex: 2,
           },
         ],
       },
@@ -1706,39 +1698,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Plug Anal. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Plug Anal?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Começar por tamanhos menores é mais seguro para iniciantes.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a proposta do plug anal?",
+            options: ["Substituir o pênis em uma relação anal completa, com movimentos automáticos.", "Estimular a região anal e ser usado para iniciação, treino ou estímulo durante outras práticas.", "Funcionar como anticoncepcional.", "Servir apenas como item decorativo."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Plug Anal para um cliente?",
-            options: ["Quando o cliente busca exatamente o que plug anal se propõe a oferecer: acessórios para preparação e dilatação anal.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
-            correctIndex: 0,
+            question: "Para que serve a base alargada do plug anal?",
+            options: ["É só estética, sem função real.", "Evita que o plug entre por completo e fique preso dentro do corpo.", "Aumenta o tamanho do plug.", "Serve para conectar a um aplicativo."],
+            correctIndex: 1,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Plug Anal ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "O plug prepara a região anal, ajudando a dilatar aos poucos para a penetração ser mais confortável.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "Qual é a melhor indicação para um cliente iniciante na prática anal?",
+            options: ["O maior plug disponível, para já se acostumar.", "Um plug pequeno, com bastante lubrificante à base de água ou específico para uso anal.", "Um pênis realístico grande, em vez de plug.", "Uma máquina de sexo no modo mais forte."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual lubrificante NÃO deve ser indicado com plug anal de silicone?",
+            options: ["Lubrificante à base de água.", "Lubrificante específico para anal à base de água.", "Lubrificante à base de silicone, porque pode danificar o material do plug.", "Gel hidratante íntimo neutro à base de água."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Plug Anal, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Nunca usar item sem base segura.", "Vender sempre o produto mais caro como única opção."],
+            question: "Qual cuidado a atendente precisa reforçar ao vender plug anal?",
+            options: ["Pode introduzir sem lubrificante e sem base alargada, sem risco.", "Sempre usar bastante lubrificação, ir devagar e nunca usar plug sem base alargada.", "Quanto maior e mais rápido, melhor para iniciantes.", "É um produto médico e dispensa orientação."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual é a diferença correta entre plug anal e pênis realístico anal?",
+            options: ["São o mesmo produto.", "O plug é feito para ficar inserido e estimular; o pênis realístico é usado em movimento de penetração, simulando o ato.", "O plug é só para homens; o pênis realístico só para mulheres.", "Plug é elétrico; pênis realístico não."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual erro de venda evitar com plug anal?",
+            options: ["Mostrar diferentes tamanhos e materiais.", "Explicar a importância da base alargada e do lubrificante.", "Indicar o tamanho maior para iniciantes só para ‘fechar venda mais alta’.", "Conversar sobre experiência prévia do cliente."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Plug Anal, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Sempre usar lubrificante.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Plug Anal?",
-            options: ["Ignorar a orientação: Não indicar tamanho grande para iniciante sem explicar cuidado.", "Seguir a orientação: Não indicar tamanho grande para iniciante sem explicar cuidado.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Plug Anal?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "A base do plug deve ficar para fora.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },
@@ -1779,39 +1771,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Estimulantes Sexuais. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Estimulantes Sexuais?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Sachês e energéticos costumam ser usados 1 a 2 horas antes.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a proposta de um estimulante sexual da nossa loja?",
+            options: ["É um medicamento que substitui consulta médica para disfunção erétil.", "É um produto natural/suplementar que ajuda na disposição, libido e desempenho, sem substituir acompanhamento médico.", "É um produto anestésico para a parceira.", "É um lubrificante de longa duração."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Estimulantes Sexuais para um cliente?",
-            options: ["Quando o cliente busca exatamente o que estimulantes sexuais se propõe a oferecer: sachês, energéticos e cápsulas para vontade, energia e libido.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            question: "Quando faz mais sentido indicar estimulante sexual?",
+            options: ["Para o cliente que reclama de baixa libido ou queda de disposição na relação e quer um apoio natural.", "Para qualquer cliente, sempre.", "Apenas para o cliente que quer aumentar o tamanho do pênis.", "Apenas como presente para datas comemorativas."],
             correctIndex: 0,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Estimulantes Sexuais ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Você quer algo para usar hoje antes da relação ou algo de uso contínuo para melhorar libido e disposição?", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "O que a atendente NÃO deve prometer com estimulante?",
+            options: ["Que pode dar mais disposição e ajudar na libido.", "Que é um produto natural/suplementar.", "Que cura disfunção erétil ou substitui tratamento médico.", "Que existem versões para homem e para mulher."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Estimulantes Sexuais, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Não comparar como medicamento sem cuidado.", "Vender sempre o produto mais caro como única opção."],
+            question: "Cliente diz: ‘tomei remédio para pressão, pode tomar?’ Qual é a postura correta?",
+            options: ["“Pode tomar sem problema, é só natural.”", "“Como existe medicação em uso, o ideal é conversar com o médico antes de combinar com qualquer estimulante.”", "“Não, esse produto não funciona com remédios.”", "“Tome em jejum que potencializa o efeito.”"],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual é a diferença correta entre estimulante sexual e excitante?",
+            options: ["São o mesmo produto, só muda o nome.", "Estimulante geralmente é ingerido e age na disposição/libido; excitante é aplicado na pele e age na sensação local.", "Excitante é ingerido e estimulante é aplicado na pele.", "Os dois servem só para mulher."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual abordagem é mais consultiva ao oferecer estimulante?",
+            options: ["Empurrar como ‘viagra natural’ para qualquer cliente.", "Perguntar sobre a queixa (libido, disposição), reforçar que é um suplemento e indicar conforme o caso.", "Vender prometendo ereção garantida por 8 horas.", "Dizer que substitui o tratamento médico atual."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual erro de venda evitar com estimulante sexual?",
+            options: ["Indicar conforme a queixa do cliente.", "Comparar com excitantes para ajudar o cliente a escolher.", "Garantir cura de impotência ou prometer efeito de medicamento controlado.", "Falar que existem opções masculinas e femininas."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Estimulantes Sexuais, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Cápsulas funcionam como rotina/tratamento e precisam de uso contínuo.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Estimulantes Sexuais?",
-            options: ["Ignorar a orientação: Orientar diferença entre dose única e cápsula contínua.", "Seguir a orientação: Orientar diferença entre dose única e cápsula contínua.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Estimulantes Sexuais?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Existem opções masculinas, femininas e unissex.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },
@@ -1849,39 +1841,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Retardante. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Retardante?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Aplicado principalmente na glande.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a função do retardante masculino?",
+            options: ["Aumentar o tamanho do pênis permanentemente.", "Diminuir a sensibilidade do pênis, ajudando o homem a controlar e adiar a ejaculação.", "Aumentar o desejo do parceiro(a) por causa do cheiro.", "Servir como lubrificante principal da relação."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Retardante para um cliente?",
-            options: ["Quando o cliente busca exatamente o que retardante se propõe a oferecer: produtos para durar mais e controlar ejaculação precoce.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            question: "Quando é mais adequado indicar retardante?",
+            options: ["Para o cliente que reclama de ejaculação muito rápida e quer durar mais na penetração.", "Para o cliente que busca aumentar o tamanho do pênis.", "Para a cliente que quer aumentar a sensibilidade no clitóris.", "Apenas em datas comemorativas."],
             correctIndex: 0,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Retardante ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Esse é para ajudar a segurar a ejaculação. Ele reduz um pouco a sensibilidade, mas a proposta é continuar com ereção e durar mais.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "Qual cuidado a atendente precisa orientar ao vender retardante?",
+            options: ["Aplicar a quantidade que quiser, sem limite.", "Aplicar pequena quantidade no pênis, aguardar o tempo indicado e evitar contato direto da parceira com o produto, pois pode anestesiar a região dela também.", "Aplicar no clitóris da parceira para o casal durar mais.", "Beber o produto antes da relação."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual é a diferença correta entre retardante e anel peniano?",
+            options: ["São o mesmo produto.", "Retardante atua diminuindo a sensibilidade pela aplicação; o anel peniano mantém a ereção por mais tempo prendendo o fluxo sanguíneo.", "Anel peniano é ingerido e retardante é aplicado.", "Retardante serve para a mulher e o anel para o homem."],
+            correctIndex: 1,
+          },
+          {
+            question: "O que a atendente NÃO deve prometer com retardante?",
+            options: ["Que ajuda a aumentar o tempo até a ejaculação.", "Que existem opções em spray e em gel.", "Que cura ejaculação precoce de forma definitiva.", "Que deve aplicar com antecedência para fazer efeito."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Retardante, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Não prometer tempo exato para todo mundo.", "Vender sempre o produto mais caro como única opção."],
+            question: "Cliente diz: ‘minha mulher reclama que sinto muito rápido, mas ela é sensível ao produto’. Melhor resposta?",
+            options: ["“Pode passar nela também, sem problema.”", "“Existem retardantes que indicam aguardar e limpar o excesso antes da penetração, para evitar anestesiar a parceira. Vou te mostrar essa opção.”", "“Use anestésico forte na parceira para ela não reclamar.”", "“Não existe solução, é assim mesmo.”"],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual erro de venda evitar com retardante?",
+            options: ["Explicar o tempo de espera antes da relação.", "Sugerir começar com pouca quantidade.", "Vender como cura de ejaculação precoce ou medicamento.", "Apresentar opções em gel e spray."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Retardante, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Ajuda a reduzir sensibilidade, não a tirar prazer completamente.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Retardante?",
-            options: ["Ignorar a orientação: Diferenciar retardante de produto para ereção.", "Seguir a orientação: Diferenciar retardante de produto para ereção.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Retardante?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Pode ser combinado com vasodilatador masculino quando há preocupação com ereção.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },
@@ -1923,39 +1915,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Anel Peniano. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Anel Peniano?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Ajuda o homem a manter ereção mais firme.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a função do anel peniano?",
+            options: ["Anestesiar o pênis para retardar a ejaculação.", "Manter a ereção firme por mais tempo, prendendo levemente o fluxo sanguíneo na base do pênis.", "Substituir o pênis durante a penetração.", "Aumentar o tamanho do pênis de forma permanente."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Anel Peniano para um cliente?",
-            options: ["Quando o cliente busca exatamente o que anel peniano se propõe a oferecer: anéis para ereção mais firme, retardar ejaculação e estimular clitóris.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            question: "Quando é mais adequado indicar um anel peniano com vibração?",
+            options: ["Quando o casal quer manter a ereção firme e ainda estimular o clitóris da parceira durante a penetração.", "Quando o cliente quer apenas durar mais tempo, sem estímulo extra.", "Quando a cliente quer um produto para usar sozinha sem o parceiro.", "Quando o objetivo é tratamento médico de impotência."],
             correctIndex: 0,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Anel Peniano ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Ele ajuda o pênis a ficar mais firme e, se for vibratório, ainda estimula o clitóris durante a penetração.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "Qual cuidado a atendente precisa reforçar ao vender anel peniano?",
+            options: ["Pode ficar a noite toda usando, quanto mais tempo melhor.", "Não usar por longos períodos (geralmente até 20–30 min) e retirar se sentir desconforto/dormência.", "Apertar o máximo possível para garantir efeito.", "Usar sempre sem lubrificante."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual é a diferença correta entre anel peniano e capa peniana?",
+            options: ["São o mesmo produto.", "O anel prende a base do pênis para manter a ereção; a capa encaixa sobre o pênis para aumentar volume/textura/comprimento.", "O anel aumenta o pênis; a capa só mantém a ereção.", "Os dois servem para a parceira usar sozinha."],
+            correctIndex: 1,
+          },
+          {
+            question: "O que a atendente NÃO deve prometer com anel peniano?",
+            options: ["Que ajuda a manter a ereção mais firme.", "Que pode ter vibração e estimular a parceira.", "Que cura disfunção erétil ou serve como tratamento médico.", "Que existem modelos em silicone, com vibração e sem vibração."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Anel Peniano, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Explicar diferença entre simples e vibratório.", "Vender sempre o produto mais caro como única opção."],
+            question: "Cliente diz: ‘perco a ereção no meio da relação’. Indicação mais consultiva?",
+            options: ["Vender retardante.", "Apresentar anel peniano (com ou sem vibração), explicando que ajuda a manter a ereção firme; se persistir, recomendar avaliação médica.", "Indicar plug anal.", "Indicar adstringente para a parceira."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual erro de venda evitar com anel peniano?",
+            options: ["Mostrar opções com e sem vibração.", "Falar do limite de tempo de uso.", "Indicar para usar por horas seguidas como se não houvesse risco.", "Explicar como colocar e retirar."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Anel Peniano, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Pode retardar a ejaculação por segurar a circulação.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Anel Peniano?",
-            options: ["Ignorar a orientação: Não apertar excessivamente por tempo prolongado.", "Seguir a orientação: Não apertar excessivamente por tempo prolongado.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Anel Peniano?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Modelos vibratórios estimulam a parceira.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },
@@ -2001,39 +1993,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Sado. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Sado?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Algemas de couro sintético costumam ser mais confortáveis e resistentes.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a proposta dos produtos de sado/BDSM da loja (algemas, vendas, palmatórias, mordaças)?",
+            options: ["São itens médicos para tratar problemas físicos.", "São acessórios para brincadeiras consensuais que envolvem submissão, dominação, restrição e exploração sensorial.", "Substituem o pênis durante a relação.", "São apenas itens decorativos sem uso real."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Sado para um cliente?",
-            options: ["Quando o cliente busca exatamente o que sado se propõe a oferecer: acessórios para dominação, contenção, sensações e fantasia.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
-            correctIndex: 0,
+            question: "Quando é mais adequado indicar produtos de sado?",
+            options: ["Para qualquer cliente, sempre.", "Para clientes que querem incrementar a relação com elementos de fantasia, dominação/submissão consensuais ou exploração sensorial.", "Apenas para clientes que sofrem de algum problema sexual.", "Apenas para datas comemorativas, como presente."],
+            correctIndex: 1,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Sado ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Tem opções mais leves para brincadeira casual e opções mais resistentes para quem quer algo mais completo.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "Qual cuidado fundamental a atendente deve orientar ao vender produtos de sado?",
+            options: ["Não precisa de combinação prévia, ‘surpresa é melhor’.", "Reforçar consentimento entre as partes, combinar uma palavra de segurança e nunca apertar/prender sem comunicação.", "Quanto mais apertado e por mais tempo, melhor a experiência.", "É um produto médico, dispensa qualquer orientação."],
+            correctIndex: 1,
+          },
+          {
+            question: "Sobre algemas de metal vs. algemas de tecido/veludo, o que é correto?",
+            options: ["Não há diferença alguma, são iguais.", "As de tecido/veludo são mais confortáveis e indicadas para iniciantes; as de metal são mais firmes e podem machucar se mal usadas.", "As de metal são para iniciantes e as de veludo para experientes.", "Só as de metal funcionam de verdade."],
+            correctIndex: 1,
+          },
+          {
+            question: "O que a atendente NÃO deve fazer ao vender produtos de sado?",
+            options: ["Perguntar a experiência prévia do cliente.", "Recomendar começar com itens mais leves para iniciantes.", "Julgar a prática do cliente ou tratar como algo errado/estranho.", "Explicar a importância da palavra de segurança."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Sado, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Falar sempre de consentimento e segurança.", "Vender sempre o produto mais caro como única opção."],
+            question: "Cliente iniciante diz: ‘quero algo para começar a brincar de dominação com meu parceiro’. Indicação mais consultiva?",
+            options: ["Um kit completo de sado pesado.", "Kit iniciante leve: venda nos olhos, algema confortável, talvez uma pena ou palmatória leve — explicando consentimento e palavra de segurança.", "Uma mordaça pesada de bola.", "Apenas um chicote pesado."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual erro de venda evitar com sado?",
+            options: ["Adaptar a indicação ao nível de experiência.", "Reforçar consentimento e palavra de segurança.", "Empurrar itens pesados para iniciantes só pelo ticket maior.", "Mostrar diferentes materiais (veludo, couro, metal)."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Sado, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Algema de metal com pelúcia é mais casual.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Sado?",
-            options: ["Ignorar a orientação: Diferenciar resistência dos materiais.", "Seguir a orientação: Diferenciar resistência dos materiais.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Sado?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Kits completos ajudam quem quer variedade.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },
@@ -2074,39 +2066,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Lubrificante. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Lubrificante?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Base água é mais versátil e compatível com preservativo/sex toy.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a função principal do lubrificante íntimo?",
+            options: ["Anestesiar a região durante a relação.", "Reduzir o atrito e aumentar o conforto durante a relação, masturbação ou uso de acessórios.", "Aumentar o tamanho do pênis.", "Substituir o preservativo como contraceptivo."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Lubrificante para um cliente?",
-            options: ["Quando o cliente busca exatamente o que lubrificante se propõe a oferecer: produtos para reduzir atrito, aumentar conforto e melhorar a relação.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
-            correctIndex: 0,
+            question: "Para uso com brinquedo de silicone, qual lubrificante deve ser indicado?",
+            options: ["Lubrificante à base de silicone, porque dura mais.", "Lubrificante à base de água, porque o de silicone pode danificar o silicone do brinquedo.", "Vaselina ou óleo de cozinha.", "Qualquer creme hidratante para o corpo."],
+            correctIndex: 1,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Lubrificante ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Para te indicar certo, você quer usar com preservativo, sex toy, anal, oral ou no banho?", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "Quando o lubrificante à base de silicone é mais indicado?",
+            options: ["Para usar com brinquedos de silicone.", "Para relações longas, banho/piscina ou sexo anal — porque dura mais e é mais escorregadio.", "Para uso oral, porque tem ótimo sabor.", "Apenas para crianças."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual é a diferença correta entre lubrificante neutro e lubrificante beijável?",
+            options: ["São o mesmo produto.", "O neutro é para uso geral, sem aroma/sabor; o beijável tem sabor e pode ser usado no sexo oral.", "O beijável é apenas para uso anal.", "O neutro é só para sexo oral."],
+            correctIndex: 1,
+          },
+          {
+            question: "O que a atendente NÃO deve recomendar como lubrificante?",
+            options: ["Lubrificante à base de água.", "Lubrificante à base de silicone para uso com brinquedos não-silicone.", "Vaselina, óleo de cozinha ou cremes corporais como substitutos.", "Lubrificante específico para uso anal."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Lubrificante, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Não indicar silicone sem perguntar se vai usar com preservativo/sex toy.", "Vender sempre o produto mais caro como única opção."],
+            question: "Cliente diz: ‘minha esposa sente muito incômodo de ressecamento na hora do sexo’. Indicação mais consultiva?",
+            options: ["Vender adstringente, para apertar o canal.", "Indicar lubrificante à base de água, explicando que ajuda no conforto e que ressecamento crônico merece atenção médica.", "Indicar excitante apenas, sem lubrificante.", "Indicar capa peniana com cerdas."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual erro de venda evitar com lubrificante?",
+            options: ["Perguntar se vai usar com brinquedo, oral ou anal.", "Mostrar versões à base de água, silicone e beijáveis.", "Falar que lubrificante é desnecessário e que é ‘falta de tesão’ usar.", "Alertar sobre compatibilidade com o material do brinquedo."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Lubrificante, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Base silicone dura mais e resiste à água, mas exige cuidado com preservativo e sex toy.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Lubrificante?",
-            options: ["Ignorar a orientação: Diferenciar base água de silicone.", "Seguir a orientação: Diferenciar base água de silicone.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Lubrificante?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Lubrificante anal precisa de maior conforto e hidratação.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },
@@ -2148,39 +2140,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Masturbador Masculino. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Masturbador Masculino?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Textura interna é o principal diferencial.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a função principal do masturbador masculino (em cyber skin/TPE)?",
+            options: ["Substituir totalmente a parceira em toda relação sexual.", "Proporcionar uma masturbação mais realista, com sensação semelhante ao toque/penetração real.", "Aumentar o tamanho do pênis permanentemente.", "Servir como item decorativo."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Masturbador Masculino para um cliente?",
-            options: ["Quando o cliente busca exatamente o que masturbador masculino se propõe a oferecer: produtos para masturbação masculina com textura e realismo.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            question: "Por que se recomenda usar lubrificante à base de água com masturbador de cyber skin/TPE?",
+            options: ["Porque a base de silicone pode danificar o material e ressecar o produto.", "Porque o lubrificante de silicone é mais barato.", "Porque o cyber skin precisa ser ‘alimentado’ por silicone.", "Porque é proibido por lei usar à base de água."],
             correctIndex: 0,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Masturbador Masculino ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Você prefere algo mais discreto, mais realístico ou um modelo automático com mais tecnologia?", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "Qual cuidado de manutenção a atendente precisa orientar para masturbador?",
+            options: ["Não precisa lavar, só guardar.", "Lavar antes e depois do uso com água morna e sabão neutro, secar bem e guardar protegido do pó.", "Lavar com álcool puro sempre.", "Colocar no micro-ondas para esterilizar."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual é a diferença correta entre masturbador realístico (formato de vagina/boca) e ovo/manga?",
+            options: ["Não há diferença alguma.", "O realístico imita o formato externo (vagina, boca, ânus) e costuma ser maior; o ovo/manga é menor, mais discreto e focado no canal interno.", "O ovo é elétrico; o realístico nunca.", "O realístico é só para uso a dois; o ovo só para uso solo."],
+            correctIndex: 1,
+          },
+          {
+            question: "O que a atendente NÃO deve prometer com masturbador masculino?",
+            options: ["Que oferece sensação realista.", "Que tem cuidados de limpeza específicos.", "Que cura disfunção erétil ou ‘corrige’ ejaculação precoce.", "Que pode ter texturas diferentes internas."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Masturbador Masculino, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Orientar uso com lubrificante.", "Vender sempre o produto mais caro como única opção."],
+            question: "Cliente diz: ‘meu marido viaja muito, queria algo para ele se masturbar com mais prazer’. Melhor indicação?",
+            options: ["Pênis realístico para o cliente.", "Masturbador masculino, explicando os tipos (ovo, manga, realístico) e os cuidados de uso e limpeza.", "Plug anal pequeno.", "Anel peniano com vibração."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual erro de venda evitar com masturbador masculino?",
+            options: ["Mostrar opções com texturas e formatos diferentes.", "Explicar limpeza e conservação.", "Indicar lubrificante de silicone para usar com cyber skin.", "Apresentar lubrificante à base de água como complemento."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Masturbador Masculino, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Lubrificante melhora muito a experiência.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Masturbador Masculino?",
-            options: ["Ignorar a orientação: Explicar higienização após o uso.", "Seguir a orientação: Explicar higienização após o uso.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Masturbador Masculino?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Alguns simulam vagina, boca ou ânus.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },
@@ -2221,39 +2213,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Roupas. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Roupas?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Vende emoção, autoestima e provocação.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a proposta das roupas/lingerie sensuais da loja?",
+            options: ["Substituir roupa de uso diário.", "Provocar, criar fantasia, valorizar o corpo e incrementar a relação com elementos visuais.", "Servir como produto medicinal.", "Substituir o lubrificante."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Roupas para um cliente?",
-            options: ["Quando o cliente busca exatamente o que roupas se propõe a oferecer: fantasias, lingeries e peças para provocar desejo.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            question: "Quando é mais adequado indicar uma fantasia/roleplay (enfermeira, policial, colegial)?",
+            options: ["Quando o casal quer trazer um elemento de fantasia/encenação para sair da rotina.", "Apenas quando a cliente pede pelo nome exato da fantasia.", "Apenas para clientes solteiros.", "Apenas em datas comemorativas."],
             correctIndex: 0,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Roupas ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Você quer algo mais elegante, provocante, fantasia ou uma peça mais surpresa?", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "Qual diferença correta entre body stocking (meia arrastão de corpo inteiro) e lingerie clássica?",
+            options: ["São o mesmo produto.", "O body stocking cobre o corpo todo em tecido tipo arrastão; a lingerie clássica é em peças (sutiã, calcinha, cinta) com mais sustentação.", "O body stocking só serve para homem.", "Lingerie clássica não pode ser usada na relação."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual cuidado a atendente precisa ter ao indicar tamanho de roupa sensual?",
+            options: ["Garantir que serve em todo mundo, sem perguntar.", "Confirmar manequim/medidas com a cliente, explicar que muitas peças têm tabela específica e que materiais finos são delicados.", "Sempre indicar o maior tamanho disponível.", "Dizer que não importa o tamanho, é elástico."],
+            correctIndex: 1,
+          },
+          {
+            question: "O que a atendente NÃO deve fazer ao vender roupas sensuais?",
+            options: ["Mostrar diferentes estilos e ocasiões.", "Sugerir combinações (lingerie + meia + acessório).", "Julgar o estilo escolhido pela cliente ou comentar sobre o corpo de forma negativa.", "Explicar como lavar/cuidar das peças."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Roupas, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Não focar só no tamanho; entender estilo.", "Vender sempre o produto mais caro como única opção."],
+            question: "Cliente diz: ‘quero algo para apimentar a noite com meu marido, mas sou tímida’. Indicação mais consultiva?",
+            options: ["Fantasia de látex cheia de detalhes.", "Camisola sensual ou conjunto de lingerie clássica mais delicado, que valorize o corpo sem ser exagerado.", "Body stocking inteiro de arrastão preto.", "Apenas acessórios de sado pesado."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual erro de venda evitar com roupas?",
+            options: ["Ajudar na escolha de tamanho.", "Sugerir combinações (peça + acessório).", "Empurrar uma peça muito ousada para uma cliente tímida só pelo ticket maior.", "Mostrar fantasias e lingerie clássica como opções diferentes."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Roupas, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Perguntar estilo desejado ajuda na indicação.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Roupas?",
-            options: ["Ignorar a orientação: Explicar cuidado com troca/higiene quando necessário.", "Seguir a orientação: Explicar cuidado com troca/higiene quando necessário.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Roupas?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Existem peças mais discretas e mais ousadas.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },
@@ -2293,39 +2285,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Anestésicos. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Anestésicos?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Anestésico anal não substitui lubrificante.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a função principal dos anestésicos íntimos vendidos na loja?",
+            options: ["Aumentar a sensibilidade da região para sentir mais.", "Diminuir a sensibilidade da região, ajudando a tolerar melhor sexo anal ou retardar ejaculação (quando aplicados no pênis).", "Curar dor crônica na região íntima.", "Substituir o lubrificante."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Anestésicos para um cliente?",
-            options: ["Quando o cliente busca exatamente o que anestésicos se propõe a oferecer: produtos para reduzir desconforto em práticas específicas.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            question: "Quando é mais adequado indicar anestésico anal?",
+            options: ["Para casais iniciantes em sexo anal, junto com bastante lubrificante específico e introdução cuidadosa.", "Para qualquer cliente, sem entender a necessidade.", "Para curar fissura anal.", "Para uso oral."],
             correctIndex: 0,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Anestésicos ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Ele ajuda a reduzir o desconforto, mas ainda precisa usar com calma, lubrificação e cuidado.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "Qual cuidado fundamental ao vender anestésico anal?",
+            options: ["Aplicar a maior quantidade possível para ‘não sentir nada’.", "Alertar que anestesiar demais pode mascarar dor de lesão; usar pouca quantidade, ir devagar e nunca usar anestésico para ‘aguentar’ algo doloroso.", "Garantir que cura qualquer problema da região.", "Recomendar usar diariamente."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual é a diferença correta entre anestésico e retardante?",
+            options: ["São o mesmo produto.", "Anestésico foca em reduzir sensibilidade para tolerar melhor uma prática (ex.: anal); retardante é especificamente para o pênis adiar a ejaculação.", "Anestésico é só para mulher e retardante só para homem.", "Retardante é mais forte que anestésico."],
+            correctIndex: 1,
+          },
+          {
+            question: "O que a atendente NÃO deve prometer com anestésico?",
+            options: ["Que diminui a sensibilidade temporariamente.", "Que precisa de lubrificação adequada.", "Que cura dor crônica ou substitui avaliação médica.", "Que existe versão para uso anal e para uso peniano."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Anestésicos, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Não prometer ausência total de dor.", "Vender sempre o produto mais caro como única opção."],
+            question: "Cliente diz: ‘sinto muita dor no sexo anal, queria algo para não sentir nada’. Postura correta?",
+            options: ["Vender o anestésico mais forte sem explicação.", "Explicar que dor forte pode indicar falta de lubrificação, técnica errada ou problema físico; oferecer lubrificante específico + anestésico leve, com orientação de uso cuidadoso.", "Dizer que é normal e mandar usar.", "Recomendar plug anal grande de cara."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual erro de venda evitar com anestésico?",
+            options: ["Combinar com lubrificante específico para anal.", "Explicar para começar com pouca quantidade.", "Vender anestésico para o cliente ‘aguentar’ algo que dói muito, sem alertar sobre o risco.", "Mostrar opções em gel e spray."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Anestésicos, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "O objetivo é reduzir desconforto, não tirar 100% da sensibilidade.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Anestésicos?",
-            options: ["Ignorar a orientação: Reforçar lubrificante no anal.", "Seguir a orientação: Reforçar lubrificante no anal.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Anestésicos?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Spray de garganta ajuda a reduzir ânsia no oral profundo.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },
@@ -2364,39 +2356,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Vibrador Rabbit. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Vibrador Rabbit?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Tem estímulo duplo.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a característica que define o vibrador rabbit?",
+            options: ["Ter apenas um motor interno simples.", "Ter uma parte para penetração (estímulo no ponto G) e uma haste/orelhinhas externas que estimulam o clitóris ao mesmo tempo.", "Ser usado apenas externamente, sem penetração.", "Ser um vibrador exclusivamente anal."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Vibrador Rabbit para um cliente?",
-            options: ["Quando o cliente busca exatamente o que vibrador rabbit se propõe a oferecer: vibrador de estímulo duplo: ponto g e clitóris.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            question: "Quando é mais adequado indicar um rabbit?",
+            options: ["Para cliente que quer estímulo duplo: clitóris e ponto G ao mesmo tempo.", "Para cliente que quer apenas estímulo no clitóris.", "Para casais que querem usar durante a penetração a dois.", "Para uso anal exclusivamente."],
             correctIndex: 0,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Vibrador Rabbit ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Esse é indicado para quem quer sentir penetração e estímulo no clitóris ao mesmo tempo.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "Qual é a diferença correta entre rabbit e sugador de clitóris?",
+            options: ["São o mesmo produto.", "Rabbit penetra e estimula o clitóris com vibração/contato; o sugador trabalha por ondas de pressão/sucção só no clitóris, sem penetrar.", "O rabbit só é externo; o sugador penetra.", "Sugador é elétrico e rabbit não."],
+            correctIndex: 1,
+          },
+          {
+            question: "Cliente diz: ‘nunca tive orgasmo só pela penetração’. Indicação mais consultiva?",
+            options: ["Vender um pênis realístico simples.", "Apresentar um vibrador rabbit, explicando que estimula clitóris e ponto G ao mesmo tempo, o que ajuda muitas mulheres a chegar ao orgasmo.", "Indicar um plug anal.", "Indicar somente lubrificante."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual lubrificante combina melhor com rabbit em silicone?",
+            options: ["Lubrificante à base de silicone, porque dura mais.", "Lubrificante à base de água, para não danificar o silicone do brinquedo.", "Vaselina.", "Óleo de cozinha."],
+            correctIndex: 1,
+          },
+          {
+            question: "O que a atendente NÃO deve prometer com o rabbit?",
+            options: ["Que pode ter recarga USB.", "Que existem modelos com balls rotativos.", "Que garante orgasmo em 100% das mulheres.", "Que tem várias velocidades de vibração."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Vibrador Rabbit, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Perguntar se a cliente gosta de penetração.", "Vender sempre o produto mais caro como única opção."],
+            question: "Qual erro de venda evitar com rabbit?",
+            options: ["Mostrar opções com recarga USB e à pilha.", "Explicar a função de cada parte (interna e externa).", "Indicar lubrificante de silicone para um rabbit de silicone.", "Comparar com sugador para ajudar na escolha."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Vibrador Rabbit, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Pode ajudar em orgasmos mais intensos.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Vibrador Rabbit?",
-            options: ["Ignorar a orientação: Não indicar tamanho grande sem considerar experiência.", "Seguir a orientação: Não indicar tamanho grande sem considerar experiência.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Vibrador Rabbit?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "O formato externo estimula o clitóris.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },
@@ -2435,39 +2427,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Sugador de Clitóris. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Sugador de Clitóris?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Foco principal é o clitóris.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Como o sugador de clitóris funciona, tecnicamente?",
+            options: ["Por penetração vaginal profunda.", "Por ondas de pressão/sucção do ar sobre o clitóris, sem precisar tocar diretamente.", "Por aquecimento da região.", "Por anestesia local na área."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Sugador de Clitóris para um cliente?",
-            options: ["Quando o cliente busca exatamente o que sugador de clitóris se propõe a oferecer: estímulo focado no clitóris por sucção/vibração.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            question: "Quando é mais adequado indicar o sugador de clitóris?",
+            options: ["Para clientes que sentem muito prazer no estímulo clitoriano e querem uma sensação diferente (sucção/onda).", "Para clientes que querem apenas estímulo interno.", "Para clientes que querem usar durante a penetração com o parceiro.", "Apenas como presente de Natal."],
             correctIndex: 0,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Sugador de Clitóris ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Esse é ideal para quem sente mais prazer no clitóris e quer um estímulo mais intenso e direto.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "Qual é a diferença correta entre sugador e vibrador clitoriano comum?",
+            options: ["São o mesmo produto.", "O vibrador clitoriano vibra em contato; o sugador trabalha por sucção/ondas de pressão, sem necessidade de contato direto.", "Sugador é só elétrico e vibrador é só à pilha.", "Sugador penetra e vibrador não."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual cuidado importante ao usar o sugador?",
+            options: ["Apertar bem forte contra o clitóris para garantir efeito.", "Apoiar o bocal sobre o clitóris sem prensar com força, usar lubrificante à base de água se for sensível, e respeitar o limite de sensibilidade.", "Usar em qualquer região do corpo, sem cuidado.", "Aquecer no fogo antes do uso."],
+            correctIndex: 1,
+          },
+          {
+            question: "Cliente diz: ‘chego ao orgasmo, mas demoro muito’. Indicação mais consultiva?",
+            options: ["Vender retardante para o parceiro.", "Apresentar o sugador de clitóris, explicando que muitas mulheres relatam orgasmo mais rápido e intenso com sucção/ondas de pressão.", "Indicar adstringente.", "Indicar plug anal."],
+            correctIndex: 1,
+          },
+          {
+            question: "O que a atendente NÃO deve prometer com sugador?",
+            options: ["Que oferece sensação diferente dos vibradores comuns.", "Que tem várias intensidades.", "Que garante orgasmo a todas as mulheres em qualquer situação.", "Que muitos modelos são recarregáveis e à prova d’água."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Sugador de Clitóris, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Perguntar se ela gosta de estímulo externo.", "Vender sempre o produto mais caro como única opção."],
+            question: "Qual erro de venda evitar com sugador de clitóris?",
+            options: ["Explicar como apoiar o bocal corretamente.", "Mostrar modelos com diferentes intensidades.", "Vender garantindo que substitui qualquer outro vibrador para qualquer mulher.", "Recomendar lubrificante à base de água."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Sugador de Clitóris, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Pode gerar orgasmo rápido e intenso.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Sugador de Clitóris?",
-            options: ["Ignorar a orientação: Explicar diferença entre sucção e vibração.", "Seguir a orientação: Explicar diferença entre sucção e vibração.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Sugador de Clitóris?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Existem modelos de entrada, intermediários e completos.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },
@@ -2504,39 +2496,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Vibrador de Calcinha. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Vibrador de Calcinha?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Discrição é o principal diferencial.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a proposta do vibrador de calcinha?",
+            options: ["Substituir a calcinha do dia a dia.", "Ser pequeno e discreto, fixado na calcinha, para estimular a região íntima — muitas vezes com controle remoto.", "Aumentar o tamanho do pênis.", "Servir como anel peniano."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Vibrador de Calcinha para um cliente?",
-            options: ["Quando o cliente busca exatamente o que vibrador de calcinha se propõe a oferecer: vibrador discreto para usar fixado na calcinha.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            question: "Qual é o principal diferencial do vibrador de calcinha em relação a outros vibradores?",
+            options: ["Tem maior potência possível.", "A discrição e o controle remoto/à distância, permitindo brincadeira a dois fora de casa.", "Sempre penetra profundamente.", "É à prova d’água em todos os modelos."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar vibrador de calcinha?",
+            options: ["Para casais que querem brincar com controle à distância e estímulo discreto.", "Para cliente que quer estímulo interno profundo.", "Para uso anal exclusivamente.", "Apenas como item decorativo."],
             correctIndex: 0,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Vibrador de Calcinha ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Esse é legal para casal brincar com controle à distância, de forma discreta e provocante.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "Qual cuidado a atendente precisa orientar com vibrador de calcinha?",
+            options: ["Pode ser usado dentro d’água sempre, em qualquer modelo.", "Conferir como o brinquedo fixa (ímã, encaixe), checar bateria do controle e respeitar o alcance do controle remoto.", "Compartilhar entre várias pessoas sem higienização.", "Usar sem roupa para funcionar."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual é a diferença correta entre vibrador de calcinha e vibrador de aplicativo?",
+            options: ["São o mesmo produto.", "O de calcinha geralmente vem com controle remoto físico de curto alcance; o de aplicativo é controlado por celular, permitindo controle de qualquer distância via internet.", "O de aplicativo só funciona para homem.", "O de calcinha é elétrico e o de app não."],
+            correctIndex: 1,
+          },
+          {
+            question: "O que a atendente NÃO deve prometer com vibrador de calcinha?",
+            options: ["Que é discreto.", "Que tem controle remoto.", "Que substitui qualquer outro vibrador, inclusive penetração profunda.", "Que pode ser usado em casa ou em saídas."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Vibrador de Calcinha, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Explicar como fixa na calcinha.", "Vender sempre o produto mais caro como única opção."],
+            question: "Qual erro de venda evitar com vibrador de calcinha?",
+            options: ["Explicar o alcance do controle.", "Mostrar como fixa na calcinha.", "Vender prometendo que é à prova d’água sem confirmar no modelo.", "Comparar com vibrador de aplicativo."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Vibrador de Calcinha, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Controle sem fio permite brincadeira a dois.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Vibrador de Calcinha?",
-            options: ["Ignorar a orientação: Verificar bateria/controle.", "Seguir a orientação: Verificar bateria/controle.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Vibrador de Calcinha?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Pode ser usado em casa ou em saídas discretas.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },
@@ -2573,39 +2565,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Máquina de Sexo. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Máquina de Sexo?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Movimento automático é o principal diferencial.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a proposta da máquina de sexo?",
+            options: ["Substituir totalmente o parceiro em qualquer relação.", "Reproduzir o movimento de penetração de forma automática, com velocidades reguláveis, para uso solo ou a dois.", "Servir como item de decoração.", "Funcionar como anticoncepcional."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Máquina de Sexo para um cliente?",
-            options: ["Quando o cliente busca exatamente o que máquina de sexo se propõe a oferecer: produto automático que simula movimento de penetração.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            question: "Quando é mais adequado indicar uma máquina de sexo?",
+            options: ["Para cliente experiente que quer um nível de estímulo diferente, com penetração automática.", "Para cliente iniciante absoluto, sem orientação.", "Para qualquer cliente, sempre.", "Apenas para uso anal."],
             correctIndex: 0,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Máquina de Sexo ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Essa é para quem quer uma experiência automática, com movimento de penetração e mais intensidade.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "Qual cuidado importante ao vender máquina de sexo?",
+            options: ["Usar sempre na velocidade máxima de cara.", "Começar nas velocidades menores, usar bastante lubrificante adequado ao material do dildo e nunca usar contra dor/incômodo.", "Não precisa de lubrificação.", "Pode ser ligada na água sem cuidado."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual é a diferença correta entre máquina de sexo e vibrador comum?",
+            options: ["São o mesmo produto.", "O vibrador comum vibra; a máquina de sexo reproduz o movimento de vai-e-vem (penetração) de forma automática.", "Vibrador é elétrico e máquina não.", "Vibrador é só externo e máquina só anal."],
+            correctIndex: 1,
+          },
+          {
+            question: "O que a atendente NÃO deve prometer com máquina de sexo?",
+            options: ["Que tem velocidades reguláveis.", "Que pode trocar o dildo em alguns modelos.", "Que cura disfunção sexual ou problemas do casal.", "Que é mais indicada para quem já tem alguma experiência."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Máquina de Sexo, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Explicar tamanho e potência.", "Vender sempre o produto mais caro como única opção."],
+            question: "Cliente diz: ‘quero algo bem intenso para usar sozinha, com penetração automática’. Indicação mais consultiva?",
+            options: ["Mini vibrador clitoriano.", "Máquina de sexo, explicando regulagem de velocidade, lubrificação e cuidados de uso.", "Sugador de clitóris.", "Vibrador de calcinha."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual erro de venda evitar com máquina de sexo?",
+            options: ["Explicar como regular a velocidade.", "Recomendar lubrificante adequado.", "Indicar para iniciante absoluta sem alertar sobre intensidade e cuidados.", "Mostrar opções com dildo intercambiável."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Máquina de Sexo, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Pode ter velocidades diferentes.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Máquina de Sexo?",
-            options: ["Ignorar a orientação: Orientar uso de lubrificante.", "Seguir a orientação: Orientar uso de lubrificante.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Máquina de Sexo?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Algumas vibram e aquecem.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },
@@ -2643,39 +2635,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Vibrador de Casal. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Vibrador de Casal?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Feito para o casal usar junto.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a proposta do vibrador de casal (em formato de U/V)?",
+            options: ["Substituir o pênis durante a relação.", "Ser usado durante a penetração: uma parte fica interna estimulando a mulher e a outra externa estimula o clitóris (e o pênis também sente a vibração).", "Ser usado apenas pela mulher sozinha.", "Ser um vibrador exclusivamente anal."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Vibrador de Casal para um cliente?",
-            options: ["Quando o cliente busca exatamente o que vibrador de casal se propõe a oferecer: vibrador para usar durante a penetração a dois.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            question: "Quando é mais adequado indicar vibrador de casal?",
+            options: ["Para o casal que quer mais estímulo durante o ato, sem trocar o parceiro pelo brinquedo.", "Para cliente que quer um brinquedo só para uso solo.", "Para uso oral exclusivo.", "Apenas como item decorativo."],
             correctIndex: 0,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Vibrador de Casal ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Ele é feito para usar durante a relação, então os dois sentem estímulo ao mesmo tempo.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "Qual é a diferença correta entre vibrador de casal e vibrador rabbit?",
+            options: ["São o mesmo produto.", "O rabbit é usado pela mulher (penetra e estimula clitóris); o de casal é desenhado para ser usado durante a relação com o parceiro, estimulando ambos.", "Os dois são iguais, só muda a cor.", "Vibrador de casal só é externo."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual cuidado a atendente precisa orientar com vibrador de casal?",
+            options: ["Não precisa de lubrificante.", "Explicar o posicionamento correto (parte interna na vagina, externa no clitóris) e recomendar lubrificante à base de água se for silicone.", "Pode-se compartilhar sem higienizar.", "Sempre usar na potência máxima."],
+            correctIndex: 1,
+          },
+          {
+            question: "O que a atendente NÃO deve prometer com vibrador de casal?",
+            options: ["Que pode ter controle remoto ou app.", "Que o pênis também sente vibração durante a penetração.", "Que substitui qualquer problema de desempenho ou desejo do casal.", "Que estimula clitóris e ponto G ao mesmo tempo."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Vibrador de Casal, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Explicar posicionamento correto.", "Vender sempre o produto mais caro como única opção."],
+            question: "Cliente diz: ‘queria algo para os dois sentirem prazer ao mesmo tempo durante a relação’. Indicação mais consultiva?",
+            options: ["Plug anal pequeno.", "Vibrador de casal em formato U/V, explicando como se encaixa e como cada um sente o estímulo.", "Apenas lubrificante neutro.", "Apenas um pênis realístico."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual erro de venda evitar com vibrador de casal?",
+            options: ["Mostrar opções com app/controle.", "Explicar posicionamento.", "Vender confundindo com vibrador individual comum, sem explicar o uso a dois.", "Recomendar lubrificante adequado."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Vibrador de Casal, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Parte interna estimula a mulher por dentro.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Vibrador de Casal?",
-            options: ["Ignorar a orientação: Não confundir com vibrador individual comum.", "Seguir a orientação: Não confundir com vibrador individual comum.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Vibrador de Casal?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Parte externa estimula clitóris.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },
@@ -2712,39 +2704,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Vibrador de Aplicativo. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Vibrador de Aplicativo?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Controle por aplicativo é o diferencial.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a principal característica do vibrador de aplicativo?",
+            options: ["Ser ligado apenas por controle físico de curto alcance.", "Ser controlado pelo celular via app, permitindo controle remoto via internet, padrões personalizados e brincadeira à distância.", "Não ter nenhum tipo de vibração.", "Ser um vibrador exclusivamente anal."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Vibrador de Aplicativo para um cliente?",
-            options: ["Quando o cliente busca exatamente o que vibrador de aplicativo se propõe a oferecer: vibrador controlado pelo celular, inclusive à distância.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            question: "Quando é mais adequado indicar vibrador de aplicativo?",
+            options: ["Para casais em relacionamento à distância ou que querem brincar de longe.", "Para cliente que não tem smartphone.", "Apenas para uso solo sem nenhum controle.", "Apenas para uso médico."],
             correctIndex: 0,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Vibrador de Aplicativo ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Esse dá para o parceiro controlar pelo celular, até de longe dependendo do modelo.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "Qual cuidado a atendente precisa orientar com vibrador de app?",
+            options: ["Não importa o app, qualquer celular funciona sem configurar.", "Avisar que precisa baixar o aplicativo do fabricante, parear via Bluetooth e que recursos à distância via internet exigem conexão de ambos os lados.", "Pode usar sem carregar a bateria.", "Só funciona em celulares antigos."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual é a diferença correta entre vibrador de aplicativo e vibrador de calcinha simples?",
+            options: ["São o mesmo produto.", "O de aplicativo é controlado pelo celular, com alcance via internet; o de calcinha simples normalmente vem com controle remoto físico de curto alcance.", "O de calcinha sempre tem app.", "Vibrador de app não vibra."],
+            correctIndex: 1,
+          },
+          {
+            question: "O que a atendente NÃO deve prometer com vibrador de aplicativo?",
+            options: ["Que tem padrões de vibração personalizáveis.", "Que pode ser controlado à distância.", "Que funciona sem internet/sem bateria/sem o app instalado.", "Que é recarregável."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Vibrador de Aplicativo, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Explicar necessidade de aplicativo.", "Vender sempre o produto mais caro como única opção."],
+            question: "Cliente diz: ‘meu parceiro mora em outra cidade, queria algo que ele controlasse à distância’. Indicação mais consultiva?",
+            options: ["Vibrador de calcinha com controle físico de curto alcance.", "Vibrador de aplicativo, explicando a necessidade do app, Bluetooth e conexão de internet de ambos os lados.", "Anel peniano.", "Plug anal."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual erro de venda evitar com vibrador de aplicativo?",
+            options: ["Explicar o passo a passo de instalação do app.", "Falar sobre alcance e dependência de internet.", "Vender prometendo controle remoto sem internet e sem app.", "Mostrar funcionalidades de padrões personalizados."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Vibrador de Aplicativo, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Pode permitir controle de longa distância.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Vibrador de Aplicativo?",
-            options: ["Ignorar a orientação: Verificar bateria e conexão.", "Seguir a orientação: Verificar bateria e conexão.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Vibrador de Aplicativo?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Muito usado por casais.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },
@@ -2782,39 +2774,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Varinha Mágica. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Varinha Mágica?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Foco é estímulo externo.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
-            correctIndex: 1,
-          },
-          {
-            question: "Quando é mais adequado indicar Varinha Mágica para um cliente?",
-            options: ["Quando o cliente busca exatamente o que varinha mágica se propõe a oferecer: vibrador externo potente para zonas erógenas.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            question: "Qual é a proposta da varinha mágica (massageador)?",
+            options: ["Ser um massageador potente com cabeça grande, usado principalmente para estímulo externo, sobretudo no clitóris.", "Ser um vibrador exclusivamente anal.", "Ser um anel peniano para o homem.", "Servir apenas como item decorativo."],
             correctIndex: 0,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Varinha Mágica ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "A varinha é para quem quer vibração forte e fácil de usar no clitóris ou em outras áreas sensíveis.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "Quando é mais adequado indicar a varinha mágica?",
+            options: ["Para cliente que gosta de estímulo externo bem intenso, principalmente clitoriano.", "Para cliente que quer estímulo interno profundo de ponto G.", "Para uso exclusivo anal.", "Apenas como presente, sem uso real."],
+            correctIndex: 0,
+          },
+          {
+            question: "Qual é a diferença correta entre varinha mágica e mini vibrador?",
+            options: ["São o mesmo produto.", "A varinha é maior, mais potente e voltada para estímulo externo intenso; o mini é compacto, mais discreto e portátil, com potência menor.", "Mini vibrador é mais potente.", "Varinha mágica é só anal."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual cuidado a atendente precisa orientar com a varinha?",
+            options: ["Apoiar a cabeça com força máxima desde o início.", "Começar nas potências menores, pode usar sobre a roupa para iniciantes (a sensibilidade pode ser muito intensa) e usar lubrificante à base de água se for sensível.", "Usar sempre dentro d’água, sem ler manual.", "Compartilhar entre várias pessoas sem higienização."],
+            correctIndex: 1,
+          },
+          {
+            question: "O que a atendente NÃO deve prometer com varinha mágica?",
+            options: ["Que tem potência alta.", "Que pode ser usada sobre a roupa.", "Que garante orgasmo a 100% das mulheres em qualquer situação.", "Que tem versão recarregável e com fio."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Varinha Mágica, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Explicar que não é o foco para penetração profunda.", "Vender sempre o produto mais caro como única opção."],
+            question: "Cliente diz: ‘quero algo bem potente para estímulo externo’. Indicação mais consultiva?",
+            options: ["Vibrador de calcinha discreto.", "Varinha mágica, explicando potência, intensidades e que se pode usar sobre a roupa para suavizar.", "Anel peniano.", "Plug anal."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual erro de venda evitar com varinha mágica?",
+            options: ["Sugerir começar nas potências menores.", "Mostrar versões com e sem fio.", "Empurrar para cliente que claramente queria algo pequeno e discreto.", "Recomendar lubrificante à base de água."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Varinha Mágica, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Vibração costuma ser forte.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Varinha Mágica?",
-            options: ["Ignorar a orientação: Orientar começar em intensidade baixa.", "Seguir a orientação: Orientar começar em intensidade baixa.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Varinha Mágica?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Cabeça maior facilita contato com a região.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },
@@ -2851,39 +2843,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Mini Vibrador. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Mini Vibrador?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Pequeno e fácil de esconder/guardar.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a proposta do mini vibrador?",
+            options: ["Ser um vibrador grande para penetração profunda.", "Ser um vibrador compacto, discreto e portátil, ótimo para iniciantes ou para quem quer transportar com discrição.", "Ser um anel peniano.", "Servir como item decorativo."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Mini Vibrador para um cliente?",
-            options: ["Quando o cliente busca exatamente o que mini vibrador se propõe a oferecer: vibrador pequeno, discreto e potente para estímulo externo.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
-            correctIndex: 0,
+            question: "Para qual perfil de cliente o mini vibrador é mais indicado?",
+            options: ["Cliente experiente que busca a maior potência possível.", "Cliente iniciante, que quer discrição ou que quer um brinquedo pequeno para viagem/bolsa.", "Cliente que quer máquina de sexo com penetração automática.", "Cliente que quer estímulo anal pesado."],
+            correctIndex: 1,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Mini Vibrador ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Esse é pequeno, discreto e ótimo para estímulo externo, principalmente clitóris.", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "Qual é a diferença correta entre mini vibrador e varinha mágica?",
+            options: ["São o mesmo produto.", "O mini é compacto e discreto, com potência menor; a varinha é maior, com potência forte para estímulo externo intenso.", "Varinha é mais discreta.", "Mini vibrador é só para uso a dois."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual cuidado importante ao indicar o mini vibrador?",
+            options: ["Confiar a vida na potência máxima.", "Alertar sobre o tamanho real (mostrar foto/medida) e indicar lubrificante à base de água se for de silicone.", "Garantir que substitui qualquer vibrador grande.", "Recomendar uso sem nenhuma higienização."],
+            correctIndex: 1,
+          },
+          {
+            question: "O que a atendente NÃO deve prometer com mini vibrador?",
+            options: ["Que é discreto e portátil.", "Que existem modelos recarregáveis.", "Que tem a mesma potência das varinhas mágicas grandes.", "Que pode ser usado externamente, principalmente no clitóris."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Mini Vibrador, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Explicar limite de uso por tamanho.", "Vender sempre o produto mais caro como única opção."],
+            question: "Cliente diz: ‘é meu primeiro vibrador, tenho um pouco de medo do tamanho’. Indicação mais consultiva?",
+            options: ["Pênis realístico grande.", "Mini vibrador, explicando que é pequeno, discreto e bom para começar; apresentar lubrificante e cuidados de uso.", "Máquina de sexo.", "Plug anal grande."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual erro de venda evitar com mini vibrador?",
+            options: ["Mostrar a medida real.", "Apresentar como opção para iniciantes ou para viagem.", "Vender confundindo o cliente, prometendo potência de varinha mágica.", "Recomendar lubrificante à base de água."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Mini Vibrador, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Ideal para estímulo externo.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Mini Vibrador?",
-            options: ["Ignorar a orientação: Falar sobre bateria/recarregável.", "Seguir a orientação: Falar sobre bateria/recarregável.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Mini Vibrador?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Pode ser forte mesmo sendo mini.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },
@@ -2922,39 +2914,39 @@ export const TOPICS: Topic[] = [
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Pênis Realístico. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
-            question: "Qual é a função principal do produto Pênis Realístico?",
-            options: ["É um produto de uso médico que substitui acompanhamento profissional.", "Ventosa permite fixar em superfícies lisas.", "É um item decorativo, sem efeito real durante o uso.", "Funciona apenas como brinde, sem aplicação prática."],
+            question: "Qual é a proposta do pênis realístico?",
+            options: ["Ser usado encaixado sobre o pênis para aumentar volume durante a relação.", "Ser uma prótese que imita um pênis real (formato, veias, glande), usada para penetração — sozinha, com cinta-strapon ou em casal.", "Ser um anel peniano.", "Servir como item decorativo apenas."],
             correctIndex: 1,
           },
           {
-            question: "Quando é mais adequado indicar Pênis Realístico para um cliente?",
-            options: ["Quando o cliente busca exatamente o que pênis realístico se propõe a oferecer: próteses realísticas vibratórias com ventosa, aquecimento ou vai e vem.", "Em qualquer situação, sem precisar entender a necessidade da pessoa.", "Apenas em datas comemorativas, como presente.", "Somente quando o cliente pede pelo nome do produto."],
+            question: "Qual é a função correta da ventosa em um pênis realístico?",
+            options: ["É só estética.", "Permite fixar o pênis em superfícies lisas (parede, piso, espelho) para uso ‘mãos livres’.", "Faz o brinquedo vibrar.", "Conecta ao aplicativo."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual é a diferença correta entre pênis realístico em PVC e em cyber skin (TPE/elastômero)?",
+            options: ["São o mesmo material.", "O cyber skin tem toque mais macio e realista, parecido com pele; o PVC é mais firme e geralmente mais barato.", "PVC é mais macio que cyber skin.", "Cyber skin é metálico."],
+            correctIndex: 1,
+          },
+          {
+            question: "Qual lubrificante é adequado para um pênis realístico em silicone?",
+            options: ["Lubrificante à base de silicone (para durar mais).", "Lubrificante à base de água, porque o de silicone pode danificar o material do brinquedo.", "Vaselina.", "Óleo de cozinha."],
+            correctIndex: 1,
+          },
+          {
+            question: "Quando é mais adequado indicar pênis realístico com escroto/testículos?",
+            options: ["Para cliente que valoriza realismo visual e na pegada do brinquedo.", "Para cliente que quer o menor e mais discreto possível.", "Apenas para uso anal.", "Apenas como item decorativo."],
             correctIndex: 0,
           },
           {
-            question: "Qual é uma boa forma de a atendente apresentar Pênis Realístico ao cliente?",
-            options: ["“Esse é o melhor produto da loja, pode levar sem pensar.”", "“Não sei muito sobre ele, mas dizem que funciona.”", "Você procura algo mais realístico simples, com ventosa, com vibração ou com movimento automático?", "“Compra que você vai gostar, todo mundo aprova.”"],
+            question: "O que a atendente NÃO deve prometer com pênis realístico?",
+            options: ["Que existem opções com ventosa, com escroto e em diferentes tamanhos.", "Que existem versões em PVC e em cyber skin.", "Que substitui o parceiro emocionalmente ou resolve problemas do casal.", "Que pode ser usado em cinta-strapon."],
             correctIndex: 2,
           },
           {
-            question: "Sobre Pênis Realístico, qual cuidado a atendente precisa lembrar no atendimento?",
-            options: ["Garantir ao cliente resultado imediato e definitivo.", "Prometer que o produto resolve qualquer problema do casal.", "Perguntar experiência/tamanho desejado.", "Vender sempre o produto mais caro como única opção."],
+            question: "Qual erro de venda evitar com pênis realístico?",
+            options: ["Perguntar preferência de tamanho e material.", "Mostrar opções com e sem ventosa.", "Indicar lubrificante de silicone para um brinquedo de silicone.", "Explicar uso solo, com strapon ou em casal."],
             correctIndex: 2,
-          },
-          {
-            question: "Em relação aos modelos de Pênis Realístico, o que a atendente precisa saber?",
-            options: ["Todos os modelos são idênticos — só muda a embalagem.", "Alguns têm vibração e aquecimento.", "A diferença está apenas no preço cobrado.", "Modelos diferentes oferecem exatamente a mesma experiência."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual postura é correta da atendente ao vender Pênis Realístico?",
-            options: ["Ignorar a orientação: Orientar lubrificante e higienização.", "Seguir a orientação: Orientar lubrificante e higienização.", "Vender o produto sem nenhuma explicação para ganhar tempo.", "Inventar benefícios que o produto não tem para fechar a venda."],
-            correctIndex: 1,
-          },
-          {
-            question: "Qual destes pontos a atendente precisa decorar sobre Pênis Realístico?",
-            options: ["Não há diferença alguma — é só ligar e usar.", "Modelos avançados têm vai e vem ou rotação.", "O produto funciona sozinho, sem influência do uso.", "É um detalhe sem importância no atendimento."],
-            correctIndex: 1,
           },
         ],
       },

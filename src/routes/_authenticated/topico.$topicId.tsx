@@ -31,7 +31,7 @@ import { Label } from "@/components/ui/label";
 
 import { toast } from "sonner";
 import { ApostilaView } from "@/components/ApostilaView";
-import { ModuleAudioPlayer } from "@/components/ModuleAudioPlayer";
+
 import { useExamPermission, requestPermission } from "@/lib/examPermission";
 
 import apostilaEmbalarHtml from "@/content/embalar/apostila.html?raw";
@@ -218,7 +218,7 @@ function TopicPage() {
         })()}
         <p className="text-muted-foreground">{topic.summary}</p>
 
-        {topic.audioUrl && <div className="mt-5"><ModuleAudioPlayer src={topic.audioUrl} /></div>}
+        
 
 
 
@@ -407,7 +407,8 @@ function SubtaskGroupCard({
     <Card className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.06] backdrop-blur-xl shadow-[0_8px_32px_-12px_rgba(0,0,0,0.45)]">
       <div className="p-4 sm:p-5 flex items-start gap-3">
         <div
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/[0.08] border border-white/10 text-white"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/[0.08] border border-white/10"
+          style={{ color: "#A78BFA" }}
         >
           <GroupIcon className="h-5 w-5" />
         </div>
