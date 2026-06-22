@@ -4,7 +4,7 @@ import {
   ChevronLeft, CheckCircle2, Circle, Copy, Loader2, Lock, X,
   Check, ChevronDown, Play, BookOpen, ListChecks, ClipboardCheck,
   FilePen, Download, History, MapPin, Hand, LayoutGrid, Globe, Package,
-  ShieldCheck, Star,
+  ShieldCheck, Star, Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
