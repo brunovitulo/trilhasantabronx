@@ -12,10 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { SubmissionHistoryDialog } from "@/components/SubmissionHistoryDialog";
-import {
-  ADMIN_OPEN_CORRECTION_EVENT,
-  type AdminOpenCorrectionDetail,
-} from "@/components/AdminPendingBell";
+import { CorrectionDialog, type CorrectionTarget } from "@/components/CorrectionDialog";
 import {
   Dialog,
   DialogContent,
