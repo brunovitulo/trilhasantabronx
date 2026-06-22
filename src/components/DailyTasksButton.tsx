@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { CalendarCheck, Check, X } from "lucide-react";
+import { CalendarCheck, Check, X, Brain } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -10,6 +12,11 @@ import {
 } from "@/components/ui/dialog";
 import apostilaResponsabilidadeHtml from "@/content/responsabilidade/apostila.html?raw";
 import checklistOrganizacaoHtml from "@/content/organizacao/checklist.html?raw";
+import {
+  listTodayReviews,
+  ensureOnboardingReview,
+} from "@/lib/reviews.functions";
+import type { ScheduledReview } from "@/lib/reviews";
 
 type DailyTask = {
   id: string;
