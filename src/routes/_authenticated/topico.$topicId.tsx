@@ -31,6 +31,7 @@ import { Label } from "@/components/ui/label";
 
 import { toast } from "sonner";
 import { ApostilaView } from "@/components/ApostilaView";
+import { ModuleAudioPlayer } from "@/components/ModuleAudioPlayer";
 import { useExamPermission, requestPermission } from "@/lib/examPermission";
 
 import apostilaEmbalarHtml from "@/content/embalar/apostila.html?raw";
@@ -217,6 +218,10 @@ function TopicPage() {
         })()}
         <p className="text-muted-foreground">{topic.summary}</p>
 
+        {topic.audioUrl && <div className="mt-5"><ModuleAudioPlayer src={topic.audioUrl} /></div>}
+
+
+
 
         {loading ? (
           <div className="flex justify-center py-10">
@@ -402,12 +407,7 @@ function SubtaskGroupCard({
     <Card className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.06] backdrop-blur-xl shadow-[0_8px_32px_-12px_rgba(0,0,0,0.45)]">
       <div className="p-4 sm:p-5 flex items-start gap-3">
         <div
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
-          style={{
-            background: "rgba(20, 184, 166, 0.18)",
-            border: "1px solid rgba(20, 184, 166, 0.45)",
-            color: "#5eead4",
-          }}
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/[0.08] border border-white/10 text-white"
         >
           <GroupIcon className="h-5 w-5" />
         </div>
@@ -523,7 +523,7 @@ function SubtaskGroupCard({
                     opacity: passed ? 0.5 : 1,
                   }}
                 >
-                  passo {startIndex + idx + 1}
+                  passo {idx + 1}
                 </span>
                 <ChevronDown
                   className={cn(
@@ -1154,7 +1154,7 @@ function InlineHtmlSubtask({
           className="p-0 w-[90vw] h-[90vh] max-w-[90vw] sm:max-w-[90vw] flex flex-col gap-0 [&>button]:hidden overflow-hidden"
         >
           <div className="flex items-center justify-between px-4 py-3 border-b border-border/60 shrink-0">
-            <DialogTitle className="text-base">{source.title}</DialogTitle>
+            <DialogTitle className="text-base">{source?.title ?? subtask.title}</DialogTitle>
             <button
               type="button"
               onClick={() => setOpen(false)}
@@ -1164,12 +1164,18 @@ function InlineHtmlSubtask({
               <X className="h-4 w-4" />
             </button>
           </div>
-          <iframe
-            key={nonce}
-            srcDoc={source.html}
-            title={source.title}
-            className="flex-1 w-full border-0 bg-white"
-          />
+          {source ? (
+            <iframe
+              key={nonce}
+              srcDoc={source.html}
+              title={source.title}
+              className="flex-1 w-full border-0 bg-white"
+            />
+          ) : (
+            <div className="flex-1 flex items-center justify-center p-6 text-center text-sm text-muted-foreground">
+              Apostila não encontrada. Verifique se o arquivo foi enviado corretamente.
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>

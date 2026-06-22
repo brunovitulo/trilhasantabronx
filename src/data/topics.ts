@@ -144,6 +144,7 @@ export type Topic = {
   title: string;
   summary: string;
   accent: string;
+  audioUrl?: string;
   subtasks: Subtask[];
 };
 
@@ -1375,7 +1376,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "1. Perfumes Feromônios — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18079101806153052/",
       },
       {
         id: "produtos.perfumes_feromonios.produtos",
@@ -1445,7 +1446,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "2. Excitantes — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18213902995324551/",
       },
       {
         id: "produtos.excitantes.produtos",
@@ -1522,7 +1523,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "3. Adstringente — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18110763523883412/",
       },
       {
         id: "produtos.adstringente.produtos",
@@ -1592,7 +1593,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "4. Capas Penianas — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/17912793174179906/",
       },
       {
         id: "produtos.capas_penianas.produtos",
@@ -1665,7 +1666,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "5. Plug Anal — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/17881692318550727/",
       },
       {
         id: "produtos.plug_anal.produtos",
@@ -1748,7 +1749,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "6. Estimulantes Sexuais — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/17948935620151742/",
       },
       {
         id: "produtos.estimulantes_sexuais.produtos",
@@ -1821,7 +1822,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "7. Retardante — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18129328621565287/",
       },
       {
         id: "produtos.retardante.produtos",
@@ -1891,7 +1892,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "8. Anel Peniano — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18007480826708456/",
       },
       {
         id: "produtos.anel_peniano.produtos",
@@ -1965,7 +1966,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "9. Sado — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18047895194583475/",
       },
       {
         id: "produtos.sado.produtos",
@@ -2043,7 +2044,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "10. Lubrificante — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18203220946339583/",
       },
       {
         id: "produtos.lubrificante.produtos",
@@ -2116,7 +2117,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "11. Masturbador Masculino — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18007013321712178/",
       },
       {
         id: "produtos.masturbador_masculino.produtos",
@@ -2190,7 +2191,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "12. Roupas — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18118409227649876/",
       },
       {
         id: "produtos.roupas.produtos",
@@ -2263,7 +2264,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "13. Anestésicos — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18092275670268816/",
       },
       {
         id: "produtos.anestesicos.produtos",
@@ -2335,7 +2336,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "14. Vibrador Rabbit — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
       {
         id: "produtos.vibrador_rabbit.produtos",
@@ -2406,7 +2407,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "15. Sugador de Clitóris — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
       {
         id: "produtos.sugador_de_clitoris.produtos",
@@ -2477,7 +2478,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "16. Vibrador de Calcinha — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
       {
         id: "produtos.vibrador_de_calcinha.produtos",
@@ -2546,7 +2547,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "17. Máquina de Sexo — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
       {
         id: "produtos.maquina_de_sexo.produtos",
@@ -2615,7 +2616,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "18. Vibrador de Casal — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
       {
         id: "produtos.vibrador_de_casal.produtos",
@@ -2685,7 +2686,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "19. Vibrador de Aplicativo — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
       {
         id: "produtos.vibrador_de_aplicativo.produtos",
@@ -2754,7 +2755,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "20. Varinha Mágica — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
       {
         id: "produtos.varinha_magica.produtos",
@@ -2824,7 +2825,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "21. Mini Vibrador — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
       {
         id: "produtos.mini_vibrador.produtos",
@@ -2893,7 +2894,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "22. Pênis Realístico — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+        url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
       {
         id: "produtos.penis_realistico.produtos",
