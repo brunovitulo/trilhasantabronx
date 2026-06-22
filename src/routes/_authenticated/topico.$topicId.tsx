@@ -9,8 +9,11 @@ import {
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { findTopic, type Subtask, type Topic, PASSING_SCORE } from "@/data/topics";
-import { computeTopicStatuses, getSubtaskState, type ProgressRow } from "@/lib/progress";
+import { computeTopicStatuses, getSubtaskState, isTopicComplete, type ProgressRow } from "@/lib/progress";
 import { TOPICS } from "@/data/topics";
+import { useServerFn } from "@tanstack/react-start";
+import { scheduleReviewsForModule } from "@/lib/reviews.functions";
+import { MODULE_REVIEW } from "@/lib/reviews";
 import { AppHeader } from "@/components/AppHeader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
