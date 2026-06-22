@@ -1149,7 +1149,7 @@ function InlineHtmlSubtask({
           className="p-0 w-[90vw] h-[90vh] max-w-[90vw] sm:max-w-[90vw] flex flex-col gap-0 [&>button]:hidden overflow-hidden"
         >
           <div className="flex items-center justify-between px-4 py-3 border-b border-border/60 shrink-0">
-            <DialogTitle className="text-base">{source.title}</DialogTitle>
+            <DialogTitle className="text-base">{source?.title ?? subtask.title}</DialogTitle>
             <button
               type="button"
               onClick={() => setOpen(false)}
@@ -1159,12 +1159,18 @@ function InlineHtmlSubtask({
               <X className="h-4 w-4" />
             </button>
           </div>
-          <iframe
-            key={nonce}
-            srcDoc={source.html}
-            title={source.title}
-            className="flex-1 w-full border-0 bg-white"
-          />
+          {source ? (
+            <iframe
+              key={nonce}
+              srcDoc={source.html}
+              title={source.title}
+              className="flex-1 w-full border-0 bg-white"
+            />
+          ) : (
+            <div className="flex-1 flex items-center justify-center p-6 text-center text-sm text-muted-foreground">
+              Apostila não encontrada. Verifique se o arquivo foi enviado corretamente.
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>
