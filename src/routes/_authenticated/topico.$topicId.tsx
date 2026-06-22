@@ -31,7 +31,7 @@ import { Label } from "@/components/ui/label";
 
 import { toast } from "sonner";
 import { ApostilaView } from "@/components/ApostilaView";
-import { ModuleAudioPlayer } from "@/components/ModuleAudioPlayer";
+
 import { useExamPermission, requestPermission } from "@/lib/examPermission";
 
 import apostilaEmbalarHtml from "@/content/embalar/apostila.html?raw";
