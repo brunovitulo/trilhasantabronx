@@ -333,6 +333,7 @@ function SubtaskGroupCard({
   rows,
   userId,
   isAdmin,
+  startIndex = 0,
   onComplete,
   onUncheck,
 }: {
@@ -341,6 +342,7 @@ function SubtaskGroupCard({
   rows: ProgressRow[];
   userId: string;
   isAdmin: boolean;
+  startIndex?: number;
   onComplete: (subtask: Subtask, score?: number) => void;
   onUncheck: (subtaskId: string) => void;
 }) {
