@@ -1059,6 +1059,7 @@ export const TOPICS: Topic[] = [
     summary:
       "Aprender as principais objeções do nicho e como respondê-las.",
     accent: "from-sky-500 to-blue-600",
+    audioUrl: "/audio/audio_guia_principais_objecoes.mp3",
     subtasks: [
       {
         id: "objecoes.video",
