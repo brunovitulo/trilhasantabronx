@@ -2044,8 +2044,10 @@ function OpenEvaluationSubtask({
       toast.error("Erro ao salvar respostas", { description: ansErr.message });
       return;
     }
+    // Não marca o passo como concluído aqui. A conclusão (e o desbloqueio do
+    // próximo módulo) só acontece quando o gestor corrigir e aprovar (≥70%).
     onSubmitted();
-    toast.success("Prova enviada. Objetivas corrigidas automaticamente; abertas vão para o gestor.");
+    toast.success("Prova enviada. Aguarde a correção da gestora — o próximo módulo libera somente após aprovação.");
     await load();
     setSending(false);
   }
