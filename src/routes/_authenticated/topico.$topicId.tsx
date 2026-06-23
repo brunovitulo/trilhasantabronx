@@ -2176,8 +2176,13 @@ function OpenEvaluationSubtask({
           })}
         </div>
         {submission.status === "rejected" && (
-          <div className="pt-2">
-            {submission.retry_allowed ? (
+          <div className="pt-2 space-y-2">
+            <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 px-3 py-3 text-sm leading-relaxed text-rose-100">
+              Você não atingiu a nota mínima de 70% nesta prova. Entre em contato com seu gestor
+              para alinhar os próximos passos: quando você vai refazer a prova e quais foram os
+              principais pontos de melhoria.
+            </div>
+            {submission.retry_allowed && (
               <Button variant="outline"
                 size="sm"
                 className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25"
@@ -2189,10 +2194,6 @@ function OpenEvaluationSubtask({
               >
                 Refazer avaliação
               </Button>
-            ) : (
-              <p className="text-xs text-muted-foreground">
-                Para refazer esta prova, peça à gestora para liberar uma nova tentativa.
-              </p>
             )}
           </div>
         )}
