@@ -2024,6 +2024,31 @@ function OpenEvaluationSubtask({
 
   useEffect(() => {
     load();
+    const ch = supabase
+      .channel(`oes-inline-${userId}-${subtask.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "open_evaluation_submissions",
+          filter: `user_id=eq.${userId}`,
+        },
+        () => load(),
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "open_evaluation_answers",
+        },
+        () => load(),
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(ch);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, subtask.id]);
 
