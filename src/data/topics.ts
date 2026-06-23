@@ -600,14 +600,6 @@ export const TOPICS: Topic[] = [
         ],
       },
       {
-        id: "embalar.prova.video",
-        kind: "video",
-        title: "3. Antes da prova — assistir vídeo do Bruno",
-        description:
-          "Vídeo de alinhamento antes da prova. Recapitula o módulo, avisa que o gestor vai acompanhar a prova em tempo real e reforça a regra de 70% para passar.",
-        url: "https://www.instagram.com/stories/highlights/PLACEHOLDER_EMBALAR/",
-      },
-      {
         id: "embalar.prova.exam",
         kind: "open_evaluation",
         title: "3. Antes da prova — prova dissertativa (15 questões)",
@@ -1027,14 +1019,6 @@ export const TOPICS: Topic[] = [
         confirmLabel: "Marquei todos os itens do checklist.",
       },
       {
-        id: "vendas.prova.video",
-        kind: "video",
-        title: "5. Antes da prova — assistir vídeo do Bruno",
-        description:
-          "Vídeo de alinhamento antes da prova. Recapitula o módulo, avisa que o gestor vai acompanhar a prova em tempo real e reforça a regra de 70% para passar.",
-        url: "https://www.instagram.com/stories/highlights/17892062016515877/",
-      },
-      {
         id: "vendas.prova.exam",
         kind: "open_evaluation",
         title: "5. Prova: Fundamentos de Vendas",
@@ -1255,14 +1239,6 @@ export const TOPICS: Topic[] = [
         confirmLabel: "Marquei todos os itens do checklist.",
       },
       {
-        id: "objecoes.prova.video",
-        kind: "video",
-        title: "5. Antes da prova — Assistir vídeo do Bruno",
-        description:
-          "Vídeo de alinhamento antes da prova. Recapitula o módulo e reforça as regras da avaliação.",
-        url: "https://www.instagram.com/stories/highlights/17892062016515877/",
-      },
-      {
         id: "objecoes.prova.exam",
         kind: "open_evaluation",
         title: "5. Antes da prova — Prova: Principais Objeções (Sex Shop)",
@@ -1341,14 +1317,6 @@ export const TOPICS: Topic[] = [
         openLabel: "Abrir checklist",
         helperText: "Este checklist também fica disponível no ícone do topo do site.",
         confirmLabel: "Marquei todos os itens do checklist.",
-      },
-      {
-        id: "dores.prova.video",
-        kind: "video",
-        title: "5. Antes da prova — Assistir vídeo do Bruno",
-        description:
-          "Vídeo de alinhamento antes da prova. Recapitula o módulo e reforça as regras da avaliação.",
-        url: "https://www.instagram.com/stories/highlights/17892062016515877/",
       },
       {
         id: "dores.prova.exam",
