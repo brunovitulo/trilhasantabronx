@@ -73,7 +73,7 @@ export function topicProgressPercent(topic: Topic, rows: ProgressRow[]): number 
   const done = topic.subtasks.filter((s) => {
     const { completed, score } = getSubtaskState(s.id, rows);
     if (!completed) return false;
-    if (s.kind === "evaluation") {
+    if (s.kind === "evaluation" || s.kind === "open_evaluation") {
       const min = s.passingScore ?? PASSING_SCORE;
       return (score ?? 0) >= min;
     }
