@@ -690,14 +690,18 @@ function SubtaskContent({
           completed={completed}
           blockTitle={displayTitle}
           needsVideo={examNeedsVideo}
-          onSubmitted={() => onComplete()}
+          onSubmitted={() => {
+            /* Nada: a prova só conta como concluída após o gestor aprovar (≥70%). */
+          }}
         />
       ) : (
         <OpenEvaluationSubtask
           subtask={subtask}
           userId={userId}
           completed={completed}
-          onSubmitted={() => onComplete()}
+          onSubmitted={() => {
+            /* Nada: a prova só conta como concluída após o gestor aprovar (≥70%). */
+          }}
         />
       );
     default:
