@@ -254,9 +254,9 @@ function TopicPage() {
               const groupCompleted = groups.map((g) =>
                 g.items.every(({ subtask }) => {
                   const st = getSubtaskState(subtask.id, rows);
-                  if (subtask.kind === "evaluation") {
+                  if (subtask.kind === "evaluation" || subtask.kind === "open_evaluation") {
                     const p =
-                      (subtask as Extract<Subtask, { kind: "evaluation" }>).passingScore ?? PASSING_SCORE;
+                      (subtask as Extract<Subtask, { kind: "evaluation" | "open_evaluation" }>).passingScore ?? PASSING_SCORE;
                     return st.completed && (st.score ?? 0) >= p;
                   }
                   return st.completed;
