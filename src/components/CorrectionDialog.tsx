@@ -98,11 +98,41 @@ export function CorrectionDialog({
         reviewed_at: new Date().toISOString(),
       })
       .eq("id", submission.id);
-    setSaving(false);
     if (error) {
+      setSaving(false);
       toast.error("Erro ao finalizar avaliação", { description: error.message });
       return;
     }
+    // Reflete na trilha do(a) atendente: só conta como concluído quando aprovado.
+    if (status === "approved") {
+      const { error: upErr } = await supabase
+        .from("subtask_progress")
+        .upsert(
+          {
+            user_id: submission.user_id,
+            subtask_id: submission.subtask_id,
+            completed: true,
+            score,
+            completed_at: new Date().toISOString(),
+          },
+          { onConflict: "user_id,subtask_id" },
+        );
+      if (upErr) {
+        setSaving(false);
+        toast.error("Avaliação salva, mas não consegui liberar o próximo módulo", {
+          description: upErr.message,
+        });
+        return;
+      }
+    } else {
+      // Reprovada: garante que o passo NÃO conste como concluído.
+      await supabase
+        .from("subtask_progress")
+        .delete()
+        .eq("user_id", submission.user_id)
+        .eq("subtask_id", submission.subtask_id);
+    }
+    setSaving(false);
     toast.success(status === "approved" ? `Avaliação aprovada (${score}%)` : `Avaliação reprovada (${score}%)`);
     onReviewed();
   }

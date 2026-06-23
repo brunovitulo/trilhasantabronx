@@ -254,9 +254,9 @@ function TopicPage() {
               const groupCompleted = groups.map((g) =>
                 g.items.every(({ subtask }) => {
                   const st = getSubtaskState(subtask.id, rows);
-                  if (subtask.kind === "evaluation") {
+                  if (subtask.kind === "evaluation" || subtask.kind === "open_evaluation") {
                     const p =
-                      (subtask as Extract<Subtask, { kind: "evaluation" }>).passingScore ?? PASSING_SCORE;
+                      (subtask as Extract<Subtask, { kind: "evaluation" | "open_evaluation" }>).passingScore ?? PASSING_SCORE;
                     return st.completed && (st.score ?? 0) >= p;
                   }
                   return st.completed;
@@ -404,11 +404,11 @@ function SubtaskGroupCard({
 
   const itemStates = group.items.map(({ subtask }) => {
     const st = getSubtaskState(subtask.id, rows);
-    const isEval = subtask.kind === "evaluation";
-    const passing = isEval
-      ? (subtask as Extract<Subtask, { kind: "evaluation" }>).passingScore ?? PASSING_SCORE
+    const isEvalLike = subtask.kind === "evaluation" || subtask.kind === "open_evaluation";
+    const passing = isEvalLike
+      ? (subtask as Extract<Subtask, { kind: "evaluation" | "open_evaluation" }>).passingScore ?? PASSING_SCORE
       : 0;
-    const passed = !isEval ? st.completed : st.completed && (st.score ?? 0) >= passing;
+    const passed = !isEvalLike ? st.completed : st.completed && (st.score ?? 0) >= passing;
     return { state: st, passed };
   });
 
@@ -690,14 +690,18 @@ function SubtaskContent({
           completed={completed}
           blockTitle={displayTitle}
           needsVideo={examNeedsVideo}
-          onSubmitted={() => onComplete()}
+          onSubmitted={() => {
+            /* Nada: a prova só conta como concluída após o gestor aprovar (≥70%). */
+          }}
         />
       ) : (
         <OpenEvaluationSubtask
           subtask={subtask}
           userId={userId}
           completed={completed}
-          onSubmitted={() => onComplete()}
+          onSubmitted={() => {
+            /* Nada: a prova só conta como concluída após o gestor aprovar (≥70%). */
+          }}
         />
       );
     default:
@@ -725,9 +729,42 @@ function ExamDialogLauncher({
   onSubmitted: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [hasSubmission, setHasSubmission] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const { data } = await supabase
+        .from("open_evaluation_submissions")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("subtask_id", subtask.id)
+        .order("created_at", { ascending: false })
+        .limit(1);
+      if (!active) return;
+      setHasSubmission((data?.length ?? 0) > 0);
+    })();
+    const ch = supabase
+      .channel(`oes-${userId}-${subtask.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "open_evaluation_submissions",
+          filter: `user_id=eq.${userId}`,
+        },
+        () => setHasSubmission(true),
+      )
+      .subscribe();
+    return () => {
+      active = false;
+      supabase.removeChannel(ch);
+    };
+  }, [userId, subtask.id]);
 
   // Se já foi enviada/corrigida, mostrar o status inline (sem dialog).
-  if (completed) {
+  if (completed || hasSubmission) {
     return (
       <OpenEvaluationSubtask
         subtask={subtask}
@@ -1987,6 +2024,31 @@ function OpenEvaluationSubtask({
 
   useEffect(() => {
     load();
+    const ch = supabase
+      .channel(`oes-inline-${userId}-${subtask.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "open_evaluation_submissions",
+          filter: `user_id=eq.${userId}`,
+        },
+        () => load(),
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "open_evaluation_answers",
+        },
+        () => load(),
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(ch);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, subtask.id]);
 
@@ -2044,8 +2106,10 @@ function OpenEvaluationSubtask({
       toast.error("Erro ao salvar respostas", { description: ansErr.message });
       return;
     }
+    // Não marca o passo como concluído aqui. A conclusão (e o desbloqueio do
+    // próximo módulo) só acontece quando o gestor corrigir e aprovar (≥70%).
     onSubmitted();
-    toast.success("Prova enviada. Objetivas corrigidas automaticamente; abertas vão para o gestor.");
+    toast.success("Prova enviada. Aguarde a correção da gestora — o próximo módulo libera somente após aprovação.");
     await load();
     setSending(false);
   }
@@ -2137,8 +2201,13 @@ function OpenEvaluationSubtask({
           })}
         </div>
         {submission.status === "rejected" && (
-          <div className="pt-2">
-            {submission.retry_allowed ? (
+          <div className="pt-2 space-y-2">
+            <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 px-3 py-3 text-sm leading-relaxed text-rose-100">
+              Você não atingiu a nota mínima de 70% nesta prova. Entre em contato com seu gestor
+              para alinhar os próximos passos: quando você vai refazer a prova e quais foram os
+              principais pontos de melhoria.
+            </div>
+            {submission.retry_allowed && (
               <Button variant="outline"
                 size="sm"
                 className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25"
@@ -2150,10 +2219,6 @@ function OpenEvaluationSubtask({
               >
                 Refazer avaliação
               </Button>
-            ) : (
-              <p className="text-xs text-muted-foreground">
-                Para refazer esta prova, peça à gestora para liberar uma nova tentativa.
-              </p>
             )}
           </div>
         )}

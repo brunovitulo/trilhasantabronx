@@ -23,11 +23,10 @@ export function isTopicComplete(topic: Topic, rows: ProgressRow[]): boolean {
   return topic.subtasks.every((s) => {
     const { completed, score } = getSubtaskState(s.id, rows);
     if (!completed) return false;
-    if (s.kind === "evaluation") {
+    if (s.kind === "evaluation" || s.kind === "open_evaluation") {
       const min = s.passingScore ?? PASSING_SCORE;
       return (score ?? 0) >= min;
     }
-    // open_evaluation conta como completo assim que enviada (correção é assíncrona).
     // practice conta como completo assim que finalizada (sem nota mínima).
     return true;
   });
@@ -74,7 +73,7 @@ export function topicProgressPercent(topic: Topic, rows: ProgressRow[]): number 
   const done = topic.subtasks.filter((s) => {
     const { completed, score } = getSubtaskState(s.id, rows);
     if (!completed) return false;
-    if (s.kind === "evaluation") {
+    if (s.kind === "evaluation" || s.kind === "open_evaluation") {
       const min = s.passingScore ?? PASSING_SCORE;
       return (score ?? 0) >= min;
     }
