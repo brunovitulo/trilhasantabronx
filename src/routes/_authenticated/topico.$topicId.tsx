@@ -12,8 +12,6 @@ import { findTopic, type Subtask, type Topic, PASSING_SCORE } from "@/data/topic
 import { computeTopicStatuses, getSubtaskState, isTopicComplete, type ProgressRow } from "@/lib/progress";
 import { TOPICS } from "@/data/topics";
 import { useServerFn } from "@tanstack/react-start";
-import { scheduleReviewsForModule, scheduleExtraReview } from "@/lib/reviews.functions";
-import { MODULE_REVIEW, inferQuestionMeta } from "@/lib/reviews";
 import { AppHeader } from "@/components/AppHeader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -147,7 +145,7 @@ function TopicPage() {
     }
   }, [accessLocked, loading, navigate]);
 
-  const scheduleReviews = useServerFn(scheduleReviewsForModule);
+
 
   async function markCompleted(subtask: Subtask, score?: number) {
     const payload = {
@@ -170,14 +168,8 @@ function TopicPage() {
     })();
     setRows(nextRows);
     toast.success("Salvo!");
-
-    // Gatilho: se o módulo ficou completo agora, agenda revisões espaçadas.
-    if (topic && MODULE_REVIEW[topic.id] && isTopicComplete(topic, nextRows)) {
-      scheduleReviews({ data: { moduleId: topic.id } }).catch((err) => {
-        console.error("scheduleReviews failed", err);
-      });
-    }
   }
+
 
   async function unmark(subtaskId: string) {
     const { error } = await supabase
