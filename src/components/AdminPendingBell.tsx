@@ -8,6 +8,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { findSubtask } from "@/data/topics";
+import { approvePermission, rejectPermission } from "@/lib/examPermission";
+import { toast } from "sonner";
 
 type Row = {
   id: string;
@@ -151,6 +153,45 @@ export function AdminPendingBell() {
                       <p className="text-[11px] text-muted-foreground">
                         {new Date(r.created_at).toLocaleString("pt-BR")}
                       </p>
+                      <div className="mt-2 flex gap-2">
+                        <Button
+                          type="button"
+                          size="sm"
+                          className="flex-1 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white h-8 text-xs"
+                          onClick={async () => {
+                            const { data: u } = await supabase.auth.getUser();
+                            const reviewerId = u.user?.id;
+                            if (!reviewerId) {
+                              toast.error("Sessão expirada");
+                              return;
+                            }
+                            const { error } = await approvePermission(r.id, reviewerId);
+                            if (error) toast.error("Não consegui liberar", { description: error.message });
+                            else toast.success(`Prova liberada para ${r.full_name ?? "atendente"}.`);
+                          }}
+                        >
+                          Liberar prova
+                        </Button>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          className="flex-1 rounded-full h-8 text-xs"
+                          onClick={async () => {
+                            const { data: u } = await supabase.auth.getUser();
+                            const reviewerId = u.user?.id;
+                            if (!reviewerId) {
+                              toast.error("Sessão expirada");
+                              return;
+                            }
+                            const { error } = await rejectPermission(r.id, reviewerId);
+                            if (error) toast.error("Erro", { description: error.message });
+                            else toast("Pedido rejeitado");
+                          }}
+                        >
+                          Rejeitar
+                        </Button>
+                      </div>
                     </div>
                   );
                 })}
