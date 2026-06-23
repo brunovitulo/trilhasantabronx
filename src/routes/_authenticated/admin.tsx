@@ -447,20 +447,124 @@ function AttendantCard({
           </div>
         )}
 
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className="rounded-full w-full sm:w-auto gap-1.5"
-          onClick={onOpenHistory}
-        >
-          <FileText className="h-4 w-4" />
-          Ver histórico de provas
-        </Button>
+        <div className="flex flex-wrap gap-2 items-center justify-between">
+          <UnlockAllExamsButton
+            attendantId={att.id}
+            attendantName={att.full_name}
+            reviewerId={reviewerId}
+            progress={att.progress}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="rounded-full gap-1.5"
+            onClick={onOpenHistory}
+          >
+            <FileText className="h-4 w-4" />
+            Ver histórico de provas
+          </Button>
+        </div>
 
         <ResetProgressBlock attendantId={att.id} attendantName={att.full_name} />
       </div>
     </Card>
+  );
+}
+
+function UnlockAllExamsButton({
+  attendantId,
+  attendantName,
+  reviewerId,
+  progress,
+}: {
+  attendantId: string;
+  attendantName: string | null;
+  reviewerId: string;
+  progress: ProgressRow[];
+}) {
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [working, setWorking] = useState(false);
+
+  // Identifica todas as provas (open_evaluation) que a atendente ainda não concluiu.
+  const pendingExamIds = useMemo(() => {
+    const completedIds = new Set(
+      progress.filter((p) => p.completed).map((p) => p.subtask_id),
+    );
+    const ids: string[] = [];
+    for (const t of TOPICS) {
+      for (const s of t.subtasks) {
+        if (s.kind === "open_evaluation" && !completedIds.has(s.id)) {
+          ids.push(s.id);
+        }
+      }
+    }
+    return ids;
+  }, [progress]);
+
+  async function doUnlockAll() {
+    setWorking(true);
+    // Expiração longa (30 dias) para uma liberação geral no início da formação.
+    const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+    const nowIso = new Date().toISOString();
+    const rows = pendingExamIds.map((sid) => ({
+      user_id: attendantId,
+      subtask_id: sid,
+      status: "approved" as const,
+      decided_at: nowIso,
+      decided_by: reviewerId,
+      expires_at: expires,
+    }));
+    const { error } = await supabase.from("exam_permission_requests").insert(rows);
+    setWorking(false);
+    setConfirmOpen(false);
+    if (error) {
+      toast.error("Não consegui liberar todas", { description: error.message });
+      return;
+    }
+    toast.success(
+      `${pendingExamIds.length} prova(s) liberada(s) para ${attendantName ?? "atendente"}.`,
+    );
+  }
+
+  return (
+    <>
+      <Button
+        type="button"
+        size="sm"
+        className="rounded-full bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5"
+        onClick={() => setConfirmOpen(true)}
+        disabled={pendingExamIds.length === 0}
+      >
+        <KeyRound className="h-4 w-4" />
+        Liberar todas as provas
+      </Button>
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Liberar todas as provas?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Isso vai liberar a permissão para que{" "}
+              <strong>{attendantName ?? "esta atendente"}</strong> realize todas as{" "}
+              <strong>{pendingExamIds.length}</strong> prova(s) pendente(s) de uma vez. Confirmar?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={working}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                doUnlockAll();
+              }}
+              disabled={working || pendingExamIds.length === 0}
+              className="bg-emerald-600 text-white hover:bg-emerald-700"
+            >
+              {working ? "Liberando..." : "Sim, liberar todas"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
 
