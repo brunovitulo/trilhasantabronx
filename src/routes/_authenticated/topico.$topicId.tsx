@@ -404,11 +404,11 @@ function SubtaskGroupCard({
 
   const itemStates = group.items.map(({ subtask }) => {
     const st = getSubtaskState(subtask.id, rows);
-    const isEval = subtask.kind === "evaluation";
-    const passing = isEval
-      ? (subtask as Extract<Subtask, { kind: "evaluation" }>).passingScore ?? PASSING_SCORE
+    const isEvalLike = subtask.kind === "evaluation" || subtask.kind === "open_evaluation";
+    const passing = isEvalLike
+      ? (subtask as Extract<Subtask, { kind: "evaluation" | "open_evaluation" }>).passingScore ?? PASSING_SCORE
       : 0;
-    const passed = !isEval ? st.completed : st.completed && (st.score ?? 0) >= passing;
+    const passed = !isEvalLike ? st.completed : st.completed && (st.score ?? 0) >= passing;
     return { state: st, passed };
   });
 
