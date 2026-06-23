@@ -729,9 +729,42 @@ function ExamDialogLauncher({
   onSubmitted: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [hasSubmission, setHasSubmission] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const { data } = await supabase
+        .from("open_evaluation_submissions")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("subtask_id", subtask.id)
+        .order("created_at", { ascending: false })
+        .limit(1);
+      if (!active) return;
+      setHasSubmission((data?.length ?? 0) > 0);
+    })();
+    const ch = supabase
+      .channel(`oes-${userId}-${subtask.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "open_evaluation_submissions",
+          filter: `user_id=eq.${userId}`,
+        },
+        () => setHasSubmission(true),
+      )
+      .subscribe();
+    return () => {
+      active = false;
+      supabase.removeChannel(ch);
+    };
+  }, [userId, subtask.id]);
 
   // Se já foi enviada/corrigida, mostrar o status inline (sem dialog).
-  if (completed) {
+  if (completed || hasSubmission) {
     return (
       <OpenEvaluationSubtask
         subtask={subtask}
