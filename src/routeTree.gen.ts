@@ -13,7 +13,6 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedRevisaoDoDiaRouteImport } from './routes/_authenticated/revisao-do-dia'
-import { Route as AuthenticatedRevisaoRouteImport } from './routes/_authenticated/revisao'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedTopicoTopicIdRouteImport } from './routes/_authenticated/topico.$topicId'
 import { Route as AuthenticatedAdminAvaliacoesRouteImport } from './routes/_authenticated/admin.avaliacoes'
@@ -38,11 +37,6 @@ const AuthenticatedRevisaoDoDiaRoute =
     path: '/revisao-do-dia',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedRevisaoRoute = AuthenticatedRevisaoRouteImport.update({
-  id: '/revisao',
-  path: '/revisao',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -65,7 +59,6 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
-  '/revisao': typeof AuthenticatedRevisaoRoute
   '/revisao-do-dia': typeof AuthenticatedRevisaoDoDiaRoute
   '/admin/avaliacoes': typeof AuthenticatedAdminAvaliacoesRoute
   '/topico/$topicId': typeof AuthenticatedTopicoTopicIdRoute
@@ -73,7 +66,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
-  '/revisao': typeof AuthenticatedRevisaoRoute
   '/revisao-do-dia': typeof AuthenticatedRevisaoDoDiaRoute
   '/': typeof AuthenticatedIndexRoute
   '/admin/avaliacoes': typeof AuthenticatedAdminAvaliacoesRoute
@@ -84,7 +76,6 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
-  '/_authenticated/revisao': typeof AuthenticatedRevisaoRoute
   '/_authenticated/revisao-do-dia': typeof AuthenticatedRevisaoDoDiaRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/admin/avaliacoes': typeof AuthenticatedAdminAvaliacoesRoute
@@ -96,7 +87,6 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/admin'
-    | '/revisao'
     | '/revisao-do-dia'
     | '/admin/avaliacoes'
     | '/topico/$topicId'
@@ -104,7 +94,6 @@ export interface FileRouteTypes {
   to:
     | '/auth'
     | '/admin'
-    | '/revisao'
     | '/revisao-do-dia'
     | '/'
     | '/admin/avaliacoes'
@@ -114,7 +103,6 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/admin'
-    | '/_authenticated/revisao'
     | '/_authenticated/revisao-do-dia'
     | '/_authenticated/'
     | '/_authenticated/admin/avaliacoes'
@@ -156,13 +144,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRevisaoDoDiaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/revisao': {
-      id: '/_authenticated/revisao'
-      path: '/revisao'
-      fullPath: '/revisao'
-      preLoaderRoute: typeof AuthenticatedRevisaoRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -200,7 +181,6 @@ const AuthenticatedAdminRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
-  AuthenticatedRevisaoRoute: typeof AuthenticatedRevisaoRoute
   AuthenticatedRevisaoDoDiaRoute: typeof AuthenticatedRevisaoDoDiaRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedTopicoTopicIdRoute: typeof AuthenticatedTopicoTopicIdRoute
@@ -208,7 +188,6 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
-  AuthenticatedRevisaoRoute: AuthenticatedRevisaoRoute,
   AuthenticatedRevisaoDoDiaRoute: AuthenticatedRevisaoDoDiaRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedTopicoTopicIdRoute: AuthenticatedTopicoTopicIdRoute,

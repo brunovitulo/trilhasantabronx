@@ -12,11 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import apostilaResponsabilidadeHtml from "@/content/responsabilidade/apostila.html?raw";
 import checklistOrganizacaoHtml from "@/content/organizacao/checklist.html?raw";
-import {
-  listTodayReviews,
-  ensureOnboardingReview,
-} from "@/lib/reviews.functions";
-import type { ScheduledReview } from "@/lib/reviews";
+import { getTodayReview, type TodayReviewState } from "@/lib/dailyReview.functions";
 
 type DailyTask = {
   id: string;
@@ -78,9 +74,8 @@ export function DailyTasksButton() {
   const [done, setDone] = useState<Record<string, boolean>>({});
   const [active, setActive] = useState<DailyTask | null>(null);
   const [nonce, setNonce] = useState(0);
-  const [reviews, setReviews] = useState<ScheduledReview[]>([]);
-  const fetchReviews = useServerFn(listTodayReviews);
-  const ensureOnboarding = useServerFn(ensureOnboardingReview);
+  const [review, setReview] = useState<TodayReviewState | null>(null);
+  const fetchReview = useServerFn(getTodayReview);
 
   useEffect(() => {
     setDone(loadDone());
@@ -90,28 +85,27 @@ export function DailyTasksButton() {
   }, []);
 
   useEffect(() => {
-    let active = true;
+    let alive = true;
     (async () => {
       try {
-        await ensureOnboarding().catch(() => null);
-        const data = await fetchReviews();
-        if (active) setReviews((data ?? []) as ScheduledReview[]);
+        const data = await fetchReview();
+        if (alive) setReview(data);
       } catch {
         /* ignore */
       }
     })();
     return () => {
-      active = false;
+      alive = false;
     };
-  }, [fetchReviews, ensureOnboarding]);
+  }, [fetchReview]);
 
-  const hasReviews = reviews.length > 0;
-  const reviewDone = hasReviews && reviews.every((r) => r.status === "completed");
+  const hasReview = !!review && review.queue.length > 0;
+  const reviewDone = !!review?.completed;
   const pending = useMemo(() => {
     const base = TASKS.filter((t) => !done[t.id]).length;
-    const rev = hasReviews && !reviewDone ? 1 : 0;
+    const rev = hasReview && !reviewDone ? 1 : 0;
     return base + rev;
-  }, [done, hasReviews, reviewDone]);
+  }, [done, hasReview, reviewDone]);
 
   function toggle(id: string, value: boolean) {
     setDone((prev) => {
@@ -225,7 +219,7 @@ export function DailyTasksButton() {
               );
             })}
 
-            {hasReviews && (
+            {hasReview && (
               <div
                 className={`rounded-2xl border p-4 transition-colors ${
                   reviewDone
@@ -243,12 +237,12 @@ export function DailyTasksButton() {
                         reviewDone ? "text-muted-foreground line-through" : ""
                       }`}
                     >
-                      Revisão do dia
+                      Fazer revisão do dia
                     </p>
                     <p className="text-xs text-muted-foreground mt-1 leading-snug">
                       {reviewDone
-                        ? "Você concluiu todas as revisões de hoje."
-                        : `Você tem ${reviews.length} revisão${reviews.length > 1 ? "ões" : ""} pendente${reviews.length > 1 ? "s" : ""}. Motivo: ${reviews[0].reason}. ~${reviews.reduce((s, r) => s + r.estimated_minutes, 0)} min · ${reviews.reduce((s, r) => s + r.question_count, 0)} perguntas.`}
+                        ? "Revisão de hoje já concluída."
+                        : `${review!.queue.length} módulo${review!.queue.length > 1 ? "s" : ""} na fila: ${review!.queue.map((q) => q.topicTitle).join(", ")}.`}
                     </p>
                     {!reviewDone && (
                       <div className="mt-3">

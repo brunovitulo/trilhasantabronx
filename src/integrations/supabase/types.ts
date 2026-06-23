@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      daily_review_completions: {
+        Row: {
+          completed_at: string
+          created_at: string
+          id: string
+          module_ids: string[]
+          review_date: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          created_at?: string
+          id?: string
+          module_ids: string[]
+          review_date: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          created_at?: string
+          id?: string
+          module_ids?: string[]
+          review_date?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       exam_permission_requests: {
         Row: {
           created_at: string
@@ -190,113 +220,6 @@ export type Database = {
           full_name?: string | null
           id?: string
           updated_at?: string
-        }
-        Relationships: []
-      }
-      review_answers: {
-        Row: {
-          answer: string | null
-          answered_at: string
-          correct_answer: string | null
-          id: string
-          is_correct: boolean
-          is_critical: boolean
-          module_id: string
-          question_id: string
-          question_type: string
-          review_id: string
-          tags: string[]
-          theme: string | null
-          user_id: string
-        }
-        Insert: {
-          answer?: string | null
-          answered_at?: string
-          correct_answer?: string | null
-          id?: string
-          is_correct?: boolean
-          is_critical?: boolean
-          module_id: string
-          question_id: string
-          question_type?: string
-          review_id: string
-          tags?: string[]
-          theme?: string | null
-          user_id: string
-        }
-        Update: {
-          answer?: string | null
-          answered_at?: string
-          correct_answer?: string | null
-          id?: string
-          is_correct?: boolean
-          is_critical?: boolean
-          module_id?: string
-          question_id?: string
-          question_type?: string
-          review_id?: string
-          tags?: string[]
-          theme?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "review_answers_review_id_fkey"
-            columns: ["review_id"]
-            isOneToOne: false
-            referencedRelation: "scheduled_reviews"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      scheduled_reviews: {
-        Row: {
-          completed_at: string | null
-          created_at: string
-          due_date: string
-          estimated_minutes: number
-          id: string
-          module_id: string
-          module_name: string
-          question_count: number
-          reason: string
-          score_percent: number | null
-          status: string
-          updated_at: string
-          user_id: string
-          weight: number
-        }
-        Insert: {
-          completed_at?: string | null
-          created_at?: string
-          due_date: string
-          estimated_minutes?: number
-          id?: string
-          module_id: string
-          module_name: string
-          question_count?: number
-          reason: string
-          score_percent?: number | null
-          status?: string
-          updated_at?: string
-          user_id: string
-          weight: number
-        }
-        Update: {
-          completed_at?: string | null
-          created_at?: string
-          due_date?: string
-          estimated_minutes?: number
-          id?: string
-          module_id?: string
-          module_name?: string
-          question_count?: number
-          reason?: string
-          score_percent?: number | null
-          status?: string
-          updated_at?: string
-          user_id?: string
-          weight?: number
         }
         Relationships: []
       }

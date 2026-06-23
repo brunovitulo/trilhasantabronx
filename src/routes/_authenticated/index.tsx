@@ -6,7 +6,6 @@ import {
   Loader2,
   Circle,
   AlertTriangle,
-  Brain,
   Store,
   Package,
   ClipboardCheck,
@@ -135,8 +134,6 @@ function HomePage() {
           </Card>
         )}
 
-        {totalDone > 0 && <ReviewReminder userId={user.id} />}
-
         {loading ? (
           <div className="flex justify-center py-10">
             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -242,59 +239,3 @@ function HomePage() {
   );
 }
 
-function ReviewReminder({ userId }: { userId: string }) {
-  const [show, setShow] = useState(true);
-  const [stale, setStale] = useState(false);
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(`sb-last-review-${userId}`);
-      const last = raw ? Number(raw) : 0;
-      const hours = (Date.now() - last) / 36e5;
-      setStale(!last || hours >= 12);
-      const dismissed = sessionStorage.getItem(`sb-review-dismiss-${userId}`);
-      if (dismissed === "1") setShow(false);
-    } catch {
-      /* noop */
-    }
-  }, [userId]);
-
-  if (!show || !stale) return null;
-
-  return (
-    <Card className="mb-6 border-primary/40 bg-primary/5 p-4">
-      <div className="flex gap-3 items-start">
-        <Brain className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-        <div className="flex-1 min-w-0">
-          <p className="font-medium text-foreground">Revise antes de continuar</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            Antes de começar um tópico novo, relembre rapidamente o que você já estudou.
-            Isso fixa o conteúdo de verdade na sua memória.
-          </p>
-          <div className="mt-3 flex gap-2 flex-wrap">
-            <Link
-              to="/revisao"
-              className="inline-flex items-center rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
-            >
-              Abrir apostila de revisão
-            </Link>
-            <button
-              type="button"
-              onClick={() => {
-                try {
-                  sessionStorage.setItem(`sb-review-dismiss-${userId}`, "1");
-                } catch {
-                  /* noop */
-                }
-                setShow(false);
-              }}
-              className="inline-flex items-center rounded-full border border-border/60 bg-background px-4 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted/60"
-            >
-              Agora não
-            </button>
-          </div>
-        </div>
-      </div>
-    </Card>
-  );
-}
