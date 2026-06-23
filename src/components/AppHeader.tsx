@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { LogOut, Shield, Brain, FileText } from "lucide-react";
+import { LogOut, Shield, FileText } from "lucide-react";
 
 import logo from "@/assets/logo.png";
 import { supabase } from "@/integrations/supabase/client";
@@ -85,12 +85,6 @@ export function AppHeader({ isAdmin }: { isAdmin: boolean }) {
               <span className="hidden sm:inline">Minhas provas</span>
             </Button>
           )}
-          <Button asChild variant="ghost" size="sm" className="text-white hover:bg-white/10 hover:text-white gap-1.5">
-            <Link to="/revisao">
-              <Brain className="h-4 w-4" />
-              <span className="hidden sm:inline">Revisão</span>
-            </Link>
-          </Button>
           {isAdmin && (
             <Button asChild variant="secondary" size="sm" className="gap-1.5">
               <Link to="/admin">

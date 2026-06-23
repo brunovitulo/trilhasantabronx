@@ -1,429 +1,576 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import {
+  ArrowLeft,
+  BookOpen,
   Brain,
+  Check,
   CheckCircle2,
-  ChevronLeft,
+  ClipboardCheck,
   Loader2,
   Sparkles,
-  XCircle,
-  AlertTriangle,
+  X,
 } from "lucide-react";
-import { AppHeader } from "@/components/AppHeader";
-import { Card } from "@/components/ui/card";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Card } from "@/components/ui/card";
 import {
-  listTodayReviews,
-  submitReviewAnswer,
-  finalizeReview,
-} from "@/lib/reviews.functions";
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
-  MODULE_REVIEW,
-  pickReviewQuestions,
-  type ReviewQuestion,
-  type ScheduledReview,
-} from "@/lib/reviews";
+  completeTodayReview,
+  getTodayReview,
+  type TodayReviewState,
+} from "@/lib/dailyReview.functions";
+import { getRevisionContent } from "@/data/revisao";
 
 export const Route = createFileRoute("/_authenticated/revisao-do-dia")({
-  head: () => ({
-    meta: [{ title: "Revisão do dia — Santa Bronx" }],
-  }),
-  component: ReviewDayPage,
+  head: () => ({ meta: [{ title: "Revisão do dia — Santa Bronx" }] }),
+  component: RevisaoDoDiaPage,
 });
 
-type Phase = "loading" | "intro" | "summary" | "quiz" | "done" | "finished_all";
+type ModulePhase = "apostila" | "checklist" | "quiz" | "done";
 
-function ReviewDayPage() {
+type ModuleState = {
+  reread: boolean;
+  checklist: boolean;
+  quizIndex: number;
+  answers: (number | null)[];
+  phase: ModulePhase;
+};
+
+function emptyModuleState(quizLen: number): ModuleState {
+  return {
+    reread: false,
+    checklist: false,
+    quizIndex: 0,
+    answers: Array(quizLen).fill(null),
+    phase: "apostila",
+  };
+}
+
+function RevisaoDoDiaPage() {
   const navigate = useNavigate();
-  const fetchList = useServerFn(listTodayReviews);
-  const submit = useServerFn(submitReviewAnswer);
-  const finalize = useServerFn(finalizeReview);
+  const fetchToday = useServerFn(getTodayReview);
+  const finishReview = useServerFn(completeTodayReview);
 
-  const [phase, setPhase] = useState<Phase>("loading");
-  const [reviews, setReviews] = useState<ScheduledReview[]>([]);
-  const [currentIdx, setCurrentIdx] = useState(0);
-  const [questions, setQuestions] = useState<ReviewQuestion[]>([]);
-  const [qIdx, setQIdx] = useState(0);
-  const [chosen, setChosen] = useState<number | null>(null);
-  const [stats, setStats] = useState({
-    correct: 0,
-    total: 0,
-    hadCritical: false,
-    wrongThemes: {} as Record<string, number>,
-  });
-  const [lastResult, setLastResult] = useState<{
-    score: number;
-    extraCreated: string | null;
-    moduleName: string;
-  } | null>(null);
+  const [state, setState] = useState<TodayReviewState | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [moduleIdx, setModuleIdx] = useState(0);
+  const [modStates, setModStates] = useState<Record<string, ModuleState>>({});
+  const [popup, setPopup] = useState<null | {
+    title: string;
+    html: string;
+  }>(null);
+  const [saving, setSaving] = useState(false);
+  const [finalScreen, setFinalScreen] = useState(false);
 
-  // carrega revisões
   useEffect(() => {
+    let alive = true;
     (async () => {
       try {
-        const data = await fetchList();
-        setReviews(data as ScheduledReview[]);
-        if (!data || data.length === 0) {
-          setPhase("finished_all");
-        } else {
-          startReview(0, data as ScheduledReview[]);
+        const s = await fetchToday();
+        if (!alive) return;
+        setState(s);
+        const init: Record<string, ModuleState> = {};
+        for (const it of s.queue) {
+          const c = getRevisionContent(it.topicId);
+          init[it.topicId] = emptyModuleState(c?.quiz.length ?? 0);
         }
-      } catch (err) {
-        console.error(err);
-        setPhase("finished_all");
+        setModStates(init);
+      } finally {
+        if (alive) setLoading(false);
       }
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  function startReview(idx: number, list: ScheduledReview[]) {
-    const rev = list[idx];
-    if (!rev) {
-      setPhase("finished_all");
-      return;
-    }
-    const qs = pickReviewQuestions(rev.module_id, rev.question_count);
-    setQuestions(qs);
-    setQIdx(0);
-    setChosen(null);
-    setStats({ correct: 0, total: 0, hadCritical: false, wrongThemes: {} });
-    setCurrentIdx(idx);
-    setPhase("intro");
-  }
-
-  const currentReview = reviews[currentIdx];
-  const cfg = currentReview ? MODULE_REVIEW[currentReview.module_id] : null;
-  const currentQ = questions[qIdx];
-
-  async function pickAnswer(oi: number) {
-    if (chosen !== null || !currentQ || !currentReview) return;
-    setChosen(oi);
-    const isCorrect = oi === currentQ.correctIndex;
-    const isCritical = !!currentQ.isCritical;
-    const theme = currentQ.theme;
-
-    const newStats = {
-      correct: stats.correct + (isCorrect ? 1 : 0),
-      total: stats.total + 1,
-      hadCritical: stats.hadCritical || (!isCorrect && isCritical),
-      wrongThemes: { ...stats.wrongThemes },
+    return () => {
+      alive = false;
     };
-    if (!isCorrect && theme) {
-      newStats.wrongThemes[theme] = (newStats.wrongThemes[theme] ?? 0) + 1;
-    }
-    setStats(newStats);
+  }, [fetchToday]);
 
-    try {
-      await submit({
-        data: {
-          reviewId: currentReview.id,
-          moduleId: currentReview.module_id,
-          questionId: currentQ.questionId,
-          theme: theme ?? null,
-          tags: currentQ.tags ?? [],
-          questionType: "mcq",
-          answer: String(oi),
-          correctAnswer: String(currentQ.correctIndex),
-          isCorrect,
-          isCritical,
-        },
-      });
-    } catch (err) {
-      console.error("submit answer failed", err);
-    }
-  }
+  const current = state?.queue[moduleIdx];
+  const content = current ? getRevisionContent(current.topicId) : null;
+  const ms = current ? modStates[current.topicId] : null;
 
-  async function next() {
-    if (qIdx + 1 < questions.length) {
-      setQIdx(qIdx + 1);
-      setChosen(null);
-      return;
-    }
-    // fim do quiz — finaliza
-    if (!currentReview) return;
-    try {
-      const res = await finalize({
-        data: {
-          reviewId: currentReview.id,
-          moduleId: currentReview.module_id,
-          correct: stats.correct,
-          total: stats.total,
-          hadCriticalError: stats.hadCritical,
-          wrongThemesCount: stats.wrongThemes,
-        },
-      });
-      setLastResult({
-        score: res.scorePercent,
-        extraCreated: res.extraCreated,
-        moduleName: currentReview.module_name,
-      });
-    } catch (err) {
-      console.error(err);
-      setLastResult({
-        score: Math.round((stats.correct / Math.max(1, stats.total)) * 100),
-        extraCreated: null,
-        moduleName: currentReview.module_name,
-      });
-    }
-    setPhase("done");
-  }
-
-  function nextReview() {
-    const nextIdx = currentIdx + 1;
-    if (nextIdx >= reviews.length) {
-      setPhase("finished_all");
-      return;
-    }
-    setLastResult(null);
-    startReview(nextIdx, reviews);
-  }
-
-  const progressPct = useMemo(
-    () => (questions.length ? Math.round(((qIdx + (chosen !== null ? 1 : 0)) / questions.length) * 100) : 0),
-    [qIdx, chosen, questions.length],
+  const allModuleIds = useMemo(
+    () => (state?.queue ?? []).map((q) => q.topicId),
+    [state],
   );
 
-  return (
-    <div className="min-h-screen bg-background">
-      <AppHeader isAdmin={false} />
-      <main className="mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-8">
+  const allModulesDone = useMemo(() => {
+    if (!state) return false;
+    return state.queue.every((q) => modStates[q.topicId]?.phase === "done");
+  }, [state, modStates]);
+
+  function updateModule(topicId: string, patch: Partial<ModuleState>) {
+    setModStates((prev) => ({
+      ...prev,
+      [topicId]: { ...prev[topicId], ...patch } as ModuleState,
+    }));
+  }
+
+  function advancePhase(topicId: string, next: ModulePhase) {
+    updateModule(topicId, { phase: next });
+  }
+
+  function answerQuestion(topicId: string, qIdx: number, optIdx: number) {
+    setModStates((prev) => {
+      const cur = prev[topicId];
+      if (!cur || cur.answers[qIdx] !== null) return prev;
+      const next = [...cur.answers];
+      next[qIdx] = optIdx;
+      return { ...prev, [topicId]: { ...cur, answers: next } };
+    });
+  }
+
+  function nextQuestion(topicId: string, quizLen: number) {
+    setModStates((prev) => {
+      const cur = prev[topicId];
+      if (!cur) return prev;
+      const next = cur.quizIndex + 1;
+      if (next >= quizLen) return { ...prev, [topicId]: { ...cur, phase: "done", quizIndex: cur.quizIndex } };
+      return { ...prev, [topicId]: { ...cur, quizIndex: next } };
+    });
+  }
+
+  function goToModule(idx: number) {
+    setModuleIdx(Math.max(0, Math.min(idx, (state?.queue.length ?? 1) - 1)));
+  }
+
+  async function finalize() {
+    if (!state) return;
+    setSaving(true);
+    try {
+      await finishReview({ data: { moduleIds: allModuleIds } });
+      setFinalScreen(true);
+    } catch (e) {
+      toast.error("Erro ao salvar revisão", {
+        description: e instanceof Error ? e.message : "Tente novamente.",
+      });
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (!state || state.queue.length === 0) {
+    return (
+      <main className="mx-auto max-w-2xl px-4 py-10">
         <Link
           to="/"
-          className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6"
         >
-          <ChevronLeft className="h-4 w-4" /> Voltar à trilha
+          <ArrowLeft className="h-4 w-4" /> Voltar
         </Link>
+        <Card className="p-8 text-center">
+          <Brain className="h-10 w-10 text-primary mx-auto mb-3" />
+          <h1 className="text-xl font-bold">Nada para revisar hoje</h1>
+          <p className="text-sm text-muted-foreground mt-2">
+            A fila de revisão fica vazia quando você ainda não concluiu nenhum
+            módulo ou quando todas as revisões já passaram da janela de 2 dias.
+            Continue a sua trilha — assim que concluir um módulo, ele aparece
+            aqui no dia seguinte.
+          </p>
+        </Card>
+      </main>
+    );
+  }
+
+  if (state.completed && !finalScreen) {
+    return (
+      <main className="mx-auto max-w-2xl px-4 py-10">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6"
+        >
+          <ArrowLeft className="h-4 w-4" /> Voltar
+        </Link>
+        <Card className="p-8 text-center">
+          <CheckCircle2 className="h-10 w-10 text-emerald-500 mx-auto mb-3" />
+          <h1 className="text-xl font-bold">Revisão do dia concluída</h1>
+          <p className="text-sm text-muted-foreground mt-2">
+            Você já concluiu a revisão de hoje. Volte amanhã para reforçar os
+            módulos que ainda estiverem na janela de 2 dias.
+          </p>
+          {state.completedModuleIds.length > 0 && (
+            <p className="text-xs text-muted-foreground mt-4">
+              Conteúdo revisado: {state.completedModuleIds
+                .map((id) => getRevisionContent(id)?.title ?? id)
+                .join(", ")}
+            </p>
+          )}
+        </Card>
+      </main>
+    );
+  }
+
+  if (finalScreen) {
+    return (
+      <main className="mx-auto max-w-2xl px-4 py-10">
+        <Card className="p-8 text-center">
+          <Sparkles className="h-10 w-10 text-primary mx-auto mb-3" />
+          <h1 className="text-2xl font-bold">Revisão do dia concluída!</h1>
+          <p className="text-sm text-muted-foreground mt-3">
+            Conteúdo revisado:{" "}
+            <span className="font-semibold text-foreground">
+              {state.queue
+                .map((q) => getRevisionContent(q.topicId)?.title ?? q.topicTitle)
+                .join(", ")}
+            </span>
+            .
+          </p>
+          <Button className="mt-6" onClick={() => navigate({ to: "/" })}>
+            Voltar para a trilha
+          </Button>
+        </Card>
+      </main>
+    );
+  }
+
+  if (!current || !ms) return null;
+
+  return (
+    <div className="min-h-screen">
+      <main className="mx-auto max-w-3xl px-4 py-6 sm:py-8">
+        <div className="flex items-center justify-between mb-4">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" /> Sair
+          </Link>
+          <span className="text-xs text-muted-foreground">
+            Módulo {moduleIdx + 1} de {state.queue.length}
+          </span>
+        </div>
 
         <div className="mb-6">
-          <div className="flex items-center gap-2 text-[11px] uppercase tracking-[3px] text-primary font-semibold mb-2">
-            <Brain className="h-3.5 w-3.5" /> Revisão do dia
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            Reforce o que já estudou
+          <h1 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
+            <Brain className="h-5 w-5 text-primary" />
+            Revisão do dia
           </h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Mini resumo + perguntas rápidas. Você recebe feedback na hora.
+          <p className="text-sm text-muted-foreground mt-1">
+            Cada módulo concluído entra na revisão por 2 dias. Faça as 3 etapas
+            de cada módulo antes de concluir.
           </p>
         </div>
 
-        {phase === "loading" && (
-          <div className="flex justify-center py-10">
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <div className="flex flex-wrap gap-2 mb-4">
+          {state.queue.map((q, idx) => {
+            const done = modStates[q.topicId]?.phase === "done";
+            const isCur = idx === moduleIdx;
+            return (
+              <button
+                key={q.topicId}
+                onClick={() => goToModule(idx)}
+                className={`text-xs rounded-full px-3 py-1.5 border transition-colors ${
+                  isCur
+                    ? "border-primary bg-primary/10 text-primary font-semibold"
+                    : done
+                      ? "border-emerald-500/40 bg-emerald-500/5 text-emerald-700"
+                      : "border-border bg-card text-muted-foreground"
+                }`}
+              >
+                {done && <Check className="inline h-3 w-3 mr-1" />}
+                {idx + 1}. {q.topicTitle}
+              </button>
+            );
+          })}
+        </div>
+
+        <Card className="p-5 sm:p-6">
+          <div className="flex items-baseline justify-between mb-1">
+            <h2 className="text-lg font-bold">{current.topicTitle}</h2>
+            <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
+              Revisão dia {current.dayInWindow} de 2
+            </span>
           </div>
-        )}
 
-        {phase === "finished_all" && (
-          <Card className="p-6 text-center">
-            <Sparkles className="h-8 w-8 text-primary mx-auto mb-2" />
-            <h2 className="font-semibold text-lg mb-1">Tudo em dia!</h2>
-            <p className="text-sm text-muted-foreground mb-4">
-              Você não tem revisões pendentes. Volte amanhã para continuar fortalecendo o que aprendeu.
-            </p>
-            <Button onClick={() => navigate({ to: "/" })}>Voltar à trilha</Button>
-          </Card>
-        )}
+          <ModulePhaseView
+            phase={ms.phase}
+            module={ms}
+            content={content}
+            onOpenPopup={(title, html) => setPopup({ title, html })}
+            onRereadChange={(v) => updateModule(current.topicId, { reread: v })}
+            onChecklistChange={(v) =>
+              updateModule(current.topicId, { checklist: v })
+            }
+            onAdvance={(next) => advancePhase(current.topicId, next)}
+            onAnswer={(qIdx, optIdx) =>
+              answerQuestion(current.topicId, qIdx, optIdx)
+            }
+            onNextQuestion={(quizLen) =>
+              nextQuestion(current.topicId, quizLen)
+            }
+          />
+        </Card>
 
-        {phase === "intro" && currentReview && (
-          <Card className="p-5 space-y-4">
-            <div className="flex items-start justify-between gap-3 flex-wrap">
-              <div>
-                <Badge variant="secondary" className="mb-2">
-                  Revisão {currentIdx + 1} de {reviews.length}
-                </Badge>
-                <h2 className="font-semibold text-lg">{currentReview.module_name}</h2>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Motivo: <strong>{currentReview.reason}</strong>
-                </p>
-              </div>
-              <div className="text-right text-xs text-muted-foreground">
-                <div>{currentReview.question_count} perguntas</div>
-                <div>~{currentReview.estimated_minutes} min</div>
-              </div>
-            </div>
-            <Button className="w-full" onClick={() => setPhase("summary")}>
-              Iniciar revisão
-            </Button>
-          </Card>
-        )}
-
-        {phase === "summary" && currentReview && cfg && (
-          <Card className="p-5 space-y-4 border-primary/30">
-            <div className="text-[10px] uppercase tracking-[2px] text-primary font-semibold">
-              Revisão rápida
-            </div>
-            <h2 className="font-semibold text-lg">{currentReview.module_name}</h2>
-            <p className="text-sm text-muted-foreground">
-              Antes de responder, relembre:
-            </p>
-            <ul className="space-y-2 text-sm">
-              {cfg.miniSummary.map((b, i) => (
-                <li key={i} className="flex gap-2">
-                  <span className="text-primary mt-0.5">•</span>
-                  <span>{b}</span>
-                </li>
-              ))}
-            </ul>
-            <Button className="w-full" onClick={() => setPhase("quiz")}>
-              Começar perguntas
-            </Button>
-          </Card>
-        )}
-
-        {phase === "quiz" && currentQ && (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span>
-                Pergunta {qIdx + 1} de {questions.length}
-              </span>
-              <span>{progressPct}%</span>
-            </div>
-            <div className="h-1 w-full rounded-full bg-muted overflow-hidden">
-              <div
-                className="h-full bg-primary transition-all"
-                style={{ width: `${progressPct}%` }}
-              />
-            </div>
-            <Card className="p-5">
-              <p className="text-sm font-medium mb-3">{currentQ.question}</p>
-              <div className="space-y-2">
-                {currentQ.options.map((opt, oi) => {
-                  const isChosen = chosen === oi;
-                  const isCorrect = oi === currentQ.correctIndex;
-                  const answered = chosen !== null;
-                  let tone = "border-border/60 hover:bg-muted/40";
-                  if (answered) {
-                    if (isCorrect) tone = "border-emerald-400/60 bg-emerald-500/10";
-                    else if (isChosen) tone = "border-rose-400/60 bg-rose-500/10";
-                    else tone = "border-border/30 opacity-60";
-                  }
-                  return (
-                    <button
-                      key={oi}
-                      type="button"
-                      disabled={answered}
-                      onClick={() => pickAnswer(oi)}
-                      className={`w-full text-left text-sm rounded-xl border px-3 py-2.5 transition-colors ${tone}`}
-                    >
-                      <span className="font-semibold mr-1">
-                        {String.fromCharCode(65 + oi)})
-                      </span>
-                      {opt}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {chosen !== null && (
-                <FeedbackCard question={currentQ} chosen={chosen} />
-              )}
-              {chosen !== null && (
-                <Button className="w-full mt-3" onClick={next}>
-                  {qIdx + 1 < questions.length ? "Próxima" : "Ver resultado"}
-                </Button>
-              )}
-            </Card>
-          </div>
-        )}
-
-        {phase === "done" && lastResult && (
-          <Card className="p-5 space-y-3">
-            <div className="text-[10px] uppercase tracking-[2px] text-primary font-semibold">
-              Resultado da revisão
-            </div>
-            <h2 className="font-semibold text-lg">{lastResult.moduleName}</h2>
-            <div className="grid grid-cols-2 gap-3 text-center">
-              <div className="rounded-xl border border-border/60 p-3">
-                <div className="text-2xl font-bold">{stats.correct}/{stats.total}</div>
-                <div className="text-xs text-muted-foreground">Acertos</div>
-              </div>
-              <div className="rounded-xl border border-border/60 p-3">
-                <div
-                  className={`text-2xl font-bold ${
-                    lastResult.score >= 70 ? "text-emerald-400" : "text-rose-400"
-                  }`}
-                >
-                  {lastResult.score}%
-                </div>
-                <div className="text-xs text-muted-foreground">Desempenho</div>
-              </div>
-            </div>
-            {lastResult.extraCreated && (
-              <div className="rounded-xl border border-amber-400/40 bg-amber-500/10 p-3 text-xs">
-                <strong>Nova revisão criada para amanhã:</strong>{" "}
-                {lastResult.extraCreated}
-              </div>
+        {ms.phase === "done" && (
+          <div className="mt-5 flex justify-end gap-2">
+            {moduleIdx < state.queue.length - 1 ? (
+              <Button onClick={() => goToModule(moduleIdx + 1)}>
+                Próximo módulo
+              </Button>
+            ) : (
+              <Button
+                onClick={finalize}
+                disabled={!allModulesDone || saving}
+                className="bg-emerald-600 hover:bg-emerald-700"
+              >
+                {saving ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : (
+                  <CheckCircle2 className="h-4 w-4 mr-2" />
+                )}
+                Concluir revisão do dia
+              </Button>
             )}
-            <Button className="w-full" onClick={nextReview}>
-              {currentIdx + 1 < reviews.length ? "Próxima revisão" : "Concluir"}
-            </Button>
-          </Card>
+          </div>
         )}
       </main>
+
+      <Dialog open={popup !== null} onOpenChange={(o) => !o && setPopup(null)}>
+        <DialogContent className="p-0 w-[92vw] h-[90vh] max-w-[92vw] sm:max-w-[92vw] flex flex-col gap-0 [&>button]:hidden overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-border/60 shrink-0">
+            <DialogTitle className="text-base">{popup?.title ?? ""}</DialogTitle>
+            <button
+              type="button"
+              onClick={() => setPopup(null)}
+              className="rounded-full p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+              aria-label="Fechar"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+          {popup && (
+            <iframe
+              srcDoc={popup.html}
+              title={popup.title}
+              className="flex-1 w-full border-0 bg-white"
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
 
-function FeedbackCard({
-  question,
-  chosen,
+function ModulePhaseView({
+  phase,
+  module: ms,
+  content,
+  onOpenPopup,
+  onRereadChange,
+  onChecklistChange,
+  onAdvance,
+  onAnswer,
+  onNextQuestion,
 }: {
-  question: ReviewQuestion;
-  chosen: number;
+  phase: ModulePhase;
+  module: ModuleState;
+  content: ReturnType<typeof getRevisionContent>;
+  onOpenPopup: (title: string, html: string) => void;
+  onRereadChange: (v: boolean) => void;
+  onChecklistChange: (v: boolean) => void;
+  onAdvance: (next: ModulePhase) => void;
+  onAnswer: (qIdx: number, optIdx: number) => void;
+  onNextQuestion: (quizLen: number) => void;
 }) {
-  const correct = chosen === question.correctIndex;
-  const critical = !!question.isCritical;
-  if (correct) {
+  if (phase === "apostila") {
     return (
-      <div className="mt-3 rounded-xl border border-emerald-400/40 bg-emerald-500/10 p-3 text-sm">
-        <div className="flex items-center gap-2 font-semibold text-emerald-300">
-          <CheckCircle2 className="h-4 w-4" /> Correto.
+      <div className="mt-4 space-y-4">
+        <StepHeader n={1} title="Reler a apostila" />
+        <p className="text-sm text-muted-foreground">
+          Abra a apostila e releia rapidamente o conteúdo deste módulo.
+        </p>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            variant="outline"
+            onClick={() =>
+              content &&
+              onOpenPopup(`Apostila — ${content.title}`, content.apostilaHtml)
+            }
+            disabled={!content}
+          >
+            <BookOpen className="h-4 w-4 mr-2" />
+            Abrir apostila
+          </Button>
         </div>
-        {question.memoryTip && (
-          <p className="text-xs text-emerald-100/80 mt-1.5">
-            <strong>Ponto para memorizar:</strong> {question.memoryTip}
-          </p>
-        )}
+        <label className="flex items-center gap-2 cursor-pointer">
+          <Checkbox
+            checked={ms.reread}
+            onCheckedChange={(v) => onRereadChange(!!v)}
+          />
+          <span className="text-sm">Reli a apostila deste módulo.</span>
+        </label>
+        <div className="flex justify-end">
+          <Button
+            disabled={!ms.reread}
+            onClick={() => onAdvance("checklist")}
+          >
+            Próxima etapa
+          </Button>
+        </div>
       </div>
     );
   }
-  return (
-    <div
-      className={`mt-3 rounded-xl border p-3 text-sm ${
-        critical
-          ? "border-rose-500/60 bg-rose-500/15"
-          : "border-rose-400/40 bg-rose-500/10"
-      }`}
-    >
-      <div className="flex items-center gap-2 font-semibold text-rose-300">
-        {critical ? (
-          <>
-            <AlertTriangle className="h-4 w-4" /> Você errou uma questão crítica.
-          </>
-        ) : (
-          <>
-            <XCircle className="h-4 w-4" /> Você errou.
-          </>
-        )}
+  if (phase === "checklist") {
+    return (
+      <div className="mt-4 space-y-4">
+        <StepHeader n={2} title="Marcar checklist de aprendizados" />
+        <p className="text-sm text-muted-foreground">
+          Abra o checklist e marque mentalmente os principais pontos.
+        </p>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            variant="outline"
+            onClick={() =>
+              content &&
+              onOpenPopup(
+                `Checklist — ${content.title}`,
+                content.checklistHtml,
+              )
+            }
+            disabled={!content}
+          >
+            <ClipboardCheck className="h-4 w-4 mr-2" />
+            Abrir checklist
+          </Button>
+        </div>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <Checkbox
+            checked={ms.checklist}
+            onCheckedChange={(v) => onChecklistChange(!!v)}
+          />
+          <span className="text-sm">Marquei os principais pontos do checklist.</span>
+        </label>
+        <div className="flex justify-end">
+          <Button
+            disabled={!ms.checklist}
+            onClick={() => onAdvance(content && content.quiz.length > 0 ? "quiz" : "done")}
+          >
+            {content && content.quiz.length > 0 ? "Iniciar quiz" : "Concluir módulo"}
+          </Button>
+        </div>
       </div>
-      <p className="text-xs mt-1.5">
-        <strong>Resposta correta:</strong>{" "}
-        <span className="text-primary font-semibold">
-          {String.fromCharCode(65 + question.correctIndex)}){" "}
-          {question.options[question.correctIndex]}
-        </span>
-      </p>
-      {question.wrongAnswerExplanation && (
-        <p className="text-xs mt-1.5 opacity-90">
-          <strong>Por quê?</strong> {question.wrongAnswerExplanation}
+    );
+  }
+  if (phase === "quiz") {
+    if (!content || content.quiz.length === 0) {
+      return (
+        <div className="mt-4 space-y-3">
+          <p className="text-sm text-muted-foreground">
+            Quiz de revisão em breve para este módulo.
+          </p>
+          <div className="flex justify-end">
+            <Button onClick={() => onAdvance("done")}>Concluir módulo</Button>
+          </div>
+        </div>
+      );
+    }
+    const qIdx = ms.quizIndex;
+    const q = content.quiz[qIdx];
+    const chosen = ms.answers[qIdx];
+    const isAnswered = chosen !== null;
+    const isLast = qIdx === content.quiz.length - 1;
+    return (
+      <div className="mt-4 space-y-4">
+        <StepHeader n={3} title={`Quiz — pergunta ${qIdx + 1} de ${content.quiz.length}`} />
+        <p className="text-sm font-medium">{q.question}</p>
+        <div className="space-y-2">
+          {q.options.map((opt, optIdx) => {
+            const isCorrect = optIdx === q.correctIndex;
+            const isChosen = chosen === optIdx;
+            const stateClass = !isAnswered
+              ? "border-border hover:border-primary/50 hover:bg-primary/5"
+              : isCorrect
+                ? "border-emerald-500/60 bg-emerald-500/10"
+                : isChosen
+                  ? "border-rose-500/60 bg-rose-500/10"
+                  : "border-border opacity-60";
+            return (
+              <button
+                key={optIdx}
+                disabled={isAnswered}
+                onClick={() => onAnswer(qIdx, optIdx)}
+                className={`w-full text-left text-sm rounded-xl border px-4 py-3 transition-colors ${stateClass}`}
+              >
+                <span className="font-semibold mr-2">
+                  {String.fromCharCode(97 + optIdx)})
+                </span>
+                {opt}
+                {isAnswered && isCorrect && (
+                  <Check className="inline h-4 w-4 ml-2 text-emerald-600" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+        {isAnswered && (
+          <div
+            className={`rounded-xl border px-4 py-3 text-sm ${
+              chosen === q.correctIndex
+                ? "border-emerald-500/40 bg-emerald-500/5 text-emerald-700"
+                : "border-rose-500/40 bg-rose-500/5 text-rose-700"
+            }`}
+          >
+            {chosen === q.correctIndex
+              ? "Resposta correta!"
+              : `Resposta incorreta. A correta é: ${String.fromCharCode(97 + q.correctIndex)}) ${q.options[q.correctIndex]}`}
+          </div>
+        )}
+        <div className="flex justify-end">
+          <Button
+            disabled={!isAnswered}
+            onClick={() => onNextQuestion(content.quiz.length)}
+          >
+            {isLast ? "Ver resultado" : "Próxima"}
+          </Button>
+        </div>
+      </div>
+    );
+  }
+  // done
+  const totalAnswered = ms.answers.filter((a) => a !== null).length;
+  const correct =
+    content && content.quiz.length > 0
+      ? ms.answers.reduce<number>(
+          (acc, a, i) =>
+            acc + (a !== null && a === content.quiz[i].correctIndex ? 1 : 0),
+          0,
+        )
+      : 0;
+  return (
+    <div className="mt-4 text-center space-y-3">
+      <CheckCircle2 className="h-10 w-10 text-emerald-500 mx-auto" />
+      <p className="text-base font-semibold">Módulo revisado!</p>
+      {content && content.quiz.length > 0 && totalAnswered > 0 && (
+        <p className="text-sm text-muted-foreground">
+          Pontuação: <span className="font-semibold text-foreground">{correct}/{content.quiz.length} corretas</span>
         </p>
       )}
-      {question.memoryTip && (
-        <p className="text-xs mt-1.5 opacity-90">
-          <strong>Ponto para memorizar:</strong> {question.memoryTip}
-        </p>
-      )}
+    </div>
+  );
+}
+
+function StepHeader({ n, title }: { n: number; title: string }) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/15 text-primary text-xs font-bold">
+        {n}
+      </span>
+      <h3 className="text-sm font-semibold">{title}</h3>
     </div>
   );
 }

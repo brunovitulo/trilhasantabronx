@@ -6,7 +6,6 @@ import {
   Loader2,
   Circle,
   AlertTriangle,
-  Brain,
   Store,
   Package,
   ClipboardCheck,
@@ -134,8 +133,6 @@ function HomePage() {
             </div>
           </Card>
         )}
-
-        {totalDone > 0 && <ReviewReminder userId={user.id} />}
 
         {loading ? (
           <div className="flex justify-center py-10">
