@@ -874,12 +874,12 @@ function ExamDialogLauncher({
         </>
       )}
 
-      <Dialog open={open} onOpenChange={(o) => { if (o) setOpen(true); /* impedimos fechar via overlay/esc */ }}>
+      <Dialog open={open} onOpenChange={(o) => { if (o) setOpen(true); else if (isAdmin) setOpen(false); /* atendente: não fecha por overlay/esc */ }}>
         <DialogContent
-          className="max-w-2xl max-h-[90vh] overflow-y-auto [&>button]:hidden"
-          onPointerDownOutside={(e) => e.preventDefault()}
-          onEscapeKeyDown={(e) => e.preventDefault()}
-          onInteractOutside={(e) => e.preventDefault()}
+          className={`max-w-2xl max-h-[90vh] overflow-y-auto ${isAdmin ? "" : "[&>button]:hidden"}`}
+          onPointerDownOutside={(e) => { if (!isAdmin) e.preventDefault(); }}
+          onEscapeKeyDown={(e) => { if (!isAdmin) e.preventDefault(); }}
+          onInteractOutside={(e) => { if (!isAdmin) e.preventDefault(); }}
         >
           <DialogHeader>
             <DialogTitle className="text-xl">{blockTitle.replace(/^Passo \d+:\s*/, "")}</DialogTitle>
@@ -890,13 +890,14 @@ function ExamDialogLauncher({
               Esta prova será acompanhada pelo seu gestor em tempo real. Responda com suas
               próprias palavras, de forma completa, sem pesquisar em fontes externas. Ao
               finalizar, clique em enviar — você só avança para a próxima etapa com 70% de
-              aproveitamento ou mais.
+              aproveitamento ou mais. Você tem <strong>30 minutos</strong> para concluir.
             </p>
           </div>
           <OpenEvaluationSubtask
             subtask={subtask}
             userId={userId}
             completed={completed}
+            showTimer
             onSubmitted={() => {
               onSubmitted();
               setOpen(false);
