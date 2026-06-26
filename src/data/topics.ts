@@ -227,7 +227,7 @@ export const TOPICS: Topic[] = [
       {
         id: "apresentacao.site.video",
         kind: "video",
-        title: "5. Apresentação do site — assistir destaque",
+        title: "4. Apresentação do site — assistir destaque",
         url: "https://www.instagram.com/stories/highlights/18095535212221625/",
       },
       {
