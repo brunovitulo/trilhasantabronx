@@ -1241,10 +1241,103 @@ export const TOPICS: Topic[] = [
         id: "objecoes.prova.exam",
         kind: "open_evaluation",
         title: "5. Antes da prova — Prova: Principais Objeções (Sex Shop)",
-        description: "Prova dissertativa final do tópico. Nota mínima 70%.",
+        description:
+          "Prova dissertativa final do tópico. 15 questões abertas. Nota mínima 70%. Solicite liberação ao gestor para iniciar. As respostas serão corrigidas manualmente.",
         passingScore: 70,
-        questions: [],
+        questions: [
+          {
+            question:
+              "Um cliente responde apenas “vou pensar” depois de você apresentar uma sugestão. Explique como você identificaria se a objeção real é preço, vergonha, insegurança, falta de informação ou medo de escolher errado. Depois, escreva uma resposta que conduza a conversa sem pressionar.",
+            expectedAnswer:
+              "A resposta deve mostrar investigação consultiva antes de insistir: fazer pergunta leve, validar a dúvida, abrir espaço para o cliente falar e só depois responder à objeção real. Deve evitar pressão, urgência falsa ou empurrar produto.",
+          },
+          {
+            question:
+              "O cliente diz: “Achei caro”. Crie uma resposta que não dê desconto imediatamente e que mostre valor, orientação e segurança na compra, sem diminuir a condição financeira do cliente.",
+            expectedAnswer:
+              "Deve reconhecer a preocupação, explicar o valor do produto pela qualidade/benefício/adequação à necessidade, comparar com escolhas erradas que podem frustrar, e oferecer alternativa se necessário, sem constranger.",
+          },
+          {
+            question:
+              "Uma cliente demonstra vergonha e manda mensagens curtas, sem explicar o que procura. Como a atendente deve conduzir esse atendimento para gerar confiança e fazer a cliente se abrir?",
+            expectedAnswer:
+              "Deve usar linguagem natural, discreta e acolhedora; normalizar a dúvida; fazer perguntas simples e respeitosas; evitar termos vulgares; garantir sigilo/discrição e não forçar exposição.",
+          },
+          {
+            question:
+              "O cliente tem medo de comprar um produto que esquenta, vibra ou causa sensação intensa. Explique como quebrar essa objeção dando controle ao cliente sobre a experiência.",
+            expectedAnswer:
+              "Deve explicar intensidade progressiva, quantidade de uso, teste com pouca quantidade quando aplicável, possibilidade de escolher versões mais suaves, controle de velocidade/intensidade e orientação de uso seguro.",
+          },
+          {
+            question:
+              "Um cliente diz: “Não sei se minha parceira vai gostar”. Como transformar essa objeção em uma conversa de descoberta sem prometer resultado e sem invadir a intimidade do casal?",
+            expectedAnswer:
+              "Deve orientar com perguntas sobre objetivo, experiência do casal, limites, conforto e intenção do presente/uso. Deve evitar promessa de aceitação e sugerir opções mais leves, consensuais e fáceis de introduzir.",
+          },
+          {
+            question:
+              "O cliente pergunta se a entrega é realmente discreta porque tem medo de alguém descobrir. Escreva uma resposta completa que passe segurança sem parecer exagerada ou artificial.",
+            expectedAnswer:
+              "Deve explicar a discrição da embalagem e do processo de entrega de forma objetiva, transmitir profissionalismo e segurança, sem usar tom debochado ou expor o tipo de produto.",
+          },
+          {
+            question:
+              "Uma pessoa diz: “Nunca usei nada disso, tenho medo de comprar errado”. Como você responderia para reduzir a insegurança e conduzir para uma primeira escolha mais adequada?",
+            expectedAnswer:
+              "Deve validar a falta de experiência, explicar que a escolha depende do objetivo e nível de conforto, fazer perguntas de diagnóstico, sugerir opções iniciantes e explicar por que são mais adequadas.",
+          },
+          {
+            question:
+              "O cliente compara com um produto mais barato que viu em outro lugar. Como responder sem falar mal do concorrente e sem perder autoridade?",
+            expectedAnswer:
+              "Deve evitar atacar concorrente. Deve reforçar orientação, escolha correta, segurança, atendimento, entrega/discrição quando aplicável e adequação do produto. Pode explicar diferenças de material, função ou qualidade sem prometer o que não sabe.",
+          },
+          {
+            question:
+              "O cliente pergunta: “Mas isso funciona mesmo?”. Explique como responder sem fazer promessa milagrosa e sem deixar o cliente inseguro.",
+            expectedAnswer:
+              "Deve evitar garantia absoluta. Deve explicar proposta do produto, condições de uso, expectativas realistas, diferença entre auxiliar/potencializar e garantir resultado, e orientar a escolha conforme necessidade.",
+          },
+          {
+            question:
+              "Uma atendente responde a uma objeção dizendo: “Pode confiar, todo mundo compra e gosta”. Explique por que essa resposta é fraca e reescreva de forma mais consultiva.",
+            expectedAnswer:
+              "Deve mostrar que a resposta é genérica, sem diagnóstico e sem gerar segurança real. A versão correta deve validar a dúvida, explicar o motivo da indicação e conectar o produto à necessidade do cliente.",
+          },
+          {
+            question:
+              "O cliente diz que vai comprar depois. Como diferenciar uma pausa real de uma objeção escondida e qual resposta você usaria para tentar manter a conversa ativa?",
+            expectedAnswer:
+              "Deve investigar com leveza se ficou alguma dúvida, preço, modelo ou forma de entrega. Deve oferecer ajuda para comparar opções e manter abertura, sem insistência agressiva.",
+          },
+          {
+            question:
+              "Explique a diferença entre quebrar uma objeção e pressionar o cliente. Dê um exemplo de frase correta e uma frase que deve ser evitada.",
+            expectedAnswer:
+              "Deve explicar que quebrar objeção é esclarecer dúvida e dar segurança; pressionar é empurrar decisão. Exemplo correto deve acolher e orientar. Exemplo errado deve envolver insistência, culpa, urgência falsa ou promessa exagerada.",
+          },
+          {
+            question:
+              "Um cliente tem receio de comprar um produto íntimo porque acha que isso é “estranho” ou “vergonhoso”. Como a atendente deve responder mantendo naturalidade e profissionalismo?",
+            expectedAnswer:
+              "Deve normalizar a busca por prazer, autocuidado ou melhora da relação, usar tom profissional e acolhedor, evitar piadas, julgamento ou exposição, e conduzir com perguntas simples.",
+          },
+          {
+            question:
+              "Durante o atendimento, o cliente demonstra duas objeções ao mesmo tempo: preço e medo de não saber usar. Explique qual objeção você trataria primeiro e como conduziria a resposta.",
+            expectedAnswer:
+              "Deve priorizar segurança/uso se ela impede a percepção de valor, ou investigar qual pesa mais. A resposta deve explicar uso, reduzir risco, justificar valor e oferecer alternativa mais adequada se necessário.",
+          },
+          {
+            question:
+              "Analise esta resposta ruim: “Esse é bom, leva ele que você vai gostar”. Explique quais informações faltam e reescreva uma resposta melhor para uma cliente indecisa.",
+            expectedAnswer:
+              "Deve apontar falta de diagnóstico, falta de conexão com necessidade, falta de explicação de benefício e excesso de afirmação vazia. A reescrita deve perguntar objetivo, explicar motivo da indicação e dar segurança.",
+          },
+        ],
       },
+
     ],
   },
   {
@@ -3062,6 +3155,42 @@ for (const topic of TOPICS) {
     }
   }
 }
+
+// Validação leve de integridade — apenas em desenvolvimento.
+// Alerta sobre provas/exercícios vazios, opções inválidas ou correctIndex
+// fora do array. Não quebra a build; somente console.warn.
+if (import.meta.env?.DEV) {
+  for (const topic of TOPICS) {
+    for (const sub of topic.subtasks) {
+      if (sub.kind === "evaluation" || sub.kind === "practice" || sub.kind === "open_evaluation") {
+        const qs = (sub as { questions: Array<{ question?: string; options?: string[]; correctIndex?: number }> }).questions;
+        if (!Array.isArray(qs) || qs.length === 0) {
+          console.warn(`[topics] subtask "${sub.id}" (${sub.kind}) está sem questões.`);
+          continue;
+        }
+        qs.forEach((q, i) => {
+          if (!q.question || !q.question.trim()) {
+            console.warn(`[topics] ${sub.id} q[${i}]: pergunta vazia.`);
+          }
+          const hasOptions = Array.isArray(q.options) && q.options.length > 0;
+          const isMC = sub.kind !== "open_evaluation" || hasOptions;
+          if (isMC) {
+            if (!hasOptions || (q.options as string[]).length < 2) {
+              console.warn(`[topics] ${sub.id} q[${i}]: precisa de ao menos 2 opções.`);
+            } else if (
+              typeof q.correctIndex !== "number" ||
+              q.correctIndex < 0 ||
+              q.correctIndex >= (q.options as string[]).length
+            ) {
+              console.warn(`[topics] ${sub.id} q[${i}]: correctIndex inválido (${q.correctIndex}).`);
+            }
+          }
+        });
+      }
+    }
+  }
+}
+
 
 export function findTopic(id: string) {
   return TOPICS.find((t) => t.id === id);
