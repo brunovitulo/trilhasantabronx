@@ -1,6 +1,39 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, Loader2, AlertCircle, RotateCcw, FileText, KeyRound, Download, MoreHorizontal, BookOpen, ShieldCheck } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronDown,
+  ChevronRight,
+  Loader2,
+  AlertCircle,
+  RotateCcw,
+  FileText,
+  KeyRound,
+  Download,
+  MoreHorizontal,
+  ShieldCheck,
+  Search,
+  Filter,
+  MapPin,
+  Lock,
+  Star,
+  Users as UsersIcon,
+  Store,
+  Package,
+  ClipboardCheck,
+  MessageCircleQuestion,
+  TrendingUp,
+  HeartPulse,
+  Tag,
+  Users,
+  Boxes,
+  Shield,
+  Heart,
+  Circle as CircleIcon,
+  ScrollText,
+  type LucideIcon,
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { generateProjectSnapshotForChatGPT } from "@/lib/projectSnapshot";
 import { approvePermission, rejectPermission } from "@/lib/examPermission";
 import { supabase } from "@/integrations/supabase/client";
