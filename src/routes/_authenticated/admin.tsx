@@ -931,11 +931,13 @@ function AttendantActionsMenu({
   attendantName,
   reviewerId,
   progress,
+  onOpenHistory,
 }: {
   attendantId: string;
   attendantName: string | null;
   reviewerId: string;
   progress: ProgressRow[];
+  onOpenHistory?: () => void;
 }) {
   const [unlockOpen, setUnlockOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
@@ -948,7 +950,7 @@ function AttendantActionsMenu({
             type="button"
             variant="ghost"
             size="sm"
-            className="rounded-full gap-1.5 text-foreground/80 hover:bg-white/[0.06]"
+            className="rounded-full gap-1.5 text-foreground/80 hover:bg-white/[0.06] h-8"
           >
             <MoreHorizontal className="h-4 w-4" />
             Ações
@@ -958,6 +960,12 @@ function AttendantActionsMenu({
           <DropdownMenuLabel className="text-xs text-muted-foreground">
             Ações administrativas
           </DropdownMenuLabel>
+          {onOpenHistory && (
+            <DropdownMenuItem onSelect={() => onOpenHistory()} className="gap-2">
+              <FileText className="h-4 w-4 text-muted-foreground" />
+              Ver histórico de provas
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onSelect={() => setUnlockOpen(true)} className="gap-2">
             <ShieldCheck className="h-4 w-4 text-[oklch(0.78_0.13_180)]" />
             Liberar todas as provas
