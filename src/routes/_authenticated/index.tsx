@@ -23,6 +23,7 @@ import {
   type ProgressRow,
 } from "@/lib/progress";
 import { AppHeader } from "@/components/AppHeader";
+import { OnboardingFlow } from "@/components/OnboardingFlow";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
@@ -36,6 +37,7 @@ type Profile = {
   full_name: string | null;
   blocked: boolean;
   blocked_reason: string | null;
+  onboarding_completed_at: string | null;
 };
 
 function topicIcon(id: string) {
@@ -67,6 +69,7 @@ function HomePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [onboardingDone, setOnboardingDone] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -78,7 +81,7 @@ function HomePage() {
           .eq("user_id", user.id),
         supabase
           .from("profiles")
-          .select("full_name, blocked, blocked_reason")
+          .select("full_name, blocked, blocked_reason, onboarding_completed_at")
           .eq("id", user.id)
           .maybeSingle(),
         supabase.from("user_roles").select("role").eq("user_id", user.id),
