@@ -1274,6 +1274,14 @@ function InlineHtmlSubtask({
 
   return (
     <div className="space-y-3">
+      <StepGuide
+        steps={[
+          { icon: BookOpen, title: "Abra o conteúdo", description: "Clique no botão abaixo para abrir." },
+          { icon: BookOpen, title: "Leia/explore por completo", description: "Não pule partes — vá até o final." },
+          { icon: ChevronLeft, title: "Volte para esta tela", description: "Feche o conteúdo quando terminar." },
+          { icon: Check, title: "Confirme que terminou", description: "Marque a confirmação e clique em concluir." },
+        ]}
+      />
       <div className="flex flex-wrap gap-2">
         <Button variant="outline"
           type="button"
