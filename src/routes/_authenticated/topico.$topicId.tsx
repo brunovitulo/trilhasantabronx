@@ -722,6 +722,29 @@ function ExamDialogLauncher({
 }) {
   const [open, setOpen] = useState(false);
   const [hasSubmission, setHasSubmission] = useState<boolean | null>(null);
+  const [showExitWarning, setShowExitWarning] = useState(false);
+
+  // Bloqueio de saída para atendentes durante a prova
+  useEffect(() => {
+    if (!open || isAdmin) return;
+    // Empurra um estado no histórico para interceptar o "voltar"
+    window.history.pushState({ examLock: true }, "");
+    const onPopState = () => {
+      window.history.pushState({ examLock: true }, "");
+      setShowExitWarning(true);
+    };
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+      return "";
+    };
+    window.addEventListener("popstate", onPopState);
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+      window.removeEventListener("beforeunload", onBeforeUnload);
+    };
+  }, [open, isAdmin]);
 
   useEffect(() => {
     let active = true;
@@ -905,9 +928,30 @@ function ExamDialogLauncher({
           />
         </DialogContent>
       </Dialog>
+
+      <Dialog open={showExitWarning} onOpenChange={(o) => { if (!o) setShowExitWarning(false); }}>
+        <DialogContent
+          className="max-w-md [&>button]:hidden"
+          onPointerDownOutside={(e) => e.preventDefault()}
+          onEscapeKeyDown={(e) => e.preventDefault()}
+          onInteractOutside={(e) => e.preventDefault()}
+        >
+          <DialogHeader>
+            <DialogTitle>⚠️ Atenção!</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm leading-relaxed text-foreground/90">
+            Você está tentando sair da prova. Isso não é permitido. Seu gestor está
+            acompanhando em tempo real. Finalize a prova clicando em "Enviar prova" abaixo.
+          </p>
+          <Button onClick={() => setShowExitWarning(false)} className="w-full">
+            Voltar para a prova
+          </Button>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
+
 
 
 
@@ -1739,7 +1783,7 @@ function EvaluationSubtask({
     <div className="space-y-4">
       {subtask.questions.map((q, qi) => (
         <div key={qi} className="rounded-lg border p-3">
-          <p className="text-sm font-medium mb-2 text-[#5DCAA5]">
+          <p className="text-sm font-medium mb-2 text-[#C8F0E4]">
             {qi + 1}. {q.question}
           </p>
           <RadioGroup
@@ -1854,7 +1898,7 @@ function PracticeSubtask({
         const chosen = answers[qi];
         return (
           <div key={qi} className="rounded-2xl border border-border/60 bg-muted/30 p-4">
-            <p className="text-[15px] sm:text-base font-semibold text-[#5DCAA5] leading-snug mb-4">
+            <p className="text-[15px] sm:text-base font-semibold text-[#C8F0E4] leading-snug mb-4">
               {qi + 1}. {q.question}
             </p>
             <div className="space-y-2.5">
@@ -2173,7 +2217,7 @@ function OpenEvaluationSubtask({
             const row = answerRows.find((r) => r.question_index === i);
             return (
               <div key={i} className="rounded-2xl border border-border/60 bg-muted/20 p-3">
-                <p className="text-sm font-medium text-[#5DCAA5]">
+                <p className="text-sm font-medium text-[#C8F0E4]">
                   {i + 1}. {q.question}
                 </p>
                 <p className="mt-2 text-sm whitespace-pre-wrap text-foreground/90">
@@ -2247,7 +2291,7 @@ function OpenEvaluationSubtask({
         const isMC = Array.isArray(q.options) && q.options.length > 0;
         return (
           <div key={i} className="rounded-2xl border border-border/60 bg-muted/20 p-3">
-            <label className="block text-sm font-medium mb-2 text-[#5DCAA5]">
+            <label className="block text-sm font-medium mb-2 text-[#C8F0E4]">
               {i + 1}. {q.question}
             </label>
             {isMC ? (
