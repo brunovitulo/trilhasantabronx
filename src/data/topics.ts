@@ -233,7 +233,7 @@ export const TOPICS: Topic[] = [
       {
         id: "apresentacao.site.checklist",
         kind: "checklist",
-        title: "5. Apresentação do site — checklist",
+        title: "4. Apresentação do site — checklist",
         items: [
           "Acessar o site: https://santabronxaraguari.com.br/",
           "Acesse o menu de categorias",
