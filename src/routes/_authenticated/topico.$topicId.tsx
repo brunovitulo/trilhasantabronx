@@ -1196,14 +1196,14 @@ function ChecklistSubtask({
   }, [allChecked]);
   return (
     <div className="space-y-2">
-      <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3 mb-1">
-        <div className="flex items-start gap-2">
-          <Info className="h-4 w-4 shrink-0 text-[#5eead4] mt-0.5" />
-          <p className="text-sm text-foreground/80 leading-snug">
-            Faça as ações do checklist uma por uma e marque cada item somente depois de concluir. Não marque tudo antes de fazer.
-          </p>
-        </div>
-      </div>
+      <StepGuide
+        steps={[
+          { icon: ListChecks, title: "Abra o checklist", description: "Leia os itens listados abaixo." },
+          { icon: Hand, title: "Aplique item por item, na ordem", description: "Faça a ação real de cada item antes de marcar." },
+          { icon: Check, title: "Marque cada item depois de concluir", description: "Não marque tudo antes de fazer." },
+          { icon: ClipboardCheck, title: "Finalize o passo", description: "Ao marcar todos, o passo é concluído automaticamente." },
+        ]}
+      />
       <ul className="space-y-1">
         {subtask.items.map((item, i) => {
           const c = checks[i];
