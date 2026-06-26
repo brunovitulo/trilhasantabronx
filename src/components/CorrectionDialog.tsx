@@ -243,16 +243,17 @@ export function CorrectionDialog({
               );
             })}
 
-            <div>
-              <Label htmlFor="general-feedback" className="text-xs">
-                Feedback geral (opcional)
+            <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4">
+              <Label htmlFor="general-feedback" className="text-[11px] font-semibold uppercase tracking-wider text-primary/90 inline-flex items-center gap-1">
+                <MessageSquare className="h-3 w-3" /> Feedback geral da prova (opcional)
               </Label>
               <Textarea
                 id="general-feedback"
                 rows={3}
+                placeholder="Mensagem geral para a atendente sobre essa prova..."
                 value={general}
                 onChange={(event) => setGeneral(event.target.value)}
-                className="mt-1 bg-background"
+                className="mt-2 bg-background"
               />
             </div>
 
