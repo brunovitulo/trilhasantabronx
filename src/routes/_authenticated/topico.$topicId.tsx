@@ -1947,17 +1947,23 @@ function OpenEvaluationSubtask({
   userId,
   completed,
   onSubmitted,
+  showTimer = false,
 }: {
   subtask: Extract<Subtask, { kind: "open_evaluation" }>;
   userId: string;
   completed: boolean;
   onSubmitted: () => void;
+  showTimer?: boolean;
 }) {
   const [loading, setLoading] = useState(true);
   const [submission, setSubmission] = useState<OpenSubmission | null>(null);
   const [answerRows, setAnswerRows] = useState<OpenAnswerRow[]>([]);
   const [drafts, setDrafts] = useState<string[]>(() => subtask.questions.map(() => ""));
   const [sending, setSending] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState(30 * 60);
+  const draftsRef = useRef(drafts);
+  useEffect(() => { draftsRef.current = drafts; }, [drafts]);
+  const submitRef = useRef<((force?: boolean) => Promise<void>) | null>(null);
 
   async function load() {
     setLoading(true);
