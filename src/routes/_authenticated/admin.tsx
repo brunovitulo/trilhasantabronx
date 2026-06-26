@@ -295,69 +295,93 @@ function AttendantCard({
   const statuses = useMemo(() => computeTopicStatuses(TOPICS, att.progress), [att.progress]);
   const totalTopics = TOPICS.length;
   const doneTopics = TOPICS.filter((t) => statuses[t.id] === "completed").length;
+  const totalSubtasks = TOPICS.reduce((acc, t) => acc + t.subtasks.length, 0);
+  const completedSet = useMemo(
+    () => new Set(att.progress.filter((p) => p.completed).map((p) => p.subtask_id)),
+    [att.progress],
+  );
+  const doneSubtasks = completedSet.size;
+  const percent = totalSubtasks > 0 ? Math.round((doneSubtasks / totalSubtasks) * 100) : 0;
 
-  // "Está em": primeiro tópico não concluído (in_progress > available > locked)
-  const current =
+  // Etapa atual: primeiro tópico não concluído + primeira subtask aberta dentro dele
+  const currentTopic =
     TOPICS.find((t) => statuses[t.id] === "in_progress") ??
     TOPICS.find((t) => statuses[t.id] === "available") ??
     TOPICS.find((t) => statuses[t.id] !== "completed" && statuses[t.id] !== "empty") ??
     null;
+  const currentSubtask = currentTopic
+    ? currentTopic.subtasks.find((s) => !completedSet.has(s.id)) ?? null
+    : null;
+  const trilhaConcluida = !currentTopic;
 
   return (
-    <Card className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] backdrop-blur-xl shadow-[0_8px_32px_-12px_rgba(0,0,0,0.45)]">
+    <Card className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05] backdrop-blur-xl shadow-[0_8px_32px_-12px_rgba(0,0,0,0.45)]">
       <div className="p-4 sm:p-5 space-y-4">
         {/* Cabeçalho */}
         <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[oklch(0.65_0.18_295)] to-[oklch(0.45_0.19_295)] text-white font-bold text-sm">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[oklch(0.65_0.18_295)] to-[oklch(0.45_0.19_295)] text-white font-bold text-sm shadow-[0_4px_12px_-4px_oklch(0.45_0.19_295/0.6)]">
             {initials(att.full_name)}
           </div>
           <div className="min-w-0 flex-1">
-            <h3 className="font-semibold leading-tight">{att.full_name ?? "Sem nome"}</h3>
-            <p className="text-[11px] text-muted-foreground font-mono mt-0.5">
-              {att.id.slice(0, 8)}
+            <h3 className="font-semibold leading-tight truncate">{att.full_name ?? "Sem nome"}</h3>
+            <p className="text-[11px] text-muted-foreground font-mono mt-0.5 truncate">
+              ID {att.id.slice(0, 8)}
             </p>
           </div>
-          <Badge className="bg-[var(--success)]/15 text-[var(--success)] border border-[var(--success)]/30 hover:bg-[var(--success)]/15">
-            Ativa
+          <Badge
+            className={
+              trilhaConcluida
+                ? "bg-[oklch(0.78_0.13_180)]/15 text-[oklch(0.85_0.13_180)] border border-[oklch(0.78_0.13_180)]/30 hover:bg-[oklch(0.78_0.13_180)]/15"
+                : "bg-[oklch(0.65_0.18_295)]/15 text-[oklch(0.82_0.12_295)] border border-[oklch(0.65_0.18_295)]/30 hover:bg-[oklch(0.65_0.18_295)]/15"
+            }
+          >
+            {trilhaConcluida ? "Concluída" : "Em andamento"}
           </Badge>
         </div>
 
-        {/* Localização atual */}
-        <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-2 flex items-start gap-2">
-          <MapPin className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-          <p className="text-sm leading-snug">
-            <span className="text-foreground/70">Está em: </span>
-            <span className="font-medium text-foreground">
-              {current ? current.title : "Trilha concluída"}
-            </span>
-          </p>
-        </div>
-
-        {/* Barra segmentada de progresso */}
-        <div>
-          <div className="flex gap-1.5">
-            {TOPICS.map((t) => {
-              const s = statuses[t.id];
-              const filled = s === "completed";
-              const inProg = s === "in_progress";
-              return (
-                <div
-                  key={t.id}
-                  title={`${t.order}. ${t.title}`}
-                  className={`h-2 flex-1 rounded-full transition-colors ${
-                    filled
-                      ? "bg-[var(--success)]"
-                      : inProg
-                      ? "bg-[var(--warning)]"
-                      : "bg-white/10"
-                  }`}
-                />
-              );
-            })}
+        {/* Progresso geral */}
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 space-y-3">
+          <div className="flex items-end justify-between gap-3">
+            <div>
+              <p className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                Progresso geral
+              </p>
+              <p className="text-2xl font-bold tabular-nums leading-none mt-1">
+                {percent}<span className="text-base text-muted-foreground">%</span>
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                Tópicos
+              </p>
+              <p className="text-sm font-semibold mt-1 tabular-nums">
+                {doneTopics}<span className="text-muted-foreground">/{totalTopics}</span>
+              </p>
+            </div>
           </div>
-          <p className="text-xs text-muted-foreground mt-2">
-            {doneTopics} de {totalTopics} tópicos concluídos
-          </p>
+          <Progress
+            value={percent}
+            className="h-1.5 bg-white/10 [&>div]:bg-gradient-to-r [&>div]:from-[oklch(0.65_0.18_295)] [&>div]:to-[oklch(0.78_0.13_180)]"
+          />
+          <div className="flex items-start gap-2 pt-1">
+            <BookOpen className="h-3.5 w-3.5 text-[oklch(0.78_0.13_180)] shrink-0 mt-0.5" />
+            <p className="text-xs leading-snug text-foreground/80">
+              {trilhaConcluida ? (
+                <span className="text-foreground/70">Concluiu toda a trilha.</span>
+              ) : (
+                <>
+                  <span className="text-muted-foreground">Etapa atual: </span>
+                  <span className="font-medium text-foreground">{currentTopic!.title}</span>
+                  {currentSubtask && (
+                    <>
+                      <span className="text-muted-foreground"> · próxima ação: </span>
+                      <span className="text-foreground/90">{currentSubtask.title}</span>
+                    </>
+                  )}
+                </>
+              )}
+            </p>
+          </div>
         </div>
 
         {/* Pedidos de permissão para prova */}
@@ -377,9 +401,7 @@ function AttendantCard({
                       <p className="text-sm font-semibold text-foreground">
                         🔔 {att.full_name ?? "Atendente"} pediu permissão
                       </p>
-                      <p className="text-sm text-foreground/90">
-                        Prova: {label}
-                      </p>
+                      <p className="text-sm text-foreground/90">Prova: {label}</p>
                       <p className="text-xs text-foreground/70">
                         Solicitado em {new Date(p.created_at).toLocaleString("pt-BR")}
                       </p>
@@ -395,7 +417,9 @@ function AttendantCard({
                         if (error) {
                           toast.error("Não consegui liberar", { description: error.message });
                         } else {
-                          toast.success(`Prova liberada para ${att.full_name ?? "atendente"} — acompanhe em tempo real.`);
+                          toast.success(
+                            `Prova liberada para ${att.full_name ?? "atendente"} — acompanhe em tempo real.`,
+                          );
                         }
                       }}
                     >
@@ -434,9 +458,7 @@ function AttendantCard({
                 >
                   <AlertCircle className="h-5 w-5 text-amber-300 shrink-0" />
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-foreground">
-                      Prova: {label}
-                    </p>
+                    <p className="text-sm font-medium text-foreground">Prova: {label}</p>
                     <p className="text-xs text-foreground/70">
                       Pendente revisão · enviada em{" "}
                       {new Date(p.created_at).toLocaleString("pt-BR")}
@@ -456,28 +478,92 @@ function AttendantCard({
           </div>
         )}
 
-        <div className="flex flex-wrap gap-2 items-center justify-between">
-          <UnlockAllExamsButton
+        {/* Rodapé: ação principal discreta + menu de ações */}
+        <div className="flex items-center justify-between gap-2 pt-1">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="rounded-full gap-1.5 border-white/15 bg-white/[0.04] hover:bg-white/[0.08]"
+            onClick={onOpenHistory}
+          >
+            <FileText className="h-4 w-4" />
+            Ver histórico
+          </Button>
+          <AttendantActionsMenu
             attendantId={att.id}
             attendantName={att.full_name}
             reviewerId={reviewerId}
             progress={att.progress}
           />
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="rounded-full gap-1.5"
-            onClick={onOpenHistory}
-          >
-            <FileText className="h-4 w-4" />
-            Ver histórico de provas
-          </Button>
         </div>
-
-        <ResetProgressBlock attendantId={att.id} attendantName={att.full_name} />
       </div>
     </Card>
+  );
+}
+
+function AttendantActionsMenu({
+  attendantId,
+  attendantName,
+  reviewerId,
+  progress,
+}: {
+  attendantId: string;
+  attendantName: string | null;
+  reviewerId: string;
+  progress: ProgressRow[];
+}) {
+  const [unlockOpen, setUnlockOpen] = useState(false);
+  const [resetOpen, setResetOpen] = useState(false);
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="rounded-full gap-1.5 text-foreground/80 hover:bg-white/[0.06]"
+          >
+            <MoreHorizontal className="h-4 w-4" />
+            Ações
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuLabel className="text-xs text-muted-foreground">
+            Ações administrativas
+          </DropdownMenuLabel>
+          <DropdownMenuItem onSelect={() => setUnlockOpen(true)} className="gap-2">
+            <ShieldCheck className="h-4 w-4 text-[oklch(0.78_0.13_180)]" />
+            Liberar todas as provas
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onSelect={() => setResetOpen(true)}
+            className="gap-2 text-amber-300 focus:text-amber-200"
+          >
+            <RotateCcw className="h-4 w-4" />
+            Resetar progresso
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <UnlockAllExamsDialog
+        open={unlockOpen}
+        onOpenChange={setUnlockOpen}
+        attendantId={attendantId}
+        attendantName={attendantName}
+        reviewerId={reviewerId}
+        progress={progress}
+      />
+      <ResetProgressDialog
+        open={resetOpen}
+        onOpenChange={setResetOpen}
+        attendantId={attendantId}
+        attendantName={attendantName}
+      />
+    </>
   );
 }
 
