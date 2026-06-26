@@ -91,6 +91,12 @@ export function QuickChecklistDrawer() {
               <X className="h-4 w-4" />
             </button>
           </div>
+          <div className="px-4 py-3 border-b border-border/60 bg-[#5eead4]/5 shrink-0">
+            <p className="text-sm leading-snug text-foreground/90">
+              📋 Faça as ações do checklist <strong>uma por uma</strong> e marque cada item somente
+              depois de concluir. Não marque tudo antes de fazer.
+            </p>
+          </div>
           {current && (
             <iframe
               key={nonce}
