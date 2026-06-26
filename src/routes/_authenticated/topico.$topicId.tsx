@@ -824,6 +824,14 @@ function ExamDialogLauncher({
 
   return (
     <div className="space-y-2">
+      <StepGuide
+        steps={[
+          { icon: ShieldCheck, title: "Solicite a liberação da prova", description: "Clique em \"Solicitar permissão\" para avisar o gestor." },
+          { icon: FilePen, title: "Responda com atenção", description: "Você terá 30 minutos. Use suas palavras, sem pesquisar." },
+          { icon: Check, title: "Envie para correção", description: "Clique em enviar quando terminar — não dá para refazer sozinha." },
+          { icon: ClipboardCheck, title: "Aguarde o feedback do gestor", description: "Você só avança com 70% ou mais. O gestor envia o retorno." },
+        ]}
+      />
       {needsVideo && !isAdmin && (
         <p className="text-xs text-foreground/80">
           Assista o vídeo acima e marque como visto para liberar o botão de iniciar a prova.
