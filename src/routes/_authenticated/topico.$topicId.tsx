@@ -928,7 +928,29 @@ function ExamDialogLauncher({
           />
         </DialogContent>
       </Dialog>
+
+      <Dialog open={showExitWarning} onOpenChange={(o) => { if (!o) setShowExitWarning(false); }}>
+        <DialogContent
+          className="max-w-md [&>button]:hidden"
+          onPointerDownOutside={(e) => e.preventDefault()}
+          onEscapeKeyDown={(e) => e.preventDefault()}
+          onInteractOutside={(e) => e.preventDefault()}
+        >
+          <DialogHeader>
+            <DialogTitle>⚠️ Atenção!</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm leading-relaxed text-foreground/90">
+            Você está tentando sair da prova. Isso não é permitido. Seu gestor está
+            acompanhando em tempo real. Finalize a prova clicando em "Enviar prova" abaixo.
+          </p>
+          <Button onClick={() => setShowExitWarning(false)} className="w-full">
+            Voltar para a prova
+          </Button>
+        </DialogContent>
+      </Dialog>
     </div>
+  );
+}
   );
 }
 
