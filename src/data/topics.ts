@@ -261,7 +261,7 @@ export const TOPICS: Topic[] = [
       {
         id: "apresentacao.prova.exam",
         kind: "open_evaluation",
-        title: "6. Prova: Apresentação da Loja",
+        title: "5. Prova: Apresentação da Loja",
         description: "Prova dissertativa final do tópico. Nota mínima 70%.",
         passingScore: 70,
         questions: [
