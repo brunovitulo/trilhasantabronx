@@ -101,9 +101,22 @@ function HomePage() {
   const totalDone = Object.values(statuses).filter((s) => s === "completed").length;
   const overallPercent = Math.round((totalDone / TOPICS.length) * 100);
 
+  // Onboarding: aparece no primeiro acesso (sem timestamp) ou quando a conta
+  // foi totalmente zerada (sem nenhum registro de progresso) — exceto admin.
+  const accountIsEmpty = rows.length === 0;
+  const shouldShowOnboarding =
+    !loading &&
+    !isAdmin &&
+    !onboardingDone &&
+    (!profile?.onboarding_completed_at || accountIsEmpty);
+
   return (
     <div className="min-h-screen">
+      {shouldShowOnboarding && (
+        <OnboardingFlow userId={user.id} onFinish={() => setOnboardingDone(true)} />
+      )}
       <AppHeader isAdmin={isAdmin} />
+
       <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold tracking-tight">
