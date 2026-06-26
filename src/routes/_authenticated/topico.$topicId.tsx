@@ -982,12 +982,17 @@ function VideoSubtask({
 
   return (
     <div className="space-y-3">
+      <StepGuide
+        steps={[
+          { icon: Copy, title: "Copie o link do vídeo/destaque", description: "Use o botão abaixo para copiar o link." },
+          { icon: Globe, title: "Cole o link em outra aba do navegador", description: "Abra uma nova aba, cole o link e acesse o conteúdo." },
+          { icon: Play, title: "Assista ao vídeo/destaque por completo", description: "Assista com atenção antes de voltar para a plataforma." },
+          { icon: Check, title: "Volte e confirme em \"Já assisti\"", description: "Clique somente depois de terminar de assistir." },
+        ]}
+      />
       <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-xs sm:text-sm text-muted-foreground break-all font-mono select-all">
         {subtask.url}
       </div>
-      <p className="text-xs text-foreground/80">
-        Copie o link, cole em outra aba, assista o destaque por completo.
-      </p>
       <div className="flex flex-wrap gap-2 items-center">
         <Button variant="outline"
           type="button"
