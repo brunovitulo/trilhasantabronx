@@ -1,6 +1,39 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, Loader2, AlertCircle, RotateCcw, FileText, KeyRound, Download, MoreHorizontal, BookOpen, ShieldCheck } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronDown,
+  ChevronRight,
+  Loader2,
+  AlertCircle,
+  RotateCcw,
+  FileText,
+  KeyRound,
+  Download,
+  MoreHorizontal,
+  ShieldCheck,
+  Search,
+  Filter,
+  MapPin,
+  Lock,
+  Star,
+  Users as UsersIcon,
+  Store,
+  Package,
+  ClipboardCheck,
+  MessageCircleQuestion,
+  TrendingUp,
+  HeartPulse,
+  Tag,
+  Users,
+  Boxes,
+  Shield,
+  Heart,
+  Circle as CircleIcon,
+  ScrollText,
+  type LucideIcon,
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { generateProjectSnapshotForChatGPT } from "@/lib/projectSnapshot";
 import { approvePermission, rejectPermission } from "@/lib/examPermission";
 import { supabase } from "@/integrations/supabase/client";
@@ -81,6 +114,11 @@ function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [correction, setCorrection] = useState<CorrectionTarget | null>(null);
   const [historyFor, setHistoryFor] = useState<{ id: string; name: string | null } | null>(null);
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "in_progress" | "completed">("all");
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
 
   async function refresh() {
     setLoading(true);
@@ -126,21 +164,9 @@ function AdminPage() {
     refresh();
     const ch = supabase
       .channel("admin-pendings")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "open_evaluation_submissions" },
-        () => refresh(),
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "subtask_progress" },
-        () => refresh(),
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "exam_permission_requests" },
-        () => refresh(),
-      )
+      .on("postgres_changes", { event: "*", schema: "public", table: "open_evaluation_submissions" }, () => refresh())
+      .on("postgres_changes", { event: "*", schema: "public", table: "subtask_progress" }, () => refresh())
+      .on("postgres_changes", { event: "*", schema: "public", table: "exam_permission_requests" }, () => refresh())
       .subscribe();
     const onFocus = () => refresh();
     window.addEventListener("focus", onFocus);
@@ -150,47 +176,188 @@ function AdminPage() {
     };
   }, []);
 
+  // Filter + search
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return list.filter((att) => {
+      const stats = computeAttendantStats(att);
+      if (statusFilter === "completed" && !stats.completed) return false;
+      if (statusFilter === "in_progress" && stats.completed) return false;
+      if (!q) return true;
+      const name = (att.full_name ?? "").toLowerCase();
+      const id = att.id.toLowerCase();
+      return name.includes(q) || id.includes(q);
+    });
+  }, [list, query, statusFilter]);
+
+  // Pagination
+  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+  const currentPage = Math.min(page, totalPages);
+  const pageStart = (currentPage - 1) * perPage;
+  const paged = filtered.slice(pageStart, pageStart + perPage);
+
+  // Auto-expand first card of page, or any with pending alerts
+  useEffect(() => {
+    if (paged.length === 0) {
+      setExpandedId(null);
+      return;
+    }
+    const stillVisible = paged.some((a) => a.id === expandedId);
+    if (!stillVisible) {
+      const withAlert = paged.find((a) => a.permissionRequests.length > 0 || a.pending.length > 0);
+      setExpandedId((withAlert ?? paged[0]).id);
+    }
+  }, [paged, expandedId]);
+
   return (
     <div className="min-h-screen">
       <AppHeader isAdmin />
-      <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
+      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
         <Link
           to="/"
           className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4"
         >
           <ChevronLeft className="h-4 w-4" /> Voltar à trilha
         </Link>
-        <div className="flex items-start justify-between gap-3 flex-wrap">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Painel da gestora</h1>
-            <p className="text-muted-foreground text-sm mt-1">
-              Acompanhe o avanço de cada atendente e corrija as provas dissertativas pendentes diretamente no card delas.
-            </p>
+
+        {/* Header: title + search + filter */}
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[oklch(0.62_0.2_295)]/30 to-[oklch(0.45_0.19_295)]/30 border border-[oklch(0.65_0.18_295)]/30">
+              <UsersIcon className="h-6 w-6 text-[oklch(0.82_0.13_295)]" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight">Usuários</h1>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                Acompanhe o progresso e desempenho de cada atendente.
+              </p>
+            </div>
           </div>
-          <ExportChatButton />
+          <div className="flex items-center gap-2 flex-1 sm:flex-none sm:min-w-[420px] justify-end">
+            <div className="relative flex-1 sm:max-w-xs">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setPage(1);
+                }}
+                placeholder="Buscar usuário..."
+                className="pl-9 h-10 rounded-xl border-white/10 bg-white/[0.04]"
+              />
+            </div>
+            <Select
+              value={statusFilter}
+              onValueChange={(v) => {
+                setStatusFilter(v as typeof statusFilter);
+                setPage(1);
+              }}
+            >
+              <SelectTrigger className="h-10 w-[140px] rounded-xl border-white/10 bg-white/[0.04] gap-2">
+                <Filter className="h-4 w-4 text-muted-foreground" />
+                <SelectValue placeholder="Filtrar" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="in_progress">Em andamento</SelectItem>
+                <SelectItem value="completed">Concluída</SelectItem>
+              </SelectContent>
+            </Select>
+            <ExportChatButton compact />
+          </div>
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-10">
+          <div className="flex justify-center py-16">
             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
           </div>
-        ) : list.length === 0 ? (
+        ) : paged.length === 0 ? (
           <Card className="mt-6 p-6 text-center text-muted-foreground border-white/10 bg-white/[0.06] backdrop-blur-xl">
-            Nenhuma atendente cadastrada ainda.
+            Nenhuma atendente encontrada.
           </Card>
         ) : (
-          <div className="mt-6 space-y-4">
-            {list.map((att) => (
-              <AttendantCard
-                key={att.id}
-                att={att}
-                reviewerId={user.id}
-                onCorrect={setCorrection}
-                onOpenHistory={() => setHistoryFor({ id: att.id, name: att.full_name })}
-              />
-            ))}
+          <div className="mt-6 space-y-3">
+            {paged.map((att) =>
+              expandedId === att.id ? (
+                <AttendantExpandedCard
+                  key={att.id}
+                  att={att}
+                  reviewerId={user.id}
+                  onCollapse={() => setExpandedId(null)}
+                  onCorrect={setCorrection}
+                  onOpenHistory={() => setHistoryFor({ id: att.id, name: att.full_name })}
+                />
+              ) : (
+                <AttendantCollapsedRow
+                  key={att.id}
+                  att={att}
+                  onExpand={() => setExpandedId(att.id)}
+                  onOpenHistory={() => setHistoryFor({ id: att.id, name: att.full_name })}
+                />
+              ),
+            )}
           </div>
         )}
+
+        {/* Pagination */}
+        {!loading && filtered.length > 0 && (
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground">
+            <span>
+              Mostrando {paged.length} de {filtered.length} usuários
+            </span>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-lg border border-white/10 bg-white/[0.04]"
+                disabled={currentPage === 1}
+                onClick={() => setPage(currentPage - 1)}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .slice(Math.max(0, currentPage - 2), Math.max(0, currentPage - 2) + 3)
+                .map((n) => (
+                  <Button
+                    key={n}
+                    size="icon"
+                    variant={n === currentPage ? "default" : "ghost"}
+                    className={
+                      n === currentPage
+                        ? "h-9 w-9 rounded-lg bg-[oklch(0.55_0.22_295)] hover:bg-[oklch(0.55_0.22_295)]/90 text-white"
+                        : "h-9 w-9 rounded-lg border border-white/10 bg-white/[0.04]"
+                    }
+                    onClick={() => setPage(n)}
+                  >
+                    {n}
+                  </Button>
+                ))}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-lg border border-white/10 bg-white/[0.04]"
+                disabled={currentPage === totalPages}
+                onClick={() => setPage(currentPage + 1)}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="flex items-center gap-2">
+              <span>Itens por página:</span>
+              <Select value={String(perPage)} onValueChange={(v) => { setPerPage(Number(v)); setPage(1); }}>
+                <SelectTrigger className="h-9 w-[80px] rounded-lg border-white/10 bg-white/[0.04]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {[5, 10, 20, 50].map((n) => (
+                    <SelectItem key={n} value={String(n)}>{n}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        )}
+
         <CorrectionDialog
           submission={correction}
           reviewerId={user.id}
@@ -212,13 +379,12 @@ function AdminPage() {
   );
 }
 
-function ExportChatButton() {
+function ExportChatButton({ compact = false }: { compact?: boolean }) {
   const [loading, setLoading] = useState(false);
 
   async function handleExport() {
     setLoading(true);
     try {
-      // pequeno yield pra UI atualizar o spinner antes do trabalho pesado
       await new Promise((r) => setTimeout(r, 10));
       const result = generateProjectSnapshotForChatGPT();
       if (result.fileCount === 0) {
@@ -251,6 +417,22 @@ function ExportChatButton() {
     }
   }
 
+  if (compact) {
+    return (
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        onClick={handleExport}
+        disabled={loading}
+        title="Baixar snapshot para ChatGPT"
+        className="h-10 w-10 rounded-xl border border-white/10 bg-white/[0.04]"
+      >
+        {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+      </Button>
+    );
+  }
+
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.06] backdrop-blur-xl p-3 max-w-xs">
       <Button
@@ -259,11 +441,7 @@ function ExportChatButton() {
         disabled={loading}
         className="w-full rounded-full bg-[var(--success)] hover:bg-[var(--success)]/90 text-[oklch(0.18_0.02_180)] font-semibold gap-2"
       >
-        {loading ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          <Download className="h-4 w-4" />
-        )}
+        {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
         Baixar snapshot para ChatGPT
       </Button>
       <p className="text-[11px] text-muted-foreground mt-2 leading-snug">
@@ -281,29 +459,79 @@ function initials(name: string | null) {
   return (a + b).toUpperCase() || "?";
 }
 
-function AttendantCard({
-  att,
-  reviewerId,
-  onCorrect,
-  onOpenHistory,
-}: {
-  att: AttendantRow;
-  reviewerId: string;
-  onCorrect: (submission: CorrectionTarget) => void;
-  onOpenHistory: () => void;
-}) {
-  const statuses = useMemo(() => computeTopicStatuses(TOPICS, att.progress), [att.progress]);
+function topicIcon(id: string): LucideIcon {
+  switch (id) {
+    case "apresentacao": return Store;
+    case "embalar": return Package;
+    case "vendas": return TrendingUp;
+    case "objecoes": return Shield;
+    case "dores": return Heart;
+    case "responsabilidade": return ClipboardCheck;
+    case "produtos": return Tag;
+    case "presencial": return Users;
+    case "organizacao": return Boxes;
+    case "decoracao": return Tag;
+    default: return CircleIcon;
+  }
+}
+
+// Cor de avatar determinística por id
+const AVATAR_GRADIENTS = [
+  "from-[oklch(0.65_0.2_295)] to-[oklch(0.45_0.19_295)]", // roxo
+  "from-[oklch(0.7_0.16_175)] to-[oklch(0.5_0.15_175)]", // verde água
+  "from-[oklch(0.7_0.18_45)] to-[oklch(0.55_0.18_45)]", // laranja
+  "from-[oklch(0.65_0.22_25)] to-[oklch(0.5_0.22_25)]", // vermelho
+  "from-[oklch(0.65_0.18_220)] to-[oklch(0.5_0.18_220)]", // azul
+  "from-[oklch(0.7_0.18_320)] to-[oklch(0.55_0.18_320)]", // rosa
+];
+
+function avatarGradient(id: string) {
+  let h = 0;
+  for (const c of id) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return AVATAR_GRADIENTS[h % AVATAR_GRADIENTS.length];
+}
+
+type AttendantStats = {
+  doneTopics: number;
+  totalTopics: number;
+  donePracticas: number;
+  doneExams: number;
+  totalExams: number;
+  examAverage: number | null;
+  percent: number;
+  currentTopic: ReturnType<typeof TOPICS.find>;
+  currentSubtask: { id: string; title: string } | null;
+  completed: boolean;
+  statuses: ReturnType<typeof computeTopicStatuses>;
+};
+
+function computeAttendantStats(att: AttendantRow): AttendantStats {
+  const statuses = computeTopicStatuses(TOPICS, att.progress);
   const totalTopics = TOPICS.length;
   const doneTopics = TOPICS.filter((t) => statuses[t.id] === "completed").length;
-  const totalSubtasks = TOPICS.reduce((acc, t) => acc + t.subtasks.length, 0);
-  const completedSet = useMemo(
-    () => new Set(att.progress.filter((p) => p.completed).map((p) => p.subtask_id)),
-    [att.progress],
+  const completedSet = new Set(
+    att.progress.filter((p) => p.completed).map((p) => p.subtask_id),
   );
-  const doneSubtasks = completedSet.size;
-  const percent = totalSubtasks > 0 ? Math.round((doneSubtasks / totalSubtasks) * 100) : 0;
+  const totalSubtasks = TOPICS.reduce((acc, t) => acc + t.subtasks.length, 0);
+  const doneSub = completedSet.size;
+  const percent = totalSubtasks > 0 ? Math.round((doneSub / totalSubtasks) * 100) : 0;
 
-  // Etapa atual: primeiro tópico não concluído + primeira subtask aberta dentro dele
+  // Provas
+  const examIds: string[] = [];
+  for (const t of TOPICS) for (const s of t.subtasks) if (s.kind === "open_evaluation") examIds.push(s.id);
+  const examScores: number[] = [];
+  let doneExams = 0;
+  for (const id of examIds) {
+    const row = att.progress.find((p) => p.subtask_id === id);
+    if (row?.completed && (row.score ?? 0) >= 70) {
+      doneExams += 1;
+      if (row.score != null) examScores.push(row.score);
+    }
+  }
+  const examAverage = examScores.length > 0
+    ? examScores.reduce((a, b) => a + b, 0) / examScores.length
+    : null;
+
   const currentTopic =
     TOPICS.find((t) => statuses[t.id] === "in_progress") ??
     TOPICS.find((t) => statuses[t.id] === "available") ??
@@ -312,76 +540,249 @@ function AttendantCard({
   const currentSubtask = currentTopic
     ? currentTopic.subtasks.find((s) => !completedSet.has(s.id)) ?? null
     : null;
-  const trilhaConcluida = !currentTopic;
+
+  return {
+    doneTopics,
+    totalTopics,
+    donePracticas: doneSub,
+    doneExams,
+    totalExams: examIds.length,
+    examAverage,
+    percent,
+    currentTopic: currentTopic ?? undefined,
+    currentSubtask,
+    completed: !currentTopic,
+    statuses,
+  };
+}
+
+function StatusBadge({ completed }: { completed: boolean }) {
+  return (
+    <Badge
+      className={
+        completed
+          ? "bg-[oklch(0.7_0.16_175)]/15 text-[oklch(0.82_0.14_175)] border border-[oklch(0.7_0.16_175)]/30 hover:bg-[oklch(0.7_0.16_175)]/15 rounded-full font-medium gap-1.5"
+          : "bg-[oklch(0.7_0.16_175)]/15 text-[oklch(0.82_0.14_175)] border border-[oklch(0.7_0.16_175)]/30 hover:bg-[oklch(0.7_0.16_175)]/15 rounded-full font-medium gap-1.5"
+      }
+    >
+      <span className="h-1.5 w-1.5 rounded-full bg-[oklch(0.78_0.18_175)]" />
+      Ativa
+    </Badge>
+  );
+}
+
+function AttendantCollapsedRow({
+  att,
+  onExpand,
+  onOpenHistory,
+}: {
+  att: AttendantRow;
+  onExpand: () => void;
+  onOpenHistory: () => void;
+}) {
+  const s = useMemo(() => computeAttendantStats(att), [att]);
+  return (
+    <Card
+      onClick={onExpand}
+      className="cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl hover:bg-white/[0.06] transition-colors"
+    >
+      <div className="grid grid-cols-12 items-center gap-3 p-3 sm:p-4">
+        <div className="col-span-12 sm:col-span-3 flex items-center gap-3 min-w-0">
+          <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${avatarGradient(att.id)} text-white font-bold text-xs`}>
+            {initials(att.full_name)}
+          </div>
+          <div className="min-w-0">
+            <p className="font-semibold leading-tight truncate text-sm">{att.full_name ?? "Sem nome"}</p>
+            <p className="text-[11px] text-muted-foreground font-mono mt-0.5 truncate">{att.id.slice(0, 8)}</p>
+          </div>
+          <StatusBadge completed={s.completed} />
+        </div>
+
+        <div className="col-span-12 sm:col-span-4 flex flex-col gap-1">
+          <p className="text-[11px] text-muted-foreground">Tópicos concluídos</p>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-semibold tabular-nums whitespace-nowrap">
+              <span className="text-[oklch(0.82_0.14_175)]">{s.doneTopics}</span>
+              <span className="text-muted-foreground"> de {s.totalTopics}</span>
+            </span>
+            <Progress
+              value={s.percent}
+              className="h-1.5 flex-1 bg-white/10 [&>div]:bg-[oklch(0.78_0.13_175)]"
+            />
+            <span className="text-xs text-muted-foreground tabular-nums w-9 text-right">{s.percent}%</span>
+          </div>
+        </div>
+
+        <div className="col-span-6 sm:col-span-2">
+          <p className="text-[11px] text-muted-foreground">Provas concluídas</p>
+          <p className="text-sm font-semibold tabular-nums mt-1">
+            <span className={s.doneExams === 0 ? "text-rose-300" : "text-[oklch(0.82_0.14_175)]"}>{s.doneExams}</span>
+            <span className="text-muted-foreground"> de {s.totalExams}</span>
+          </p>
+        </div>
+
+        <div className="col-span-6 sm:col-span-1">
+          <p className="text-[11px] text-muted-foreground">Média geral</p>
+          <p className="text-sm font-semibold mt-1 flex items-center gap-1">
+            <Star className={`h-3.5 w-3.5 ${s.examAverage != null ? "text-amber-300 fill-amber-300" : "text-muted-foreground"}`} />
+            {s.examAverage != null ? (s.examAverage / 10).toFixed(1).replace(".", ",") : "—"}
+          </p>
+        </div>
+
+        <div className="col-span-6 sm:col-span-2 flex items-center justify-end gap-1.5">
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            className="rounded-full gap-1.5 border-white/15 bg-white/[0.04] hover:bg-white/[0.1] h-8"
+            onClick={(e) => { e.stopPropagation(); onOpenHistory(); }}
+          >
+            <FileText className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Ver histórico</span>
+          </Button>
+          <Button
+            type="button"
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8 rounded-full border border-white/10 bg-white/[0.04]"
+            onClick={(e) => { e.stopPropagation(); onExpand(); }}
+            aria-label="Expandir"
+          >
+            <ChevronDown className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+function AttendantExpandedCard({
+  att,
+  reviewerId,
+  onCollapse,
+  onCorrect,
+  onOpenHistory,
+}: {
+  att: AttendantRow;
+  reviewerId: string;
+  onCollapse: () => void;
+  onCorrect: (submission: CorrectionTarget) => void;
+  onOpenHistory: () => void;
+}) {
+  const s = useMemo(() => computeAttendantStats(att), [att]);
+  const ringPct = s.percent;
 
   return (
     <Card className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05] backdrop-blur-xl shadow-[0_8px_32px_-12px_rgba(0,0,0,0.45)]">
-      <div className="p-4 sm:p-5 space-y-4">
-        {/* Cabeçalho */}
-        <div className="flex items-start gap-3">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[oklch(0.65_0.18_295)] to-[oklch(0.45_0.19_295)] text-white font-bold text-sm shadow-[0_4px_12px_-4px_oklch(0.45_0.19_295/0.6)]">
-            {initials(att.full_name)}
+      <div className="p-4 sm:p-6 space-y-5">
+        {/* Header: identity + stats */}
+        <div className="grid grid-cols-12 gap-4 items-center">
+          {/* Identidade */}
+          <div className="col-span-12 md:col-span-3 flex items-center gap-3">
+            <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${avatarGradient(att.id)} text-white font-bold text-base shadow-lg`}>
+              {initials(att.full_name)}
+            </div>
+            <div className="min-w-0">
+              <h3 className="font-semibold leading-tight truncate">{att.full_name ?? "Sem nome"}</h3>
+              <p className="text-[11px] text-muted-foreground font-mono mt-0.5 truncate">{att.id.slice(0, 8)}</p>
+              <div className="mt-1.5"><StatusBadge completed={s.completed} /></div>
+            </div>
           </div>
-          <div className="min-w-0 flex-1">
-            <h3 className="font-semibold leading-tight truncate">{att.full_name ?? "Sem nome"}</h3>
-            <p className="text-[11px] text-muted-foreground font-mono mt-0.5 truncate">
-              ID {att.id.slice(0, 8)}
+
+          {/* Tópicos concluídos */}
+          <div className="col-span-6 md:col-span-2">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+              <MapPin className="h-3 w-3 text-[oklch(0.78_0.13_175)]" />
+              Tópicos concluídos
+            </p>
+            <p className="text-2xl font-bold mt-2 tabular-nums">
+              {s.doneTopics}
+              <span className="text-base font-normal text-muted-foreground"> de {s.totalTopics}</span>
             </p>
           </div>
-          <Badge
-            className={
-              trilhaConcluida
-                ? "bg-[oklch(0.78_0.13_180)]/15 text-[oklch(0.85_0.13_180)] border border-[oklch(0.78_0.13_180)]/30 hover:bg-[oklch(0.78_0.13_180)]/15"
-                : "bg-[oklch(0.65_0.18_295)]/15 text-[oklch(0.82_0.12_295)] border border-[oklch(0.65_0.18_295)]/30 hover:bg-[oklch(0.65_0.18_295)]/15"
-            }
-          >
-            {trilhaConcluida ? "Concluída" : "Em andamento"}
-          </Badge>
+
+          {/* Progresso geral (circular) */}
+          <div className="col-span-6 md:col-span-2 flex flex-col items-center">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Progresso geral</p>
+            <CircularProgress value={ringPct} />
+          </div>
+
+          {/* Provas concluídas */}
+          <div className="col-span-6 md:col-span-2">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+              <ScrollText className="h-3 w-3 text-[oklch(0.78_0.13_175)]" />
+              Provas concluídas
+            </p>
+            <p className="text-2xl font-bold mt-2 tabular-nums">
+              <span className={s.doneExams === 0 ? "text-rose-300" : ""}>{s.doneExams}</span>
+              <span className="text-base font-normal text-muted-foreground"> de {s.totalExams}</span>
+            </p>
+          </div>
+
+          {/* Média geral */}
+          <div className="col-span-6 md:col-span-2">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+              <Star className="h-3 w-3 text-amber-300" />
+              Média geral
+            </p>
+            <p className="text-2xl font-bold mt-2 flex items-center gap-1.5">
+              <Star className={`h-5 w-5 ${s.examAverage != null ? "text-amber-300 fill-amber-300" : "text-muted-foreground"}`} />
+              <span className="tabular-nums">
+                {s.examAverage != null ? (s.examAverage / 10).toFixed(1).replace(".", ",") : "—"}
+              </span>
+            </p>
+          </div>
+
+          {/* Ver histórico de provas */}
+          <div className="col-span-12 md:col-span-1 flex md:justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="rounded-full gap-1.5 border-white/15 bg-white/[0.04] hover:bg-white/[0.1] whitespace-nowrap"
+              onClick={onOpenHistory}
+            >
+              <FileText className="h-4 w-4" />
+              Ver histórico de provas
+            </Button>
+          </div>
         </div>
 
-        {/* Progresso geral */}
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 space-y-3">
-          <div className="flex items-end justify-between gap-3">
-            <div>
-              <p className="text-[11px] uppercase tracking-wider text-muted-foreground">
-                Progresso geral
-              </p>
-              <p className="text-2xl font-bold tabular-nums leading-none mt-1">
-                {percent}<span className="text-base text-muted-foreground">%</span>
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-[11px] uppercase tracking-wider text-muted-foreground">
-                Tópicos
-              </p>
-              <p className="text-sm font-semibold mt-1 tabular-nums">
-                {doneTopics}<span className="text-muted-foreground">/{totalTopics}</span>
-              </p>
-            </div>
+        {/* Etapa atual */}
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 flex flex-wrap items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[oklch(0.55_0.22_295)]/20 border border-[oklch(0.65_0.18_295)]/30">
+            <MapPin className="h-6 w-6 text-[oklch(0.82_0.13_295)]" />
           </div>
-          <Progress
-            value={percent}
-            className="h-1.5 bg-white/10 [&>div]:bg-gradient-to-r [&>div]:from-[oklch(0.65_0.18_295)] [&>div]:to-[oklch(0.78_0.13_180)]"
-          />
-          <div className="flex items-start gap-2 pt-1">
-            <BookOpen className="h-3.5 w-3.5 text-[oklch(0.78_0.13_180)] shrink-0 mt-0.5" />
-            <p className="text-xs leading-snug text-foreground/80">
-              {trilhaConcluida ? (
-                <span className="text-foreground/70">Concluiu toda a trilha.</span>
-              ) : (
-                <>
-                  <span className="text-muted-foreground">Etapa atual: </span>
-                  <span className="font-medium text-foreground">{currentTopic!.title}</span>
-                  {currentSubtask && (
-                    <>
-                      <span className="text-muted-foreground"> · próxima ação: </span>
-                      <span className="text-foreground/90">{currentSubtask.title}</span>
-                    </>
-                  )}
-                </>
-              )}
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] uppercase tracking-wider text-[oklch(0.82_0.13_295)] font-semibold">Etapa atual</p>
+            <p className="text-lg font-bold leading-tight mt-0.5">
+              {s.currentTopic ? s.currentTopic.title : "Trilha concluída"}
+            </p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {s.currentTopic
+                ? s.currentSubtask
+                  ? `Próxima ação: ${s.currentSubtask.title}`
+                  : "Aguardando avanço."
+                : "Concluiu todos os tópicos da trilha."}
             </p>
           </div>
+          <UnlockAllExamsLauncher attendantId={att.id} attendantName={att.full_name} reviewerId={reviewerId} progress={att.progress} />
+          <AttendantActionsMenu
+            attendantId={att.id}
+            attendantName={att.full_name}
+            reviewerId={reviewerId}
+            progress={att.progress}
+          />
+          <Button
+            type="button"
+            size="icon"
+            variant="ghost"
+            className="h-9 w-9 rounded-full border border-white/10 bg-white/[0.04]"
+            onClick={onCollapse}
+            aria-label="Recolher"
+          >
+            <ChevronDown className="h-4 w-4 rotate-180" />
+          </Button>
         </div>
 
         {/* Pedidos de permissão para prova */}
@@ -391,20 +792,13 @@ function AttendantCard({
               const meta = findSubtask(p.subtask_id);
               const label = meta?.topic.title ?? "Prova";
               return (
-                <div
-                  key={p.id}
-                  className="rounded-2xl border-2 border-rose-400/60 bg-rose-500/15 p-3 animate-pulse-once shadow-[0_0_24px_-4px_rgba(244,63,94,0.5)]"
-                >
+                <div key={p.id} className="rounded-2xl border-2 border-rose-400/60 bg-rose-500/15 p-3 shadow-[0_0_24px_-4px_rgba(244,63,94,0.5)]">
                   <div className="flex items-start gap-3">
                     <KeyRound className="h-5 w-5 text-rose-200 shrink-0 mt-0.5" />
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-semibold text-foreground">
-                        🔔 {att.full_name ?? "Atendente"} pediu permissão
-                      </p>
+                      <p className="text-sm font-semibold">🔔 {att.full_name ?? "Atendente"} pediu permissão</p>
                       <p className="text-sm text-foreground/90">Prova: {label}</p>
-                      <p className="text-xs text-foreground/70">
-                        Solicitado em {new Date(p.created_at).toLocaleString("pt-BR")}
-                      </p>
+                      <p className="text-xs text-foreground/70">Solicitado em {new Date(p.created_at).toLocaleString("pt-BR")}</p>
                     </div>
                   </div>
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -414,13 +808,8 @@ function AttendantCard({
                       className="rounded-full bg-emerald-500 hover:bg-emerald-600 text-white"
                       onClick={async () => {
                         const { error } = await approvePermission(p.id, reviewerId);
-                        if (error) {
-                          toast.error("Não consegui liberar", { description: error.message });
-                        } else {
-                          toast.success(
-                            `Prova liberada para ${att.full_name ?? "atendente"} — acompanhe em tempo real.`,
-                          );
-                        }
+                        if (error) toast.error("Não consegui liberar", { description: error.message });
+                        else toast.success(`Prova liberada para ${att.full_name ?? "atendente"}.`);
                       }}
                     >
                       Liberar prova
@@ -445,23 +834,19 @@ function AttendantCard({
           </div>
         )}
 
-        {/* Avaliações pendentes inline */}
+        {/* Avaliações pendentes */}
         {att.pending.length > 0 && (
           <div className="space-y-2">
             {att.pending.map((p) => {
               const meta = findSubtask(p.subtask_id);
               const label = meta?.topic.title ?? "Prova";
               return (
-                <div
-                  key={p.id}
-                  className="flex items-center gap-3 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-3"
-                >
+                <div key={p.id} className="flex items-center gap-3 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-3">
                   <AlertCircle className="h-5 w-5 text-amber-300 shrink-0" />
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-foreground">Prova: {label}</p>
+                    <p className="text-sm font-medium">Prova: {label}</p>
                     <p className="text-xs text-foreground/70">
-                      Pendente revisão · enviada em{" "}
-                      {new Date(p.created_at).toLocaleString("pt-BR")}
+                      Pendente revisão · enviada em {new Date(p.created_at).toLocaleString("pt-BR")}
                     </p>
                   </div>
                   <Button
@@ -478,27 +863,140 @@ function AttendantCard({
           </div>
         )}
 
-        {/* Rodapé: ação principal discreta + menu de ações */}
-        <div className="flex items-center justify-between gap-2 pt-1">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="rounded-full gap-1.5 border-white/15 bg-white/[0.04] hover:bg-white/[0.08]"
-            onClick={onOpenHistory}
-          >
-            <FileText className="h-4 w-4" />
-            Ver histórico
-          </Button>
-          <AttendantActionsMenu
-            attendantId={att.id}
-            attendantName={att.full_name}
-            reviewerId={reviewerId}
-            progress={att.progress}
-          />
+        {/* Progresso por tópico (timeline) */}
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+            Progresso por tópico
+          </p>
+          <div className="mt-4 relative">
+            <div className="absolute top-7 left-6 right-6 h-px border-t border-dashed border-white/15" />
+            <div className="relative grid grid-cols-4 md:grid-cols-8 gap-3">
+              {TOPICS.map((t) => {
+                const status = s.statuses[t.id];
+                const Icon = topicIcon(t.id);
+                const isCompleted = status === "completed";
+                const isCurrent = status === "in_progress" || status === "available";
+                const isLocked = status === "locked";
+                return (
+                  <div key={t.id} className="flex flex-col items-center text-center gap-2">
+                    <div className="relative">
+                      <div
+                        className={
+                          "flex h-14 w-14 items-center justify-center rounded-full border-2 transition-colors " +
+                          (isCompleted
+                            ? "bg-[oklch(0.7_0.16_175)]/20 border-[oklch(0.78_0.13_175)] text-[oklch(0.85_0.13_175)]"
+                            : isCurrent
+                              ? "bg-[oklch(0.55_0.22_295)]/20 border-[oklch(0.65_0.18_295)] text-[oklch(0.82_0.13_295)] shadow-[0_0_24px_-6px_oklch(0.65_0.18_295/0.8)]"
+                              : "bg-white/[0.03] border-white/15 text-muted-foreground")
+                        }
+                      >
+                        <Icon className="h-5 w-5" />
+                        {isLocked && (
+                          <Lock className="absolute -bottom-0.5 -right-0.5 h-4 w-4 p-0.5 rounded-full bg-background text-muted-foreground" />
+                        )}
+                      </div>
+                      <span
+                        className={
+                          "absolute -top-1 -left-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold border " +
+                          (isCompleted
+                            ? "bg-[oklch(0.78_0.13_175)] text-[oklch(0.18_0.02_175)] border-[oklch(0.78_0.13_175)]"
+                            : isCurrent
+                              ? "bg-[oklch(0.55_0.22_295)] text-white border-[oklch(0.55_0.22_295)]"
+                              : "bg-white/10 text-muted-foreground border-white/15")
+                        }
+                      >
+                        {t.order}
+                      </span>
+                    </div>
+                    <p className="text-[11px] leading-tight font-medium text-foreground/90 line-clamp-2 min-h-[2.4em]">
+                      {t.title}
+                    </p>
+                    <span
+                      className={
+                        "text-[10px] px-2 py-0.5 rounded-full border " +
+                        (isCompleted
+                          ? "border-[oklch(0.78_0.13_175)]/40 bg-[oklch(0.78_0.13_175)]/10 text-[oklch(0.85_0.13_175)]"
+                          : isCurrent
+                            ? "border-[oklch(0.65_0.18_295)]/40 bg-[oklch(0.55_0.22_295)]/15 text-[oklch(0.82_0.13_295)]"
+                            : "border-white/10 bg-white/[0.03] text-muted-foreground")
+                      }
+                    >
+                      {isCompleted ? "Concluído" : isCurrent ? (status === "in_progress" ? "Em andamento" : "Não iniciado") : "Bloqueado"}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </Card>
+  );
+}
+
+function CircularProgress({ value }: { value: number }) {
+  const size = 64;
+  const stroke = 6;
+  const r = (size - stroke) / 2;
+  const c = 2 * Math.PI * r;
+  const offset = c - (value / 100) * c;
+  return (
+    <div className="relative mt-1" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="-rotate-90">
+        <circle cx={size / 2} cy={size / 2} r={r} stroke="oklch(0.3 0.02 285)" strokeWidth={stroke} fill="none" />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          stroke="oklch(0.65 0.18 295)"
+          strokeWidth={stroke}
+          fill="none"
+          strokeDasharray={c}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          className="transition-[stroke-dashoffset] duration-500"
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center text-sm font-bold tabular-nums">
+        {value}%
+      </div>
+    </div>
+  );
+}
+
+function UnlockAllExamsLauncher({
+  attendantId,
+  attendantName,
+  reviewerId,
+  progress,
+}: {
+  attendantId: string;
+  attendantName: string | null;
+  reviewerId: string;
+  progress: ProgressRow[];
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        className="rounded-full gap-1.5 border-white/15 bg-white/[0.04] hover:bg-white/[0.1]"
+        onClick={() => setOpen(true)}
+      >
+        <Lock className="h-4 w-4" />
+        Liberar todas as provas
+      </Button>
+      <UnlockAllExamsDialog
+        open={open}
+        onOpenChange={setOpen}
+        attendantId={attendantId}
+        attendantName={attendantName}
+        reviewerId={reviewerId}
+        progress={progress}
+      />
+    </>
   );
 }
 
