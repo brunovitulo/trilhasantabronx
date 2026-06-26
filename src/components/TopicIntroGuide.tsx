@@ -260,5 +260,5 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 export function topicIntroStorageKey(userId: string, topicId: string, version: string | null) {
   const v = version ?? "init";
-  return `sbx:topic-intro:${userId}:${topicId}:v=${v}`;
+  return `sbx:topic-intro:v2:${userId}:${topicId}:reset=${v}`;
 }
