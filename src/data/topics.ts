@@ -184,7 +184,7 @@ export const TOPICS: Topic[] = [
         kind: "video",
         title: "1. Nossa História — assistir destaque",
         description: "Assista o destaque 'Apresentação Inicial' no Instagram da loja.",
-        url: IG_APRESENTACAO,
+        url: "https://www.instagram.com/stories/highlights/17958057917908256/",
       },
       {
         id: "apresentacao.organizacao.video",
@@ -238,7 +238,6 @@ export const TOPICS: Topic[] = [
           "Acessar o site: https://santabronxaraguari.com.br/",
           "Acesse o menu de categorias",
           "Entre na subcategoria \"Varinha Mágica\"",
-          "Pegue este link e envie para a pessoa que está te auxiliando (gestor)",
           "Abra a aba de pesquisa clicando na lupinha",
           "Encontre o produto \"Xana Loka\" e clique nele",
           "Clique no botão \"Comprar no WhatsApp\"",
