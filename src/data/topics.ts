@@ -207,40 +207,15 @@ export const TOPICS: Topic[] = [
         ],
       },
       {
-        id: "apresentacao.produtos.video",
-        kind: "video",
-        title: "3. Familiarizar com produtos — assistir destaques",
-        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
-      },
-      {
-        id: "apresentacao.produtos.checklist",
-        kind: "checklist",
-        title: "3. Familiarizar com produtos — checklist",
-        items: [
-          "Abrir as 2 algemas e analisar elas por completo",
-          "Abrir as velas de massagem e sentir o cheiro delas",
-          "Abrir todos masturbadores masculinos em cyber skin e analisá-los por completo",
-          "Sentir o cheiro dos perfumes existentes",
-          "Sentir o efeito na língua dos 2 excitantes (Meltesão e Vibration)",
-          "Sentir o efeito do Excitante Pico Pulse (https://sexshopsantabronx.com.br/produto/excitante-unissex-pico-pulse-suga-vibra-pulsa-e-refresca-sabor-melancia/)",
-          "Analisar todos os anéis penianos",
-          "Analisar todos os vibradores (é necessário ligar eles — não todos)",
-          "Pegar os plugs anais na mão e analisar",
-          "Abrir e ver material do body stocking e meia",
-          "Pegar uma prótese com ventosa e colar ela na parede e chão",
-          "Abrir um modelo de prótese em cyber skin pra sentir a diferença do material",
-        ],
-      },
-      {
         id: "apresentacao.padrao.video",
         kind: "video",
-        title: "4. Padrão de organização — assistir destaque",
+        title: "3. Padrão de organização — assistir destaque",
         url: "https://www.instagram.com/stories/highlights/18089212679196183/",
       },
       {
         id: "apresentacao.padrao.checklist",
         kind: "inline_html",
-        title: "4. Padrão de organização — ver checklist de organização",
+        title: "3. Padrão de organização — ver checklist de organização",
         description:
           "Use este checklist diariamente para garantir que a loja está sempre organizada e bem apresentada antes de atender.",
         source: "organizacao",
@@ -252,13 +227,13 @@ export const TOPICS: Topic[] = [
       {
         id: "apresentacao.site.video",
         kind: "video",
-        title: "5. Apresentação do site — assistir destaque",
+        title: "4. Apresentação do site — assistir destaque",
         url: "https://www.instagram.com/stories/highlights/18095535212221625/",
       },
       {
         id: "apresentacao.site.checklist",
         kind: "checklist",
-        title: "5. Apresentação do site — checklist",
+        title: "4. Apresentação do site — checklist",
         items: [
           "Acessar o site: https://santabronxaraguari.com.br/",
           "Acesse o menu de categorias",
@@ -278,7 +253,7 @@ export const TOPICS: Topic[] = [
       {
         id: "apresentacao.prova.video",
         kind: "video",
-        title: "6. Antes da prova — assistir vídeo do Bruno",
+        title: "5. Antes da prova — assistir vídeo do Bruno",
         description:
           "Vídeo de alinhamento antes da prova. Recapitula o módulo, avisa que o gestor vai acompanhar a prova em tempo real e reforça a regra de 70% para passar.",
         url: "https://www.instagram.com/stories/highlights/17892062016515877/",
@@ -286,7 +261,7 @@ export const TOPICS: Topic[] = [
       {
         id: "apresentacao.prova.exam",
         kind: "open_evaluation",
-        title: "6. Prova: Apresentação da Loja",
+        title: "5. Prova: Apresentação da Loja",
         description: "Prova dissertativa final do tópico. Nota mínima 70%.",
         passingScore: 70,
         questions: [
@@ -822,6 +797,31 @@ export const TOPICS: Topic[] = [
         helperText:
           "Este checklist também fica sempre disponível na aba de tarefas do dia no topo do site.",
         confirmLabel: "Li e marquei todos os itens do checklist por completo.",
+      },
+      {
+        id: "apresentacao.produtos.video",
+        kind: "video",
+        title: "3. Familiarizar com produtos — assistir destaques",
+        url: "https://www.instagram.com/stories/highlights/18094082618461071/",
+      },
+      {
+        id: "apresentacao.produtos.checklist",
+        kind: "checklist",
+        title: "3. Familiarizar com produtos — checklist",
+        items: [
+          "Abrir as 2 algemas e analisar elas por completo",
+          "Abrir as velas de massagem e sentir o cheiro delas",
+          "Abrir todos masturbadores masculinos em cyber skin e analisá-los por completo",
+          "Sentir o cheiro dos perfumes existentes",
+          "Sentir o efeito na língua dos 2 excitantes (Meltesão e Vibration)",
+          "Sentir o efeito do Excitante Pico Pulse (https://sexshopsantabronx.com.br/produto/excitante-unissex-pico-pulse-suga-vibra-pulsa-e-refresca-sabor-melancia/)",
+          "Analisar todos os anéis penianos",
+          "Analisar todos os vibradores (é necessário ligar eles — não todos)",
+          "Pegar os plugs anais na mão e analisar",
+          "Abrir e ver material do body stocking e meia",
+          "Pegar uma prótese com ventosa e colar ela na parede e chão",
+          "Abrir um modelo de prótese em cyber skin pra sentir a diferença do material",
+        ],
       },
     ],
   },
