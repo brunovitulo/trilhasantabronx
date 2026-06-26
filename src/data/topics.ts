@@ -3156,6 +3156,42 @@ for (const topic of TOPICS) {
   }
 }
 
+// Validação leve de integridade — apenas em desenvolvimento.
+// Alerta sobre provas/exercícios vazios, opções inválidas ou correctIndex
+// fora do array. Não quebra a build; somente console.warn.
+if (import.meta.env?.DEV) {
+  for (const topic of TOPICS) {
+    for (const sub of topic.subtasks) {
+      if (sub.kind === "evaluation" || sub.kind === "practice" || sub.kind === "open_evaluation") {
+        const qs = (sub as { questions: Array<{ question?: string; options?: string[]; correctIndex?: number }> }).questions;
+        if (!Array.isArray(qs) || qs.length === 0) {
+          console.warn(`[topics] subtask "${sub.id}" (${sub.kind}) está sem questões.`);
+          continue;
+        }
+        qs.forEach((q, i) => {
+          if (!q.question || !q.question.trim()) {
+            console.warn(`[topics] ${sub.id} q[${i}]: pergunta vazia.`);
+          }
+          const hasOptions = Array.isArray(q.options) && q.options.length > 0;
+          const isMC = sub.kind !== "open_evaluation" || hasOptions;
+          if (isMC) {
+            if (!hasOptions || (q.options as string[]).length < 2) {
+              console.warn(`[topics] ${sub.id} q[${i}]: precisa de ao menos 2 opções.`);
+            } else if (
+              typeof q.correctIndex !== "number" ||
+              q.correctIndex < 0 ||
+              q.correctIndex >= (q.options as string[]).length
+            ) {
+              console.warn(`[topics] ${sub.id} q[${i}]: correctIndex inválido (${q.correctIndex}).`);
+            }
+          }
+        });
+      }
+    }
+  }
+}
+
+
 export function findTopic(id: string) {
   return TOPICS.find((t) => t.id === id);
 }
