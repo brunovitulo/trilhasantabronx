@@ -837,38 +837,6 @@ function AttendantExpandedCard({
           </div>
         )}
 
-        {/* Timeline minimalista dos tópicos */}
-        <div className="pt-1">
-          <div className="flex items-center justify-between gap-2 mb-2">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
-              Tópicos
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-1.5">
-            {TOPICS.map((t) => {
-              const status = s.statuses[t.id];
-              const Icon = topicIcon(t.id);
-              const isCompleted = status === "completed";
-              const isCurrent = status === "in_progress" || status === "available";
-              return (
-                <div
-                  key={t.id}
-                  title={`${t.order}. ${t.title} — ${isCompleted ? "Concluído" : isCurrent ? "Em andamento" : status === "locked" ? "Bloqueado" : "—"}`}
-                  className={
-                    "flex h-9 w-9 items-center justify-center rounded-lg border transition-colors " +
-                    (isCompleted
-                      ? "bg-[oklch(0.7_0.16_175)]/15 border-[oklch(0.78_0.13_175)]/50 text-[oklch(0.85_0.13_175)]"
-                      : isCurrent
-                        ? "bg-[oklch(0.55_0.22_295)]/15 border-[oklch(0.65_0.18_295)]/50 text-[oklch(0.82_0.13_295)]"
-                        : "bg-white/[0.02] border-white/10 text-muted-foreground/60")
-                  }
-                >
-                  <Icon className="h-4 w-4" />
-                </div>
-              );
-            })}
-          </div>
-        </div>
       </div>
     </Card>
   );
