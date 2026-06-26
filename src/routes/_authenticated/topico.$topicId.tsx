@@ -1423,6 +1423,14 @@ function DualInlineHtmlSubtask({
 
   return (
     <div className="space-y-4">
+      <StepGuide
+        steps={[
+          { icon: BookOpen, title: "Abra cada conteúdo, na ordem", description: "Comece pelo primeiro e depois vá ao segundo." },
+          { icon: BookOpen, title: "Leia/explore cada um por completo", description: "Não pule partes — leia tudo." },
+          { icon: ChevronLeft, title: "Volte para esta tela", description: "Retorne aqui após cada leitura." },
+          { icon: Check, title: "Confirme cada um e finalize", description: "Marque as duas confirmações e conclua." },
+        ]}
+      />
       {renderBlock(subtask.first, "first", confirm1, setConfirm1)}
       {renderBlock(subtask.second, "second", confirm2, setConfirm2)}
       <div className="flex flex-wrap gap-2">
