@@ -208,7 +208,15 @@ function TopicPage() {
 
   return (
     <div className="min-h-screen">
+      {showIntro && !isAdmin && (
+        <TopicIntroGuide
+          topic={topic}
+          storageKey={topicIntroStorageKey(user.id, topic.id, resetVersion)}
+          onClose={() => setShowIntro(false)}
+        />
+      )}
       <AppHeader isAdmin={isAdmin} />
+
       <main className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
         <Link to="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4">
           <ChevronLeft className="h-4 w-4" /> Voltar à trilha
