@@ -32,6 +32,7 @@ import { Label } from "@/components/ui/label";
 
 import { toast } from "sonner";
 import { ApostilaView } from "@/components/ApostilaView";
+import { StepGuide } from "@/components/StepGuide";
 
 import { useExamPermission, requestPermission } from "@/lib/examPermission";
 
@@ -823,6 +824,14 @@ function ExamDialogLauncher({
 
   return (
     <div className="space-y-2">
+      <StepGuide
+        steps={[
+          { icon: ShieldCheck, title: "Solicite a liberação da prova", description: "Clique em \"Solicitar permissão\" para avisar o gestor." },
+          { icon: FilePen, title: "Responda com atenção", description: "Você terá 30 minutos. Use suas palavras, sem pesquisar." },
+          { icon: Check, title: "Envie para correção", description: "Clique em enviar quando terminar — não dá para refazer sozinha." },
+          { icon: ClipboardCheck, title: "Aguarde o feedback do gestor", description: "Você só avança com 70% ou mais. O gestor envia o retorno." },
+        ]}
+      />
       {needsVideo && !isAdmin && (
         <p className="text-xs text-foreground/80">
           Assista o vídeo acima e marque como visto para liberar o botão de iniciar a prova.
@@ -981,12 +990,17 @@ function VideoSubtask({
 
   return (
     <div className="space-y-3">
+      <StepGuide
+        steps={[
+          { icon: Copy, title: "Copie o link do vídeo/destaque", description: "Use o botão abaixo para copiar o link." },
+          { icon: Globe, title: "Cole o link em outra aba do navegador", description: "Abra uma nova aba, cole o link e acesse o conteúdo." },
+          { icon: Play, title: "Assista ao vídeo/destaque por completo", description: "Assista com atenção antes de voltar para a plataforma." },
+          { icon: Check, title: "Volte e confirme em \"Já assisti\"", description: "Clique somente depois de terminar de assistir." },
+        ]}
+      />
       <div className="rounded-2xl border border-border/60 bg-muted/40 p-3 text-xs sm:text-sm text-muted-foreground break-all font-mono select-all">
         {subtask.url}
       </div>
-      <p className="text-xs text-foreground/80">
-        Copie o link, cole em outra aba, assista o destaque por completo.
-      </p>
       <div className="flex flex-wrap gap-2 items-center">
         <Button variant="outline"
           type="button"
@@ -1032,6 +1046,14 @@ function ReadingSubtask({
   const [open, setOpen] = useState(false);
   return (
     <div>
+      <StepGuide
+        steps={[
+          { icon: BookOpen, title: "Abra a apostila", description: "Clique em \"Abrir apostila\" para começar." },
+          { icon: BookOpen, title: "Leia o conteúdo por completo", description: "Leia até o final antes de marcar como concluído." },
+          { icon: ChevronLeft, title: "Volte para esta tela", description: "Quando terminar a leitura, retorne aqui." },
+          { icon: Check, title: "Confirme que terminou a leitura", description: "Marque como lida abaixo." },
+        ]}
+      />
       <Button
         variant="outline"
         size="sm"
@@ -1072,6 +1094,14 @@ function ApostilaSubtask({
   const [open, setOpen] = useState(false);
   return (
     <div>
+      <StepGuide
+        steps={[
+          { icon: BookOpen, title: "Abra a apostila", description: "Clique no botão abaixo para acessar o conteúdo." },
+          { icon: BookOpen, title: "Leia o conteúdo por completo", description: "Não pule seções — leia até o final." },
+          { icon: ChevronLeft, title: "Volte para esta tela", description: "Quando terminar, retorne para confirmar." },
+          { icon: Check, title: "Confirme que terminou a leitura", description: "Marque como lida abaixo." },
+        ]}
+      />
       <Button
         variant="outline"
         size="sm"
@@ -1166,14 +1196,14 @@ function ChecklistSubtask({
   }, [allChecked]);
   return (
     <div className="space-y-2">
-      <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3 mb-1">
-        <div className="flex items-start gap-2">
-          <Info className="h-4 w-4 shrink-0 text-[#5eead4] mt-0.5" />
-          <p className="text-sm text-foreground/80 leading-snug">
-            Faça as ações do checklist uma por uma e marque cada item somente depois de concluir. Não marque tudo antes de fazer.
-          </p>
-        </div>
-      </div>
+      <StepGuide
+        steps={[
+          { icon: ListChecks, title: "Abra o checklist", description: "Leia os itens listados abaixo." },
+          { icon: Hand, title: "Aplique item por item, na ordem", description: "Faça a ação real de cada item antes de marcar." },
+          { icon: Check, title: "Marque cada item depois de concluir", description: "Não marque tudo antes de fazer." },
+          { icon: ClipboardCheck, title: "Finalize o passo", description: "Ao marcar todos, o passo é concluído automaticamente." },
+        ]}
+      />
       <ul className="space-y-1">
         {subtask.items.map((item, i) => {
           const c = checks[i];
@@ -1244,6 +1274,14 @@ function InlineHtmlSubtask({
 
   return (
     <div className="space-y-3">
+      <StepGuide
+        steps={[
+          { icon: BookOpen, title: "Abra o conteúdo", description: "Clique no botão abaixo para abrir." },
+          { icon: BookOpen, title: "Leia/explore por completo", description: "Não pule partes — vá até o final." },
+          { icon: ChevronLeft, title: "Volte para esta tela", description: "Feche o conteúdo quando terminar." },
+          { icon: Check, title: "Confirme que terminou", description: "Marque a confirmação e clique em concluir." },
+        ]}
+      />
       <div className="flex flex-wrap gap-2">
         <Button variant="outline"
           type="button"
@@ -1385,6 +1423,14 @@ function DualInlineHtmlSubtask({
 
   return (
     <div className="space-y-4">
+      <StepGuide
+        steps={[
+          { icon: BookOpen, title: "Abra cada conteúdo, na ordem", description: "Comece pelo primeiro e depois vá ao segundo." },
+          { icon: BookOpen, title: "Leia/explore cada um por completo", description: "Não pule partes — leia tudo." },
+          { icon: ChevronLeft, title: "Volte para esta tela", description: "Retorne aqui após cada leitura." },
+          { icon: Check, title: "Confirme cada um e finalize", description: "Marque as duas confirmações e conclua." },
+        ]}
+      />
       {renderBlock(subtask.first, "first", confirm1, setConfirm1)}
       {renderBlock(subtask.second, "second", confirm2, setConfirm2)}
       <div className="flex flex-wrap gap-2">
@@ -1569,6 +1615,14 @@ function ExternalHtmlSubtask({
 
   return (
     <div className="space-y-3">
+      <StepGuide
+        steps={[
+          { icon: Globe, title: isDownload ? "Baixe o arquivo" : "Abra o conteúdo", description: "Clique no botão abaixo." },
+          { icon: BookOpen, title: "Veja o conteúdo por completo", description: "Não pule partes — explore tudo." },
+          { icon: ChevronLeft, title: "Volte para esta tela", description: "Retorne aqui após terminar." },
+          { icon: Check, title: "Confirme e finalize", description: "Marque a confirmação para concluir." },
+        ]}
+      />
       <div className="flex flex-wrap gap-2">
         <Button asChild variant="outline" size="sm" className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25">
           {isDownload ? (
@@ -1632,14 +1686,14 @@ function MultiChecklistSubtask({
   }, [allDone]);
   return (
     <div className="space-y-3">
-      <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
-        <div className="flex items-start gap-2">
-          <Info className="h-4 w-4 shrink-0 text-[#5eead4] mt-0.5" />
-          <p className="text-sm text-foreground/80 leading-snug">
-            Faça as ações de cada grupo uma por uma e marque cada item somente depois de concluir.
-          </p>
-        </div>
-      </div>
+      <StepGuide
+        steps={[
+          { icon: ListChecks, title: "Abra cada grupo do checklist", description: "Leia os itens de cada bloco." },
+          { icon: Hand, title: "Aplique item por item, na ordem", description: "Faça a ação real antes de marcar." },
+          { icon: Check, title: "Marque depois de concluir", description: "Não marque tudo antes de fazer." },
+          { icon: ClipboardCheck, title: "Finalize todos os grupos", description: "Ao marcar todos os itens, o passo é concluído." },
+        ]}
+      />
       {subtask.groups.map((group, gi) => {
         const done = checks[gi]?.every(Boolean);
         const infoLines = group.subtitle
@@ -1781,6 +1835,14 @@ function EvaluationSubtask({
 
   return (
     <div className="space-y-4">
+      <StepGuide
+        steps={[
+          { icon: Play, title: "Comece a avaliação", description: "Leia cada pergunta com calma." },
+          { icon: FilePen, title: "Responda todas as perguntas", description: "Escolha a alternativa correta em cada uma." },
+          { icon: ClipboardCheck, title: "Confira antes de enviar", description: "Revise suas respostas antes do envio." },
+          { icon: Check, title: `Envie e atinja ${passing}%`, description: "Você precisa da nota mínima para aprovar." },
+        ]}
+      />
       {subtask.questions.map((q, qi) => (
         <div key={qi} className="rounded-lg border p-3">
           <p className="text-sm font-medium mb-2 text-[#C8F0E4]">
@@ -1871,6 +1933,14 @@ function PracticeSubtask({
   if (!started) {
     return (
       <div className="space-y-3">
+        <StepGuide
+          steps={[
+            { icon: Play, title: "Inicie o exercício", description: "Clique em \"Iniciar\" quando estiver pronta." },
+            { icon: FilePen, title: "Responda todas as perguntas", description: "Cada pergunta só pode ser respondida uma única vez." },
+            { icon: Check, title: "Confira o feedback", description: "Veja se acertou cada pergunta." },
+            { icon: ClipboardCheck, title: "Finalize o exercício", description: "Depois de finalizar não dá para refazer." },
+          ]}
+        />
         <div className="rounded-2xl border border-white/10 bg-white/[0.06] backdrop-blur-xl p-4 text-sm leading-relaxed text-foreground/90">
           <p className="font-semibold mb-2">⚠️ Antes de iniciar, leia com atenção:</p>
           <ul className="list-disc pl-5 space-y-1 text-foreground/80">
@@ -2348,10 +2418,14 @@ function ProductLinksSubtask({
 
   return (
     <div className="space-y-3">
-      <p className="text-xs text-foreground/80">
-        Abra cada link em uma aba nova e observe nome, imagem, descrição e preço atualizado.
-        Esses são os produtos reais desta categoria no site da loja.
-      </p>
+      <StepGuide
+        steps={[
+          { icon: Globe, title: "Abra cada produto no site", description: "Use os links abaixo, uma aba para cada." },
+          { icon: Info, title: "Observe nome, imagem, descrição e preço", description: "Memorize os detalhes principais de cada item." },
+          { icon: ChevronLeft, title: "Volte para a plataforma", description: "Após revisar todos, retorne para esta tela." },
+          { icon: Check, title: "Confirme que revisou todos", description: "Marque a confirmação abaixo para concluir." },
+        ]}
+      />
       <div className="grid gap-2">
         {subtask.links.map((l, i) => (
           <a
