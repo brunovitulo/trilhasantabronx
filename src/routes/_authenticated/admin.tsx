@@ -549,7 +549,7 @@ function computeAttendantStats(att: AttendantRow): AttendantStats {
     totalExams: examIds.length,
     examAverage,
     percent,
-    currentTopic,
+    currentTopic: currentTopic ?? undefined,
     currentSubtask,
     completed: !currentTopic,
     statuses,
