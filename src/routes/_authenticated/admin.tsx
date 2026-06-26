@@ -567,25 +567,25 @@ function AttendantActionsMenu({
   );
 }
 
-function UnlockAllExamsButton({
+function UnlockAllExamsDialog({
+  open,
+  onOpenChange,
   attendantId,
   attendantName,
   reviewerId,
   progress,
 }: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   attendantId: string;
   attendantName: string | null;
   reviewerId: string;
   progress: ProgressRow[];
 }) {
-  const [confirmOpen, setConfirmOpen] = useState(false);
   const [working, setWorking] = useState(false);
 
-  // Identifica todas as provas (open_evaluation) que a atendente ainda não concluiu.
   const pendingExamIds = useMemo(() => {
-    const completedIds = new Set(
-      progress.filter((p) => p.completed).map((p) => p.subtask_id),
-    );
+    const completedIds = new Set(progress.filter((p) => p.completed).map((p) => p.subtask_id));
     const ids: string[] = [];
     for (const t of TOPICS) {
       for (const s of t.subtasks) {
@@ -599,7 +599,6 @@ function UnlockAllExamsButton({
 
   async function doUnlockAll() {
     setWorking(true);
-    // Expiração longa (30 dias) para uma liberação geral no início da formação.
     const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
     const nowIso = new Date().toISOString();
     const rows = pendingExamIds.map((sid) => ({
@@ -612,7 +611,7 @@ function UnlockAllExamsButton({
     }));
     const { error } = await supabase.from("exam_permission_requests").insert(rows);
     setWorking(false);
-    setConfirmOpen(false);
+    onOpenChange(false);
     if (error) {
       toast.error("Não consegui liberar todas", { description: error.message });
       return;
@@ -623,51 +622,48 @@ function UnlockAllExamsButton({
   }
 
   return (
-    <>
-      <Button
-        type="button"
-        size="sm"
-        className="rounded-full bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5"
-        onClick={() => setConfirmOpen(true)}
-        disabled={pendingExamIds.length === 0}
-      >
-        <KeyRound className="h-4 w-4" />
-        Liberar todas as provas
-      </Button>
-      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Liberar todas as provas?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Isso vai liberar a permissão para que{" "}
-              <strong>{attendantName ?? "esta atendente"}</strong> realize todas as{" "}
-              <strong>{pendingExamIds.length}</strong> prova(s) pendente(s) de uma vez. Confirmar?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={working}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={(e) => {
-                e.preventDefault();
-                doUnlockAll();
-              }}
-              disabled={working || pendingExamIds.length === 0}
-              className="bg-emerald-600 text-white hover:bg-emerald-700"
-            >
-              {working ? "Liberando..." : "Sim, liberar todas"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Liberar todas as provas?</AlertDialogTitle>
+          <AlertDialogDescription>
+            {pendingExamIds.length === 0 ? (
+              <>Não há provas pendentes de liberação para esta atendente.</>
+            ) : (
+              <>
+                Isso vai liberar a permissão para que{" "}
+                <strong>{attendantName ?? "esta atendente"}</strong> realize todas as{" "}
+                <strong>{pendingExamIds.length}</strong> prova(s) pendente(s) de uma vez. Confirmar?
+              </>
+            )}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={working}>Cancelar</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={(e) => {
+              e.preventDefault();
+              doUnlockAll();
+            }}
+            disabled={working || pendingExamIds.length === 0}
+            className="bg-[oklch(0.78_0.13_180)] text-[oklch(0.18_0.02_180)] hover:bg-[oklch(0.72_0.13_180)]"
+          >
+            {working ? "Liberando..." : "Sim, liberar todas"}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
-
-function ResetProgressBlock({
+function ResetProgressDialog({
+  open,
+  onOpenChange,
   attendantId,
   attendantName,
 }: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   attendantId: string;
   attendantName: string | null;
 }) {
@@ -697,8 +693,6 @@ function ResetProgressBlock({
         .delete()
         .eq("user_id", attendantId)
         .in("subtask_id", subtaskIds),
-      // Marca novo "ponto de reset" e zera o onboarding para reexibir os guias
-      // (popup inicial da home + popups introdutórios de cada tópico).
       supabase
         .from("profiles")
         .update({
@@ -714,53 +708,67 @@ function ResetProgressBlock({
       toast.error("Erro ao resetar", {
         description: (e1 ?? e2 ?? e3)?.message ?? "Tente novamente",
       });
-
       return;
     }
     toast.success(
       `Progresso de ${attendantName ?? "atendente"} zerado no tópico "${selectedTopic.title}"`,
     );
     setFromTopicId("");
+    onOpenChange(false);
     if (typeof window !== "undefined") window.location.reload();
   }
 
-
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 space-y-2">
-      <div className="flex items-center gap-2">
-        <RotateCcw className="h-4 w-4 text-foreground/70" />
-        <p className="text-sm font-medium text-foreground/90">Resetar progresso</p>
-      </div>
-      <p className="text-xs text-foreground/60">
-        Apaga o progresso da atendente apenas no tópico escolhido. Os demais tópicos, anteriores ou posteriores, não são afetados.
-      </p>
-
-      <div className="flex flex-col sm:flex-row gap-2">
-        <Select value={fromTopicId} onValueChange={setFromTopicId}>
-          <SelectTrigger className="bg-white/5 border-white/10">
-            <SelectValue placeholder="Escolha o tópico..." />
-          </SelectTrigger>
-          <SelectContent>
-            {TOPICS.map((t) => (
-              <SelectItem key={t.id} value={t.id}>
-                {t.order}. {t.title}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {fromTopicId && (
-          <Button
-            type="button"
-            variant="destructive"
-            size="sm"
-            className="rounded-full shrink-0"
-            onClick={() => setConfirmOpen(true)}
-          >
-            Resetar este tópico
-          </Button>
-        )}
-
-      </div>
+    <>
+      <AlertDialog
+        open={open && !confirmOpen}
+        onOpenChange={(o) => {
+          if (!o) {
+            setFromTopicId("");
+            onOpenChange(false);
+          }
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <RotateCcw className="h-4 w-4 text-amber-300" />
+              Resetar progresso
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Apaga o progresso de {attendantName ?? "esta atendente"} apenas no tópico escolhido.
+              Os demais tópicos não são afetados.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="py-2">
+            <Select value={fromTopicId} onValueChange={setFromTopicId}>
+              <SelectTrigger className="bg-white/5 border-white/10">
+                <SelectValue placeholder="Escolha o tópico..." />
+              </SelectTrigger>
+              <SelectContent>
+                {TOPICS.map((t) => (
+                  <SelectItem key={t.id} value={t.id}>
+                    {t.order}. {t.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                if (fromTopicId) setConfirmOpen(true);
+              }}
+              disabled={!fromTopicId}
+              className="bg-amber-500 text-amber-950 hover:bg-amber-400"
+            >
+              Continuar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent>
@@ -778,7 +786,6 @@ function ResetProgressBlock({
                 </>
               ) : null}
             </AlertDialogDescription>
-
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={working}>Cancelar</AlertDialogCancel>
@@ -795,6 +802,6 @@ function ResetProgressBlock({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </>
   );
 }
