@@ -2023,16 +2023,19 @@ function OpenEvaluationSubtask({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, subtask.id]);
 
-  async function submit() {
-    const missing = subtask.questions.some((q, i) => {
-      const isMC = Array.isArray(q.options) && q.options.length > 0;
-      return drafts[i].trim().length === 0 && !isMC ? true : isMC && drafts[i] === "" ? true : false;
-    });
-    if (missing) {
-      toast.error(`Responda todas as ${subtask.questions.length} perguntas antes de enviar`);
-      return;
+  async function submit(force = false) {
+    if (!force) {
+      const missing = subtask.questions.some((q, i) => {
+        const isMC = Array.isArray(q.options) && q.options.length > 0;
+        return drafts[i].trim().length === 0 && !isMC ? true : isMC && drafts[i] === "" ? true : false;
+      });
+      if (missing) {
+        toast.error(`Responda todas as ${subtask.questions.length} perguntas antes de enviar`);
+        return;
+      }
     }
     setSending(true);
+    const currentDrafts = draftsRef.current;
     const { data: sub, error: subErr } = await supabase
       .from("open_evaluation_submissions")
       .insert({
@@ -2050,9 +2053,9 @@ function OpenEvaluationSubtask({
     const rows = subtask.questions.map((q, i) => {
       const isMC = Array.isArray(q.options) && q.options.length > 0;
       if (isMC) {
-        const idx = parseInt(drafts[i], 10);
-        const chosen = q.options![idx] ?? "";
-        const correct = idx === q.correctIndex;
+        const idx = parseInt(currentDrafts[i], 10);
+        const chosen = !Number.isNaN(idx) ? (q.options![idx] ?? "") : "";
+        const correct = !Number.isNaN(idx) && idx === q.correctIndex;
         return {
           submission_id: sub.id,
           question_index: i,
@@ -2066,7 +2069,7 @@ function OpenEvaluationSubtask({
         submission_id: sub.id,
         question_index: i,
         question_text: q.question,
-        answer_text: drafts[i].trim(),
+        answer_text: (currentDrafts[i] ?? "").trim(),
       };
     });
     const { error: ansErr } = await supabase
@@ -2077,13 +2080,35 @@ function OpenEvaluationSubtask({
       toast.error("Erro ao salvar respostas", { description: ansErr.message });
       return;
     }
-    // Não marca o passo como concluído aqui. A conclusão (e o desbloqueio do
-    // próximo módulo) só acontece quando o gestor corrigir e aprovar (≥70%).
     onSubmitted();
-    toast.success("Prova enviada. Aguarde a correção da gestora — o próximo módulo libera somente após aprovação.");
+    if (force) {
+      toast.warning("Tempo esgotado. Prova enviada automaticamente.");
+    } else {
+      toast.success("Prova enviada. Aguarde a correção da gestora — o próximo módulo libera somente após aprovação.");
+    }
     await load();
     setSending(false);
   }
+
+  useEffect(() => {
+    submitRef.current = submit;
+  });
+
+  useEffect(() => {
+    if (!showTimer || loading || submission) return;
+    setSecondsLeft(30 * 60);
+    const startedAt = Date.now();
+    const id = setInterval(() => {
+      const left = Math.max(0, 30 * 60 - Math.floor((Date.now() - startedAt) / 1000));
+      setSecondsLeft(left);
+      if (left <= 0) {
+        clearInterval(id);
+        submitRef.current?.(true);
+      }
+    }, 1000);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showTimer, loading, submission?.id]);
 
   if (loading) {
     return (
