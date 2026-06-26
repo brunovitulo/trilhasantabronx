@@ -1686,14 +1686,14 @@ function MultiChecklistSubtask({
   }, [allDone]);
   return (
     <div className="space-y-3">
-      <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
-        <div className="flex items-start gap-2">
-          <Info className="h-4 w-4 shrink-0 text-[#5eead4] mt-0.5" />
-          <p className="text-sm text-foreground/80 leading-snug">
-            Faça as ações de cada grupo uma por uma e marque cada item somente depois de concluir.
-          </p>
-        </div>
-      </div>
+      <StepGuide
+        steps={[
+          { icon: ListChecks, title: "Abra cada grupo do checklist", description: "Leia os itens de cada bloco." },
+          { icon: Hand, title: "Aplique item por item, na ordem", description: "Faça a ação real antes de marcar." },
+          { icon: Check, title: "Marque depois de concluir", description: "Não marque tudo antes de fazer." },
+          { icon: ClipboardCheck, title: "Finalize todos os grupos", description: "Ao marcar todos os itens, o passo é concluído." },
+        ]}
+      />
       {subtask.groups.map((group, gi) => {
         const done = checks[gi]?.every(Boolean);
         const infoLines = group.subtitle
