@@ -138,15 +138,6 @@ function TopicPage() {
       const ver = (prof as { progress_reset_at: string | null } | null)?.progress_reset_at ?? null;
       setResetVersion(ver);
       setLoading(false);
-      // Mostra o guia introdutório do tópico se ainda não foi visto após o último reset.
-      if (!admin && typeof window !== "undefined") {
-        try {
-          const key = topicIntroStorageKey(user.id, topicId, ver);
-          if (!localStorage.getItem(key)) setShowIntro(true);
-        } catch {
-          // ignore
-        }
-      }
     })();
     return () => {
       active = false;
@@ -166,6 +157,23 @@ function TopicPage() {
       navigate({ to: "/" });
     }
   }, [accessLocked, loading, navigate]);
+
+  // Decide se o popup introdutório deve abrir — separado do efeito de carregamento.
+  useEffect(() => {
+    if (loading) return;
+    if (isAdmin) return;
+    if (accessLocked) return;
+    if (!topic) return;
+    if (typeof window === "undefined") return;
+    try {
+      const key = topicIntroStorageKey(user.id, topic.id, resetVersion);
+      const seen = localStorage.getItem(key);
+      setShowIntro(!seen);
+    } catch {
+      setShowIntro(true);
+    }
+  }, [loading, isAdmin, accessLocked, user.id, topic?.id, resetVersion]);
+
 
 
 
@@ -208,7 +216,7 @@ function TopicPage() {
 
   return (
     <div className="min-h-screen">
-      {showIntro && !isAdmin && (
+      {showIntro && !isAdmin && !accessLocked && (
         <TopicIntroGuide
           topic={topic}
           storageKey={topicIntroStorageKey(user.id, topic.id, resetVersion)}
