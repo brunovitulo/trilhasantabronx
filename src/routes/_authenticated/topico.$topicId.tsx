@@ -13,6 +13,7 @@ import { computeTopicStatuses, getSubtaskState, isTopicComplete, type ProgressRo
 import { TOPICS } from "@/data/topics";
 import { useServerFn } from "@tanstack/react-start";
 import { AppHeader } from "@/components/AppHeader";
+import { TopicIntroGuide, topicIntroStorageKey } from "@/components/TopicIntroGuide";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -112,26 +113,46 @@ function TopicPage() {
   const [rows, setRows] = useState<ProgressRow[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [resetVersion, setResetVersion] = useState<string | null>(null);
+  const [showIntro, setShowIntro] = useState(false);
 
   useEffect(() => {
     let active = true;
     (async () => {
-      const [{ data: prog }, { data: roles }] = await Promise.all([
+      const [{ data: prog }, { data: roles }, { data: prof }] = await Promise.all([
         supabase
           .from("subtask_progress")
           .select("subtask_id, completed, score")
           .eq("user_id", user.id),
         supabase.from("user_roles").select("role").eq("user_id", user.id),
+        supabase
+          .from("profiles")
+          .select("progress_reset_at")
+          .eq("id", user.id)
+          .maybeSingle(),
       ]);
       if (!active) return;
       setRows((prog ?? []) as ProgressRow[]);
-      setIsAdmin(!!roles?.some((r) => r.role === "admin"));
+      const admin = !!roles?.some((r) => r.role === "admin");
+      setIsAdmin(admin);
+      const ver = (prof as { progress_reset_at: string | null } | null)?.progress_reset_at ?? null;
+      setResetVersion(ver);
       setLoading(false);
+      // Mostra o guia introdutório do tópico se ainda não foi visto após o último reset.
+      if (!admin && typeof window !== "undefined") {
+        try {
+          const key = topicIntroStorageKey(user.id, topicId, ver);
+          if (!localStorage.getItem(key)) setShowIntro(true);
+        } catch {
+          // ignore
+        }
+      }
     })();
     return () => {
       active = false;
     };
-  }, [user.id]);
+  }, [user.id, topicId]);
+
 
   const statuses = useMemo(
     () => computeTopicStatuses(TOPICS, rows, { isAdmin }),
