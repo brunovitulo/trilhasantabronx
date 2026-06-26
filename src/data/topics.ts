@@ -839,18 +839,9 @@ export const TOPICS: Topic[] = [
         url: IG_VENDAS,
       },
       {
-        id: "vendas.apostila",
-        kind: "inline_html",
-        title: "2. Ler apostila — Fundamentos de Vendas",
-        description: "Leia a apostila por completo antes de fazer os exercícios.",
-        source: "vendas_apostila",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
         id: "vendas.fixacao",
         kind: "practice",
-        title: "3. Exercício de fixação — Fundamentos de Vendas (15 questões)",
+        title: "1. Fundamentos de vendas — exercício de fixação (15 questões)",
         description:
           "Múltipla escolha autocorrigido. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
@@ -1007,9 +998,18 @@ export const TOPICS: Topic[] = [
         ],
       },
       {
+        id: "vendas.apostila",
+        kind: "inline_html",
+        title: "2. Ler apostila — Fundamentos de Vendas",
+        description: "Leia a apostila por completo para reforçar o conteúdo.",
+        source: "vendas_apostila",
+        openLabel: "Abrir apostila",
+        confirmLabel: "Li a apostila por completo.",
+      },
+      {
         id: "vendas.checklist",
         kind: "inline_html",
-        title: "4. Ver checklist de aprendizados — Fundamentos de Vendas",
+        title: "3. Ver checklist de aprendizados — Fundamentos de Vendas",
         description:
           "Marque os aprendizados que você fixou neste módulo. Este checklist ficará disponível para revisão sempre que precisar.",
         source: "vendas_checklist",
@@ -1020,7 +1020,7 @@ export const TOPICS: Topic[] = [
       {
         id: "vendas.prova.exam",
         kind: "open_evaluation",
-        title: "5. Prova: Fundamentos de Vendas",
+        title: "4. Prova: Fundamentos de Vendas",
         description: "Prova dissertativa final do tópico. Nota mínima 70%.",
         passingScore: 70,
         questions: [
