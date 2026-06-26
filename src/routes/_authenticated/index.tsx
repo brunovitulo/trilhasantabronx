@@ -38,6 +38,7 @@ type Profile = {
   blocked: boolean;
   blocked_reason: string | null;
   onboarding_completed_at: string | null;
+  progress_reset_at: string | null;
 };
 
 function topicIcon(id: string) {
@@ -81,7 +82,7 @@ function HomePage() {
           .eq("user_id", user.id),
         supabase
           .from("profiles")
-          .select("full_name, blocked, blocked_reason, onboarding_completed_at")
+          .select("full_name, blocked, blocked_reason, onboarding_completed_at, progress_reset_at")
           .eq("id", user.id)
           .maybeSingle(),
         supabase.from("user_roles").select("role").eq("user_id", user.id),
@@ -101,14 +102,20 @@ function HomePage() {
   const totalDone = Object.values(statuses).filter((s) => s === "completed").length;
   const overallPercent = Math.round((totalDone / TOPICS.length) * 100);
 
-  // Onboarding: aparece no primeiro acesso (sem timestamp) ou quando a conta
-  // foi totalmente zerada (sem nenhum registro de progresso) — exceto admin.
+  // Onboarding: aparece no primeiro acesso (sem timestamp), quando a conta
+  // está totalmente zerada (sem nenhum registro de progresso), ou quando o
+  // admin resetou o progresso depois da última conclusão do guia — exceto admin.
   const accountIsEmpty = rows.length === 0;
+  const resetAfterOnboarding =
+    !!profile?.progress_reset_at &&
+    (!profile?.onboarding_completed_at ||
+      new Date(profile.progress_reset_at) > new Date(profile.onboarding_completed_at));
   const shouldShowOnboarding =
     !loading &&
     !isAdmin &&
     !onboardingDone &&
-    (!profile?.onboarding_completed_at || accountIsEmpty);
+    (!profile?.onboarding_completed_at || accountIsEmpty || resetAfterOnboarding);
+
 
   return (
     <div className="min-h-screen">
