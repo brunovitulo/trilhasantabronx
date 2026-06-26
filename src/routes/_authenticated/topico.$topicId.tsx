@@ -1925,6 +1925,14 @@ function PracticeSubtask({
   if (!started) {
     return (
       <div className="space-y-3">
+        <StepGuide
+          steps={[
+            { icon: Play, title: "Inicie o exercício", description: "Clique em \"Iniciar\" quando estiver pronta." },
+            { icon: FilePen, title: "Responda todas as perguntas", description: "Cada pergunta só pode ser respondida uma única vez." },
+            { icon: Check, title: "Confira o feedback", description: "Veja se acertou cada pergunta." },
+            { icon: ClipboardCheck, title: "Finalize o exercício", description: "Depois de finalizar não dá para refazer." },
+          ]}
+        />
         <div className="rounded-2xl border border-white/10 bg-white/[0.06] backdrop-blur-xl p-4 text-sm leading-relaxed text-foreground/90">
           <p className="font-semibold mb-2">⚠️ Antes de iniciar, leia com atenção:</p>
           <ul className="list-disc pl-5 space-y-1 text-foreground/80">
