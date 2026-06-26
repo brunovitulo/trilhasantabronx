@@ -23,6 +23,7 @@ import {
   type ProgressRow,
 } from "@/lib/progress";
 import { AppHeader } from "@/components/AppHeader";
+import { OnboardingFlow } from "@/components/OnboardingFlow";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
@@ -36,6 +37,7 @@ type Profile = {
   full_name: string | null;
   blocked: boolean;
   blocked_reason: string | null;
+  onboarding_completed_at: string | null;
 };
 
 function topicIcon(id: string) {
@@ -67,6 +69,7 @@ function HomePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [onboardingDone, setOnboardingDone] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -78,7 +81,7 @@ function HomePage() {
           .eq("user_id", user.id),
         supabase
           .from("profiles")
-          .select("full_name, blocked, blocked_reason")
+          .select("full_name, blocked, blocked_reason, onboarding_completed_at")
           .eq("id", user.id)
           .maybeSingle(),
         supabase.from("user_roles").select("role").eq("user_id", user.id),
@@ -98,9 +101,22 @@ function HomePage() {
   const totalDone = Object.values(statuses).filter((s) => s === "completed").length;
   const overallPercent = Math.round((totalDone / TOPICS.length) * 100);
 
+  // Onboarding: aparece no primeiro acesso (sem timestamp) ou quando a conta
+  // foi totalmente zerada (sem nenhum registro de progresso) — exceto admin.
+  const accountIsEmpty = rows.length === 0;
+  const shouldShowOnboarding =
+    !loading &&
+    !isAdmin &&
+    !onboardingDone &&
+    (!profile?.onboarding_completed_at || accountIsEmpty);
+
   return (
     <div className="min-h-screen">
+      {shouldShowOnboarding && (
+        <OnboardingFlow userId={user.id} onFinish={() => setOnboardingDone(true)} />
+      )}
       <AppHeader isAdmin={isAdmin} />
+
       <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold tracking-tight">

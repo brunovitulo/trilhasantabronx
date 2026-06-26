@@ -3048,6 +3048,21 @@ export const TOPICS: Topic[] = [
   },
 ];
 
+// Embaralha (uma única vez, deterministicamente) as alternativas de toda
+// questão de múltipla escolha — em exercícios de fixação, provas objetivas
+// e provas dissertativas que tenham `options`. Mantém a coerência entre
+// sessões e usuários porque a seed é o próprio texto da questão.
+import { shuffleQuestion as _shuffleQuestion } from "@/lib/shuffleOptions";
+for (const topic of TOPICS) {
+  for (const sub of topic.subtasks) {
+    if (sub.kind === "evaluation" || sub.kind === "practice" || sub.kind === "open_evaluation") {
+      sub.questions = (sub.questions as Array<{ question: string; options?: string[]; correctIndex?: number }>).map(
+        (q) => _shuffleQuestion(q),
+      ) as typeof sub.questions;
+    }
+  }
+}
+
 export function findTopic(id: string) {
   return TOPICS.find((t) => t.id === id);
 }
