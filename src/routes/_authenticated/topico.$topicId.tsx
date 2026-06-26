@@ -1739,7 +1739,7 @@ function EvaluationSubtask({
     <div className="space-y-4">
       {subtask.questions.map((q, qi) => (
         <div key={qi} className="rounded-lg border p-3">
-          <p className="text-sm font-medium mb-2 text-[#5DCAA5]">
+          <p className="text-sm font-medium mb-2 text-[#C8F0E4]">
             {qi + 1}. {q.question}
           </p>
           <RadioGroup
@@ -1854,7 +1854,7 @@ function PracticeSubtask({
         const chosen = answers[qi];
         return (
           <div key={qi} className="rounded-2xl border border-border/60 bg-muted/30 p-4">
-            <p className="text-[15px] sm:text-base font-semibold text-[#5DCAA5] leading-snug mb-4">
+            <p className="text-[15px] sm:text-base font-semibold text-[#C8F0E4] leading-snug mb-4">
               {qi + 1}. {q.question}
             </p>
             <div className="space-y-2.5">
@@ -2173,7 +2173,7 @@ function OpenEvaluationSubtask({
             const row = answerRows.find((r) => r.question_index === i);
             return (
               <div key={i} className="rounded-2xl border border-border/60 bg-muted/20 p-3">
-                <p className="text-sm font-medium text-[#5DCAA5]">
+                <p className="text-sm font-medium text-[#C8F0E4]">
                   {i + 1}. {q.question}
                 </p>
                 <p className="mt-2 text-sm whitespace-pre-wrap text-foreground/90">
@@ -2247,7 +2247,7 @@ function OpenEvaluationSubtask({
         const isMC = Array.isArray(q.options) && q.options.length > 0;
         return (
           <div key={i} className="rounded-2xl border border-border/60 bg-muted/20 p-3">
-            <label className="block text-sm font-medium mb-2 text-[#5DCAA5]">
+            <label className="block text-sm font-medium mb-2 text-[#C8F0E4]">
               {i + 1}. {q.question}
             </label>
             {isMC ? (
