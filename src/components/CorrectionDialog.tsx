@@ -156,58 +156,92 @@ export function CorrectionDialog({
             Nenhuma resposta encontrada para esta prova.
           </Card>
         ) : (
-          <div className="space-y-4">
-            {answers.map((answer) => (
-              <div key={answer.id} className="rounded-2xl border bg-muted/30 p-4">
-                <p className="text-sm font-semibold">
-                  {answer.question_index + 1}. {answer.question_text}
-                </p>
-                <p className="mt-3 whitespace-pre-wrap rounded-xl bg-background/70 p-3 text-sm leading-relaxed text-foreground/90">
-                  {answer.answer_text}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <Button
-                    type="button"
-                    size="sm"
-                    className={
-                      answer.is_correct === true
-                        ? "rounded-full bg-emerald-600 hover:bg-emerald-700 text-white border-0"
-                        : "rounded-full border border-emerald-500/60 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20"
-                    }
-                    onClick={() => updateAnswer(answer.id, { is_correct: true })}
-                  >
-                    Está certa
-                  </Button>
-                  <Button
-                    type="button"
-                    size="sm"
-                    className={
-                      answer.is_correct === false
-                        ? "rounded-full bg-rose-600 hover:bg-rose-700 text-white border-0"
-                        : "rounded-full border border-rose-500/60 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20"
-                    }
-                    onClick={() => updateAnswer(answer.id, { is_correct: false })}
-                  >
-                    Está errada
-                  </Button>
+          <div className="space-y-5">
+            {answers.map((answer) => {
+              const marked = answer.is_correct !== null;
+              const correct = answer.is_correct === true;
+              return (
+                <div
+                  key={answer.id}
+                  className={`rounded-2xl border bg-card/30 overflow-hidden ${
+                    marked
+                      ? correct
+                        ? "border-emerald-500/40"
+                        : "border-rose-500/40"
+                      : "border-border/60"
+                  }`}
+                >
+                  {/* Pergunta */}
+                  <div className="bg-muted/40 px-4 py-3 border-b border-border/40">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">
+                      Pergunta {answer.question_index + 1}
+                    </p>
+                    <p className="text-sm font-semibold leading-snug">{answer.question_text}</p>
+                  </div>
+
+                  {/* Resposta da atendente */}
+                  <div className="px-4 py-3 bg-background/40">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 inline-flex items-center gap-1">
+                      <User2 className="h-3 w-3" /> Resposta da atendente
+                    </p>
+                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
+                      {answer.answer_text || (
+                        <span className="text-muted-foreground italic">(sem resposta)</span>
+                      )}
+                    </p>
+                  </div>
+
+                  {/* Área de correção da gestora */}
+                  <div className="px-4 py-3 border-t border-dashed border-border/60 bg-primary/5 space-y-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-primary/90 inline-flex items-center gap-1">
+                      <MessageSquare className="h-3 w-3" /> Sua correção
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        type="button"
+                        size="sm"
+                        className={
+                          correct
+                            ? "rounded-full bg-emerald-600 hover:bg-emerald-700 text-white border-0"
+                            : "rounded-full border border-emerald-500/60 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20"
+                        }
+                        onClick={() => updateAnswer(answer.id, { is_correct: true })}
+                      >
+                        <CheckCircle2 className="h-4 w-4 mr-1" /> Está certa
+                      </Button>
+                      <Button
+                        type="button"
+                        size="sm"
+                        className={
+                          answer.is_correct === false
+                            ? "rounded-full bg-rose-600 hover:bg-rose-700 text-white border-0"
+                            : "rounded-full border border-rose-500/60 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20"
+                        }
+                        onClick={() => updateAnswer(answer.id, { is_correct: false })}
+                      >
+                        <XCircle className="h-4 w-4 mr-1" /> Está errada
+                      </Button>
+                    </div>
+                    <div>
+                      <Label htmlFor={`answer-feedback-${answer.id}`} className="text-[11px] text-muted-foreground">
+                        Comentário desta questão (opcional)
+                      </Label>
+                      <Textarea
+                        id={`answer-feedback-${answer.id}`}
+                        rows={2}
+                        placeholder="Adicione uma observação para a atendente..."
+                        defaultValue={answer.feedback ?? ""}
+                        onBlur={(event) => {
+                          const value = event.target.value || null;
+                          if (value !== (answer.feedback ?? null)) updateAnswer(answer.id, { feedback: value });
+                        }}
+                        className="mt-1 bg-background"
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className="mt-3">
-                  <Label htmlFor={`answer-feedback-${answer.id}`} className="text-xs">
-                    Feedback desta questão (opcional)
-                  </Label>
-                  <Textarea
-                    id={`answer-feedback-${answer.id}`}
-                    rows={2}
-                    defaultValue={answer.feedback ?? ""}
-                    onBlur={(event) => {
-                      const value = event.target.value || null;
-                      if (value !== (answer.feedback ?? null)) updateAnswer(answer.id, { feedback: value });
-                    }}
-                    className="mt-1 bg-background"
-                  />
-                </div>
-              </div>
-            ))}
+              );
+            })}
 
             <div>
               <Label htmlFor="general-feedback" className="text-xs">
