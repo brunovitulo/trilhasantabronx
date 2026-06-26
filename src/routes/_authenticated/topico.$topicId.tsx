@@ -2410,10 +2410,14 @@ function ProductLinksSubtask({
 
   return (
     <div className="space-y-3">
-      <p className="text-xs text-foreground/80">
-        Abra cada link em uma aba nova e observe nome, imagem, descrição e preço atualizado.
-        Esses são os produtos reais desta categoria no site da loja.
-      </p>
+      <StepGuide
+        steps={[
+          { icon: Globe, title: "Abra cada produto no site", description: "Use os links abaixo, uma aba para cada." },
+          { icon: Info, title: "Observe nome, imagem, descrição e preço", description: "Memorize os detalhes principais de cada item." },
+          { icon: ChevronLeft, title: "Volte para a plataforma", description: "Após revisar todos, retorne para esta tela." },
+          { icon: Check, title: "Confirme que revisou todos", description: "Marque a confirmação abaixo para concluir." },
+        ]}
+      />
       <div className="grid gap-2">
         {subtask.links.map((l, i) => (
           <a
