@@ -591,7 +591,7 @@ function ResetProgressBlock({
       setConfirmOpen(false);
       return;
     }
-    const [{ error: e1 }, { error: e2 }] = await Promise.all([
+    const [{ error: e1 }, { error: e2 }, { error: e3 }] = await Promise.all([
       supabase
         .from("subtask_progress")
         .delete()
@@ -602,13 +602,24 @@ function ResetProgressBlock({
         .delete()
         .eq("user_id", attendantId)
         .in("subtask_id", subtaskIds),
+      // Marca novo "ponto de reset" e zera o onboarding para reexibir os guias
+      // (popup inicial da home + popups introdutórios de cada tópico).
+      supabase
+        .from("profiles")
+        .update({
+          progress_reset_at: new Date().toISOString(),
+          onboarding_completed_at: null,
+        })
+        .eq("id", attendantId),
     ]);
+
     setWorking(false);
     setConfirmOpen(false);
-    if (e1 || e2) {
+    if (e1 || e2 || e3) {
       toast.error("Erro ao resetar", {
-        description: (e1 ?? e2)?.message ?? "Tente novamente",
+        description: (e1 ?? e2 ?? e3)?.message ?? "Tente novamente",
       });
+
       return;
     }
     toast.success(
