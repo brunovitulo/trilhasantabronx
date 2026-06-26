@@ -1835,6 +1835,14 @@ function EvaluationSubtask({
 
   return (
     <div className="space-y-4">
+      <StepGuide
+        steps={[
+          { icon: Play, title: "Comece a avaliação", description: "Leia cada pergunta com calma." },
+          { icon: FilePen, title: "Responda todas as perguntas", description: "Escolha a alternativa correta em cada uma." },
+          { icon: ClipboardCheck, title: "Confira antes de enviar", description: "Revise suas respostas antes do envio." },
+          { icon: Check, title: `Envie e atinja ${passing}%`, description: "Você precisa da nota mínima para aprovar." },
+        ]}
+      />
       {subtask.questions.map((q, qi) => (
         <div key={qi} className="rounded-lg border p-3">
           <p className="text-sm font-medium mb-2 text-[#C8F0E4]">
