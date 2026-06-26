@@ -1242,98 +1242,132 @@ export const TOPICS: Topic[] = [
         kind: "open_evaluation",
         title: "5. Antes da prova — Prova: Principais Objeções (Sex Shop)",
         description:
-          "Prova dissertativa final do tópico. 15 questões abertas. Nota mínima 70%. Solicite liberação ao gestor para iniciar. As respostas serão corrigidas manualmente.",
+          "Prova final do tópico. 10 questões abertas e 5 de múltipla escolha. Nota mínima 70%. Solicite liberação ao gestor para iniciar. As questões abertas serão corrigidas manualmente.",
         passingScore: 70,
         questions: [
           {
-            question:
-              "Um cliente responde apenas “vou pensar” depois de você apresentar uma sugestão. Explique como você identificaria se a objeção real é preço, vergonha, insegurança, falta de informação ou medo de escolher errado. Depois, escreva uma resposta que conduza a conversa sem pressionar.",
+            question: "O que significa “quebrar uma objeção” no atendimento?",
             expectedAnswer:
-              "A resposta deve mostrar investigação consultiva antes de insistir: fazer pergunta leve, validar a dúvida, abrir espaço para o cliente falar e só depois responder à objeção real. Deve evitar pressão, urgência falsa ou empurrar produto.",
+              "A resposta deve explicar que quebrar uma objeção é entender e responder uma dúvida, medo ou insegurança do cliente, ajudando-o a se sentir mais seguro para decidir, sem pressionar.",
           },
           {
             question:
-              "O cliente diz: “Achei caro”. Crie uma resposta que não dê desconto imediatamente e que mostre valor, orientação e segurança na compra, sem diminuir a condição financeira do cliente.",
+              "Quando o cliente fica em dúvida, por que é melhor fazer uma pergunta antes de indicar outro produto?",
             expectedAnswer:
-              "Deve reconhecer a preocupação, explicar o valor do produto pela qualidade/benefício/adequação à necessidade, comparar com escolhas erradas que podem frustrar, e oferecer alternativa se necessário, sem constranger.",
+              "A resposta deve mostrar que perguntar ajuda a descobrir a dúvida real do cliente e evita indicar algo errado ou trocar de produto sem entender a necessidade.",
           },
           {
             question:
-              "Uma cliente demonstra vergonha e manda mensagens curtas, sem explicar o que procura. Como a atendente deve conduzir esse atendimento para gerar confiança e fazer a cliente se abrir?",
+              "O cliente diz que vai comprar depois. O que você pode perguntar para entender melhor a dúvida dele?",
             expectedAnswer:
-              "Deve usar linguagem natural, discreta e acolhedora; normalizar a dúvida; fazer perguntas simples e respeitosas; evitar termos vulgares; garantir sigilo/discrição e não forçar exposição.",
+              "A resposta deve trazer uma pergunta leve, como se ficou dúvida sobre preço, entrega, uso ou modelo, sem pressionar o cliente a comprar na hora.",
           },
           {
             question:
-              "O cliente tem medo de comprar um produto que esquenta, vibra ou causa sensação intensa. Explique como quebrar essa objeção dando controle ao cliente sobre a experiência.",
+              "Como você explicaria um produto para uma cliente que tem vergonha de perguntar?",
             expectedAnswer:
-              "Deve explicar intensidade progressiva, quantidade de uso, teste com pouca quantidade quando aplicável, possibilidade de escolher versões mais suaves, controle de velocidade/intensidade e orientação de uso seguro.",
+              "A resposta deve mostrar acolhimento, naturalidade, discrição e linguagem respeitosa, deixando a cliente confortável para falar.",
           },
           {
             question:
-              "Um cliente diz: “Não sei se minha parceira vai gostar”. Como transformar essa objeção em uma conversa de descoberta sem prometer resultado e sem invadir a intimidade do casal?",
+              "O cliente achou caro. O que você pode falar para mostrar que o produto tem valor?",
             expectedAnswer:
-              "Deve orientar com perguntas sobre objetivo, experiência do casal, limites, conforto e intenção do presente/uso. Deve evitar promessa de aceitação e sugerir opções mais leves, consensuais e fáceis de introduzir.",
+              "A resposta deve explicar benefícios, qualidade, indicação correta, segurança ou utilidade do produto antes de pensar em desconto.",
           },
           {
             question:
-              "O cliente pergunta se a entrega é realmente discreta porque tem medo de alguém descobrir. Escreva uma resposta completa que passe segurança sem parecer exagerada ou artificial.",
+              "Por que não é correto pressionar o cliente quando ele apresenta uma objeção?",
             expectedAnswer:
-              "Deve explicar a discrição da embalagem e do processo de entrega de forma objetiva, transmitir profissionalismo e segurança, sem usar tom debochado ou expor o tipo de produto.",
+              "A resposta deve mostrar que pressão pode gerar desconforto, insegurança e afastar o cliente, enquanto orientação gera confiança.",
           },
           {
             question:
-              "Uma pessoa diz: “Nunca usei nada disso, tenho medo de comprar errado”. Como você responderia para reduzir a insegurança e conduzir para uma primeira escolha mais adequada?",
+              "Como você pode passar segurança para um cliente que nunca comprou em sex shop?",
             expectedAnswer:
-              "Deve validar a falta de experiência, explicar que a escolha depende do objetivo e nível de conforto, fazer perguntas de diagnóstico, sugerir opções iniciantes e explicar por que são mais adequadas.",
+              "A resposta deve citar atendimento acolhedor, explicação simples, perguntas para entender o objetivo, indicação de opções mais fáceis/iniciantes e discrição.",
           },
           {
             question:
-              "O cliente compara com um produto mais barato que viu em outro lugar. Como responder sem falar mal do concorrente e sem perder autoridade?",
+              "O cliente tem medo de a entrega chamar atenção. Como você responderia?",
             expectedAnswer:
-              "Deve evitar atacar concorrente. Deve reforçar orientação, escolha correta, segurança, atendimento, entrega/discrição quando aplicável e adequação do produto. Pode explicar diferenças de material, função ou qualidade sem prometer o que não sabe.",
+              "A resposta deve explicar a entrega discreta, embalagem sem identificação e cuidado com privacidade, de forma objetiva e profissional.",
           },
           {
             question:
-              "O cliente pergunta: “Mas isso funciona mesmo?”. Explique como responder sem fazer promessa milagrosa e sem deixar o cliente inseguro.",
+              "O que você deve fazer quando o cliente compara seu produto com outro mais barato?",
             expectedAnswer:
-              "Deve evitar garantia absoluta. Deve explicar proposta do produto, condições de uso, expectativas realistas, diferença entre auxiliar/potencializar e garantir resultado, e orientar a escolha conforme necessidade.",
+              "A resposta deve orientar a não falar mal do concorrente, explicar diferenças de qualidade, atendimento, indicação correta, segurança e benefícios.",
           },
           {
             question:
-              "Uma atendente responde a uma objeção dizendo: “Pode confiar, todo mundo compra e gosta”. Explique por que essa resposta é fraca e reescreva de forma mais consultiva.",
+              "Por que entender a dúvida do cliente ajuda a escolher melhor o produto indicado?",
             expectedAnswer:
-              "Deve mostrar que a resposta é genérica, sem diagnóstico e sem gerar segurança real. A versão correta deve validar a dúvida, explicar o motivo da indicação e conectar o produto à necessidade do cliente.",
+              "A resposta deve mostrar que entender a dúvida permite indicar um produto mais adequado ao objetivo, experiência e necessidade do cliente.",
           },
           {
             question:
-              "O cliente diz que vai comprar depois. Como diferenciar uma pausa real de uma objeção escondida e qual resposta você usaria para tentar manter a conversa ativa?",
+              "Um cliente diz: “Vou pensar e depois te chamo”. Qual resposta conduz melhor a conversa sem parecer insistente?",
+            options: [
+              "Tudo bem. Vou deixar separado aqui e fico aguardando você decidir.",
+              "Claro. Só para eu te orientar melhor: ficou alguma dúvida sobre o produto, o valor ou a entrega?",
+              "Sem problema. Esse produto costuma acabar rápido, então é melhor decidir logo.",
+              "Certo. Posso te mandar mais algumas opções parecidas para você escolher?",
+            ],
+            correctIndex: 1,
             expectedAnswer:
-              "Deve investigar com leveza se ficou alguma dúvida, preço, modelo ou forma de entrega. Deve oferecer ajuda para comparar opções e manter abertura, sem insistência agressiva.",
+              "A melhor resposta tenta descobrir a objeção real com leveza, sem pressionar e sem encerrar a conversa.",
           },
           {
             question:
-              "Explique a diferença entre quebrar uma objeção e pressionar o cliente. Dê um exemplo de frase correta e uma frase que deve ser evitada.",
+              "Quando o cliente diz que achou caro, qual atitude mostra melhor o valor do produto?",
+            options: [
+              "Explicar por que aquele produto foi indicado, quais benefícios ele entrega e oferecer uma alternativa se ainda ficar fora do orçamento.",
+              "Informar que o produto é caro porque é mais vendido e que por isso vale mais a pena.",
+              "Comparar com produtos mais baratos e dizer que eles provavelmente têm qualidade inferior.",
+              "Oferecer desconto logo no início para evitar que o cliente desista da compra.",
+            ],
+            correctIndex: 0,
             expectedAnswer:
-              "Deve explicar que quebrar objeção é esclarecer dúvida e dar segurança; pressionar é empurrar decisão. Exemplo correto deve acolher e orientar. Exemplo errado deve envolver insistência, culpa, urgência falsa ou promessa exagerada.",
+              "A melhor atitude é mostrar valor e adequação antes de partir para desconto ou comparação com concorrentes.",
           },
           {
             question:
-              "Um cliente tem receio de comprar um produto íntimo porque acha que isso é “estranho” ou “vergonhoso”. Como a atendente deve responder mantendo naturalidade e profissionalismo?",
+              "Uma cliente está com vergonha e responde de forma curta. Qual postura tende a ajudar mais?",
+            options: [
+              "Enviar várias opções de produtos para ela escolher sem precisar explicar muito.",
+              "Fazer perguntas mais diretas para acelerar o atendimento e descobrir logo o que ela quer.",
+              "Usar uma linguagem natural e discreta, normalizar a dúvida e fazer perguntas simples, uma de cada vez.",
+              "Explicar que muitas pessoas compram esses produtos, então ela não precisa ter vergonha.",
+            ],
+            correctIndex: 2,
             expectedAnswer:
-              "Deve normalizar a busca por prazer, autocuidado ou melhora da relação, usar tom profissional e acolhedor, evitar piadas, julgamento ou exposição, e conduzir com perguntas simples.",
+              "A postura ideal é acolhedora, discreta e gradual, sem expor a cliente ou acelerar demais a conversa.",
           },
           {
             question:
-              "Durante o atendimento, o cliente demonstra duas objeções ao mesmo tempo: preço e medo de não saber usar. Explique qual objeção você trataria primeiro e como conduziria a resposta.",
+              "O cliente nunca comprou em sex shop e tem medo de escolher errado. Qual caminho é mais adequado?",
+            options: [
+              "Indicar o produto mais vendido, porque ele costuma agradar a maioria dos clientes.",
+              "Perguntar o objetivo da compra, o nível de experiência e explicar opções mais fáceis para começar.",
+              "Mostrar os produtos com melhor custo-benefício para diminuir o risco da primeira compra.",
+              "Sugerir um produto mais simples e barato, porque iniciantes não devem começar com produtos mais elaborados.",
+            ],
+            correctIndex: 1,
             expectedAnswer:
-              "Deve priorizar segurança/uso se ela impede a percepção de valor, ou investigar qual pesa mais. A resposta deve explicar uso, reduzir risco, justificar valor e oferecer alternativa mais adequada se necessário.",
+              "O melhor caminho é entender objetivo e experiência antes de indicar, evitando uma escolha genérica.",
           },
           {
             question:
-              "Analise esta resposta ruim: “Esse é bom, leva ele que você vai gostar”. Explique quais informações faltam e reescreva uma resposta melhor para uma cliente indecisa.",
+              "Qual frase representa melhor a diferença entre orientar e pressionar o cliente?",
+            options: [
+              "Orientar é explicar com clareza e deixar o cliente seguro; pressionar é tentar forçar a decisão antes de entender a dúvida.",
+              "Orientar é mostrar os benefícios do produto; pressionar é mandar muitas opções para o cliente escolher.",
+              "Orientar é responder rápido; pressionar é insistir quando o cliente demora para responder.",
+              "Orientar é indicar o produto certo; pressionar é oferecer desconto para fechar mais rápido.",
+            ],
+            correctIndex: 0,
             expectedAnswer:
-              "Deve apontar falta de diagnóstico, falta de conexão com necessidade, falta de explicação de benefício e excesso de afirmação vazia. A reescrita deve perguntar objetivo, explicar motivo da indicação e dar segurança.",
+              "A alternativa correta explica a diferença de forma mais completa: orientação esclarece e dá segurança; pressão força decisão.",
           },
         ],
       },
