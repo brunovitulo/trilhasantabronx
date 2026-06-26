@@ -2222,8 +2222,23 @@ function OpenEvaluationSubtask({
     );
   }
 
+  const mm = Math.floor(secondsLeft / 60).toString().padStart(2, "0");
+  const ss = (secondsLeft % 60).toString().padStart(2, "0");
+  const timerLow = secondsLeft <= 5 * 60;
+
   return (
     <div className="space-y-3">
+      {showTimer && (
+        <div
+          className={`sticky top-0 z-30 -mx-3 px-3 py-2 border-b backdrop-blur-md text-sm font-semibold flex items-center justify-center rounded-b-xl ${
+            timerLow
+              ? "bg-rose-500/20 border-rose-500/40 text-rose-100"
+              : "bg-amber-500/15 border-amber-500/30 text-amber-100"
+          }`}
+        >
+          ⏱ {mm}:{ss} restantes
+        </div>
+      )}
       <p className="text-xs text-foreground/80">
         Responda as objetivas (correção automática) e as abertas (correção do gestor). Ao enviar, o próximo tópico é liberado.
       </p>
@@ -2265,7 +2280,7 @@ function OpenEvaluationSubtask({
           </div>
         );
       })}
-      <Button variant="outline" onClick={submit} disabled={sending} className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25">
+      <Button variant="outline" onClick={() => submit(false)} disabled={sending} className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25">
         {sending ? "Enviando..." : "Enviar prova"}
       </Button>
     </div>
