@@ -722,6 +722,29 @@ function ExamDialogLauncher({
 }) {
   const [open, setOpen] = useState(false);
   const [hasSubmission, setHasSubmission] = useState<boolean | null>(null);
+  const [showExitWarning, setShowExitWarning] = useState(false);
+
+  // Bloqueio de saída para atendentes durante a prova
+  useEffect(() => {
+    if (!open || isAdmin) return;
+    // Empurra um estado no histórico para interceptar o "voltar"
+    window.history.pushState({ examLock: true }, "");
+    const onPopState = () => {
+      window.history.pushState({ examLock: true }, "");
+      setShowExitWarning(true);
+    };
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+      return "";
+    };
+    window.addEventListener("popstate", onPopState);
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+      window.removeEventListener("beforeunload", onBeforeUnload);
+    };
+  }, [open, isAdmin]);
 
   useEffect(() => {
     let active = true;
