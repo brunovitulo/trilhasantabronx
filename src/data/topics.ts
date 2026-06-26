@@ -839,18 +839,9 @@ export const TOPICS: Topic[] = [
         url: IG_VENDAS,
       },
       {
-        id: "vendas.apostila",
-        kind: "inline_html",
-        title: "2. Ler apostila — Fundamentos de Vendas",
-        description: "Leia a apostila por completo antes de fazer os exercícios.",
-        source: "vendas_apostila",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
         id: "vendas.fixacao",
         kind: "practice",
-        title: "3. Exercício de fixação — Fundamentos de Vendas (15 questões)",
+        title: "1. Fundamentos de vendas — exercício de fixação (15 questões)",
         description:
           "Múltipla escolha autocorrigido. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
