@@ -32,6 +32,7 @@ import { Label } from "@/components/ui/label";
 
 import { toast } from "sonner";
 import { ApostilaView } from "@/components/ApostilaView";
+import { StepGuide } from "@/components/StepGuide";
 
 import { useExamPermission, requestPermission } from "@/lib/examPermission";
 
