@@ -209,13 +209,13 @@ export const TOPICS: Topic[] = [
       {
         id: "apresentacao.padrao.video",
         kind: "video",
-        title: "4. Padrão de organização — assistir destaque",
+        title: "3. Padrão de organização — assistir destaque",
         url: "https://www.instagram.com/stories/highlights/18089212679196183/",
       },
       {
         id: "apresentacao.padrao.checklist",
         kind: "inline_html",
-        title: "4. Padrão de organização — ver checklist de organização",
+        title: "3. Padrão de organização — ver checklist de organização",
         description:
           "Use este checklist diariamente para garantir que a loja está sempre organizada e bem apresentada antes de atender.",
         source: "organizacao",
