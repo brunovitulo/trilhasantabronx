@@ -216,7 +216,7 @@ function TopicPage() {
 
   return (
     <div className="min-h-screen">
-      {showIntro && !isAdmin && !accessLocked && (
+      {showIntro && !accessLocked && (
         <TopicIntroGuide
           topic={topic}
           storageKey={topicIntroStorageKey(user.id, topic.id, resetVersion)}
