@@ -1000,6 +1000,7 @@ function UnlockAllExamsLauncher({
   );
 }
 
+function AttendantActionsMenu({
   attendantId,
   attendantName,
   reviewerId,
