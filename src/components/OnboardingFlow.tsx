@@ -34,8 +34,16 @@ export function OnboardingFlow({ userId, onFinish }: Props) {
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+    window.addEventListener("keydown", onKey, true);
     return () => {
       document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey, true);
     };
   }, []);
 
@@ -49,10 +57,6 @@ export function OnboardingFlow({ userId, onFinish }: Props) {
     onFinish();
   }
 
-  async function skip() {
-    // Mesmo comportamento de finalizar: marca como visto para não reaparecer.
-    await finish();
-  }
 
   function toggle(i: number, v: boolean) {
     setConfirmed((prev) => prev.map((p, idx) => (idx === i ? v : p)));
@@ -139,15 +143,6 @@ export function OnboardingFlow({ userId, onFinish }: Props) {
               </>
             )}
           </Button>
-
-          <button
-            type="button"
-            onClick={skip}
-            disabled={saving}
-            className="mt-3 mx-auto block text-xs text-muted-foreground hover:text-foreground/80 underline underline-offset-4"
-          >
-            Pular guia por enquanto
-          </button>
         </div>
       </div>
     </div>
