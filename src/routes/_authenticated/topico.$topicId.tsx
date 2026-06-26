@@ -1615,6 +1615,14 @@ function ExternalHtmlSubtask({
 
   return (
     <div className="space-y-3">
+      <StepGuide
+        steps={[
+          { icon: Globe, title: isDownload ? "Baixe o arquivo" : "Abra o conteúdo", description: "Clique no botão abaixo." },
+          { icon: BookOpen, title: "Veja o conteúdo por completo", description: "Não pule partes — explore tudo." },
+          { icon: ChevronLeft, title: "Volte para esta tela", description: "Retorne aqui após terminar." },
+          { icon: Check, title: "Confirme e finalize", description: "Marque a confirmação para concluir." },
+        ]}
+      />
       <div className="flex flex-wrap gap-2">
         <Button asChild variant="outline" size="sm" className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25">
           {isDownload ? (
