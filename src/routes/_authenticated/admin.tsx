@@ -1,5 +1,9 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { deleteAttendant, setAttendantBanned } from "@/lib/adminUsers.functions";
+import { Ban, Trash2, ShieldOff } from "lucide-react";
+
 import {
   ChevronLeft,
   ChevronDown,
@@ -941,6 +945,9 @@ function AttendantActionsMenu({
 }) {
   const [unlockOpen, setUnlockOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
+  const [banOpen, setBanOpen] = useState(false);
+  const [unbanOpen, setUnbanOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   return (
     <>
@@ -978,6 +985,28 @@ function AttendantActionsMenu({
             <RotateCcw className="h-4 w-4" />
             Resetar progresso
           </DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={() => setBanOpen(true)}
+            className="gap-2 text-amber-300 focus:text-amber-200"
+          >
+            <Ban className="h-4 w-4" />
+            Bloquear acesso
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={() => setUnbanOpen(true)}
+            className="gap-2"
+          >
+            <ShieldOff className="h-4 w-4 text-muted-foreground" />
+            Desbloquear acesso
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onSelect={() => setDeleteOpen(true)}
+            className="gap-2 text-rose-300 focus:text-rose-200"
+          >
+            <Trash2 className="h-4 w-4" />
+            Excluir usuário
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -995,9 +1024,189 @@ function AttendantActionsMenu({
         attendantId={attendantId}
         attendantName={attendantName}
       />
+      <BanAttendantDialog
+        open={banOpen}
+        onOpenChange={setBanOpen}
+        attendantId={attendantId}
+        attendantName={attendantName}
+        banned
+      />
+      <BanAttendantDialog
+        open={unbanOpen}
+        onOpenChange={setUnbanOpen}
+        attendantId={attendantId}
+        attendantName={attendantName}
+        banned={false}
+      />
+      <DeleteAttendantDialog
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        attendantId={attendantId}
+        attendantName={attendantName}
+      />
     </>
   );
 }
+
+function BanAttendantDialog({
+  open,
+  onOpenChange,
+  attendantId,
+  attendantName,
+  banned,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  attendantId: string;
+  attendantName: string | null;
+  banned: boolean;
+}) {
+  const [working, setWorking] = useState(false);
+  const setBanned = useServerFn(setAttendantBanned);
+
+  async function run() {
+    setWorking(true);
+    try {
+      await setBanned({ data: { userId: attendantId, banned } });
+      toast.success(
+        banned
+          ? `Acesso de ${attendantName ?? "atendente"} bloqueado.`
+          : `Acesso de ${attendantName ?? "atendente"} liberado.`,
+      );
+      onOpenChange(false);
+    } catch (err) {
+      toast.error("Não consegui aplicar", {
+        description: err instanceof Error ? err.message : "Tente novamente",
+      });
+    } finally {
+      setWorking(false);
+    }
+  }
+
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle className="flex items-center gap-2">
+            {banned ? <Ban className="h-4 w-4 text-amber-300" /> : <ShieldOff className="h-4 w-4" />}
+            {banned ? "Bloquear acesso?" : "Desbloquear acesso?"}
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            {banned ? (
+              <>
+                <strong>{attendantName ?? "Esta atendente"}</strong> não vai mais conseguir
+                entrar na conta até ser desbloqueada. O progresso e os dados ficam preservados.
+              </>
+            ) : (
+              <>
+                Liberar o acesso de <strong>{attendantName ?? "esta atendente"}</strong> para
+                voltar a entrar na conta normalmente.
+              </>
+            )}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={working}>Cancelar</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={(e) => {
+              e.preventDefault();
+              run();
+            }}
+            disabled={working}
+            className={
+              banned
+                ? "bg-amber-500 text-amber-950 hover:bg-amber-400"
+                : "bg-emerald-500 text-emerald-950 hover:bg-emerald-400"
+            }
+          >
+            {working ? "Aplicando..." : banned ? "Sim, bloquear" : "Sim, desbloquear"}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+function DeleteAttendantDialog({
+  open,
+  onOpenChange,
+  attendantId,
+  attendantName,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  attendantId: string;
+  attendantName: string | null;
+}) {
+  const [working, setWorking] = useState(false);
+  const [confirmText, setConfirmText] = useState("");
+  const removeUser = useServerFn(deleteAttendant);
+  const expected = "EXCLUIR";
+
+  async function run() {
+    setWorking(true);
+    try {
+      await removeUser({ data: { userId: attendantId } });
+      toast.success(`${attendantName ?? "Atendente"} foi excluída.`);
+      onOpenChange(false);
+      if (typeof window !== "undefined") window.location.reload();
+    } catch (err) {
+      toast.error("Não consegui excluir", {
+        description: err instanceof Error ? err.message : "Tente novamente",
+      });
+    } finally {
+      setWorking(false);
+    }
+  }
+
+  return (
+    <AlertDialog
+      open={open}
+      onOpenChange={(o) => {
+        if (!o) setConfirmText("");
+        onOpenChange(o);
+      }}
+    >
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle className="flex items-center gap-2 text-rose-300">
+            <Trash2 className="h-4 w-4" />
+            Excluir usuário?
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            Essa ação é permanente. <strong>{attendantName ?? "Esta atendente"}</strong> perde
+            o acesso, o progresso, as provas enviadas e o histórico. Não dá pra desfazer.
+            <br />
+            <br />
+            Digite <strong>{expected}</strong> para confirmar.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <div className="py-2">
+          <Input
+            value={confirmText}
+            onChange={(e) => setConfirmText(e.target.value)}
+            placeholder={expected}
+            className="bg-white/5 border-white/10"
+          />
+        </div>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={working}>Cancelar</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={(e) => {
+              e.preventDefault();
+              run();
+            }}
+            disabled={working || confirmText !== expected}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          >
+            {working ? "Excluindo..." : "Excluir definitivamente"}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
 
 function UnlockAllExamsDialog({
   open,
