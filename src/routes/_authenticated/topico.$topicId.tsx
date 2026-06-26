@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ChevronLeft, CheckCircle2, Circle, Copy, Loader2, Lock, X,
   Check, ChevronDown, Play, BookOpen, ListChecks, ClipboardCheck,
@@ -874,12 +874,12 @@ function ExamDialogLauncher({
         </>
       )}
 
-      <Dialog open={open} onOpenChange={(o) => { if (o) setOpen(true); /* impedimos fechar via overlay/esc */ }}>
+      <Dialog open={open} onOpenChange={(o) => { if (o) setOpen(true); else if (isAdmin) setOpen(false); /* atendente: não fecha por overlay/esc */ }}>
         <DialogContent
-          className="max-w-2xl max-h-[90vh] overflow-y-auto [&>button]:hidden"
-          onPointerDownOutside={(e) => e.preventDefault()}
-          onEscapeKeyDown={(e) => e.preventDefault()}
-          onInteractOutside={(e) => e.preventDefault()}
+          className={`max-w-2xl max-h-[90vh] overflow-y-auto ${isAdmin ? "" : "[&>button]:hidden"}`}
+          onPointerDownOutside={(e) => { if (!isAdmin) e.preventDefault(); }}
+          onEscapeKeyDown={(e) => { if (!isAdmin) e.preventDefault(); }}
+          onInteractOutside={(e) => { if (!isAdmin) e.preventDefault(); }}
         >
           <DialogHeader>
             <DialogTitle className="text-xl">{blockTitle.replace(/^Passo \d+:\s*/, "")}</DialogTitle>
@@ -890,13 +890,14 @@ function ExamDialogLauncher({
               Esta prova será acompanhada pelo seu gestor em tempo real. Responda com suas
               próprias palavras, de forma completa, sem pesquisar em fontes externas. Ao
               finalizar, clique em enviar — você só avança para a próxima etapa com 70% de
-              aproveitamento ou mais.
+              aproveitamento ou mais. Você tem <strong>30 minutos</strong> para concluir.
             </p>
           </div>
           <OpenEvaluationSubtask
             subtask={subtask}
             userId={userId}
             completed={completed}
+            showTimer
             onSubmitted={() => {
               onSubmitted();
               setOpen(false);
@@ -1738,7 +1739,7 @@ function EvaluationSubtask({
     <div className="space-y-4">
       {subtask.questions.map((q, qi) => (
         <div key={qi} className="rounded-lg border p-3">
-          <p className="text-sm font-medium mb-2">
+          <p className="text-sm font-medium mb-2 text-[#5DCAA5]">
             {qi + 1}. {q.question}
           </p>
           <RadioGroup
@@ -1853,7 +1854,7 @@ function PracticeSubtask({
         const chosen = answers[qi];
         return (
           <div key={qi} className="rounded-2xl border border-border/60 bg-muted/30 p-4">
-            <p className="text-[15px] sm:text-base font-semibold text-foreground leading-snug mb-4">
+            <p className="text-[15px] sm:text-base font-semibold text-[#5DCAA5] leading-snug mb-4">
               {qi + 1}. {q.question}
             </p>
             <div className="space-y-2.5">
@@ -1947,17 +1948,23 @@ function OpenEvaluationSubtask({
   userId,
   completed,
   onSubmitted,
+  showTimer = false,
 }: {
   subtask: Extract<Subtask, { kind: "open_evaluation" }>;
   userId: string;
   completed: boolean;
   onSubmitted: () => void;
+  showTimer?: boolean;
 }) {
   const [loading, setLoading] = useState(true);
   const [submission, setSubmission] = useState<OpenSubmission | null>(null);
   const [answerRows, setAnswerRows] = useState<OpenAnswerRow[]>([]);
   const [drafts, setDrafts] = useState<string[]>(() => subtask.questions.map(() => ""));
   const [sending, setSending] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState(30 * 60);
+  const draftsRef = useRef(drafts);
+  useEffect(() => { draftsRef.current = drafts; }, [drafts]);
+  const submitRef = useRef<((force?: boolean) => Promise<void>) | null>(null);
 
   async function load() {
     setLoading(true);
@@ -2017,16 +2024,19 @@ function OpenEvaluationSubtask({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, subtask.id]);
 
-  async function submit() {
-    const missing = subtask.questions.some((q, i) => {
-      const isMC = Array.isArray(q.options) && q.options.length > 0;
-      return drafts[i].trim().length === 0 && !isMC ? true : isMC && drafts[i] === "" ? true : false;
-    });
-    if (missing) {
-      toast.error(`Responda todas as ${subtask.questions.length} perguntas antes de enviar`);
-      return;
+  async function submit(force = false) {
+    if (!force) {
+      const missing = subtask.questions.some((q, i) => {
+        const isMC = Array.isArray(q.options) && q.options.length > 0;
+        return drafts[i].trim().length === 0 && !isMC ? true : isMC && drafts[i] === "" ? true : false;
+      });
+      if (missing) {
+        toast.error(`Responda todas as ${subtask.questions.length} perguntas antes de enviar`);
+        return;
+      }
     }
     setSending(true);
+    const currentDrafts = draftsRef.current;
     const { data: sub, error: subErr } = await supabase
       .from("open_evaluation_submissions")
       .insert({
@@ -2044,9 +2054,9 @@ function OpenEvaluationSubtask({
     const rows = subtask.questions.map((q, i) => {
       const isMC = Array.isArray(q.options) && q.options.length > 0;
       if (isMC) {
-        const idx = parseInt(drafts[i], 10);
-        const chosen = q.options![idx] ?? "";
-        const correct = idx === q.correctIndex;
+        const idx = parseInt(currentDrafts[i], 10);
+        const chosen = !Number.isNaN(idx) ? (q.options![idx] ?? "") : "";
+        const correct = !Number.isNaN(idx) && idx === q.correctIndex;
         return {
           submission_id: sub.id,
           question_index: i,
@@ -2060,7 +2070,7 @@ function OpenEvaluationSubtask({
         submission_id: sub.id,
         question_index: i,
         question_text: q.question,
-        answer_text: drafts[i].trim(),
+        answer_text: (currentDrafts[i] ?? "").trim(),
       };
     });
     const { error: ansErr } = await supabase
@@ -2071,13 +2081,35 @@ function OpenEvaluationSubtask({
       toast.error("Erro ao salvar respostas", { description: ansErr.message });
       return;
     }
-    // Não marca o passo como concluído aqui. A conclusão (e o desbloqueio do
-    // próximo módulo) só acontece quando o gestor corrigir e aprovar (≥70%).
     onSubmitted();
-    toast.success("Prova enviada. Aguarde a correção da gestora — o próximo módulo libera somente após aprovação.");
+    if (force) {
+      toast.warning("Tempo esgotado. Prova enviada automaticamente.");
+    } else {
+      toast.success("Prova enviada. Aguarde a correção da gestora — o próximo módulo libera somente após aprovação.");
+    }
     await load();
     setSending(false);
   }
+
+  useEffect(() => {
+    submitRef.current = submit;
+  });
+
+  useEffect(() => {
+    if (!showTimer || loading || submission) return;
+    setSecondsLeft(30 * 60);
+    const startedAt = Date.now();
+    const id = setInterval(() => {
+      const left = Math.max(0, 30 * 60 - Math.floor((Date.now() - startedAt) / 1000));
+      setSecondsLeft(left);
+      if (left <= 0) {
+        clearInterval(id);
+        submitRef.current?.(true);
+      }
+    }, 1000);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showTimer, loading, submission?.id]);
 
   if (loading) {
     return (
@@ -2141,7 +2173,7 @@ function OpenEvaluationSubtask({
             const row = answerRows.find((r) => r.question_index === i);
             return (
               <div key={i} className="rounded-2xl border border-border/60 bg-muted/20 p-3">
-                <p className="text-sm font-medium">
+                <p className="text-sm font-medium text-[#5DCAA5]">
                   {i + 1}. {q.question}
                 </p>
                 <p className="mt-2 text-sm whitespace-pre-wrap text-foreground/90">
@@ -2191,8 +2223,23 @@ function OpenEvaluationSubtask({
     );
   }
 
+  const mm = Math.floor(secondsLeft / 60).toString().padStart(2, "0");
+  const ss = (secondsLeft % 60).toString().padStart(2, "0");
+  const timerLow = secondsLeft <= 5 * 60;
+
   return (
     <div className="space-y-3">
+      {showTimer && (
+        <div
+          className={`sticky top-0 z-30 -mx-3 px-3 py-2 border-b backdrop-blur-md text-sm font-semibold flex items-center justify-center rounded-b-xl ${
+            timerLow
+              ? "bg-rose-500/20 border-rose-500/40 text-rose-100"
+              : "bg-amber-500/15 border-amber-500/30 text-amber-100"
+          }`}
+        >
+          ⏱ {mm}:{ss} restantes
+        </div>
+      )}
       <p className="text-xs text-foreground/80">
         Responda as objetivas (correção automática) e as abertas (correção do gestor). Ao enviar, o próximo tópico é liberado.
       </p>
@@ -2200,7 +2247,7 @@ function OpenEvaluationSubtask({
         const isMC = Array.isArray(q.options) && q.options.length > 0;
         return (
           <div key={i} className="rounded-2xl border border-border/60 bg-muted/20 p-3">
-            <label className="block text-sm font-medium mb-2">
+            <label className="block text-sm font-medium mb-2 text-[#5DCAA5]">
               {i + 1}. {q.question}
             </label>
             {isMC ? (
@@ -2234,7 +2281,7 @@ function OpenEvaluationSubtask({
           </div>
         );
       })}
-      <Button variant="outline" onClick={submit} disabled={sending} className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25">
+      <Button variant="outline" onClick={() => submit(false)} disabled={sending} className="rounded-full border-primary/40 bg-primary/15 text-foreground hover:bg-primary/25">
         {sending ? "Enviando..." : "Enviar prova"}
       </Button>
     </div>
