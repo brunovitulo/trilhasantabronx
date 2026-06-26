@@ -1,6 +1,6 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, Loader2, AlertCircle, MapPin, RotateCcw, FileText, KeyRound, Download } from "lucide-react";
+import { ChevronLeft, Loader2, AlertCircle, RotateCcw, FileText, KeyRound, Download, MoreHorizontal, BookOpen, ShieldCheck } from "lucide-react";
 import { generateProjectSnapshotForChatGPT } from "@/lib/projectSnapshot";
 import { approvePermission, rejectPermission } from "@/lib/examPermission";
 import { supabase } from "@/integrations/supabase/client";
