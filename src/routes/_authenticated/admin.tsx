@@ -621,7 +621,7 @@ function AttendantCollapsedRow({
           </p>
         </div>
 
-        <div className="col-span-3 sm:col-span-1.5">
+        <div className="col-span-6 sm:col-span-1">
           <p className="text-[11px] text-muted-foreground">Média geral</p>
           <p className="text-sm font-semibold mt-1 flex items-center gap-1">
             <Star className={`h-3.5 w-3.5 ${s.examAverage != null ? "text-amber-300 fill-amber-300" : "text-muted-foreground"}`} />
@@ -629,7 +629,7 @@ function AttendantCollapsedRow({
           </p>
         </div>
 
-        <div className="col-span-3 sm:col-span-1.5 flex items-center justify-end gap-1.5">
+        <div className="col-span-6 sm:col-span-2 flex items-center justify-end gap-1.5">
           <Button
             type="button"
             size="sm"
