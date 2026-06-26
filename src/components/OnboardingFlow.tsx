@@ -143,15 +143,6 @@ export function OnboardingFlow({ userId, onFinish }: Props) {
               </>
             )}
           </Button>
-
-          <button
-            type="button"
-            onClick={skip}
-            disabled={saving}
-            className="mt-3 mx-auto block text-xs text-muted-foreground hover:text-foreground/80 underline underline-offset-4"
-          >
-            Pular guia por enquanto
-          </button>
         </div>
       </div>
     </div>
