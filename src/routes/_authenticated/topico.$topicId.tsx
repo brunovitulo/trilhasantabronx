@@ -161,7 +161,6 @@ function TopicPage() {
   // Decide se o popup introdutório deve abrir — separado do efeito de carregamento.
   useEffect(() => {
     if (loading) return;
-    if (isAdmin) return;
     if (accessLocked) return;
     if (!topic) return;
     if (typeof window === "undefined") return;
@@ -172,7 +171,8 @@ function TopicPage() {
     } catch {
       setShowIntro(true);
     }
-  }, [loading, isAdmin, accessLocked, user.id, topic?.id, resetVersion]);
+  }, [loading, accessLocked, user.id, topic?.id, resetVersion]);
+
 
 
 
