@@ -253,7 +253,7 @@ export const TOPICS: Topic[] = [
       {
         id: "apresentacao.prova.video",
         kind: "video",
-        title: "6. Antes da prova — assistir vídeo do Bruno",
+        title: "5. Antes da prova — assistir vídeo do Bruno",
         description:
           "Vídeo de alinhamento antes da prova. Recapitula o módulo, avisa que o gestor vai acompanhar a prova em tempo real e reforça a regra de 70% para passar.",
         url: "https://www.instagram.com/stories/highlights/17892062016515877/",
