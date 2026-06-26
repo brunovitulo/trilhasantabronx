@@ -670,119 +670,82 @@ function AttendantExpandedCard({
   onOpenHistory: () => void;
 }) {
   const s = useMemo(() => computeAttendantStats(att), [att]);
-  const ringPct = s.percent;
 
   return (
-    <Card className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05] backdrop-blur-xl shadow-[0_8px_32px_-12px_rgba(0,0,0,0.45)]">
-      <div className="p-4 sm:p-6 space-y-5">
-        {/* Header: identity + stats */}
-        <div className="grid grid-cols-12 gap-4 items-center">
-          {/* Identidade */}
-          <div className="col-span-12 md:col-span-3 flex items-center gap-3">
-            <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${avatarGradient(att.id)} text-white font-bold text-base shadow-lg`}>
-              {initials(att.full_name)}
-            </div>
-            <div className="min-w-0">
+    <Card className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05] backdrop-blur-xl">
+      <div className="p-4 sm:p-5 space-y-4">
+        {/* Header: identidade + ações */}
+        <div className="flex items-center gap-3">
+          <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${avatarGradient(att.id)} text-white font-bold text-sm shadow`}>
+            {initials(att.full_name)}
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
               <h3 className="font-semibold leading-tight truncate">{att.full_name ?? "Sem nome"}</h3>
-              <p className="text-[11px] text-muted-foreground font-mono mt-0.5 truncate">{att.id.slice(0, 8)}</p>
-              <div className="mt-1.5"><StatusBadge completed={s.completed} /></div>
+              <StatusBadge completed={s.completed} />
             </div>
+            <p className="text-[11px] text-muted-foreground font-mono mt-0.5 truncate">{att.id.slice(0, 8)}</p>
           </div>
-
-          {/* Tópicos concluídos */}
-          <div className="col-span-6 md:col-span-2">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <MapPin className="h-3 w-3 text-[oklch(0.78_0.13_175)]" />
-              Tópicos concluídos
-            </p>
-            <p className="text-2xl font-bold mt-2 tabular-nums">
-              {s.doneTopics}
-              <span className="text-base font-normal text-muted-foreground"> de {s.totalTopics}</span>
-            </p>
-          </div>
-
-          {/* Progresso geral (circular) */}
-          <div className="col-span-6 md:col-span-2 flex flex-col items-center">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Progresso geral</p>
-            <CircularProgress value={ringPct} />
-          </div>
-
-          {/* Provas concluídas */}
-          <div className="col-span-6 md:col-span-2">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <ScrollText className="h-3 w-3 text-[oklch(0.78_0.13_175)]" />
-              Provas concluídas
-            </p>
-            <p className="text-2xl font-bold mt-2 tabular-nums">
-              <span className={s.doneExams === 0 ? "text-rose-300" : ""}>{s.doneExams}</span>
-              <span className="text-base font-normal text-muted-foreground"> de {s.totalExams}</span>
-            </p>
-          </div>
-
-          {/* Média geral */}
-          <div className="col-span-6 md:col-span-2">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <Star className="h-3 w-3 text-amber-300" />
-              Média geral
-            </p>
-            <p className="text-2xl font-bold mt-2 flex items-center gap-1.5">
-              <Star className={`h-5 w-5 ${s.examAverage != null ? "text-amber-300 fill-amber-300" : "text-muted-foreground"}`} />
-              <span className="tabular-nums">
-                {s.examAverage != null ? (s.examAverage / 10).toFixed(1).replace(".", ",") : "—"}
-              </span>
-            </p>
-          </div>
-
-          {/* Ver histórico de provas */}
-          <div className="col-span-12 md:col-span-1 flex md:justify-end">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="rounded-full gap-1.5 border-white/15 bg-white/[0.04] hover:bg-white/[0.1] whitespace-nowrap"
-              onClick={onOpenHistory}
-            >
-              <FileText className="h-4 w-4" />
-              Ver histórico de provas
-            </Button>
-          </div>
-        </div>
-
-        {/* Etapa atual */}
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 flex flex-wrap items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[oklch(0.55_0.22_295)]/20 border border-[oklch(0.65_0.18_295)]/30">
-            <MapPin className="h-6 w-6 text-[oklch(0.82_0.13_295)]" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-[10px] uppercase tracking-wider text-[oklch(0.82_0.13_295)] font-semibold">Etapa atual</p>
-            <p className="text-lg font-bold leading-tight mt-0.5">
-              {s.currentTopic ? s.currentTopic.title : "Trilha concluída"}
-            </p>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {s.currentTopic
-                ? s.currentSubtask
-                  ? `Próxima ação: ${s.currentSubtask.title}`
-                  : "Aguardando avanço."
-                : "Concluiu todos os tópicos da trilha."}
-            </p>
-          </div>
-          <UnlockAllExamsLauncher attendantId={att.id} attendantName={att.full_name} reviewerId={reviewerId} progress={att.progress} />
           <AttendantActionsMenu
             attendantId={att.id}
             attendantName={att.full_name}
             reviewerId={reviewerId}
             progress={att.progress}
+            onOpenHistory={onOpenHistory}
           />
           <Button
             type="button"
             size="icon"
             variant="ghost"
-            className="h-9 w-9 rounded-full border border-white/10 bg-white/[0.04]"
+            className="h-8 w-8 rounded-full border border-white/10 bg-white/[0.04]"
             onClick={onCollapse}
             aria-label="Recolher"
           >
             <ChevronDown className="h-4 w-4 rotate-180" />
           </Button>
+        </div>
+
+        {/* KPIs compactos */}
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+          <div className="flex items-center gap-2">
+            <span className="text-muted-foreground text-xs">Progresso</span>
+            <span className="font-semibold tabular-nums">{s.percent}%</span>
+            <Progress value={s.percent} className="h-1.5 w-24 bg-white/10 [&>div]:bg-[oklch(0.78_0.13_175)]" />
+          </div>
+          <div className="flex items-center gap-1.5">
+            <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
+            <span className="text-muted-foreground text-xs">Tópicos</span>
+            <span className="font-semibold tabular-nums">{s.doneTopics}/{s.totalTopics}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <ScrollText className="h-3.5 w-3.5 text-muted-foreground" />
+            <span className="text-muted-foreground text-xs">Provas</span>
+            <span className={`font-semibold tabular-nums ${s.doneExams === 0 ? "text-rose-300" : ""}`}>{s.doneExams}/{s.totalExams}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Star className={`h-3.5 w-3.5 ${s.examAverage != null ? "text-amber-300 fill-amber-300" : "text-muted-foreground"}`} />
+            <span className="text-muted-foreground text-xs">Média</span>
+            <span className="font-semibold tabular-nums">
+              {s.examAverage != null ? (s.examAverage / 10).toFixed(1).replace(".", ",") : "—"}
+            </span>
+          </div>
+        </div>
+
+        {/* Etapa atual — uma linha discreta */}
+        <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2.5 flex items-center gap-3">
+          <MapPin className="h-4 w-4 text-[oklch(0.82_0.13_295)] shrink-0" />
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium truncate">
+              {s.currentTopic ? s.currentTopic.title : "Trilha concluída"}
+            </p>
+            <p className="text-xs text-muted-foreground truncate">
+              {s.currentTopic
+                ? s.currentSubtask
+                  ? `Próxima ação: ${s.currentSubtask.title}`
+                  : "Aguardando avanço."
+                : "Concluiu todos os tópicos."}
+            </p>
+          </div>
         </div>
 
         {/* Pedidos de permissão para prova */}
@@ -792,33 +755,30 @@ function AttendantExpandedCard({
               const meta = findSubtask(p.subtask_id);
               const label = meta?.topic.title ?? "Prova";
               return (
-                <div key={p.id} className="rounded-2xl border-2 border-rose-400/60 bg-rose-500/15 p-3 shadow-[0_0_24px_-4px_rgba(244,63,94,0.5)]">
-                  <div className="flex items-start gap-3">
-                    <KeyRound className="h-5 w-5 text-rose-200 shrink-0 mt-0.5" />
+                <div key={p.id} className="rounded-xl border border-rose-400/50 bg-rose-500/10 p-3">
+                  <div className="flex items-center gap-3">
+                    <KeyRound className="h-4 w-4 text-rose-200 shrink-0" />
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-semibold">🔔 {att.full_name ?? "Atendente"} pediu permissão</p>
-                      <p className="text-sm text-foreground/90">Prova: {label}</p>
-                      <p className="text-xs text-foreground/70">Solicitado em {new Date(p.created_at).toLocaleString("pt-BR")}</p>
+                      <p className="text-sm font-medium">Pedido de permissão · {label}</p>
+                      <p className="text-xs text-foreground/70">{new Date(p.created_at).toLocaleString("pt-BR")}</p>
                     </div>
-                  </div>
-                  <div className="mt-3 flex flex-wrap gap-2">
                     <Button
                       type="button"
                       size="sm"
-                      className="rounded-full bg-emerald-500 hover:bg-emerald-600 text-white"
+                      className="rounded-full bg-emerald-500 hover:bg-emerald-600 text-white h-8"
                       onClick={async () => {
                         const { error } = await approvePermission(p.id, reviewerId);
                         if (error) toast.error("Não consegui liberar", { description: error.message });
                         else toast.success(`Prova liberada para ${att.full_name ?? "atendente"}.`);
                       }}
                     >
-                      Liberar prova
+                      Liberar
                     </Button>
                     <Button
                       type="button"
                       size="sm"
                       variant="outline"
-                      className="rounded-full"
+                      className="rounded-full h-8"
                       onClick={async () => {
                         const { error } = await rejectPermission(p.id, reviewerId);
                         if (error) toast.error("Erro", { description: error.message });
@@ -841,18 +801,18 @@ function AttendantExpandedCard({
               const meta = findSubtask(p.subtask_id);
               const label = meta?.topic.title ?? "Prova";
               return (
-                <div key={p.id} className="flex items-center gap-3 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-3">
-                  <AlertCircle className="h-5 w-5 text-amber-300 shrink-0" />
+                <div key={p.id} className="flex items-center gap-3 rounded-xl border border-amber-500/40 bg-amber-500/10 px-3 py-2">
+                  <AlertCircle className="h-4 w-4 text-amber-300 shrink-0" />
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium">Prova: {label}</p>
+                    <p className="text-sm font-medium truncate">Prova: {label}</p>
                     <p className="text-xs text-foreground/70">
-                      Pendente revisão · enviada em {new Date(p.created_at).toLocaleString("pt-BR")}
+                      Enviada em {new Date(p.created_at).toLocaleString("pt-BR")}
                     </p>
                   </div>
                   <Button
                     type="button"
                     size="sm"
-                    className="rounded-full shrink-0"
+                    className="rounded-full h-8 shrink-0"
                     onClick={() => onCorrect({ ...p, user_id: att.id, full_name: att.full_name })}
                   >
                     Corrigir
@@ -863,70 +823,36 @@ function AttendantExpandedCard({
           </div>
         )}
 
-        {/* Progresso por tópico (timeline) */}
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
-            Progresso por tópico
-          </p>
-          <div className="mt-4 relative">
-            <div className="absolute top-7 left-6 right-6 h-px border-t border-dashed border-white/15" />
-            <div className="relative grid grid-cols-4 md:grid-cols-8 gap-3">
-              {TOPICS.map((t) => {
-                const status = s.statuses[t.id];
-                const Icon = topicIcon(t.id);
-                const isCompleted = status === "completed";
-                const isCurrent = status === "in_progress" || status === "available";
-                const isLocked = status === "locked";
-                return (
-                  <div key={t.id} className="flex flex-col items-center text-center gap-2">
-                    <div className="relative">
-                      <div
-                        className={
-                          "flex h-14 w-14 items-center justify-center rounded-full border-2 transition-colors " +
-                          (isCompleted
-                            ? "bg-[oklch(0.7_0.16_175)]/20 border-[oklch(0.78_0.13_175)] text-[oklch(0.85_0.13_175)]"
-                            : isCurrent
-                              ? "bg-[oklch(0.55_0.22_295)]/20 border-[oklch(0.65_0.18_295)] text-[oklch(0.82_0.13_295)] shadow-[0_0_24px_-6px_oklch(0.65_0.18_295/0.8)]"
-                              : "bg-white/[0.03] border-white/15 text-muted-foreground")
-                        }
-                      >
-                        <Icon className="h-5 w-5" />
-                        {isLocked && (
-                          <Lock className="absolute -bottom-0.5 -right-0.5 h-4 w-4 p-0.5 rounded-full bg-background text-muted-foreground" />
-                        )}
-                      </div>
-                      <span
-                        className={
-                          "absolute -top-1 -left-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold border " +
-                          (isCompleted
-                            ? "bg-[oklch(0.78_0.13_175)] text-[oklch(0.18_0.02_175)] border-[oklch(0.78_0.13_175)]"
-                            : isCurrent
-                              ? "bg-[oklch(0.55_0.22_295)] text-white border-[oklch(0.55_0.22_295)]"
-                              : "bg-white/10 text-muted-foreground border-white/15")
-                        }
-                      >
-                        {t.order}
-                      </span>
-                    </div>
-                    <p className="text-[11px] leading-tight font-medium text-foreground/90 line-clamp-2 min-h-[2.4em]">
-                      {t.title}
-                    </p>
-                    <span
-                      className={
-                        "text-[10px] px-2 py-0.5 rounded-full border " +
-                        (isCompleted
-                          ? "border-[oklch(0.78_0.13_175)]/40 bg-[oklch(0.78_0.13_175)]/10 text-[oklch(0.85_0.13_175)]"
-                          : isCurrent
-                            ? "border-[oklch(0.65_0.18_295)]/40 bg-[oklch(0.55_0.22_295)]/15 text-[oklch(0.82_0.13_295)]"
-                            : "border-white/10 bg-white/[0.03] text-muted-foreground")
-                      }
-                    >
-                      {isCompleted ? "Concluído" : isCurrent ? (status === "in_progress" ? "Em andamento" : "Não iniciado") : "Bloqueado"}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
+        {/* Timeline minimalista dos tópicos */}
+        <div className="pt-1">
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+              Tópicos
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-1.5">
+            {TOPICS.map((t) => {
+              const status = s.statuses[t.id];
+              const Icon = topicIcon(t.id);
+              const isCompleted = status === "completed";
+              const isCurrent = status === "in_progress" || status === "available";
+              return (
+                <div
+                  key={t.id}
+                  title={`${t.order}. ${t.title} — ${isCompleted ? "Concluído" : isCurrent ? "Em andamento" : status === "locked" ? "Bloqueado" : "—"}`}
+                  className={
+                    "flex h-9 w-9 items-center justify-center rounded-lg border transition-colors " +
+                    (isCompleted
+                      ? "bg-[oklch(0.7_0.16_175)]/15 border-[oklch(0.78_0.13_175)]/50 text-[oklch(0.85_0.13_175)]"
+                      : isCurrent
+                        ? "bg-[oklch(0.55_0.22_295)]/15 border-[oklch(0.65_0.18_295)]/50 text-[oklch(0.82_0.13_295)]"
+                        : "bg-white/[0.02] border-white/10 text-muted-foreground/60")
+                  }
+                >
+                  <Icon className="h-4 w-4" />
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
