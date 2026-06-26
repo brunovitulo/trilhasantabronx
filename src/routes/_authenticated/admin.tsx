@@ -750,6 +750,16 @@ function AttendantExpandedCard({
                 : "Concluiu todos os tópicos."}
             </p>
           </div>
+          {s.currentTopic && (
+            <Link
+              to="/topico/$topicId"
+              params={{ topicId: s.currentTopic.id }}
+              className="inline-flex items-center gap-1.5 rounded-full bg-[oklch(0.55_0.22_295)]/20 hover:bg-[oklch(0.55_0.22_295)]/30 text-[oklch(0.82_0.13_295)] px-3 py-1.5 text-xs font-medium border border-[oklch(0.65_0.18_295)]/30 transition-colors"
+            >
+              <ChevronRight className="h-3.5 w-3.5" />
+              Ir ao tópico
+            </Link>
+          )}
         </div>
 
         {/* Pedidos de permissão para prova */}
