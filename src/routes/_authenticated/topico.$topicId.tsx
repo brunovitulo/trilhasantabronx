@@ -1046,6 +1046,14 @@ function ReadingSubtask({
   const [open, setOpen] = useState(false);
   return (
     <div>
+      <StepGuide
+        steps={[
+          { icon: BookOpen, title: "Abra a apostila", description: "Clique em \"Abrir apostila\" para começar." },
+          { icon: BookOpen, title: "Leia o conteúdo por completo", description: "Leia até o final antes de marcar como concluído." },
+          { icon: ChevronLeft, title: "Volte para esta tela", description: "Quando terminar a leitura, retorne aqui." },
+          { icon: Check, title: "Confirme que terminou a leitura", description: "Marque como lida abaixo." },
+        ]}
+      />
       <Button
         variant="outline"
         size="sm"
