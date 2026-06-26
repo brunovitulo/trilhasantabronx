@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, CheckCircle2, XCircle, MessageSquare, User2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { findSubtask, PASSING_SCORE } from "@/data/topics";
 import { Button } from "@/components/ui/button";
