@@ -2473,7 +2473,8 @@ function OpenEvaluationSubtask({
   const [answerRows, setAnswerRows] = useState<OpenAnswerRow[]>([]);
   const [drafts, setDrafts] = useState<string[]>(() => subtask.questions.map(() => ""));
   const [sending, setSending] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(45 * 60);
+  const durationSeconds = getExamDurationMinutes(subtask.questions.length) * 60;
+  const [secondsLeft, setSecondsLeft] = useState(durationSeconds);
   const draftsRef = useRef(drafts);
   useEffect(() => { draftsRef.current = drafts; }, [drafts]);
   const submitRef = useRef<((force?: boolean) => Promise<void>) | null>(null);
@@ -2609,10 +2610,10 @@ function OpenEvaluationSubtask({
 
   useEffect(() => {
     if (!showTimer || loading || submission) return;
-    setSecondsLeft(45 * 60);
+    setSecondsLeft(durationSeconds);
     const startedAt = Date.now();
     const id = setInterval(() => {
-      const left = Math.max(0, 45 * 60 - Math.floor((Date.now() - startedAt) / 1000));
+      const left = Math.max(0, durationSeconds - Math.floor((Date.now() - startedAt) / 1000));
       setSecondsLeft(left);
       if (left <= 0) {
         clearInterval(id);
