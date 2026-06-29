@@ -144,6 +144,16 @@ function AuthPage() {
                   >
                     {loading ? "Entrando..." : "Entrar"}
                   </Button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setForgotEmail(email);
+                      setForgotOpen(true);
+                    }}
+                    className="block w-full text-center text-xs text-white/60 hover:text-white underline-offset-4 hover:underline"
+                  >
+                    Esqueci minha senha
+                  </button>
                 </form>
               </TabsContent>
               <TabsContent value="signup">
