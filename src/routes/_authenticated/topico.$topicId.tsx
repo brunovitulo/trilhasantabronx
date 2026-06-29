@@ -322,11 +322,18 @@ function TopicPage() {
 }
 
 type SubtaskGroupEntry = { subtask: Subtask; stepLabel: string };
+type SubBlock = {
+  key: string;
+  title: string;
+  items: SubtaskGroupEntry[];
+  isExam: boolean;
+};
 type SubtaskGroup = {
   key: string;
   title: string;
   items: SubtaskGroupEntry[];
   titleFromDash: boolean;
+  subBlocks?: SubBlock[];
 };
 
 function groupSubtasks(subtasks: Subtask[]): SubtaskGroup[] {
@@ -358,6 +365,39 @@ function groupSubtasks(subtasks: Subtask[]): SubtaskGroup[] {
       groups[groupIdx].titleFromDash = true;
     }
     groups[groupIdx].items.push({ subtask: sub, stepLabel });
+  }
+  // Post-process: when items inside a group have a second-level dash header
+  // (e.g. "Excitantes — Assistir destaque"), bundle them into product sub-blocks.
+  for (const g of groups) {
+    const anyNested = g.items.some((it) => it.stepLabel.includes(" — "));
+    if (!anyNested) continue;
+    const blocks: SubBlock[] = [];
+    const indexByName = new Map<string, number>();
+    for (const it of g.items) {
+      const parts = it.stepLabel.split(/\s+—\s+/);
+      const isEval =
+        it.subtask.kind === "evaluation" || it.subtask.kind === "open_evaluation";
+      if (parts.length < 2 || isEval) {
+        // Standalone (likely the group's final exam) — highlighted block.
+        blocks.push({
+          key: `__exam__${it.subtask.id}`,
+          title: it.stepLabel,
+          items: [{ subtask: it.subtask, stepLabel: it.stepLabel }],
+          isExam: true,
+        });
+        continue;
+      }
+      const name = parts[0].trim();
+      const inner = parts.slice(1).join(" — ").trim();
+      let idx = indexByName.get(name);
+      if (idx === undefined) {
+        idx = blocks.length;
+        blocks.push({ key: `sub-${idx}-${name}`, title: name, items: [], isExam: false });
+        indexByName.set(name, idx);
+      }
+      blocks[idx].items.push({ subtask: it.subtask, stepLabel: inner });
+    }
+    g.subBlocks = blocks;
   }
   return groups;
 }
