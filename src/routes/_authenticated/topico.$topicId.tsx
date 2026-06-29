@@ -780,7 +780,7 @@ function SubtaskGroupCard({
                         className={cn(
                           "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border",
                           isExam
-                            ? "border-violet-300/50 bg-violet-500/20 text-violet-100"
+                            ? "border-[#E24B4A] bg-[#E24B4A] text-white"
                             : soloPassed
                               ? "border-[var(--success)]/50 bg-[var(--success)]/15 text-[var(--success)]"
                               : "border-white/10 bg-white/[0.06] text-[#A78BFA]",
