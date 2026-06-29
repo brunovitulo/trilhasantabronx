@@ -886,12 +886,12 @@ function SubtaskGroupCard({
                             padding: "2px 9px",
                             borderRadius: "20px",
                             background: isExam
-                              ? "rgba(167, 139, 250, 0.22)"
+                              ? "rgba(226, 75, 74, 0.22)"
                               : "rgba(20, 184, 166, 0.18)",
                             border: isExam
-                              ? "0.5px solid rgba(167, 139, 250, 0.6)"
+                              ? "0.5px solid rgba(240, 149, 149, 0.6)"
                               : "0.5px solid rgba(20, 184, 166, 0.6)",
-                            color: isExam ? "#ddd6fe" : "#5eead4",
+                            color: isExam ? "#F09595" : "#5eead4",
                             opacity: (isSolo ? soloPassed : meta.done) ? 0.5 : 1,
                           }}
                         >
