@@ -864,7 +864,7 @@ function ExamDialogLauncher({
       <StepGuide
         steps={[
           { icon: ShieldCheck, title: "Solicite a liberação da prova", description: "Clique em \"Solicitar permissão\" para avisar o gestor." },
-          { icon: FilePen, title: "Responda com atenção", description: "Você terá 30 minutos. Use suas palavras, sem pesquisar." },
+          { icon: FilePen, title: "Responda com atenção", description: "Você terá 45 minutos. Use suas palavras, sem pesquisar." },
           { icon: Check, title: "Envie para correção", description: "Clique em enviar quando terminar — não dá para refazer sozinha." },
           { icon: ClipboardCheck, title: "Aguarde o feedback do gestor", description: "Você só avança com 70% ou mais. O gestor envia o retorno." },
         ]}
@@ -959,7 +959,7 @@ function ExamDialogLauncher({
               Esta prova será acompanhada pelo seu gestor em tempo real. Responda com suas
               próprias palavras, de forma completa, sem pesquisar em fontes externas. Ao
               finalizar, clique em enviar — você só avança para a próxima etapa com 70% de
-              aproveitamento ou mais. Você tem <strong>30 minutos</strong> para concluir.
+              aproveitamento ou mais. Você tem <strong>45 minutos</strong> para concluir.
             </p>
           </div>
           <OpenEvaluationSubtask
@@ -2112,7 +2112,7 @@ function OpenEvaluationSubtask({
   const [answerRows, setAnswerRows] = useState<OpenAnswerRow[]>([]);
   const [drafts, setDrafts] = useState<string[]>(() => subtask.questions.map(() => ""));
   const [sending, setSending] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(30 * 60);
+  const [secondsLeft, setSecondsLeft] = useState(45 * 60);
   const draftsRef = useRef(drafts);
   useEffect(() => { draftsRef.current = drafts; }, [drafts]);
   const submitRef = useRef<((force?: boolean) => Promise<void>) | null>(null);
@@ -2248,10 +2248,10 @@ function OpenEvaluationSubtask({
 
   useEffect(() => {
     if (!showTimer || loading || submission) return;
-    setSecondsLeft(30 * 60);
+    setSecondsLeft(45 * 60);
     const startedAt = Date.now();
     const id = setInterval(() => {
-      const left = Math.max(0, 30 * 60 - Math.floor((Date.now() - startedAt) / 1000));
+      const left = Math.max(0, 45 * 60 - Math.floor((Date.now() - startedAt) / 1000));
       setSecondsLeft(left);
       if (left <= 0) {
         clearInterval(id);
