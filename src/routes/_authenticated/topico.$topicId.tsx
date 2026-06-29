@@ -1225,7 +1225,7 @@ function ExamDialogLauncher({
       <StepGuide
         steps={[
           { icon: ShieldCheck, title: "Solicite a liberação da prova", description: "Clique em \"Solicitar permissão\" para avisar o gestor." },
-          { icon: FilePen, title: "Responda com atenção", description: "Você terá 45 minutos. Use suas palavras, sem pesquisar." },
+          { icon: FilePen, title: "Responda com atenção", description: `Você terá ${durationMinutes} minutos. Use suas palavras, sem pesquisar.` },
           { icon: Check, title: "Envie para correção", description: "Clique em enviar quando terminar — não dá para refazer sozinha." },
           { icon: ClipboardCheck, title: "Aguarde o feedback do gestor", description: "Você só avança com 70% ou mais. O gestor envia o retorno." },
         ]}
@@ -1320,7 +1320,7 @@ function ExamDialogLauncher({
               Esta prova será acompanhada pelo seu gestor em tempo real. Responda com suas
               próprias palavras, de forma completa, sem pesquisar em fontes externas. Ao
               finalizar, clique em enviar — você só avança para a próxima etapa com 70% de
-              aproveitamento ou mais. Você tem <strong>45 minutos</strong> para concluir.
+              aproveitamento ou mais. Você tem <strong>{durationMinutes} minutos</strong> para concluir.
             </p>
           </div>
           <OpenEvaluationSubtask
