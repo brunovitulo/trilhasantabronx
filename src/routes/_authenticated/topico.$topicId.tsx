@@ -4,7 +4,7 @@ import {
   ChevronLeft, CheckCircle2, Circle, Copy, Loader2, Lock, X,
   Check, ChevronDown, Play, BookOpen, ListChecks, ClipboardCheck,
   FilePen, Download, History, MapPin, Hand, LayoutGrid, Globe, Package,
-  ShieldCheck, Star, Info,
+  ShieldCheck, Star, Info, Pencil, Clock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
@@ -366,19 +366,19 @@ function groupSubtasks(subtasks: Subtask[]): SubtaskGroup[] {
     }
     groups[groupIdx].items.push({ subtask: sub, stepLabel });
   }
-  // Post-process: when items inside a group have a second-level dash header
-  // (e.g. "Excitantes — Assistir destaque"), bundle them into product sub-blocks.
+  // Post-process: ALWAYS bundle items into sub-blocks so every subtask is
+  // rendered as its own collapsible card. When items share a second-level dash
+  // header (e.g. "Excitantes — Assistir destaque"), they collapse together into
+  // a product sub-block; otherwise each item becomes its own solo sub-block.
+  // Evaluations are always isolated as highlighted exam sub-blocks.
   for (const g of groups) {
-    const anyNested = g.items.some((it) => it.stepLabel.includes(" — "));
-    if (!anyNested) continue;
     const blocks: SubBlock[] = [];
     const indexByName = new Map<string, number>();
     for (const it of g.items) {
       const parts = it.stepLabel.split(/\s+—\s+/);
       const isEval =
         it.subtask.kind === "evaluation" || it.subtask.kind === "open_evaluation";
-      if (parts.length < 2 || isEval) {
-        // Standalone (likely the group's final exam) — highlighted block.
+      if (isEval) {
         blocks.push({
           key: `__exam__${it.subtask.id}`,
           title: it.stepLabel,
@@ -387,15 +387,24 @@ function groupSubtasks(subtasks: Subtask[]): SubtaskGroup[] {
         });
         continue;
       }
-      const name = parts[0].trim();
-      const inner = parts.slice(1).join(" — ").trim();
-      let idx = indexByName.get(name);
-      if (idx === undefined) {
-        idx = blocks.length;
-        blocks.push({ key: `sub-${idx}-${name}`, title: name, items: [], isExam: false });
-        indexByName.set(name, idx);
+      if (parts.length >= 2) {
+        const name = parts[0].trim();
+        const inner = parts.slice(1).join(" — ").trim();
+        let idx = indexByName.get(name);
+        if (idx === undefined) {
+          idx = blocks.length;
+          blocks.push({ key: `sub-${idx}-${name}`, title: name, items: [], isExam: false });
+          indexByName.set(name, idx);
+        }
+        blocks[idx].items.push({ subtask: it.subtask, stepLabel: inner });
+      } else {
+        blocks.push({
+          key: `solo-${it.subtask.id}`,
+          title: it.stepLabel,
+          items: [{ subtask: it.subtask, stepLabel: it.stepLabel }],
+          isExam: false,
+        });
       }
-      blocks[idx].items.push({ subtask: it.subtask, stepLabel: inner });
     }
     g.subBlocks = blocks;
   }
@@ -434,6 +443,21 @@ function pickStepIcon(kind: Subtask["kind"], hasDownload?: boolean) {
     case "credentials": return Lock;
     default: return BookOpen;
   }
+}
+
+// Conta perguntas abertas vs fechadas de uma avaliação para exibição.
+function getExamCounts(sub: Subtask): { open: number; closed: number } {
+  if (sub.kind === "evaluation") return { open: 0, closed: sub.questions.length };
+  if (sub.kind === "open_evaluation") {
+    let open = 0;
+    let closed = 0;
+    for (const q of sub.questions) {
+      if (q.options && typeof q.correctIndex === "number") closed++;
+      else open++;
+    }
+    return { open, closed };
+  }
+  return { open: 0, closed: 0 };
 }
 
 function SubtaskGroupCard({
@@ -679,9 +703,10 @@ function SubtaskGroupCard({
         };
 
         if (group.subBlocks && group.subBlocks.length > 0) {
-          // Nested rendering: each sub-block is its own collapsible card.
-          // Precompute item indices and "completed" flags per sub-block to drive
-          // sequential unlock between blocks.
+          // Cada subtarefa vira um cartão colapsável próprio. Sub-blocos com
+          // múltiplos itens (produtos do tópico 7) reúnem etapas internas; os
+          // de item único expõem o conteúdo diretamente ao expandir. Exames
+          // recebem um visual roxo destacado com tags de tipo de pergunta.
           const blockMeta = group.subBlocks.map((block) => {
             const indices = block.items.map((it) =>
               group.items.findIndex((g) => g.subtask.id === it.subtask.id),
@@ -701,13 +726,38 @@ function SubtaskGroupCard({
                 const isOpen = openBlockKey === block.key && !blockLocked;
                 const blockPct = meta.total > 0 ? (meta.blockDone / meta.total) * 100 : 0;
                 const isExam = block.isExam;
+                const isSolo = block.items.length === 1 && !isExam;
+                const soloEntry = isSolo ? block.items[0] : null;
+                const soloIdx = soloEntry ? meta.indices[0] : -1;
+                const soloSub = soloEntry?.subtask;
+                const soloPassed = soloIdx >= 0 ? itemStates[soloIdx]?.passed : false;
+                const soloState = soloIdx >= 0 ? itemStates[soloIdx]?.state : undefined;
+                const soloHasDownload =
+                  soloSub && "downloadAs" in soloSub
+                    ? !!(soloSub as { downloadAs?: string }).downloadAs
+                    : false;
+                const SoloIcon = soloSub
+                  ? pickStepIcon(soloSub.kind, soloHasDownload)
+                  : BookOpen;
+                const soloDesc =
+                  soloSub && "description" in soloSub
+                    ? (soloSub as { description?: string }).description
+                    : undefined;
+
+                // Metadados do exame (quando aplicável)
+                const examSub = isExam ? block.items[0].subtask : null;
+                const examIdx = isExam ? meta.indices[0] : -1;
+                const examState = examIdx >= 0 ? itemStates[examIdx]?.state : undefined;
+                const examCounts = examSub ? getExamCounts(examSub) : { open: 0, closed: 0 };
+                const examPassed = isExam && meta.done;
+
                 return (
                   <div
                     key={block.key}
                     className={cn(
                       "rounded-2xl border overflow-hidden transition-colors",
                       isExam
-                        ? "mt-3 border-pink-400/40 bg-gradient-to-br from-pink-500/15 via-fuchsia-500/10 to-purple-500/10 shadow-[0_8px_24px_-12px_rgba(236,72,153,0.45)]"
+                        ? "mt-3 border-violet-400/40 bg-gradient-to-br from-violet-500/15 via-purple-500/10 to-fuchsia-500/10 shadow-[0_8px_24px_-12px_rgba(139,92,246,0.45)]"
                         : "border-white/10 bg-white/[0.035]",
                       blockLocked && "opacity-60",
                     )}
@@ -720,7 +770,7 @@ function SubtaskGroupCard({
                         setOpenBlockKey(isOpen ? null : block.key);
                       }}
                       className={cn(
-                        "w-full flex items-center gap-3 px-4 py-3 text-left transition-colors",
+                        "w-full flex items-start gap-3 px-4 py-3 text-left transition-colors",
                         blockLocked
                           ? "cursor-not-allowed"
                           : "hover:bg-white/[0.04] cursor-pointer",
@@ -730,14 +780,22 @@ function SubtaskGroupCard({
                         className={cn(
                           "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border",
                           isExam
-                            ? "border-pink-400/40 bg-pink-500/20 text-pink-200"
-                            : "border-white/10 bg-white/[0.06] text-[#A78BFA]",
+                            ? "border-violet-300/50 bg-violet-500/20 text-violet-100"
+                            : soloPassed
+                              ? "border-[var(--success)]/50 bg-[var(--success)]/15 text-[var(--success)]"
+                              : "border-white/10 bg-white/[0.06] text-[#A78BFA]",
                         )}
                       >
                         {blockLocked ? (
                           <Lock className="h-4 w-4" />
                         ) : isExam ? (
                           <FilePen className="h-4 w-4" />
+                        ) : isSolo ? (
+                          soloPassed ? (
+                            <Check className="h-4 w-4" strokeWidth={3} />
+                          ) : (
+                            <SoloIcon className="h-4 w-4" />
+                          )
                         ) : meta.done ? (
                           <Check className="h-4 w-4" strokeWidth={3} />
                         ) : (
@@ -749,55 +807,178 @@ function SubtaskGroupCard({
                           <h4
                             className={cn(
                               "text-sm font-semibold leading-tight",
-                              isExam ? "text-pink-100" : "text-foreground",
+                              isExam
+                                ? "text-violet-50"
+                                : soloPassed
+                                  ? "text-muted-foreground line-through"
+                                  : "text-foreground",
                             )}
                           >
-                            {isExam ? "Prova Final do grupo" : block.title}
+                            {isExam ? (examSub?.title ?? "Prova") : block.title}
                           </h4>
                           {isExam && (
-                            <Badge className="bg-pink-500/25 text-pink-100 border border-pink-300/40 hover:bg-pink-500/25">
+                            <Badge className="bg-violet-500/25 text-violet-50 border border-violet-300/40 hover:bg-violet-500/25">
                               Avaliação
                             </Badge>
                           )}
-                        </div>
-                        <p
-                          className={cn(
-                            "text-[11px] mt-0.5",
-                            isExam ? "text-pink-200/80" : "text-muted-foreground",
+                          {isExam && examState?.completed && examPassed && (
+                            <Badge className="bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 hover:bg-emerald-500/20">
+                              Aprovada
+                            </Badge>
                           )}
-                        >
-                          {isExam
-                            ? "Conclua todos os produtos acima para liberar."
-                            : `${meta.blockDone} de ${meta.total} passos`}
-                        </p>
-                        {!isExam && (
-                          <div className="mt-1.5 h-1 w-full rounded-full bg-white/10 overflow-hidden">
-                            <div
-                              className="h-full rounded-full transition-all duration-500"
-                              style={{
-                                width: `${blockPct}%`,
-                                background: "linear-gradient(90deg, #5DCAA5, #AFA9EC)",
-                              }}
-                            />
+                        </div>
+                        {/* Linha de descrição/tags */}
+                        {isExam ? (
+                          <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                            {examCounts.open > 0 && (
+                              <span className="inline-flex items-center gap-1 rounded-full border border-violet-300/30 bg-violet-500/15 px-2 py-0.5 text-[11px] text-violet-100">
+                                <Pencil className="h-3 w-3" />
+                                {examCounts.open} {examCounts.open === 1 ? "questão aberta" : "questões abertas"}
+                              </span>
+                            )}
+                            {examCounts.open > 0 && examCounts.closed > 0 && (
+                              <span className="text-[11px] text-violet-200/70">+</span>
+                            )}
+                            {examCounts.closed > 0 && (
+                              <span className="inline-flex items-center gap-1 rounded-full border border-violet-300/30 bg-violet-500/15 px-2 py-0.5 text-[11px] text-violet-100">
+                                <ListChecks className="h-3 w-3" />
+                                {examCounts.closed} {examCounts.closed === 1 ? "questão fechada" : "questões fechadas"}
+                              </span>
+                            )}
+                            <span className="inline-flex items-center gap-1 rounded-full border border-violet-300/30 bg-violet-500/15 px-2 py-0.5 text-[11px] text-violet-100">
+                              <Clock className="h-3 w-3" />
+                              45 minutos
+                            </span>
+                            {blockLocked && (
+                              <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/[0.06] px-2 py-0.5 text-[11px] text-muted-foreground">
+                                <Lock className="h-3 w-3" />
+                                Conclua todos os passos acima para liberar
+                              </span>
+                            )}
                           </div>
+                        ) : isSolo ? (
+                          <p className="text-[11px] mt-0.5 text-muted-foreground">
+                            {soloDesc || (soloPassed ? "Concluído" : "Toque para abrir")}
+                          </p>
+                        ) : (
+                          <>
+                            <p className="text-[11px] mt-0.5 text-muted-foreground">
+                              {meta.blockDone} de {meta.total} passos
+                            </p>
+                            <div className="mt-1.5 h-1 w-full rounded-full bg-white/10 overflow-hidden">
+                              <div
+                                className="h-full rounded-full transition-all duration-500"
+                                style={{
+                                  width: `${blockPct}%`,
+                                  background: "linear-gradient(90deg, #5DCAA5, #AFA9EC)",
+                                }}
+                              />
+                            </div>
+                          </>
                         )}
                       </div>
-                      <ChevronDown
-                        className={cn(
-                          "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
-                          isOpen && "rotate-180",
-                        )}
-                      />
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span
+                          className="lowercase tracking-wide"
+                          style={{
+                            fontSize: "10px",
+                            fontWeight: 500,
+                            padding: "2px 9px",
+                            borderRadius: "20px",
+                            background: isExam
+                              ? "rgba(167, 139, 250, 0.22)"
+                              : "rgba(20, 184, 166, 0.18)",
+                            border: isExam
+                              ? "0.5px solid rgba(167, 139, 250, 0.6)"
+                              : "0.5px solid rgba(20, 184, 166, 0.6)",
+                            color: isExam ? "#ddd6fe" : "#5eead4",
+                            opacity: (isSolo ? soloPassed : meta.done) ? 0.5 : 1,
+                          }}
+                        >
+                          passo {bIdx + 1}
+                        </span>
+                        <ChevronDown
+                          className={cn(
+                            "h-4 w-4 text-muted-foreground transition-transform duration-200",
+                            isOpen && "rotate-180",
+                          )}
+                        />
+                      </div>
                     </button>
                     {isOpen && (
-                      <div className="border-t border-white/5 divide-y divide-white/5">
-                        {block.items.map((entry) => {
-                          const idx = group.items.findIndex(
-                            (g) => g.subtask.id === entry.subtask.id,
-                          );
-                          return renderItemRow(entry, idx);
-                        })}
-                      </div>
+                      isSolo && soloSub && soloEntry ? (
+                        <div className="border-t border-white/5 px-4 sm:px-5 py-4 sm:py-5">
+                          {soloDesc && (
+                            <p className="text-sm text-muted-foreground mb-3">{soloDesc}</p>
+                          )}
+                          {(() => {
+                            const inFinalGate = FINAL_GATE_IDS.has(soloSub.id);
+                            const gateLocked =
+                              inFinalGate && !gateUnlocked && !isAdmin;
+                            const examNeedsVideo =
+                              soloSub.id === EXAM_ID &&
+                              gateUnlocked &&
+                              !gateVideoCompleted &&
+                              !isAdmin;
+                            const useExamDialog = soloSub.id === EXAM_ID;
+                            return (
+                              <SubtaskContent
+                                subtask={soloSub}
+                                userId={userId}
+                                isAdmin={isAdmin}
+                                displayTitle={block.title}
+                                completed={!!soloState?.completed}
+                                score={soloState?.score ?? null}
+                                gateLocked={gateLocked}
+                                examNeedsVideo={examNeedsVideo}
+                                useExamDialog={useExamDialog}
+                                onComplete={(score) => onComplete(soloSub, score)}
+                                onUncheck={() => onUncheck(soloSub.id)}
+                              />
+                            );
+                          })()}
+                        </div>
+                      ) : isExam && examSub ? (
+                        <div className="border-t border-violet-300/20 px-4 sm:px-5 py-4 sm:py-5">
+                          {(() => {
+                            const inFinalGate = FINAL_GATE_IDS.has(examSub.id);
+                            const gateLocked =
+                              inFinalGate && !gateUnlocked && !isAdmin;
+                            const examNeedsVideo =
+                              examSub.id === EXAM_ID &&
+                              gateUnlocked &&
+                              !gateVideoCompleted &&
+                              !isAdmin;
+                            const useExamDialog = examSub.id === EXAM_ID;
+                            return (
+                              <SubtaskContent
+                                subtask={examSub}
+                                userId={userId}
+                                isAdmin={isAdmin}
+                                displayTitle={examSub.title}
+                                completed={!!examState?.completed || examPassed}
+                                score={examState?.score ?? null}
+                                gateLocked={gateLocked}
+                                examNeedsVideo={examNeedsVideo}
+                                useExamDialog={useExamDialog}
+                                onComplete={(score) =>
+                                  onComplete(examSub, score)
+                                }
+                                onUncheck={() => onUncheck(examSub.id)}
+                              />
+                            );
+                          })()}
+                        </div>
+                      ) : (
+                        <div className="border-t border-white/5 divide-y divide-white/5">
+                          {block.items.map((entry) => {
+                            const idx = group.items.findIndex(
+                              (g) => g.subtask.id === entry.subtask.id,
+                            );
+                            return renderItemRow(entry, idx);
+                          })}
+                        </div>
+                      )
                     )}
                   </div>
                 );
