@@ -490,6 +490,7 @@ function SubtaskGroupCard({
 
   // All steps start collapsed by default. User expands manually.
   const [openId, setOpenId] = useState<string | null>(null);
+  const [openBlockKey, setOpenBlockKey] = useState<string | null>(null);
   // Collapse a step automatically once it's marked complete.
   useEffect(() => {
     setOpenId((cur) => {
