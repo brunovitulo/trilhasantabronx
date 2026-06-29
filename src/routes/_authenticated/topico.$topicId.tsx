@@ -1145,19 +1145,34 @@ function ExamDialogLauncher({
     };
   }, [open, isAdmin]);
 
+  // Buscamos a última submissão (se houver) para saber se entramos no fluxo inline
+  // (mostrando status/feedback) ou se voltamos para o pedido de permissão. No caso de
+  // reprovação com "refazer módulo inteiro", tratamos como se não houvesse submissão.
+  const [lastSubmission, setLastSubmission] = useState<
+    { status: "pending_review" | "approved" | "rejected"; retry_requires_module_redo: boolean } | null | undefined
+  >(undefined);
+
   useEffect(() => {
     let active = true;
-    (async () => {
+    async function load() {
       const { data } = await supabase
         .from("open_evaluation_submissions")
-        .select("id")
+        .select("status, retry_requires_module_redo")
         .eq("user_id", userId)
         .eq("subtask_id", subtask.id)
         .order("created_at", { ascending: false })
         .limit(1);
       if (!active) return;
-      setHasSubmission((data?.length ?? 0) > 0);
-    })();
+      const row = data?.[0] as
+        | { status: "pending_review" | "approved" | "rejected"; retry_requires_module_redo: boolean | null }
+        | undefined;
+      setLastSubmission(
+        row
+          ? { status: row.status, retry_requires_module_redo: !!row.retry_requires_module_redo }
+          : null,
+      );
+    }
+    load();
     const ch = supabase
       .channel(`oes-${userId}-${subtask.id}`)
       .on(
@@ -1168,7 +1183,7 @@ function ExamDialogLauncher({
           table: "open_evaluation_submissions",
           filter: `user_id=eq.${userId}`,
         },
-        () => setHasSubmission(true),
+        () => load(),
       )
       .subscribe();
     return () => {
@@ -1177,8 +1192,16 @@ function ExamDialogLauncher({
     };
   }, [userId, subtask.id]);
 
-  // Se já foi enviada/corrigida, mostrar o status inline (sem dialog).
-  if (completed || hasSubmission) {
+  // Caso especial: prova reprovada com exigência de refazer o módulo inteiro.
+  // Não bloqueia o fluxo: cai no fluxo de pedido de permissão (e o gate de tarefas
+  // do tópico vai exigir refazer tudo antes do botão liberar).
+  const forceRedoModule =
+    lastSubmission?.status === "rejected" && lastSubmission.retry_requires_module_redo;
+  const hasActiveSubmission =
+    lastSubmission != null && !forceRedoModule;
+
+  // Se já foi enviada/corrigida e não exige refazer o módulo, mostra o status inline.
+  if (completed || hasActiveSubmission) {
     return (
       <OpenEvaluationSubtask
         subtask={subtask}
