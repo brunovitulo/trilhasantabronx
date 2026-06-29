@@ -851,7 +851,7 @@ function SubtaskGroupCard({
                             )}
                             <span className="inline-flex items-center gap-1 rounded-full border border-[#F09595]/50 bg-[#E24B4A]/20 px-2 py-0.5 text-[11px] text-[#F09595]">
                               <Clock className="h-3 w-3" />
-                              45 minutos
+                              {examSub ? getExamDurationMinutes((examSub as Extract<Subtask, { kind: "evaluation" | "open_evaluation" }>).questions.length) : 45} minutos
                             </span>
                             {blockLocked && (
                               <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/[0.06] px-2 py-0.5 text-[11px] text-muted-foreground">
@@ -1121,6 +1121,7 @@ function ExamDialogLauncher({
   const [open, setOpen] = useState(false);
   const [hasSubmission, setHasSubmission] = useState<boolean | null>(null);
   const [showExitWarning, setShowExitWarning] = useState(false);
+  const durationMinutes = getExamDurationMinutes(subtask.questions.length);
 
   // Bloqueio de saída para atendentes durante a prova
   useEffect(() => {
