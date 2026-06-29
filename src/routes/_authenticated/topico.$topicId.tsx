@@ -956,12 +956,8 @@ function SubtaskGroupCard({
                                 userId={userId}
                                 isAdmin={isAdmin}
                                 displayTitle={examSub.title}
-                                completed={!!soloState?.completed || examPassed}
-                                score={
-                                  (group.items[meta.indices[0]] &&
-                                    itemStates[meta.indices[0]]?.state.score) ??
-                                  null
-                                }
+                                completed={!!examState?.completed || examPassed}
+                                score={examState?.score ?? null}
                                 gateLocked={gateLocked}
                                 examNeedsVideo={examNeedsVideo}
                                 useExamDialog={useExamDialog}
