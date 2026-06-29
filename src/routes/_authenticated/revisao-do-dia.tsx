@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import {
   ArrowLeft,
@@ -916,7 +916,4 @@ function StepHeader({ n, title }: { n: number; title: string }) {
   );
 }
 
-// Suprime warning de imports não utilizados quando renderizamos só metadados.
-export type { ReviewQueueItem } from "@/lib/dailyReview";
-function _unused(_: { useMemo?: typeof useMemo }) { /* noop */ }
-void _unused;
+
