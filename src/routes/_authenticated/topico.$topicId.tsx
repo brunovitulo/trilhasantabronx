@@ -831,21 +831,21 @@ function SubtaskGroupCard({
                         {isExam ? (
                           <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                             {examCounts.open > 0 && (
-                              <span className="inline-flex items-center gap-1 rounded-full border border-violet-300/30 bg-violet-500/15 px-2 py-0.5 text-[11px] text-violet-100">
+                              <span className="inline-flex items-center gap-1 rounded-full border border-[#F09595]/50 bg-[#E24B4A]/20 px-2 py-0.5 text-[11px] text-[#F09595]">
                                 <Pencil className="h-3 w-3" />
                                 {examCounts.open} {examCounts.open === 1 ? "questão aberta" : "questões abertas"}
                               </span>
                             )}
                             {examCounts.open > 0 && examCounts.closed > 0 && (
-                              <span className="text-[11px] text-violet-200/70">+</span>
+                              <span className="text-[11px] text-[#F09595]/70">+</span>
                             )}
                             {examCounts.closed > 0 && (
-                              <span className="inline-flex items-center gap-1 rounded-full border border-violet-300/30 bg-violet-500/15 px-2 py-0.5 text-[11px] text-violet-100">
+                              <span className="inline-flex items-center gap-1 rounded-full border border-[#F09595]/50 bg-[#E24B4A]/20 px-2 py-0.5 text-[11px] text-[#F09595]">
                                 <ListChecks className="h-3 w-3" />
                                 {examCounts.closed} {examCounts.closed === 1 ? "questão fechada" : "questões fechadas"}
                               </span>
                             )}
-                            <span className="inline-flex items-center gap-1 rounded-full border border-violet-300/30 bg-violet-500/15 px-2 py-0.5 text-[11px] text-violet-100">
+                            <span className="inline-flex items-center gap-1 rounded-full border border-[#F09595]/50 bg-[#E24B4A]/20 px-2 py-0.5 text-[11px] text-[#F09595]">
                               <Clock className="h-3 w-3" />
                               45 minutos
                             </span>
