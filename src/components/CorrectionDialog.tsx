@@ -47,6 +47,8 @@ export function CorrectionDialog({
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [general, setGeneral] = useState("");
+  // Quando reprovada, admin escolhe se atendente pode refazer só a prova ou todo o módulo.
+  const [retryMode, setRetryMode] = useState<"direct" | "redo_module">("direct");
 
   const sub = submission ? findSubtask(submission.subtask_id) : null;
   const topicTitle = sub?.topic.title ?? "Prova";
