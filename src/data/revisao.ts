@@ -413,6 +413,172 @@ const QUIZ_VENDAS: RevisionQuestion[] = [
   ),
 ];
 
+const QUIZ_OBJECOES: RevisionQuestion[] = [
+  Q(
+    "Uma cliente pergunta se a entrega é discreta. Qual resposta quebra melhor todas as objeções de uma vez?",
+    [
+      "\"Entregamos sim, pode ficar tranquila — nosso motoboy é de confiança.\"",
+      "\"Entregamos com embalagem sem identificação, lacrada, sem mostrar o conteúdo — parece qualquer outra entrega.\"",
+      "\"Entregamos normalmente, igual qualquer outro produto online.\"",
+      "\"Pode vir buscar na loja se preferir — temos loja física também.\"",
+    ],
+    1,
+  ),
+  Q(
+    "Por que a consultora deve antecipar objeções em vez de esperar o cliente perguntar?",
+    [
+      "Porque o cliente se sente mais confortável quando a atendente faz perguntas primeiro.",
+      "Porque antecipar mostra domínio do produto e impressiona o cliente.",
+      "Porque muitas objeções ficam apenas na cabeça do cliente e podem fazê-lo desistir silenciosamente sem dar chance de resposta.",
+      "Porque o gestor exige que todas as dúvidas sejam respondidas antes de fechar a venda.",
+    ],
+    2,
+  ),
+  Q(
+    "Um cliente tem medo de que o nome da loja apareça na fatura do cartão. Como responder corretamente?",
+    [
+      "Sugerir que o cliente use pix para evitar qualquer registro na fatura.",
+      "Explicar que na fatura aparece apenas 'Santa Bronx', sem identificação do nicho.",
+      "Dizer que a fatura vem em nome do banco, então não aparece nada.",
+      "Oferecer parcelamento para diluir o valor e o nome aparecer menor.",
+    ],
+    1,
+  ),
+  Q(
+    "Qual cuidado é obrigatório ao embalar produtos com formato evidente, como próteses?",
+    [
+      "Usar caixa de papelão rígida para que o formato não apareça por fora.",
+      "Avisar o motoboy para manusear com cuidado e não apertar a embalagem.",
+      "Envolver o produto em plástico bolha antes de lacrar, para disfarçar o formato.",
+      "Colocar outros itens junto para que o formato se perca entre os demais produtos.",
+    ],
+    2,
+  ),
+  Q(
+    "Um cliente tem receio de ser visto entrando na loja presencial. Qual resposta transmite mais segurança?",
+    [
+      "\"A loja é discreta por fora, ninguém vai perceber que é um sex shop.\"",
+      "\"Pode vir em horário de menor movimento, como de manhã cedo.\"",
+      "\"Pode vir tranquila. Nosso atendimento é leve, discreto e sem julgamento — e a entrada não chama atenção.\"",
+      "\"Temos câmeras internas que garantem a privacidade de quem visita.\"",
+    ],
+    2,
+  ),
+  Q(
+    "O que diferencia uma consultora de uma vendedora no atendimento da Santa Bronx?",
+    [
+      "A consultora vende produtos mais caros e tem comissão maior.",
+      "A consultora faz perguntas para entender a necessidade e indica a solução certa; a vendedora empurra produto sem entender o que o cliente precisa.",
+      "A consultora só atende clientes que já conhecem os produtos.",
+      "A consultora foca em fechar rápido; a vendedora dedica mais tempo ao cliente.",
+    ],
+    1,
+  ),
+  Q(
+    "Por que a leveza e simpatia são fundamentais especialmente no atendimento de sex shop?",
+    [
+      "Porque clientes desse nicho costumam ser mais exigentes e reclamam mais.",
+      "Porque simpatia compensa a falta de conhecimento técnico sobre os produtos.",
+      "Porque o cliente precisa sentir naturalidade e segurança para se abrir sobre necessidades íntimas — sem isso ele não fala o que realmente precisa.",
+      "Porque o gestor avalia principalmente a simpatia nas gravações de atendimento.",
+    ],
+    2,
+  ),
+  Q(
+    "Um cliente pergunta se a embalagem pode revelar o formato do produto por fora. O que responder?",
+    [
+      "\"Não garantimos em produtos maiores, mas tentamos empacotar bem.\"",
+      "\"Embalamos com cuidado e usamos plástico bolha quando necessário — nenhum formato fica aparente por fora.\"",
+      "\"A embalagem é opaca, então mesmo sem plástico bolha nada aparece.\"",
+      "\"Orientamos o motoboy para segurar a embalagem de forma que não marque.\"",
+    ],
+    1,
+  ),
+];
+
+const QUIZ_DORES: RevisionQuestion[] = [
+  Q(
+    "Um cliente relata dificuldade de ereção ocasional e quer algo pontual para usar antes da relação. Qual indicação faz mais sentido?",
+    [
+      "Cápsulas de libido de uso contínuo, pois têm efeito acumulativo mais eficaz.",
+      "Bomba peniana, pois é a solução mais completa independente da gravidade.",
+      "Sachê estimulante, pois tem proposta de efeito mais imediato e pontual.",
+      "Anel peniano, pois sustenta a ereção durante toda a relação sem precisar de preparo.",
+    ],
+    2,
+  ),
+  Q(
+    "Por que o spray retardante não causa perda de ereção mesmo reduzindo sensibilidade?",
+    [
+      "Porque é aplicado externamente e o corpo compensa com mais lubrificação natural.",
+      "Porque contém vasodilatador que mantém o fluxo sanguíneo na região, compensando a redução de sensibilidade.",
+      "Porque a redução de sensibilidade é tão leve que o cérebro não registra diferença.",
+      "Porque age só na pele superficial e não afeta os nervos responsáveis pela ereção.",
+    ],
+    1,
+  ),
+  Q(
+    "Uma cliente com ressecamento vaginal severo e recorrente busca tratamento. O que indicar e por quê?",
+    [
+      "Lubrificante de uso contínuo, pois é o produto mais acessível para ressecamento.",
+      "Excitante vaginal, pois aumenta a sensibilidade e compensa o ressecamento.",
+      "Hidratante vaginal, pois é um tratamento de uso contínuo focado em restaurar a hidratação — diferente do lubrificante que é apenas pontual.",
+      "Dilatador vaginal, pois o ressecamento severo costuma vir acompanhado de tensão muscular.",
+    ],
+    2,
+  ),
+  Q(
+    "Qual é a diferença prática entre lubrificante e hidratante vaginal que a consultora deve saber explicar?",
+    [
+      "Lubrificante é para uso anal; hidratante é exclusivo para uso vaginal.",
+      "Lubrificante tem efeito imediato e pontual durante a relação; hidratante é um tratamento de uso contínuo para ressecamento crônico.",
+      "Hidratante tem textura mais grossa e lubrifica melhor durante o ato do que o lubrificante comum.",
+      "São o mesmo produto — a diferença é só na embalagem e no público-alvo.",
+    ],
+    1,
+  ),
+  Q(
+    "Por que saliva não é suficiente como lubrificante no sexo anal?",
+    [
+      "Porque a saliva tem pH incompatível com o tecido anal e causa irritação.",
+      "Porque a saliva contém bactérias que aumentam o risco de infecção local.",
+      "Porque o ânus não tem lubrificação própria e a saliva seca rapidamente, aumentando o atrito e o risco de lesão.",
+      "Porque a saliva não tem viscosidade suficiente para produtos maiores.",
+    ],
+    2,
+  ),
+  Q(
+    "Um casal quer experimentar penetração anal pela primeira vez. Qual combinação de produtos é mais adequada?",
+    [
+      "Anestésico anal + lubrificante, pois eliminar o desconforto é o passo mais importante.",
+      "Plug anal pequeno + lubrificante + anestésico anal, para dilatar gradualmente e reduzir o desconforto.",
+      "Vibrador de penetração + lubrificante, pois a vibração relaxa a musculatura naturalmente.",
+      "Lubrificante abundante sozinho, pois com quantidade suficiente não há necessidade de preparo adicional.",
+    ],
+    1,
+  ),
+  Q(
+    "O que a consultora deve esclarecer sobre capa peniana antes de fechar a venda?",
+    [
+      "Que ela deve ser usada junto com lubrificante para não ressecar durante o uso.",
+      "Que o efeito de aumento de volume é permanente com uso regular.",
+      "Que ela não substitui camisinha e não oferece proteção contra ISTs ou gravidez.",
+      "Que ela é indicada apenas para homens com disfunção erétil moderada.",
+    ],
+    2,
+  ),
+  Q(
+    "Uma cliente pergunta se a bolinha explosiva pode ficar presa. Como responder com segurança e precisão?",
+    [
+      "Explicar que existe risco em modelos maiores, mas que o corpo elimina naturalmente em até 72h.",
+      "Dizer que o produto é seguro e que qualquer dúvida ela pode consultar um ginecologista após o uso.",
+      "Explicar que o corpo dissolve a bolinha naturalmente durante o uso — ela não fica presa.",
+      "Garantir que a bolinha é pequena o suficiente para não oferecer nenhum risco independente do modelo.",
+    ],
+    2,
+  ),
+];
+
 export const REVISION_CONTENT: Record<string, RevisionContent> = {
   apresentacao: {
     topicId: "apresentacao",
