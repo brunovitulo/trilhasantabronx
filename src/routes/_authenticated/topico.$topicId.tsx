@@ -808,7 +808,7 @@ function SubtaskGroupCard({
                             className={cn(
                               "text-sm font-semibold leading-tight",
                               isExam
-                                ? "text-violet-50"
+                                ? "text-[#F09595]"
                                 : soloPassed
                                   ? "text-muted-foreground line-through"
                                   : "text-foreground",
