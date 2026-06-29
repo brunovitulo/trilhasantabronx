@@ -460,6 +460,10 @@ function getExamCounts(sub: Subtask): { open: number; closed: number } {
   return { open: 0, closed: 0 };
 }
 
+function getExamDurationMinutes(questionCount: number): number {
+  return questionCount <= 16 ? 45 : 60;
+}
+
 function SubtaskGroupCard({
   group,
   topic,
