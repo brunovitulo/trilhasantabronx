@@ -817,7 +817,7 @@ function SubtaskGroupCard({
                             {isExam ? (examSub?.title ?? "Prova") : block.title}
                           </h4>
                           {isExam && (
-                            <Badge className="bg-violet-500/25 text-violet-50 border border-violet-300/40 hover:bg-violet-500/25">
+                            <Badge className="bg-[#E24B4A] text-white border border-[#E24B4A] hover:bg-[#E24B4A]">
                               Avaliação
                             </Badge>
                           )}
