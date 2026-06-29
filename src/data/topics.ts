@@ -1480,14 +1480,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.excitantes.video",
         kind: "video",
-        title: "1. Excitantes — Assistir destaque",
+        title: "1. Cosméticos — Excitantes — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18213902995324551/",
       },
       {
         id: "produtos.excitantes.produtos",
         kind: "product_links",
-        title: "1. Excitantes — Ver produtos reais no site",
+        title: "1. Cosméticos — Excitantes — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Excitante Unissex Pico Pulse Suga Vibra Pulsa E Refresca Sabor Melancia", url: "https://sexshopsantabronx.com.br/produto/excitante-unissex-pico-pulse-suga-vibra-pulsa-e-refresca-sabor-melancia/" },
@@ -1505,7 +1505,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.excitantes.fixacao",
         kind: "practice",
-        title: "1. Excitantes — Exercício de fixação (7 questões)",
+        title: "1. Cosméticos — Excitantes — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Excitantes. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -1548,7 +1548,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.excitantes.apostila",
         kind: "inline_html",
-        title: "1. Excitantes — Ler apostila",
+        title: "1. Cosméticos — Excitantes — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_excitantes",
         openLabel: "Abrir apostila",
@@ -1557,14 +1557,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.perfumes_feromonios.video",
         kind: "video",
-        title: "2. Perfumes Feromônios — Assistir destaque",
+        title: "1. Cosméticos — Perfumes Feromônios — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18079101806153052/",
       },
       {
         id: "produtos.perfumes_feromonios.produtos",
         kind: "product_links",
-        title: "2. Perfumes Feromônios — Ver produtos reais no site",
+        title: "1. Cosméticos — Perfumes Feromônios — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Perfume Com Feromonio Selvage", url: "https://sexshopsantabronx.com.br/produto/perfume-com-feromonio-selvage/" },
@@ -1575,7 +1575,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.perfumes_feromonios.fixacao",
         kind: "practice",
-        title: "2. Perfumes Feromônios — Exercício de fixação (7 questões)",
+        title: "1. Cosméticos — Perfumes Feromônios — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Perfumes Feromônios. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -1618,7 +1618,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.perfumes_feromonios.apostila",
         kind: "inline_html",
-        title: "2. Perfumes Feromônios — Ler apostila",
+        title: "1. Cosméticos — Perfumes Feromônios — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_perfumes_feromonios",
         openLabel: "Abrir apostila",
@@ -1627,14 +1627,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.adstringente.video",
         kind: "video",
-        title: "3. Adstringente — Assistir destaque",
+        title: "1. Cosméticos — Adstringente — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18110763523883412/",
       },
       {
         id: "produtos.adstringente.produtos",
         kind: "product_links",
-        title: "3. Adstringente — Ver produtos reais no site",
+        title: "1. Cosméticos — Adstringente — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Adstringente Feminino Lacradinha", url: "https://sexshopsantabronx.com.br/produto/adstringente-feminino-lacradinha/" },
@@ -1645,7 +1645,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.adstringente.fixacao",
         kind: "practice",
-        title: "3. Adstringente — Exercício de fixação (7 questões)",
+        title: "1. Cosméticos — Adstringente — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Adstringente. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -1688,7 +1688,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.adstringente.apostila",
         kind: "inline_html",
-        title: "3. Adstringente — Ler apostila",
+        title: "1. Cosméticos — Adstringente — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_adstringente",
         openLabel: "Abrir apostila",
@@ -1697,14 +1697,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.estimulantes_sexuais.video",
         kind: "video",
-        title: "4. Estimulantes Sexuais — Assistir destaque",
+        title: "1. Cosméticos — Estimulantes Sexuais — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/17948935620151742/",
       },
       {
         id: "produtos.estimulantes_sexuais.produtos",
         kind: "product_links",
-        title: "4. Estimulantes Sexuais — Ver produtos reais no site",
+        title: "1. Cosméticos — Estimulantes Sexuais — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Mel Power Honey Original Melzinho Do Amor", url: "https://sexshopsantabronx.com.br/produto/mel-power-honey-original-melzinho-do-amor/" },
@@ -1718,7 +1718,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.estimulantes_sexuais.fixacao",
         kind: "practice",
-        title: "4. Estimulantes Sexuais — Exercício de fixação (7 questões)",
+        title: "1. Cosméticos — Estimulantes Sexuais — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Estimulantes Sexuais. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -1761,7 +1761,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.estimulantes_sexuais.apostila",
         kind: "inline_html",
-        title: "4. Estimulantes Sexuais — Ler apostila",
+        title: "1. Cosméticos — Estimulantes Sexuais — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_estimulantes_sexuais",
         openLabel: "Abrir apostila",
@@ -1770,14 +1770,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.retardante.video",
         kind: "video",
-        title: "5. Retardante — Assistir destaque",
+        title: "1. Cosméticos — Retardante — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18129328621565287/",
       },
       {
         id: "produtos.retardante.produtos",
         kind: "product_links",
-        title: "5. Retardante — Ver produtos reais no site",
+        title: "1. Cosméticos — Retardante — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Retardante Masculino", url: "https://sexshopsantabronx.com.br/produto/retardante-masculino/" },
@@ -1788,7 +1788,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.retardante.fixacao",
         kind: "practice",
-        title: "5. Retardante — Exercício de fixação (7 questões)",
+        title: "1. Cosméticos — Retardante — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Retardante. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -1831,7 +1831,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.retardante.apostila",
         kind: "inline_html",
-        title: "5. Retardante — Ler apostila",
+        title: "1. Cosméticos — Retardante — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_retardante",
         openLabel: "Abrir apostila",
@@ -1840,14 +1840,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.lubrificante.video",
         kind: "video",
-        title: "6. Lubrificante — Assistir destaque",
+        title: "1. Cosméticos — Lubrificante — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18203220946339583/",
       },
       {
         id: "produtos.lubrificante.produtos",
         kind: "product_links",
-        title: "6. Lubrificante — Ver produtos reais no site",
+        title: "1. Cosméticos — Lubrificante — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Lubrificante Intimo Lubrisex Luxo", url: "https://sexshopsantabronx.com.br/produto/lubrificante-intimo-lubrisex-luxo/" },
@@ -1861,7 +1861,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.lubrificante.fixacao",
         kind: "practice",
-        title: "6. Lubrificante — Exercício de fixação (7 questões)",
+        title: "1. Cosméticos — Lubrificante — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Lubrificante. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -1904,7 +1904,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.lubrificante.apostila",
         kind: "inline_html",
-        title: "6. Lubrificante — Ler apostila",
+        title: "1. Cosméticos — Lubrificante — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_lubrificante",
         openLabel: "Abrir apostila",
@@ -1913,14 +1913,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.anestesicos.video",
         kind: "video",
-        title: "7. Anestésicos — Assistir destaque",
+        title: "1. Cosméticos — Anestésicos — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18092275670268816/",
       },
       {
         id: "produtos.anestesicos.produtos",
         kind: "product_links",
-        title: "7. Anestésicos — Ver produtos reais no site",
+        title: "1. Cosméticos — Anestésicos — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Anestesico Anal Cliv Intt Gold", url: "https://sexshopsantabronx.com.br/produto/anestesico-anal-cliv-intt-gold/" },
@@ -1933,7 +1933,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.anestesicos.fixacao",
         kind: "practice",
-        title: "7. Anestésicos — Exercício de fixação (7 questões)",
+        title: "1. Cosméticos — Anestésicos — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Anestésicos. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -1976,7 +1976,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.anestesicos.apostila",
         kind: "inline_html",
-        title: "7. Anestésicos — Ler apostila",
+        title: "1. Cosméticos — Anestésicos — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_anestesicos",
         openLabel: "Abrir apostila",
@@ -1985,7 +1985,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.cosmeticos.exam",
         kind: "open_evaluation",
-        title: "Prova Final — Cosméticos",
+        title: "1. Cosméticos — Prova final do grupo",
         description:
           "Prova final do grupo Cosméticos. 28 questões (21 múltipla escolha + 7 abertas). Solicite liberação ao gestor para iniciar. As objetivas são corrigidas automaticamente; as abertas vão para correção do gestor. Nota mínima 70%.",
         passingScore: 70,
@@ -2023,14 +2023,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.capas_penianas.video",
         kind: "video",
-        title: "8. Capas Penianas — Assistir destaque",
+        title: "2. Acessórios — Capas Penianas — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/17912793174179906/",
       },
       {
         id: "produtos.capas_penianas.produtos",
         kind: "product_links",
-        title: "8. Capas Penianas — Ver produtos reais no site",
+        title: "2. Acessórios — Capas Penianas — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Capa Peniana 4", url: "https://sexshopsantabronx.com.br/produto/capa-peniana-4/" },
@@ -2044,7 +2044,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.capas_penianas.fixacao",
         kind: "practice",
-        title: "8. Capas Penianas — Exercício de fixação (7 questões)",
+        title: "2. Acessórios — Capas Penianas — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Capas Penianas. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2087,7 +2087,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.capas_penianas.apostila",
         kind: "inline_html",
-        title: "8. Capas Penianas — Ler apostila",
+        title: "2. Acessórios — Capas Penianas — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_capas_penianas",
         openLabel: "Abrir apostila",
@@ -2096,14 +2096,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.plug_anal.video",
         kind: "video",
-        title: "9. Plug Anal — Assistir destaque",
+        title: "2. Acessórios — Plug Anal — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/17881692318550727/",
       },
       {
         id: "produtos.plug_anal.produtos",
         kind: "product_links",
-        title: "9. Plug Anal — Ver produtos reais no site",
+        title: "2. Acessórios — Plug Anal — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Plug Anal Com Joia Em Metal P", url: "https://sexshopsantabronx.com.br/produto/plug-anal-com-joia-em-metal-p/" },
@@ -2127,7 +2127,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.plug_anal.fixacao",
         kind: "practice",
-        title: "9. Plug Anal — Exercício de fixação (7 questões)",
+        title: "2. Acessórios — Plug Anal — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Plug Anal. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2170,7 +2170,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.plug_anal.apostila",
         kind: "inline_html",
-        title: "9. Plug Anal — Ler apostila",
+        title: "2. Acessórios — Plug Anal — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_plug_anal",
         openLabel: "Abrir apostila",
@@ -2179,14 +2179,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.anel_peniano.video",
         kind: "video",
-        title: "10. Anel Peniano — Assistir destaque",
+        title: "2. Acessórios — Anel Peniano — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18007480826708456/",
       },
       {
         id: "produtos.anel_peniano.produtos",
         kind: "product_links",
-        title: "10. Anel Peniano — Ver produtos reais no site",
+        title: "2. Acessórios — Anel Peniano — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Anel Peniano Com Vibrador Luvkis", url: "https://sexshopsantabronx.com.br/produto/anel-peniano-com-vibrador-luvkis/" },
@@ -2201,7 +2201,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.anel_peniano.fixacao",
         kind: "practice",
-        title: "10. Anel Peniano — Exercício de fixação (7 questões)",
+        title: "2. Acessórios — Anel Peniano — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Anel Peniano. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2244,7 +2244,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.anel_peniano.apostila",
         kind: "inline_html",
-        title: "10. Anel Peniano — Ler apostila",
+        title: "2. Acessórios — Anel Peniano — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_anel_peniano",
         openLabel: "Abrir apostila",
@@ -2253,14 +2253,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.sado.video",
         kind: "video",
-        title: "11. Sado — Assistir destaque",
+        title: "2. Acessórios — Sado — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18047895194583475/",
       },
       {
         id: "produtos.sado.produtos",
         kind: "product_links",
-        title: "11. Sado — Ver produtos reais no site",
+        title: "2. Acessórios — Sado — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Algema De Luxo", url: "https://sexshopsantabronx.com.br/produto/algema-de-luxo/" },
@@ -2279,7 +2279,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.sado.fixacao",
         kind: "practice",
-        title: "11. Sado — Exercício de fixação (7 questões)",
+        title: "2. Acessórios — Sado — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Sado. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2322,7 +2322,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.sado.apostila",
         kind: "inline_html",
-        title: "11. Sado — Ler apostila",
+        title: "2. Acessórios — Sado — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_sado",
         openLabel: "Abrir apostila",
@@ -2331,14 +2331,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.masturbador_masculino.video",
         kind: "video",
-        title: "12. Masturbador Masculino — Assistir destaque",
+        title: "2. Acessórios — Masturbador Masculino — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18007013321712178/",
       },
       {
         id: "produtos.masturbador_masculino.produtos",
         kind: "product_links",
-        title: "12. Masturbador Masculino — Ver produtos reais no site",
+        title: "2. Acessórios — Masturbador Masculino — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Masturbador Vagina E Anus Bumbum2", url: "https://sexshopsantabronx.com.br/produto/masturbador-vagina-e-anus-bumbum2/" },
@@ -2353,7 +2353,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.masturbador_masculino.fixacao",
         kind: "practice",
-        title: "12. Masturbador Masculino — Exercício de fixação (7 questões)",
+        title: "2. Acessórios — Masturbador Masculino — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Masturbador Masculino. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2396,7 +2396,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.masturbador_masculino.apostila",
         kind: "inline_html",
-        title: "12. Masturbador Masculino — Ler apostila",
+        title: "2. Acessórios — Masturbador Masculino — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_masturbador_masculino",
         openLabel: "Abrir apostila",
@@ -2405,14 +2405,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.roupas.video",
         kind: "video",
-        title: "13. Roupas — Assistir destaque",
+        title: "2. Acessórios — Roupas — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18118409227649876/",
       },
       {
         id: "produtos.roupas.produtos",
         kind: "product_links",
-        title: "13. Roupas — Ver produtos reais no site",
+        title: "2. Acessórios — Roupas — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Body Stocking Macacao Sexy Detalhe Na Barriga Abertura Intima Tamanho Unico Veste Do 34 Ao 44", url: "https://sexshopsantabronx.com.br/produto/body-stocking-macacao-sexy-detalhe-na-barriga-abertura-intima-tamanho-unico-veste-do-34-ao-44/" },
@@ -2426,7 +2426,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.roupas.fixacao",
         kind: "practice",
-        title: "13. Roupas — Exercício de fixação (7 questões)",
+        title: "2. Acessórios — Roupas — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Roupas. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2469,7 +2469,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.roupas.apostila",
         kind: "inline_html",
-        title: "13. Roupas — Ler apostila",
+        title: "2. Acessórios — Roupas — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_roupas",
         openLabel: "Abrir apostila",
@@ -2478,14 +2478,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.penis_realistico.video",
         kind: "video",
-        title: "14. Pênis Realístico — Assistir destaque",
+        title: "2. Acessórios — Pênis Realístico — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
         url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
       {
         id: "produtos.penis_realistico.produtos",
         kind: "product_links",
-        title: "14. Pênis Realístico — Ver produtos reais no site",
+        title: "2. Acessórios — Pênis Realístico — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Penis De Borracha 22Cm X 4Cm 10 Modos De Vibracoes Rotacao 360 Graus Vai E Vem Aquecimento...", url: "https://sexshopsantabronx.com.br/produto/penis-de-borracha-22cm-x-4cm-10-modos-de-vibracoes-rotacao-360-graus-vai-e-vem-aquecimento-material-semelhante-a-pele-controle-sem-fio-recarregavel/" },
@@ -2497,7 +2497,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.penis_realistico.fixacao",
         kind: "practice",
-        title: "14. Pênis Realístico — Exercício de fixação (7 questões)",
+        title: "2. Acessórios — Pênis Realístico — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Pênis Realístico. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2540,7 +2540,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.penis_realistico.apostila",
         kind: "inline_html",
-        title: "14. Pênis Realístico — Ler apostila",
+        title: "2. Acessórios — Pênis Realístico — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_penis_realistico",
         openLabel: "Abrir apostila",
@@ -2549,7 +2549,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.acessorios.exam",
         kind: "open_evaluation",
-        title: "Prova Final — Acessórios",
+        title: "2. Acessórios — Prova final do grupo",
         description:
           "Prova final do grupo Acessórios. 28 questões (21 múltipla escolha + 7 abertas). Solicite liberação ao gestor para iniciar. As objetivas são corrigidas automaticamente; as abertas vão para correção do gestor. Nota mínima 70%.",
         passingScore: 70,
@@ -2587,14 +2587,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.vibrador_rabbit.video",
         kind: "video",
-        title: "15. Vibrador Rabbit — Assistir destaque",
+        title: "3. Vibradores — Vibrador Rabbit — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
         url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
       {
         id: "produtos.vibrador_rabbit.produtos",
         kind: "product_links",
-        title: "15. Vibrador Rabbit — Ver produtos reais no site",
+        title: "3. Vibradores — Vibrador Rabbit — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Vibrador Rabbit Ponto G E Clitoris Recarregavel 9 Modos De Vibracao", url: "https://sexshopsantabronx.com.br/produto/vibrador-rabbit-ponto-g-e-clitoris-recarregavel-9-modos-de-vibracao/" },
@@ -2606,7 +2606,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.vibrador_rabbit.fixacao",
         kind: "practice",
-        title: "15. Vibrador Rabbit — Exercício de fixação (7 questões)",
+        title: "3. Vibradores — Vibrador Rabbit — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Vibrador Rabbit. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2649,7 +2649,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.vibrador_rabbit.apostila",
         kind: "inline_html",
-        title: "15. Vibrador Rabbit — Ler apostila",
+        title: "3. Vibradores — Vibrador Rabbit — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_vibrador_rabbit",
         openLabel: "Abrir apostila",
@@ -2658,14 +2658,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.sugador_de_clitoris.video",
         kind: "video",
-        title: "16. Sugador de Clitóris — Assistir destaque",
+        title: "3. Vibradores — Sugador de Clitóris — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
         url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
       {
         id: "produtos.sugador_de_clitoris.produtos",
         kind: "product_links",
-        title: "16. Sugador de Clitóris — Ver produtos reais no site",
+        title: "3. Vibradores — Sugador de Clitóris — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Sugador De Clitoris Duplo", url: "https://sexshopsantabronx.com.br/produto/sugador-de-clitoris-duplo/" },
@@ -2677,7 +2677,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.sugador_de_clitoris.fixacao",
         kind: "practice",
-        title: "16. Sugador de Clitóris — Exercício de fixação (7 questões)",
+        title: "3. Vibradores — Sugador de Clitóris — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Sugador de Clitóris. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2720,7 +2720,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.sugador_de_clitoris.apostila",
         kind: "inline_html",
-        title: "16. Sugador de Clitóris — Ler apostila",
+        title: "3. Vibradores — Sugador de Clitóris — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_sugador_de_clitoris",
         openLabel: "Abrir apostila",
@@ -2729,14 +2729,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.vibrador_de_calcinha.video",
         kind: "video",
-        title: "17. Vibrador de Calcinha — Assistir destaque",
+        title: "3. Vibradores — Vibrador de Calcinha — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
         url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
       {
         id: "produtos.vibrador_de_calcinha.produtos",
         kind: "product_links",
-        title: "17. Vibrador de Calcinha — Ver produtos reais no site",
+        title: "3. Vibradores — Vibrador de Calcinha — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Calcinha Vibratoria Recarregavel Com Ima E Controle Sem Fio", url: "https://sexshopsantabronx.com.br/produto/calcinha-vibratoria-recarregavel-com-ima-e-controle-sem-fio/" }
@@ -2746,7 +2746,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.vibrador_de_calcinha.fixacao",
         kind: "practice",
-        title: "17. Vibrador de Calcinha — Exercício de fixação (7 questões)",
+        title: "3. Vibradores — Vibrador de Calcinha — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Vibrador de Calcinha. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2789,7 +2789,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.vibrador_de_calcinha.apostila",
         kind: "inline_html",
-        title: "17. Vibrador de Calcinha — Ler apostila",
+        title: "3. Vibradores — Vibrador de Calcinha — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_vibrador_de_calcinha",
         openLabel: "Abrir apostila",
@@ -2798,14 +2798,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.maquina_de_sexo.video",
         kind: "video",
-        title: "18. Máquina de Sexo — Assistir destaque",
+        title: "3. Vibradores — Máquina de Sexo — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
         url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
       {
         id: "produtos.maquina_de_sexo.produtos",
         kind: "product_links",
-        title: "18. Máquina de Sexo — Ver produtos reais no site",
+        title: "3. Vibradores — Máquina de Sexo — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Maquina De Sexo Uberlandia", url: "https://sexshopsantabronx.com.br/produto/maquina-de-sexo-uberlandia/" }
@@ -2815,7 +2815,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.maquina_de_sexo.fixacao",
         kind: "practice",
-        title: "18. Máquina de Sexo — Exercício de fixação (7 questões)",
+        title: "3. Vibradores — Máquina de Sexo — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Máquina de Sexo. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2858,7 +2858,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.maquina_de_sexo.apostila",
         kind: "inline_html",
-        title: "18. Máquina de Sexo — Ler apostila",
+        title: "3. Vibradores — Máquina de Sexo — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_maquina_de_sexo",
         openLabel: "Abrir apostila",
@@ -2867,14 +2867,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.vibrador_de_casal.video",
         kind: "video",
-        title: "19. Vibrador de Casal — Assistir destaque",
+        title: "3. Vibradores — Vibrador de Casal — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
         url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
       {
         id: "produtos.vibrador_de_casal.produtos",
         kind: "product_links",
-        title: "19. Vibrador de Casal — Ver produtos reais no site",
+        title: "3. Vibradores — Vibrador de Casal — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Vibrador Para Casal Com Controle Sem Fio", url: "https://sexshopsantabronx.com.br/produto/vibrador-para-casal-com-controle-sem-fio/" },
@@ -2885,7 +2885,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.vibrador_de_casal.fixacao",
         kind: "practice",
-        title: "19. Vibrador de Casal — Exercício de fixação (7 questões)",
+        title: "3. Vibradores — Vibrador de Casal — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Vibrador de Casal. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2928,7 +2928,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.vibrador_de_casal.apostila",
         kind: "inline_html",
-        title: "19. Vibrador de Casal — Ler apostila",
+        title: "3. Vibradores — Vibrador de Casal — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_vibrador_de_casal",
         openLabel: "Abrir apostila",
@@ -2937,14 +2937,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.vibrador_de_aplicativo.video",
         kind: "video",
-        title: "20. Vibrador de Aplicativo — Assistir destaque",
+        title: "3. Vibradores — Vibrador de Aplicativo — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
         url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
       {
         id: "produtos.vibrador_de_aplicativo.produtos",
         kind: "product_links",
-        title: "20. Vibrador de Aplicativo — Ver produtos reais no site",
+        title: "3. Vibradores — Vibrador de Aplicativo — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Vibrador Por Aplicativo Lola", url: "https://sexshopsantabronx.com.br/produto/vibrador-por-aplicativo-lola/" }
@@ -2954,7 +2954,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.vibrador_de_aplicativo.fixacao",
         kind: "practice",
-        title: "20. Vibrador de Aplicativo — Exercício de fixação (7 questões)",
+        title: "3. Vibradores — Vibrador de Aplicativo — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Vibrador de Aplicativo. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2997,7 +2997,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.vibrador_de_aplicativo.apostila",
         kind: "inline_html",
-        title: "20. Vibrador de Aplicativo — Ler apostila",
+        title: "3. Vibradores — Vibrador de Aplicativo — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_vibrador_de_aplicativo",
         openLabel: "Abrir apostila",
@@ -3006,14 +3006,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.varinha_magica.video",
         kind: "video",
-        title: "21. Varinha Mágica — Assistir destaque",
+        title: "3. Vibradores — Varinha Mágica — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
         url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
       {
         id: "produtos.varinha_magica.produtos",
         kind: "product_links",
-        title: "21. Varinha Mágica — Ver produtos reais no site",
+        title: "3. Vibradores — Varinha Mágica — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Vibrador Varinha Magica Luxo", url: "https://sexshopsantabronx.com.br/produto/vibrador-varinha-magica-luxo/" },
@@ -3024,7 +3024,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.varinha_magica.fixacao",
         kind: "practice",
-        title: "21. Varinha Mágica — Exercício de fixação (7 questões)",
+        title: "3. Vibradores — Varinha Mágica — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Varinha Mágica. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -3067,7 +3067,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.varinha_magica.apostila",
         kind: "inline_html",
-        title: "21. Varinha Mágica — Ler apostila",
+        title: "3. Vibradores — Varinha Mágica — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_varinha_magica",
         openLabel: "Abrir apostila",
@@ -3076,14 +3076,14 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.mini_vibrador.video",
         kind: "video",
-        title: "22. Mini Vibrador — Assistir destaque",
+        title: "3. Vibradores — Mini Vibrador — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
         url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
       {
         id: "produtos.mini_vibrador.produtos",
         kind: "product_links",
-        title: "22. Mini Vibrador — Ver produtos reais no site",
+        title: "3. Vibradores — Mini Vibrador — Ver produtos reais no site",
         description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
         links: [
           { label: "Vibrador Bullet Recarregavel Com 10 Vibracoes", url: "https://sexshopsantabronx.com.br/produto/vibrador-bullet-recarregavel-com-10-vibracoes/" }
@@ -3093,7 +3093,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.mini_vibrador.fixacao",
         kind: "practice",
-        title: "22. Mini Vibrador — Exercício de fixação (7 questões)",
+        title: "3. Vibradores — Mini Vibrador — Exercício de fixação (7 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Mini Vibrador. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -3136,7 +3136,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.mini_vibrador.apostila",
         kind: "inline_html",
-        title: "22. Mini Vibrador — Ler apostila",
+        title: "3. Vibradores — Mini Vibrador — Ler apostila",
         description: "Leia a apostila desta categoria como material de revisão.",
         source: "produtos_mini_vibrador",
         openLabel: "Abrir apostila",
@@ -3145,7 +3145,7 @@ export const TOPICS: Topic[] = [
       {
         id: "produtos.vibradores.exam",
         kind: "open_evaluation",
-        title: "Prova Final — Vibradores",
+        title: "3. Vibradores — Prova final do grupo",
         description:
           "Prova final do grupo Vibradores. 32 questões (24 múltipla escolha + 8 abertas). Solicite liberação ao gestor para iniciar. As objetivas são corrigidas automaticamente; as abertas vão para correção do gestor. Nota mínima 70%.",
         passingScore: 70,
