@@ -133,6 +133,7 @@ export type Database = {
           general_feedback: string | null
           id: string
           retry_allowed: boolean
+          retry_requires_module_redo: boolean
           reviewed_at: string | null
           reviewer_id: string | null
           score: number | null
@@ -146,6 +147,7 @@ export type Database = {
           general_feedback?: string | null
           id?: string
           retry_allowed?: boolean
+          retry_requires_module_redo?: boolean
           reviewed_at?: string | null
           reviewer_id?: string | null
           score?: number | null
@@ -159,6 +161,7 @@ export type Database = {
           general_feedback?: string | null
           id?: string
           retry_allowed?: boolean
+          retry_requires_module_redo?: boolean
           reviewed_at?: string | null
           reviewer_id?: string | null
           score?: number | null
