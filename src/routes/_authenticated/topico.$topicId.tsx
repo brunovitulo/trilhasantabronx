@@ -757,7 +757,7 @@ function SubtaskGroupCard({
                     className={cn(
                       "rounded-2xl border overflow-hidden transition-colors",
                       isExam
-                        ? "mt-3 border-violet-400/40 bg-gradient-to-br from-violet-500/15 via-purple-500/10 to-fuchsia-500/10 shadow-[0_8px_24px_-12px_rgba(139,92,246,0.45)]"
+                        ? "mt-3 shadow-[0_8px_24px_-12px_rgba(226,75,74,0.45)] border-[#F09595] bg-[#3a1a1a]"
                         : "border-white/10 bg-white/[0.035]",
                       blockLocked && "opacity-60",
                     )}
