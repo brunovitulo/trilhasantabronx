@@ -557,9 +557,9 @@ function SubtaskGroupCard({
         </div>
       )}
 
-      <div className="border-t border-white/5 divide-y divide-white/5">
-
-        {group.items.map((entry, idx) => {
+      {(() => {
+        // Renders a single step row (used by both flat and sub-block paths).
+        const renderItemRow = (entry: SubtaskGroupEntry, idx: number) => {
           const sub = entry.subtask;
           const { state, passed } = itemStates[idx];
           const inFinalGate = FINAL_GATE_IDS.has(sub.id);
@@ -676,8 +676,142 @@ function SubtaskGroupCard({
               )}
             </div>
           );
-        })}
-      </div>
+        };
+
+        if (group.subBlocks && group.subBlocks.length > 0) {
+          // Nested rendering: each sub-block is its own collapsible card.
+          // Precompute item indices and "completed" flags per sub-block to drive
+          // sequential unlock between blocks.
+          const blockMeta = group.subBlocks.map((block) => {
+            const indices = block.items.map((it) =>
+              group.items.findIndex((g) => g.subtask.id === it.subtask.id),
+            );
+            const done = indices.every((i) => itemStates[i]?.passed);
+            const blockDone = indices.filter((i) => itemStates[i]?.passed).length;
+            return { indices, done, total: indices.length, blockDone };
+          });
+
+          return (
+            <div className="px-3 sm:px-4 pb-4 sm:pb-5 pt-3 space-y-3">
+              {group.subBlocks.map((block, bIdx) => {
+                const meta = blockMeta[bIdx];
+                const prevBlocksDone =
+                  bIdx === 0 || blockMeta.slice(0, bIdx).every((m) => m.done);
+                const blockLocked = !isAdmin && (isCardLocked || !prevBlocksDone);
+                const isOpen = openBlockKey === block.key && !blockLocked;
+                const blockPct = meta.total > 0 ? (meta.blockDone / meta.total) * 100 : 0;
+                const isExam = block.isExam;
+                return (
+                  <div
+                    key={block.key}
+                    className={cn(
+                      "rounded-2xl border overflow-hidden transition-colors",
+                      isExam
+                        ? "mt-3 border-pink-400/40 bg-gradient-to-br from-pink-500/15 via-fuchsia-500/10 to-purple-500/10 shadow-[0_8px_24px_-12px_rgba(236,72,153,0.45)]"
+                        : "border-white/10 bg-white/[0.035]",
+                      blockLocked && "opacity-60",
+                    )}
+                  >
+                    <button
+                      type="button"
+                      disabled={blockLocked}
+                      onClick={() => {
+                        if (blockLocked) return;
+                        setOpenBlockKey(isOpen ? null : block.key);
+                      }}
+                      className={cn(
+                        "w-full flex items-center gap-3 px-4 py-3 text-left transition-colors",
+                        blockLocked
+                          ? "cursor-not-allowed"
+                          : "hover:bg-white/[0.04] cursor-pointer",
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border",
+                          isExam
+                            ? "border-pink-400/40 bg-pink-500/20 text-pink-200"
+                            : "border-white/10 bg-white/[0.06] text-[#A78BFA]",
+                        )}
+                      >
+                        {blockLocked ? (
+                          <Lock className="h-4 w-4" />
+                        ) : isExam ? (
+                          <FilePen className="h-4 w-4" />
+                        ) : meta.done ? (
+                          <Check className="h-4 w-4" strokeWidth={3} />
+                        ) : (
+                          <span className="text-[12px] font-semibold">{bIdx + 1}</span>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h4
+                            className={cn(
+                              "text-sm font-semibold leading-tight",
+                              isExam ? "text-pink-100" : "text-foreground",
+                            )}
+                          >
+                            {isExam ? "Prova Final do grupo" : block.title}
+                          </h4>
+                          {isExam && (
+                            <Badge className="bg-pink-500/25 text-pink-100 border border-pink-300/40 hover:bg-pink-500/25">
+                              Avaliação
+                            </Badge>
+                          )}
+                        </div>
+                        <p
+                          className={cn(
+                            "text-[11px] mt-0.5",
+                            isExam ? "text-pink-200/80" : "text-muted-foreground",
+                          )}
+                        >
+                          {isExam
+                            ? "Conclua todos os produtos acima para liberar."
+                            : `${meta.blockDone} de ${meta.total} passos`}
+                        </p>
+                        {!isExam && (
+                          <div className="mt-1.5 h-1 w-full rounded-full bg-white/10 overflow-hidden">
+                            <div
+                              className="h-full rounded-full transition-all duration-500"
+                              style={{
+                                width: `${blockPct}%`,
+                                background: "linear-gradient(90deg, #5DCAA5, #AFA9EC)",
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
+                      <ChevronDown
+                        className={cn(
+                          "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
+                          isOpen && "rotate-180",
+                        )}
+                      />
+                    </button>
+                    {isOpen && (
+                      <div className="border-t border-white/5 divide-y divide-white/5">
+                        {block.items.map((entry) => {
+                          const idx = group.items.findIndex(
+                            (g) => g.subtask.id === entry.subtask.id,
+                          );
+                          return renderItemRow(entry, idx);
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        }
+
+        return (
+          <div className="border-t border-white/5 divide-y divide-white/5">
+            {group.items.map((entry, idx) => renderItemRow(entry, idx))}
+          </div>
+        );
+      })()}
     </Card>
   );
 }
