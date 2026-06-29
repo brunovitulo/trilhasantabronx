@@ -1119,7 +1119,6 @@ function ExamDialogLauncher({
   onSubmitted: () => void;
 }) {
   const [open, setOpen] = useState(false);
-  const [hasSubmission, setHasSubmission] = useState<boolean | null>(null);
   const [showExitWarning, setShowExitWarning] = useState(false);
   const durationMinutes = getExamDurationMinutes(subtask.questions.length);
 
