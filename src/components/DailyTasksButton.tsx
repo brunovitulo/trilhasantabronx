@@ -99,13 +99,19 @@ export function DailyTasksButton() {
     };
   }, [fetchReview]);
 
-  const hasReview = !!review && review.queue.length > 0;
-  const reviewDone = !!review?.completed;
+  const pendingReviewItems = useMemo(() => {
+    if (!review) return [];
+    return review.queue.filter(
+      (q) => !review.completedKeysToday.includes(q.reviewKey),
+    );
+  }, [review]);
+  const hasReview = pendingReviewItems.length > 0;
+  const reviewDone = !!review && review.queue.length > 0 && !hasReview;
   const pending = useMemo(() => {
     const base = TASKS.filter((t) => !done[t.id]).length;
-    const rev = hasReview && !reviewDone ? 1 : 0;
+    const rev = hasReview ? 1 : 0;
     return base + rev;
-  }, [done, hasReview, reviewDone]);
+  }, [done, hasReview]);
 
   function toggle(id: string, value: boolean) {
     setDone((prev) => {
@@ -242,7 +248,7 @@ export function DailyTasksButton() {
                     <p className="text-xs text-muted-foreground mt-1 leading-snug">
                       {reviewDone
                         ? "Revisão de hoje já concluída."
-                        : `${review!.queue.length} módulo${review!.queue.length > 1 ? "s" : ""} na fila: ${review!.queue.map((q) => q.topicTitle).join(", ")}.`}
+                        : `Hoje: ${pendingReviewItems.map((q) => q.title).join(", ")}.`}
                     </p>
                     {!reviewDone && (
                       <div className="mt-3">

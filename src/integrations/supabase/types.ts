@@ -17,29 +17,32 @@ export type Database = {
       daily_review_completions: {
         Row: {
           completed_at: string
-          created_at: string
           id: string
-          module_ids: string[]
+          metadata: Json
           review_date: string
-          updated_at: string
+          review_key: string
+          score_correct: number | null
+          score_total: number | null
           user_id: string
         }
         Insert: {
           completed_at?: string
-          created_at?: string
           id?: string
-          module_ids: string[]
-          review_date: string
-          updated_at?: string
+          metadata?: Json
+          review_date?: string
+          review_key: string
+          score_correct?: number | null
+          score_total?: number | null
           user_id: string
         }
         Update: {
           completed_at?: string
-          created_at?: string
           id?: string
-          module_ids?: string[]
+          metadata?: Json
           review_date?: string
-          updated_at?: string
+          review_key?: string
+          score_correct?: number | null
+          score_total?: number | null
           user_id?: string
         }
         Relationships: []
@@ -192,6 +195,51 @@ export type Database = {
           id?: string
           subtask_id?: string
           total?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      product_revision_progress: {
+        Row: {
+          created_at: string
+          cycle: number
+          cycle_anchor_date: string
+          group_completed: boolean
+          group_id: string
+          id: string
+          last_session_at: string | null
+          phase: number
+          phase3_score: number | null
+          sessions_done: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          cycle?: number
+          cycle_anchor_date: string
+          group_completed?: boolean
+          group_id: string
+          id?: string
+          last_session_at?: string | null
+          phase?: number
+          phase3_score?: number | null
+          sessions_done?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          cycle?: number
+          cycle_anchor_date?: string
+          group_completed?: boolean
+          group_id?: string
+          id?: string
+          last_session_at?: string | null
+          phase?: number
+          phase3_score?: number | null
+          sessions_done?: number
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
