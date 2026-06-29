@@ -821,7 +821,7 @@ function SubtaskGroupCard({
                               Avaliação
                             </Badge>
                           )}
-                          {isExam && soloState?.completed && examPassed && (
+                          {isExam && examState?.completed && examPassed && (
                             <Badge className="bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 hover:bg-emerald-500/20">
                               Aprovada
                             </Badge>
