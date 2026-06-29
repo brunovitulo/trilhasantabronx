@@ -620,7 +620,7 @@ export const REVISION_CONTENT: Record<string, RevisionContent> = {
     title: "Principais Dores e Soluções",
     apostilaHtml: doresApostila,
     checklistHtml: doresChecklist,
-    quiz: [],
+    quiz: QUIZ_DORES,
   },
 };
 
