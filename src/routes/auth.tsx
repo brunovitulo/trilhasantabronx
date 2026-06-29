@@ -22,9 +22,14 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
 
   useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      // Não redirecionar se for evento de recuperação de senha (usuário vai pra /reset-password).
+      if (event === "PASSWORD_RECOVERY") return;
       if (session) navigate({ to: "/", replace: true });
     });
     return () => sub.subscription.unsubscribe();
@@ -59,6 +64,25 @@ function AuthPage() {
       return;
     }
     toast.success("Cadastro feito! Pode entrar.");
+  }
+
+  async function handleForgot(e: React.FormEvent) {
+    e.preventDefault();
+    const target = forgotEmail.trim();
+    if (!target) return;
+    setForgotLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(target, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setForgotLoading(false);
+    if (error) {
+      toast.error("Não consegui enviar o e-mail", { description: error.message });
+      return;
+    }
+    toast.success("E-mail enviado!", {
+      description: "Confira sua caixa de entrada (e spam) para redefinir a senha.",
+    });
+    setForgotOpen(false);
   }
 
   const inputCls =
