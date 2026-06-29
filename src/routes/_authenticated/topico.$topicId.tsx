@@ -939,7 +939,7 @@ function SubtaskGroupCard({
                           })()}
                         </div>
                       ) : isExam && examSub ? (
-                        <div className="border-t border-violet-300/20 px-4 sm:px-5 py-4 sm:py-5">
+                        <div className="border-t border-[#F09595]/30 px-4 sm:px-5 py-4 sm:py-5">
                           {(() => {
                             const inFinalGate = FINAL_GATE_IDS.has(examSub.id);
                             const gateLocked =
