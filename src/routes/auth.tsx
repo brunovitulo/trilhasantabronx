@@ -186,6 +186,37 @@ function AuthPage() {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={forgotOpen} onOpenChange={setForgotOpen}>
+        <DialogContent className="border-white/10 bg-zinc-950 text-white">
+          <DialogHeader>
+            <DialogTitle>Recuperar senha</DialogTitle>
+            <DialogDescription className="text-white/60">
+              Informe o e-mail da sua conta. Vamos enviar um link para você redefinir a senha.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleForgot} className="space-y-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="forgot-email" className="text-white/80">E-mail</Label>
+              <Input
+                id="forgot-email"
+                type="email"
+                required
+                value={forgotEmail}
+                onChange={(e) => setForgotEmail(e.target.value)}
+                className={inputCls}
+              />
+            </div>
+            <Button
+              type="submit"
+              disabled={forgotLoading}
+              className="w-full bg-gradient-to-r from-primary to-fuchsia-600 text-white hover:opacity-90 border-0"
+            >
+              {forgotLoading ? "Enviando..." : "Enviar link de recuperação"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
