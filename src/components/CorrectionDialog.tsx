@@ -292,6 +292,64 @@ export function CorrectionDialog({
               />
             </div>
 
+            {(() => {
+              const allMarked = answers.length > 0 && answers.every((a) => a.is_correct !== null);
+              const correctCount = answers.filter((a) => a.is_correct === true).length;
+              const previewScore = allMarked
+                ? Math.round((correctCount / answers.length) * 100)
+                : null;
+              const wouldFail = previewScore != null && previewScore < PASSING_SCORE;
+              if (!wouldFail) return null;
+              return (
+                <div className="rounded-2xl border border-rose-500/30 bg-rose-500/5 p-4 space-y-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-rose-300">
+                    Prévia: {previewScore}% — reprovada
+                  </p>
+                  <p className="text-xs text-foreground/80">
+                    Como ficará a próxima tentativa da atendente?
+                  </p>
+                  <div className="space-y-2">
+                    <label className={`flex items-start gap-2 rounded-xl border p-3 cursor-pointer ${
+                      retryMode === "direct" ? "border-primary/60 bg-primary/10" : "border-border/60 bg-background/40"
+                    }`}>
+                      <input
+                        type="radio"
+                        name="retry-mode"
+                        className="mt-1"
+                        checked={retryMode === "direct"}
+                        onChange={() => setRetryMode("direct")}
+                      />
+                      <span className="text-xs leading-snug">
+                        <span className="font-semibold text-foreground">Refazer só a prova</span>
+                        <br />
+                        <span className="text-muted-foreground">
+                          Ao receber o resultado, ela já vê o botão "Refazer prova" e tenta de novo na sequência.
+                        </span>
+                      </span>
+                    </label>
+                    <label className={`flex items-start gap-2 rounded-xl border p-3 cursor-pointer ${
+                      retryMode === "redo_module" ? "border-primary/60 bg-primary/10" : "border-border/60 bg-background/40"
+                    }`}>
+                      <input
+                        type="radio"
+                        name="retry-mode"
+                        className="mt-1"
+                        checked={retryMode === "redo_module"}
+                        onChange={() => setRetryMode("redo_module")}
+                      />
+                      <span className="text-xs leading-snug">
+                        <span className="font-semibold text-foreground">Refazer o módulo inteiro</span>
+                        <br />
+                        <span className="text-muted-foreground">
+                          As demais tarefas do módulo voltam para "a fazer" e ela precisa pedir permissão de novo antes da nova prova.
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              );
+            })()}
+
             <div className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
               <span className="text-xs text-muted-foreground">
                 {marked} de {answers.length} questões marcadas
