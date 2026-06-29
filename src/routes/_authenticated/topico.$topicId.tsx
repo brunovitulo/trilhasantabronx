@@ -366,19 +366,19 @@ function groupSubtasks(subtasks: Subtask[]): SubtaskGroup[] {
     }
     groups[groupIdx].items.push({ subtask: sub, stepLabel });
   }
-  // Post-process: when items inside a group have a second-level dash header
-  // (e.g. "Excitantes — Assistir destaque"), bundle them into product sub-blocks.
+  // Post-process: ALWAYS bundle items into sub-blocks so every subtask is
+  // rendered as its own collapsible card. When items share a second-level dash
+  // header (e.g. "Excitantes — Assistir destaque"), they collapse together into
+  // a product sub-block; otherwise each item becomes its own solo sub-block.
+  // Evaluations are always isolated as highlighted exam sub-blocks.
   for (const g of groups) {
-    const anyNested = g.items.some((it) => it.stepLabel.includes(" — "));
-    if (!anyNested) continue;
     const blocks: SubBlock[] = [];
     const indexByName = new Map<string, number>();
     for (const it of g.items) {
       const parts = it.stepLabel.split(/\s+—\s+/);
       const isEval =
         it.subtask.kind === "evaluation" || it.subtask.kind === "open_evaluation";
-      if (parts.length < 2 || isEval) {
-        // Standalone (likely the group's final exam) — highlighted block.
+      if (isEval) {
         blocks.push({
           key: `__exam__${it.subtask.id}`,
           title: it.stepLabel,
@@ -387,15 +387,24 @@ function groupSubtasks(subtasks: Subtask[]): SubtaskGroup[] {
         });
         continue;
       }
-      const name = parts[0].trim();
-      const inner = parts.slice(1).join(" — ").trim();
-      let idx = indexByName.get(name);
-      if (idx === undefined) {
-        idx = blocks.length;
-        blocks.push({ key: `sub-${idx}-${name}`, title: name, items: [], isExam: false });
-        indexByName.set(name, idx);
+      if (parts.length >= 2) {
+        const name = parts[0].trim();
+        const inner = parts.slice(1).join(" — ").trim();
+        let idx = indexByName.get(name);
+        if (idx === undefined) {
+          idx = blocks.length;
+          blocks.push({ key: `sub-${idx}-${name}`, title: name, items: [], isExam: false });
+          indexByName.set(name, idx);
+        }
+        blocks[idx].items.push({ subtask: it.subtask, stepLabel: inner });
+      } else {
+        blocks.push({
+          key: `solo-${it.subtask.id}`,
+          title: it.stepLabel,
+          items: [{ subtask: it.subtask, stepLabel: it.stepLabel }],
+          isExam: false,
+        });
       }
-      blocks[idx].items.push({ subtask: it.subtask, stepLabel: inner });
     }
     g.subBlocks = blocks;
   }
@@ -434,6 +443,21 @@ function pickStepIcon(kind: Subtask["kind"], hasDownload?: boolean) {
     case "credentials": return Lock;
     default: return BookOpen;
   }
+}
+
+// Conta perguntas abertas vs fechadas de uma avaliação para exibição.
+function getExamCounts(sub: Subtask): { open: number; closed: number } {
+  if (sub.kind === "evaluation") return { open: 0, closed: sub.questions.length };
+  if (sub.kind === "open_evaluation") {
+    let open = 0;
+    let closed = 0;
+    for (const q of sub.questions) {
+      if (q.options && typeof q.correctIndex === "number") closed++;
+      else open++;
+    }
+    return { open, closed };
+  }
+  return { open: 0, closed: 0 };
 }
 
 function SubtaskGroupCard({
