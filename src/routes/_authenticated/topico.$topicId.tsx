@@ -746,6 +746,8 @@ function SubtaskGroupCard({
 
                 // Metadados do exame (quando aplicável)
                 const examSub = isExam ? block.items[0].subtask : null;
+                const examIdx = isExam ? meta.indices[0] : -1;
+                const examState = examIdx >= 0 ? itemStates[examIdx]?.state : undefined;
                 const examCounts = examSub ? getExamCounts(examSub) : { open: 0, closed: 0 };
                 const examPassed = isExam && meta.done;
 
