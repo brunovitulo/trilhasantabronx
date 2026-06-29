@@ -613,7 +613,7 @@ export const REVISION_CONTENT: Record<string, RevisionContent> = {
     title: "Principais Objeções",
     apostilaHtml: objecoesApostila,
     checklistHtml: objecoesChecklist,
-    quiz: [],
+    quiz: QUIZ_OBJECOES,
   },
   dores: {
     topicId: "dores",
