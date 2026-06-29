@@ -460,6 +460,10 @@ function getExamCounts(sub: Subtask): { open: number; closed: number } {
   return { open: 0, closed: 0 };
 }
 
+function getExamDurationMinutes(questionCount: number): number {
+  return questionCount <= 16 ? 45 : 60;
+}
+
 function SubtaskGroupCard({
   group,
   topic,
@@ -847,7 +851,7 @@ function SubtaskGroupCard({
                             )}
                             <span className="inline-flex items-center gap-1 rounded-full border border-[#F09595]/50 bg-[#E24B4A]/20 px-2 py-0.5 text-[11px] text-[#F09595]">
                               <Clock className="h-3 w-3" />
-                              45 minutos
+                              {examSub ? getExamDurationMinutes((examSub as Extract<Subtask, { kind: "evaluation" | "open_evaluation" }>).questions.length) : 45} minutos
                             </span>
                             {blockLocked && (
                               <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/[0.06] px-2 py-0.5 text-[11px] text-muted-foreground">
@@ -1117,6 +1121,7 @@ function ExamDialogLauncher({
   const [open, setOpen] = useState(false);
   const [hasSubmission, setHasSubmission] = useState<boolean | null>(null);
   const [showExitWarning, setShowExitWarning] = useState(false);
+  const durationMinutes = getExamDurationMinutes(subtask.questions.length);
 
   // Bloqueio de saída para atendentes durante a prova
   useEffect(() => {
@@ -1220,7 +1225,7 @@ function ExamDialogLauncher({
       <StepGuide
         steps={[
           { icon: ShieldCheck, title: "Solicite a liberação da prova", description: "Clique em \"Solicitar permissão\" para avisar o gestor." },
-          { icon: FilePen, title: "Responda com atenção", description: "Você terá 45 minutos. Use suas palavras, sem pesquisar." },
+          { icon: FilePen, title: "Responda com atenção", description: `Você terá ${durationMinutes} minutos. Use suas palavras, sem pesquisar.` },
           { icon: Check, title: "Envie para correção", description: "Clique em enviar quando terminar — não dá para refazer sozinha." },
           { icon: ClipboardCheck, title: "Aguarde o feedback do gestor", description: "Você só avança com 70% ou mais. O gestor envia o retorno." },
         ]}
@@ -1315,7 +1320,7 @@ function ExamDialogLauncher({
               Esta prova será acompanhada pelo seu gestor em tempo real. Responda com suas
               próprias palavras, de forma completa, sem pesquisar em fontes externas. Ao
               finalizar, clique em enviar — você só avança para a próxima etapa com 70% de
-              aproveitamento ou mais. Você tem <strong>45 minutos</strong> para concluir.
+              aproveitamento ou mais. Você tem <strong>{durationMinutes} minutos</strong> para concluir.
             </p>
           </div>
           <OpenEvaluationSubtask
@@ -2468,7 +2473,8 @@ function OpenEvaluationSubtask({
   const [answerRows, setAnswerRows] = useState<OpenAnswerRow[]>([]);
   const [drafts, setDrafts] = useState<string[]>(() => subtask.questions.map(() => ""));
   const [sending, setSending] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(45 * 60);
+  const durationSeconds = getExamDurationMinutes(subtask.questions.length) * 60;
+  const [secondsLeft, setSecondsLeft] = useState(durationSeconds);
   const draftsRef = useRef(drafts);
   useEffect(() => { draftsRef.current = drafts; }, [drafts]);
   const submitRef = useRef<((force?: boolean) => Promise<void>) | null>(null);
@@ -2604,10 +2610,10 @@ function OpenEvaluationSubtask({
 
   useEffect(() => {
     if (!showTimer || loading || submission) return;
-    setSecondsLeft(45 * 60);
+    setSecondsLeft(durationSeconds);
     const startedAt = Date.now();
     const id = setInterval(() => {
-      const left = Math.max(0, 45 * 60 - Math.floor((Date.now() - startedAt) / 1000));
+      const left = Math.max(0, durationSeconds - Math.floor((Date.now() - startedAt) / 1000));
       setSecondsLeft(left);
       if (left <= 0) {
         clearInterval(id);
