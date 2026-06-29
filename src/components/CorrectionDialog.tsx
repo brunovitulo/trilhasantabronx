@@ -90,6 +90,7 @@ export function CorrectionDialog({
     const correct = answers.filter((a) => a.is_correct === true).length;
     const score = Math.round((correct / answers.length) * 100);
     const status = score >= PASSING_SCORE ? "approved" : "rejected";
+    const isRedoModule = status === "rejected" && retryMode === "redo_module";
     const { error } = await supabase
       .from("open_evaluation_submissions")
       .update({
@@ -98,6 +99,10 @@ export function CorrectionDialog({
         general_feedback: general || null,
         reviewer_id: reviewerId,
         reviewed_at: new Date().toISOString(),
+        // Em reprovação, sempre liberamos retry no banco — o gate de "refazer só a
+        // prova" vs "refazer o módulo todo" é controlado pelo retry_requires_module_redo.
+        retry_allowed: status === "rejected",
+        retry_requires_module_redo: isRedoModule,
       })
       .eq("id", submission.id);
     if (error) {
@@ -133,9 +138,37 @@ export function CorrectionDialog({
         .delete()
         .eq("user_id", submission.user_id)
         .eq("subtask_id", submission.subtask_id);
+
+      // Refazer o módulo inteiro: zera o progresso das demais subtarefas do mesmo tópico
+      // (mantém apenas a prova já zerada acima) e marca a permissão atual como consumida,
+      // forçando novo fluxo de pedido de permissão depois que ela refizer tudo.
+      if (isRedoModule && sub) {
+        const otherIds = sub.topic.subtasks
+          .map((s) => s.id)
+          .filter((id) => id !== submission.subtask_id);
+        if (otherIds.length > 0) {
+          await supabase
+            .from("subtask_progress")
+            .delete()
+            .eq("user_id", submission.user_id)
+            .in("subtask_id", otherIds);
+        }
+        await supabase
+          .from("exam_permission_requests")
+          .update({ status: "consumed" })
+          .eq("user_id", submission.user_id)
+          .eq("subtask_id", submission.subtask_id)
+          .in("status", ["pending", "approved"]);
+      }
     }
     setSaving(false);
-    toast.success(status === "approved" ? `Avaliação aprovada (${score}%)` : `Avaliação reprovada (${score}%)`);
+    if (status === "approved") {
+      toast.success(`Avaliação aprovada (${score}%)`);
+    } else if (isRedoModule) {
+      toast.success(`Avaliação reprovada (${score}%). Atendente precisa refazer o módulo inteiro.`);
+    } else {
+      toast.success(`Avaliação reprovada (${score}%). Atendente pode refazer a prova na sequência.`);
+    }
     onReviewed();
   }
 
