@@ -757,7 +757,7 @@ function SubtaskGroupCard({
                     className={cn(
                       "rounded-2xl border overflow-hidden transition-colors",
                       isExam
-                        ? "mt-3 border-violet-400/40 bg-gradient-to-br from-violet-500/15 via-purple-500/10 to-fuchsia-500/10 shadow-[0_8px_24px_-12px_rgba(139,92,246,0.45)]"
+                        ? "mt-3 shadow-[0_8px_24px_-12px_rgba(226,75,74,0.45)] border-[#F09595] bg-[#3a1a1a]"
                         : "border-white/10 bg-white/[0.035]",
                       blockLocked && "opacity-60",
                     )}
@@ -780,7 +780,7 @@ function SubtaskGroupCard({
                         className={cn(
                           "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border",
                           isExam
-                            ? "border-violet-300/50 bg-violet-500/20 text-violet-100"
+                            ? "border-[#E24B4A] bg-[#E24B4A] text-white"
                             : soloPassed
                               ? "border-[var(--success)]/50 bg-[var(--success)]/15 text-[var(--success)]"
                               : "border-white/10 bg-white/[0.06] text-[#A78BFA]",
@@ -808,7 +808,7 @@ function SubtaskGroupCard({
                             className={cn(
                               "text-sm font-semibold leading-tight",
                               isExam
-                                ? "text-violet-50"
+                                ? "text-[#F09595]"
                                 : soloPassed
                                   ? "text-muted-foreground line-through"
                                   : "text-foreground",
@@ -817,7 +817,7 @@ function SubtaskGroupCard({
                             {isExam ? (examSub?.title ?? "Prova") : block.title}
                           </h4>
                           {isExam && (
-                            <Badge className="bg-violet-500/25 text-violet-50 border border-violet-300/40 hover:bg-violet-500/25">
+                            <Badge className="bg-[#E24B4A] text-white border border-[#E24B4A] hover:bg-[#E24B4A]">
                               Avaliação
                             </Badge>
                           )}
@@ -831,21 +831,21 @@ function SubtaskGroupCard({
                         {isExam ? (
                           <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                             {examCounts.open > 0 && (
-                              <span className="inline-flex items-center gap-1 rounded-full border border-violet-300/30 bg-violet-500/15 px-2 py-0.5 text-[11px] text-violet-100">
+                              <span className="inline-flex items-center gap-1 rounded-full border border-[#F09595]/50 bg-[#E24B4A]/20 px-2 py-0.5 text-[11px] text-[#F09595]">
                                 <Pencil className="h-3 w-3" />
                                 {examCounts.open} {examCounts.open === 1 ? "questão aberta" : "questões abertas"}
                               </span>
                             )}
                             {examCounts.open > 0 && examCounts.closed > 0 && (
-                              <span className="text-[11px] text-violet-200/70">+</span>
+                              <span className="text-[11px] text-[#F09595]/70">+</span>
                             )}
                             {examCounts.closed > 0 && (
-                              <span className="inline-flex items-center gap-1 rounded-full border border-violet-300/30 bg-violet-500/15 px-2 py-0.5 text-[11px] text-violet-100">
+                              <span className="inline-flex items-center gap-1 rounded-full border border-[#F09595]/50 bg-[#E24B4A]/20 px-2 py-0.5 text-[11px] text-[#F09595]">
                                 <ListChecks className="h-3 w-3" />
                                 {examCounts.closed} {examCounts.closed === 1 ? "questão fechada" : "questões fechadas"}
                               </span>
                             )}
-                            <span className="inline-flex items-center gap-1 rounded-full border border-violet-300/30 bg-violet-500/15 px-2 py-0.5 text-[11px] text-violet-100">
+                            <span className="inline-flex items-center gap-1 rounded-full border border-[#F09595]/50 bg-[#E24B4A]/20 px-2 py-0.5 text-[11px] text-[#F09595]">
                               <Clock className="h-3 w-3" />
                               45 minutos
                             </span>
@@ -886,12 +886,12 @@ function SubtaskGroupCard({
                             padding: "2px 9px",
                             borderRadius: "20px",
                             background: isExam
-                              ? "rgba(167, 139, 250, 0.22)"
+                              ? "rgba(226, 75, 74, 0.22)"
                               : "rgba(20, 184, 166, 0.18)",
                             border: isExam
-                              ? "0.5px solid rgba(167, 139, 250, 0.6)"
+                              ? "0.5px solid rgba(240, 149, 149, 0.6)"
                               : "0.5px solid rgba(20, 184, 166, 0.6)",
-                            color: isExam ? "#ddd6fe" : "#5eead4",
+                            color: isExam ? "#F09595" : "#5eead4",
                             opacity: (isSolo ? soloPassed : meta.done) ? 0.5 : 1,
                           }}
                         >
@@ -939,7 +939,7 @@ function SubtaskGroupCard({
                           })()}
                         </div>
                       ) : isExam && examSub ? (
-                        <div className="border-t border-violet-300/20 px-4 sm:px-5 py-4 sm:py-5">
+                        <div className="border-t border-[#F09595]/30 px-4 sm:px-5 py-4 sm:py-5">
                           {(() => {
                             const inFinalGate = FINAL_GATE_IDS.has(examSub.id);
                             const gateLocked =
