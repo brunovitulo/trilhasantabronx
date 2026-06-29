@@ -47,6 +47,8 @@ export function CorrectionDialog({
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [general, setGeneral] = useState("");
+  // Quando reprovada, admin escolhe se atendente pode refazer só a prova ou todo o módulo.
+  const [retryMode, setRetryMode] = useState<"direct" | "redo_module">("direct");
 
   const sub = submission ? findSubtask(submission.subtask_id) : null;
   const topicTitle = sub?.topic.title ?? "Prova";
@@ -88,6 +90,7 @@ export function CorrectionDialog({
     const correct = answers.filter((a) => a.is_correct === true).length;
     const score = Math.round((correct / answers.length) * 100);
     const status = score >= PASSING_SCORE ? "approved" : "rejected";
+    const isRedoModule = status === "rejected" && retryMode === "redo_module";
     const { error } = await supabase
       .from("open_evaluation_submissions")
       .update({
@@ -96,6 +99,10 @@ export function CorrectionDialog({
         general_feedback: general || null,
         reviewer_id: reviewerId,
         reviewed_at: new Date().toISOString(),
+        // Em reprovação, sempre liberamos retry no banco — o gate de "refazer só a
+        // prova" vs "refazer o módulo todo" é controlado pelo retry_requires_module_redo.
+        retry_allowed: status === "rejected",
+        retry_requires_module_redo: isRedoModule,
       })
       .eq("id", submission.id);
     if (error) {
@@ -131,9 +138,37 @@ export function CorrectionDialog({
         .delete()
         .eq("user_id", submission.user_id)
         .eq("subtask_id", submission.subtask_id);
+
+      // Refazer o módulo inteiro: zera o progresso das demais subtarefas do mesmo tópico
+      // (mantém apenas a prova já zerada acima) e marca a permissão atual como consumida,
+      // forçando novo fluxo de pedido de permissão depois que ela refizer tudo.
+      if (isRedoModule && sub) {
+        const otherIds = sub.topic.subtasks
+          .map((s) => s.id)
+          .filter((id) => id !== submission.subtask_id);
+        if (otherIds.length > 0) {
+          await supabase
+            .from("subtask_progress")
+            .delete()
+            .eq("user_id", submission.user_id)
+            .in("subtask_id", otherIds);
+        }
+        await supabase
+          .from("exam_permission_requests")
+          .update({ status: "consumed" })
+          .eq("user_id", submission.user_id)
+          .eq("subtask_id", submission.subtask_id)
+          .in("status", ["pending", "approved"]);
+      }
     }
     setSaving(false);
-    toast.success(status === "approved" ? `Avaliação aprovada (${score}%)` : `Avaliação reprovada (${score}%)`);
+    if (status === "approved") {
+      toast.success(`Avaliação aprovada (${score}%)`);
+    } else if (isRedoModule) {
+      toast.success(`Avaliação reprovada (${score}%). Atendente precisa refazer o módulo inteiro.`);
+    } else {
+      toast.success(`Avaliação reprovada (${score}%). Atendente pode refazer a prova na sequência.`);
+    }
     onReviewed();
   }
 
@@ -256,6 +291,64 @@ export function CorrectionDialog({
                 className="mt-2 bg-background"
               />
             </div>
+
+            {(() => {
+              const allMarked = answers.length > 0 && answers.every((a) => a.is_correct !== null);
+              const correctCount = answers.filter((a) => a.is_correct === true).length;
+              const previewScore = allMarked
+                ? Math.round((correctCount / answers.length) * 100)
+                : null;
+              const wouldFail = previewScore != null && previewScore < PASSING_SCORE;
+              if (!wouldFail) return null;
+              return (
+                <div className="rounded-2xl border border-rose-500/30 bg-rose-500/5 p-4 space-y-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-rose-300">
+                    Prévia: {previewScore}% — reprovada
+                  </p>
+                  <p className="text-xs text-foreground/80">
+                    Como ficará a próxima tentativa da atendente?
+                  </p>
+                  <div className="space-y-2">
+                    <label className={`flex items-start gap-2 rounded-xl border p-3 cursor-pointer ${
+                      retryMode === "direct" ? "border-primary/60 bg-primary/10" : "border-border/60 bg-background/40"
+                    }`}>
+                      <input
+                        type="radio"
+                        name="retry-mode"
+                        className="mt-1"
+                        checked={retryMode === "direct"}
+                        onChange={() => setRetryMode("direct")}
+                      />
+                      <span className="text-xs leading-snug">
+                        <span className="font-semibold text-foreground">Refazer só a prova</span>
+                        <br />
+                        <span className="text-muted-foreground">
+                          Ao receber o resultado, ela já vê o botão "Refazer prova" e tenta de novo na sequência.
+                        </span>
+                      </span>
+                    </label>
+                    <label className={`flex items-start gap-2 rounded-xl border p-3 cursor-pointer ${
+                      retryMode === "redo_module" ? "border-primary/60 bg-primary/10" : "border-border/60 bg-background/40"
+                    }`}>
+                      <input
+                        type="radio"
+                        name="retry-mode"
+                        className="mt-1"
+                        checked={retryMode === "redo_module"}
+                        onChange={() => setRetryMode("redo_module")}
+                      />
+                      <span className="text-xs leading-snug">
+                        <span className="font-semibold text-foreground">Refazer o módulo inteiro</span>
+                        <br />
+                        <span className="text-muted-foreground">
+                          As demais tarefas do módulo voltam para "a fazer" e ela precisa pedir permissão de novo antes da nova prova.
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              );
+            })()}
 
             <div className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
               <span className="text-xs text-muted-foreground">
