@@ -231,8 +231,11 @@ function initProductState(
 
 function RevisaoDoDiaPage() {
   const navigate = useNavigate();
+  const search = Route.useSearch();
+  const previewMode = !!search.preview;
   const fetchToday = useServerFn(getTodayReview);
   const completeItem = useServerFn(completeReviewItem);
+
 
   const [state, setState] = useState<TodayReviewState | null>(null);
   const [loading, setLoading] = useState(true);
