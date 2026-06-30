@@ -33,7 +33,17 @@ import {
   getProductRevisionGroup,
   type ProductRevisionItem,
 } from "@/data/produtosRevisao";
-import { sampleIndices, type ReviewQueueItem } from "@/lib/dailyReview";
+import {
+  MODULE_REVIEW_PLANS,
+  sampleIndices,
+  spDateKey,
+  type ReviewQueueItem,
+} from "@/lib/dailyReview";
+import { TOPICS } from "@/data/topics";
+import {
+  PRODUCT_REVISION_GROUPS,
+  type ProductRevisionGroupId,
+} from "@/data/produtosRevisao";
 import { useQuery } from "@tanstack/react-query";
 import {
   getFlashcardSession,
@@ -44,8 +54,63 @@ import {
 
 export const Route = createFileRoute("/_authenticated/revisao-do-dia")({
   head: () => ({ meta: [{ title: "Revisão do dia — Santa Bronx" }] }),
+  validateSearch: (search: Record<string, unknown>): { preview?: string } => ({
+    preview: typeof search.preview === "string" ? search.preview : undefined,
+  }),
   component: RevisaoDoDiaPage,
 });
+
+/** Constrói um estado sintético para o modo "visualizar revisão" (admin),
+ *  sem nenhuma gravação no banco. */
+function buildPreviewState(preview: string): TodayReviewState | null {
+  if (preview.startsWith("module:")) {
+    const topicId = preview.slice("module:".length);
+    const plan = MODULE_REVIEW_PLANS.find((p) => p.topicId === topicId);
+    if (!plan) return null;
+    const topic = TOPICS.find((t) => t.id === topicId);
+    return {
+      date: spDateKey(),
+      completedKeysToday: [],
+      queue: [
+        {
+          kind: "module",
+          reviewKey: `preview:${topicId}`,
+          topicId,
+          title: topic?.title ?? topicId,
+          hasApostila: plan.hasApostila,
+          hasChecklist: plan.hasChecklist,
+          quizCount: plan.quizCount,
+          dayOffset: plan.dayOffsets[0] ?? 1,
+          sessionIndex: 1,
+          totalSessions: plan.dayOffsets.length,
+          estimatedMinutes: plan.estimatedMinutes,
+        },
+      ],
+    };
+  }
+  if (preview.startsWith("group:")) {
+    const groupId = preview.slice("group:".length) as ProductRevisionGroupId;
+    const grp = PRODUCT_REVISION_GROUPS.find((g) => g.id === groupId);
+    if (!grp) return null;
+    return {
+      date: spDateKey(),
+      completedKeysToday: [],
+      queue: [
+        {
+          kind: "product-group",
+          reviewKey: `preview:produtos:${groupId}`,
+          groupId,
+          title: grp.title,
+          phase: 1,
+          cycle: 1,
+          sessionsDoneInCycle: 0,
+          estimatedMinutes: "10-15",
+        },
+      ],
+    };
+  }
+  return null;
+}
 
 // =============================================================================
 // Estados por item de revisão
@@ -166,8 +231,11 @@ function initProductState(
 
 function RevisaoDoDiaPage() {
   const navigate = useNavigate();
+  const search = Route.useSearch();
+  const previewMode = !!search.preview;
   const fetchToday = useServerFn(getTodayReview);
   const completeItem = useServerFn(completeReviewItem);
+
 
   const [state, setState] = useState<TodayReviewState | null>(null);
   const [loading, setLoading] = useState(true);
@@ -187,7 +255,13 @@ function RevisaoDoDiaPage() {
     let alive = true;
     (async () => {
       try {
-        const s = await fetchToday();
+        const s = previewMode
+          ? buildPreviewState(search.preview!) ?? {
+              date: spDateKey(),
+              queue: [],
+              completedKeysToday: [],
+            }
+          : await fetchToday();
         if (!alive) return;
         setState(s);
         const init: Record<string, ItemState> = {};
@@ -209,7 +283,8 @@ function RevisaoDoDiaPage() {
     return () => {
       alive = false;
     };
-  }, [fetchToday]);
+  }, [fetchToday, previewMode, search.preview]);
+
 
   const queue = state?.queue ?? [];
   const remaining = queue.filter((q) => !completed[q.reviewKey]);
@@ -255,6 +330,63 @@ function RevisaoDoDiaPage() {
         }
       }
 
+      // Constrói metadata detalhada (respostas por questão) para auditoria admin.
+      let metadata: Record<string, unknown> | undefined;
+      if (cur.kind === "module" && current.kind === "module") {
+        const content = getRevisionContent(current.topicId);
+        if (content) {
+          metadata = {
+            kind: "module",
+            topicId: current.topicId,
+            answers: cur.selected.map((qOriginalIdx, i) => {
+              const q = content.quiz[qOriginalIdx];
+              const chosen = cur.answers[i];
+              return {
+                question: q.question,
+                options: q.options,
+                correctIndex: q.correctIndex,
+                chosenIndex: chosen,
+                correct: chosen === q.correctIndex,
+              };
+            }),
+          };
+        }
+      } else if (cur.kind === "product-group" && current.kind === "product-group") {
+        const group = getProductRevisionGroup(current.groupId);
+        if (group) {
+          metadata = {
+            kind: "product-group",
+            groupId: current.groupId,
+            phase: current.phase,
+            cycle: current.cycle,
+            answers: cur.selectedProducts.flatMap((pIdx, sIdx) => {
+              const product = group.products[pIdx];
+              return cur.selectedQuestionsPerProduct[sIdx].map((qIdx, qPos) => {
+                const q = product.questions[qIdx];
+                const got = cur.answers[`p${sIdx}:q${qPos}`];
+                return {
+                  productName: product.productLabel,
+                  question: q.question,
+                  options: q.options,
+                  correctIndex: q.correctIndex,
+                  chosenIndex: got ?? null,
+                  correct: got === q.correctIndex,
+                };
+              });
+            }),
+          };
+        }
+      }
+
+      if (previewMode) {
+        // Modo visualização — não grava nada.
+        setCompleted((prev) => ({ ...prev, [current.reviewKey]: true }));
+        const nextRemaining = remaining.filter((q) => q.reviewKey !== current.reviewKey);
+        if (nextRemaining.length === 0) setFinalScreen(true);
+        else setItemIdx(0);
+        return;
+      }
+
       await completeItem({
         data: {
           reviewKey: current.reviewKey,
@@ -262,6 +394,7 @@ function RevisaoDoDiaPage() {
           scoreTotal,
           groupId:
             current.kind === "product-group" ? current.groupId : undefined,
+          metadata,
         },
       });
 
@@ -399,6 +532,13 @@ function RevisaoDoDiaPage() {
   return (
     <div className="min-h-screen">
       <main className="mx-auto max-w-3xl px-4 py-6 sm:py-8">
+        {previewMode && (
+          <div className="mb-4 rounded-xl border border-amber-500/50 bg-amber-500/10 px-4 py-3 text-sm text-amber-200 flex items-center gap-2">
+            <span className="inline-block h-2 w-2 rounded-full bg-amber-300 animate-pulse" />
+            <span className="font-semibold">Modo visualização</span>
+            <span className="text-amber-100/80">— não afeta dados reais. Apenas para você revisar a experiência da atendente.</span>
+          </div>
+        )}
         <div className="flex items-center justify-between mb-4">
           <Link
             to="/"
@@ -494,6 +634,7 @@ function RevisaoDoDiaPage() {
                 onUpdate={(patch) => updateState(current.reviewKey, patch)}
                 onFinish={finishCurrentItem}
                 saving={saving}
+                preview={previewMode}
               />
             )}
         </Card>
@@ -707,12 +848,14 @@ function ProductGroupFlow({
   item,
   onFinish,
   saving,
+  preview = false,
 }: {
   item: Extract<ReviewQueueItem, { kind: "product-group" }>;
   state: ProductItemState;
   onUpdate: (patch: Partial<ProductItemState>) => void;
   onFinish: () => void;
   saving: boolean;
+  preview?: boolean;
 }) {
   const sessionFn = useServerFn(getFlashcardSession);
   const recordFn = useServerFn(recordFlashcardResult);
@@ -807,14 +950,16 @@ function ProductGroupFlow({
       priceChoice === current.priceCorrectIndex;
     setSubmitted(true);
     try {
-      await recordFn({
-        data: {
-          groupId: item.groupId,
-          subcategoryId: current.subcategoryId,
-          productSlug: current.productSlug,
-          mastered: both,
-        },
-      });
+      if (!preview) {
+        await recordFn({
+          data: {
+            groupId: item.groupId,
+            subcategoryId: current.subcategoryId,
+            productSlug: current.productSlug,
+            mastered: both,
+          },
+        });
+      }
       setResults((r) => ({
         mastered: r.mastered + (both ? 1 : 0),
         wrong: r.wrong + (both ? 0 : 1),

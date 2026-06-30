@@ -174,3 +174,19 @@
   border: 1px solid oklch(0.68 0.16 150 / 28%);
 }
 
+
+/* StepGuide badges: usa cor escura quando em .dark */
+.dark .step-guide-badge {
+  background: var(--sg-bg-dark) !important;
+  color: var(--sg-fg-dark) !important;
+}
+
+/* Chips de funcionalidade / badges de seção em dark mode */
+.dark .product-feature-chip {
+  background: var(--chip-bg-dark) !important;
+  color: var(--chip-fg-dark) !important;
+}
+.dark .rich-summary-badge {
+  background: var(--rs-icon-bg-dark) !important;
+  color: var(--rs-icon-fg-dark) !important;
+}
