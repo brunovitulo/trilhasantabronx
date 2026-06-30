@@ -203,14 +203,7 @@ function AdminPage() {
   const pageStart = (currentPage - 1) * perPage;
   const paged = filtered.slice(pageStart, pageStart + perPage);
 
-  // Mantém o cartão expandido apenas se ele ainda estiver visível na página atual.
-  // NÃO expande automaticamente nenhum atendente no carregamento — o admin
-  // precisa clicar manualmente em quem quiser abrir.
-  useEffect(() => {
-    if (expandedId && !paged.some((a) => a.id === expandedId)) {
-      setExpandedId(null);
-    }
-  }, [paged, expandedId]);
+  // (no expand/collapse state to reconcile)
 
   return (
     <div className="min-h-screen">
