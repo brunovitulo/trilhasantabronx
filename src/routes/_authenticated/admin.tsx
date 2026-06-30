@@ -292,25 +292,15 @@ function AdminPage() {
           </Card>
         ) : (
           <div className="mt-6 space-y-3">
-            {paged.map((att) =>
-              expandedId === att.id ? (
-                <AttendantExpandedCard
-                  key={att.id}
-                  att={att}
-                  reviewerId={user.id}
-                  onCollapse={() => setExpandedId(null)}
-                  onCorrect={setCorrection}
-                  onOpenHistory={() => setHistoryFor({ id: att.id, name: att.full_name })}
-                />
-              ) : (
-                <AttendantCollapsedRow
-                  key={att.id}
-                  att={att}
-                  onExpand={() => setExpandedId(att.id)}
-                  onOpenHistory={() => setHistoryFor({ id: att.id, name: att.full_name })}
-                />
-              ),
-            )}
+            {paged.map((att) => (
+              <AttendantCard
+                key={att.id}
+                att={att}
+                reviewerId={user.id}
+                onCorrect={setCorrection}
+                onOpenHistory={() => setHistoryFor({ id: att.id, name: att.full_name })}
+              />
+            ))}
           </div>
         )}
 
