@@ -83,6 +83,33 @@ export type Database = {
         }
         Relationships: []
       }
+      generated_questions: {
+        Row: {
+          approved_by: string | null
+          created_at: string
+          generated_at: string
+          questions: Json
+          subcategory_key: string
+          updated_at: string
+        }
+        Insert: {
+          approved_by?: string | null
+          created_at?: string
+          generated_at?: string
+          questions: Json
+          subcategory_key: string
+          updated_at?: string
+        }
+        Update: {
+          approved_by?: string | null
+          created_at?: string
+          generated_at?: string
+          questions?: Json
+          subcategory_key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       open_evaluation_answers: {
         Row: {
           answer_text: string
