@@ -1,114 +1,75 @@
-## Visão geral
+## Objetivo
 
-Reformular a lógica e o conteúdo da Revisão do Dia para todos os módulos. As mudanças tocam 5 arquivos principais e exigem ajuste no modo "preview" do admin para refletir o novo formato.
+Aplicar duas mudanças no sistema de provas (Módulos 1–6 e provas de grupo do Módulo 7):
 
----
-
-## 1. Módulos 1, 2 e 3 — Apresentação / Embalar / Responsabilidade
-
-**`src/lib/dailyReview.ts`** — atualizar `MODULE_REVIEW_PLANS`:
-- `dayOffsets: [1]` (somente D+1, sai da fila depois)
-- `hasApostila: false`
-- `hasChecklist: true`
-- `quizCount: 5` (mantém)
-- `estimatedMinutes: "5-7"`
-
-Fluxo: checklist → 5 perguntas. Aparece uma única vez no dia seguinte.
+1. **Auto-correção das questões objetivas** no momento da submissão.
+2. **Revisão de conteúdo** de todas as questões (clareza, distratores plausíveis, alinhamento com a apostila/checklist).
 
 ---
 
-## 2. Módulo 4 — Principais Objeções
+## Parte 1 — Auto-correção de múltipla escolha (mudança técnica)
 
-**`src/lib/dailyReview.ts`**:
-- `dayOffsets: [1, 3, 5]` (mantém)
-- `hasApostila: true` (volta)
-- `hasChecklist: true`
-- `quizCount: 10`
+### Fluxo atual
+Hoje o `OpenEvaluationSubtask` já calcula localmente os acertos das objetivas, mas a submissão entra no banco com `status=pending` e o admin precisa marcar cada questão (incluindo as objetivas) no `CorrectionDialog`. A nota final só é fechada depois que todas — abertas e objetivas — recebem `correct/incorrect`.
 
-**`src/data/revisao.ts`** — expandir `QUIZ_OBJECOES` para 12 perguntas (banco maior que o `quizCount=10`, igual aos outros módulos). Conteúdo cobre: quebrar objeções comuns, discrição na entrega, medo de ser visto, experiência presencial na loja, sigilo no atendimento, postura consultiva ao receber objeção.
+### Nova lógica
+- Na submissão (`OpenEvaluationSubtask.handleSubmit`):
+  - Para cada questão com `options` + `correctIndex`, gravar imediatamente `question_results.is_correct` comparando a resposta da atendente com o índice correto (considerando o embaralhamento determinístico já existente em `shuffleOptions.ts`).
+  - Marcar essas linhas com uma flag nova `auto_graded = true` (coluna boolean default false em `open_evaluation_question_results`).
+  - Se a prova só tem questões objetivas → calcular nota final na hora, gravar `score`, definir `status = approved` ou `rejected` conforme `passingScore`, preencher `reviewed_at`, e disparar o popup de resultado.
+  - Se houver pelo menos uma questão aberta → manter `status = pending` para revisão manual, mas as objetivas já ficam resolvidas.
 
----
+- `CorrectionDialog.tsx`:
+  - Renderizar questões objetivas em modo somente-leitura, com badge "Auto-corrigida" e marcação verde/vermelha.
+  - Botão "Finalizar avaliação" passa a exigir apenas que as questões **abertas** estejam marcadas.
+  - Cálculo da nota final = (objetivas auto-corretas + abertas marcadas como corretas) / total × 100. Mantém os pesos atuais (1 ponto por questão).
 
-## 3. Módulo 5 — Fundamentos de Vendas
-
-**`src/lib/dailyReview.ts`**:
-- `quizCount: 10` (era 5)
-
-**`src/data/revisao.ts`** — expandir `QUIZ_VENDAS` para 12 perguntas. Pontos cobertos: tempo de resposta < 1 min, mentalidade consultora vs vendedora, perguntar antes de indicar, explicar o porquê, antecipar e quebrar objeções, simpatia como pré-requisito.
-
----
-
-## 4. Módulo 6 — Principais Dores e Soluções
-
-**`src/lib/dailyReview.ts`**:
-- `quizCount: 10` (era 6)
-
-**`src/data/revisao.ts`** — expandir `QUIZ_DORES` para 12 perguntas cobrindo os principais pares dor → produto/solução e notas clínicas relevantes (ressecamento, libido baixa, ejaculação precoce, dificuldade de orgasmo, dor anal, monotonia do casal, etc.).
+- Backend (`supabase--migration`):
+  - `ALTER TABLE open_evaluation_question_results ADD COLUMN auto_graded boolean NOT NULL DEFAULT false;`
+  - Sem mudança em RLS (a coluna herda as policies existentes).
 
 ---
 
-## 5. Módulo 7 — Revisão de Produtos (Flashcards)
+## Parte 2 — Revisão de conteúdo das questões
 
-### 5.1 Restringir produtos elegíveis para revisão
+### Escopo
+Todos os subtasks `evaluation` e `open_evaluation` em `src/data/topics.ts`:
+- Módulo 1 (Responsabilidades) — prova final
+- Módulo 2 (Organização) — prova final
+- Módulo 3 (Embalar) — prova final
+- Módulo 4 (Vendas) — prova final
+- Módulo 5 (Dores) — prova final
+- Módulo 6 (Objeções) — prova final
+- Módulo 7 (Produtos) — 3 provas de grupo (Cosméticos, Vibradores, Acessórios)
 
-**`src/data/produtosRevisao.ts`**:
-- Grupo **Cosméticos** passa a conter apenas `EXCITANTES` + `LUBRIFICANTE`. Remover Perfumes, Adstringente, Estimulantes, Retardante, Anestésicos do array.
-- Grupo **Vibradores**: mantém todos.
-- Remover o grupo **Acessórios** de `PRODUCT_REVISION_GROUPS`.
+### Processo por prova
+Para cada prova:
+1. Ler a apostila + checklist + destaque do tópico (arquivos em `src/content/<topic>/`).
+2. Para cada questão:
+   - **Clareza**: reescrever enunciado se for confuso, redundante, ou testar algo irrelevante para o trabalho da atendente.
+   - **Distratores**: substituir opções obviamente absurdas por distratores plausíveis baseados em outros conceitos reais do mesmo tópico.
+   - **Cobertura**: confirmar que a resposta correta aparece textualmente (ou diretamente derivável) da apostila/checklist. Se não estiver, reescrever para testar algo que está coberto, ou remover.
+3. Não alterar quantidade total de questões salvo se uma precisar ser removida por não ter base no material — nesse caso, substituir por uma equivalente baseada em conteúdo coberto.
+4. Manter `correctIndex` apontando para a opção certa após qualquer reordenação.
+5. Provas de grupo do Módulo 7: verificar cada questão contra os produtos do grupo (`src/data/m7Products.ts` + chips em `m7Chips.ts` + apostilas individuais em `src/content/produtos/apostila_*.html`).
 
-### 5.2 Filtrar `M7_PRODUCTS` na fila de flashcards
-
-**`src/lib/flashcards.functions.ts`** — em `getFlashcardSession`, filtrar `products` para incluir apenas as subcategorias permitidas:
-- Cosméticos: `excitantes`, `lubrificante`
-- Vibradores: todas as subcategorias do grupo
-
-Os distratores e a contagem de total/mastered também passam a usar essa lista filtrada.
-
-### 5.3 Progressão sequencial entre grupos
-
-**`src/lib/dailyReview.functions.ts`** — em `getTodayReview`:
-- Iterar `PRODUCT_REVISION_GROUPS` na ordem (Cosméticos → Vibradores).
-- Calcular `total` e `masteredCount` usando apenas os produtos filtrados (5.2).
-- Quando Cosméticos ainda tem produto não-dominado, NÃO enfileirar Vibradores nesse dia, mesmo se o exame de Vibradores já estiver concluído.
-- Reescrever a função auxiliar `totalByGroup` para respeitar o filtro de subcategorias permitidas.
-
-### 5.4 Lógica por produto (sem bloqueio)
-
-Já é o comportamento atual: a sessão percorre todos os flashcards; quem acerta as duas perguntas (funcionalidade + preço) vira `mastered` e sai da fila; quem erra reaparece no dia seguinte. **Nenhuma mudança necessária** em `recordFlashcardResult`.
-
-### 5.5 Tela de resumo + download (HTML)
-
-**`src/routes/_authenticated/revisao-do-dia.tsx`** — substituir a tela "Sessão de flashcards pronta!" do `ProductGroupFlow` por uma tela de resumo que:
-- Lista todos os produtos errados na sessão (rastreados em estado local: `wrongItems: FlashcardItem[]`).
-- Mostra imagem, nome, funcionalidade correta (chips) e preço correto de cada produto errado.
-- Mensagem positiva se a lista estiver vazia.
-- Botão **"Baixar resumo"** que gera um HTML standalone (`Blob` + `URL.createObjectURL`) com os produtos errados e dispara download. HTML é imprimível no navegador (Ctrl+P → "Salvar como PDF"), atendendo "PDF ou HTML".
-- Botão "Concluir este item" para finalizar.
-
-Implementação puramente client-side, sem nova dependência.
-
-### 5.6 Limpeza
-
-- Remover tela `phase3Result` (não há mais fases 2/3 — a sessão é diária até dominar).
-- Simplificar `initProductState`: percorre todos os flashcards do grupo, sem cards intermediários.
+### Entregáveis
+- `src/data/topics.ts` atualizado com questões revisadas.
+- Diff mantido apenas no array de `questions` de cada subtask de avaliação — sem mexer em outras subtasks, fluxo, ou estilos.
 
 ---
 
-## Detalhes técnicos
+## Ordem de execução
 
-- **Sem migração de schema**: `product_flashcard_mastery` já suporta o fluxo (mastered_at + reset diário implícito).
-- **`product_revision_progress`**: a flag `group_completed` continua sendo setada quando todos os produtos filtrados são dominados.
-- **Preview admin** (`buildPreviewState`): remover `group:acessorios` da lista — feito implicitamente porque o grupo deixa de existir em `PRODUCT_REVISION_GROUPS`.
+1. Migration `auto_graded` + ajustes em `OpenEvaluationSubtask` e `CorrectionDialog` (Parte 1). Verificar build.
+2. Revisão de conteúdo Módulo 1 → 6 (uma prova por vez, lendo a apostila correspondente antes).
+3. Revisão das 3 provas do Módulo 7.
+4. Build final + smoke test.
 
 ---
 
-## Arquivos alterados
+## Observações
 
-1. `src/lib/dailyReview.ts` — `MODULE_REVIEW_PLANS`
-2. `src/data/revisao.ts` — expansão dos quizzes M4/M5/M6
-3. `src/data/produtosRevisao.ts` — remoção de produtos/grupos
-4. `src/lib/flashcards.functions.ts` — filtro de subcategorias permitidas
-5. `src/lib/dailyReview.functions.ts` — progressão sequencial entre grupos M7
-6. `src/routes/_authenticated/revisao-do-dia.tsx` — tela de resumo + download, simplificação
-
-Confirma que posso seguir com tudo nesse formato?
+- A revisão de conteúdo é um trabalho extenso (~80–100 questões no total). Vou executar tópico por tópico para manter qualidade; se preferir, posso começar só pelos módulos que você considera prioritários — me avise antes de eu seguir.
+- Submissões antigas (`open_evaluation_submissions` já criadas) continuam funcionando como hoje; a flag `auto_graded` só passa a ser gravada nas novas submissões.
+- Nenhuma mudança visual além do badge "Auto-corrigida" no painel de correção.
