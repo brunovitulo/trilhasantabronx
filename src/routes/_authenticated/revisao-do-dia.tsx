@@ -34,6 +34,13 @@ import {
   type ProductRevisionItem,
 } from "@/data/produtosRevisao";
 import { sampleIndices, type ReviewQueueItem } from "@/lib/dailyReview";
+import { useQuery } from "@tanstack/react-query";
+import {
+  getFlashcardSession,
+  recordFlashcardResult,
+  type FlashcardItem,
+  type FlashcardSession,
+} from "@/lib/flashcards.functions";
 
 export const Route = createFileRoute("/_authenticated/revisao-do-dia")({
   head: () => ({ meta: [{ title: "Revisão do dia — Santa Bronx" }] }),
