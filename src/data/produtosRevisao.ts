@@ -5,7 +5,7 @@
 
 import type { RevisionQuestion } from "@/data/revisao";
 
-export type ProductRevisionGroupId = "cosmeticos" | "acessorios" | "vibradores";
+export type ProductRevisionGroupId = "cosmeticos" | "vibradores";
 
 export type ProductRevisionItem = {
   productId: string;
