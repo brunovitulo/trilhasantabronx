@@ -419,54 +419,111 @@ export const getFlashcardSession = createServerFn({ method: "POST" })
       return cachedCoreName(p) ?? neutralFallbackName(p.productName);
     }
 
+    // Tokeniza uma frase em palavras significativas (>=4 chars), sem stopwords.
+    const STOP = new Set([
+      "com","sem","para","uma","umas","uns","dos","das","que","por","mais",
+      "este","esta","esse","essa","isso","muito","pouco","tipo","modo","feito",
+      "efeito","produto","sabor","aroma","cor","cores","tamanho",
+    ]);
+    function tokens(s: string): Set<string> {
+      return new Set(
+        s
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^a-z0-9 ]+/g, " ")
+          .split(/\s+/)
+          .filter((w) => w.length >= 4 && !STOP.has(w)),
+      );
+    }
+    function jaccard(a: Set<string>, b: Set<string>): number {
+      if (a.size === 0 || b.size === 0) return 0;
+      let inter = 0;
+      for (const t of a) if (b.has(t)) inter++;
+      const uni = a.size + b.size - inter;
+      return uni === 0 ? 0 : inter / uni;
+    }
+
     function pickDistractors(p: M7Product, correct: string, seed: number): string[] {
       const ownLabel = (M7_SUBCATEGORY_LABELS[p.subcategoryId] ?? p.subcategoryLabel)
         .toLowerCase();
       const own = p.productName.toLowerCase();
+      const correctTokens = tokens(correct);
 
-      // 1) Irmãos da subcategoria primeiro — produzem os distratores mais difíceis.
       const siblings = getM7ProductsBySubcategory(p.subcategoryId).filter(
         (s) => s.productSlug !== p.productSlug,
       );
-      const pool: string[] = [];
+      type Cand = { text: string; sibling: boolean };
+      const siblingPool: Cand[] = [];
       for (const s of siblings) {
         const f = cachedFunctionality(s);
-        if (f) pool.push(f);
+        if (f) siblingPool.push({ text: f, sibling: true });
+      }
+      const otherPool: Cand[] = [];
+      for (const other of products) {
+        if (other.productSlug === p.productSlug) continue;
+        if (siblings.some((s) => s.productSlug === other.productSlug)) continue;
+        const f = cachedFunctionality(other);
+        if (f) otherPool.push({ text: f, sibling: false });
       }
 
-      // 2) Completa com outras subcategorias do mesmo grupo, ainda do cache.
-      if (pool.length < 3) {
-        for (const other of products) {
-          if (other.productSlug === p.productSlug) continue;
-          if (siblings.some((s) => s.productSlug === other.productSlug)) continue;
-          const f = cachedFunctionality(other);
-          if (f) pool.push(f);
-        }
-      }
-
-      // 3) Filtra duplicados / coincidência com a correta / nome do próprio produto.
-      const filtered: string[] = [];
-      const seen = new Set<string>([correct.toLowerCase()]);
-      for (const cand of pool) {
-        const c = cand.trim();
-        const lc = c.toLowerCase();
-        if (!c || seen.has(lc)) continue;
-        if (lc === own || lc === ownLabel) continue;
-        seen.add(lc);
-        filtered.push(c);
-      }
-
-      // 4) Embaralha determinístico e devolve até 3.
       let s = seed >>> 0;
       const rand = () => {
         s = (s * 1664525 + 1013904223) >>> 0;
         return s / 0xffffffff;
       };
-      for (let i = filtered.length - 1; i > 0; i--) {
-        const j = Math.floor(rand() * (i + 1));
-        [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+      const shuffle = <T,>(arr: T[]) => {
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(rand() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+      };
+      shuffle(siblingPool);
+      shuffle(otherPool);
+
+      // Mistura: 1 irmão plausível + 2 de outras subcategorias do grupo.
+      // Distratores ficam distintos entre si e nem óbvios nem quase-iguais
+      // à resposta correta.
+      const ordered: Cand[] = [];
+      if (siblingPool[0]) ordered.push(siblingPool[0]);
+      for (const c of [...otherPool, ...siblingPool.slice(1)]) ordered.push(c);
+
+      const chosen: string[] = [];
+      const chosenTokens: Set<string>[] = [];
+      const seen = new Set<string>([correct.toLowerCase()]);
+      const TOO_SIMILAR = 0.6;
+
+      const tryAdd = (text: string) => {
+        const c = text.trim();
+        const lc = c.toLowerCase();
+        if (!c || seen.has(lc)) return false;
+        if (lc === own || lc === ownLabel) return false;
+        const t = tokens(c);
+        if (jaccard(t, correctTokens) >= TOO_SIMILAR) return false;
+        for (const ct of chosenTokens) {
+          if (jaccard(t, ct) >= TOO_SIMILAR) return false;
+        }
+        seen.add(lc);
+        chosen.push(c);
+        chosenTokens.push(t);
+        return true;
+      };
+
+      for (const c of ordered) {
+        if (chosen.length >= 3) break;
+        tryAdd(c.text);
       }
-      return filtered.slice(0, 3);
+      // Fallback: relaxa similaridade só se ainda faltar (catálogo pequeno).
+      if (chosen.length < 3) {
+        for (const c of ordered) {
+          if (chosen.length >= 3) break;
+          const lc = c.text.trim().toLowerCase();
+          if (seen.has(lc)) continue;
+          seen.add(lc);
+          chosen.push(c.text.trim());
+        }
+      }
+      return chosen.slice(0, 3);
     }
 
     const items: FlashcardItem[] = queue.map((p) => {
