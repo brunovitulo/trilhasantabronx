@@ -283,16 +283,24 @@ export const completeReviewItem = createServerFn({ method: "POST" })
         .maybeSingle();
 
       if (gpRow && !gpRow.group_completed) {
-        // Conta produtos do grupo no catálogo M7.
+        // Conta produtos do grupo APÓS o filtro de subcategorias revisáveis.
         const { M7_PRODUCTS } = await import("@/data/m7Products");
-        const total = M7_PRODUCTS.filter((p) => p.groupId === data.groupId).length;
+        const { M7_REVIEW_ALLOWED_SUBCATEGORIES } = await import(
+          "@/data/produtosRevisao"
+        );
+        const allowedForGroup = new Set(
+          M7_REVIEW_ALLOWED_SUBCATEGORIES[data.groupId] ?? [],
+        );
+        const total = M7_PRODUCTS.filter(
+          (p) => p.groupId === data.groupId && allowedForGroup.has(p.subcategoryId),
+        ).length;
         const { data: masteryRows } = await supabase
           .from("product_flashcard_mastery")
-          .select("product_slug, mastered_at")
+          .select("product_slug, subcategory_id, mastered_at")
           .eq("user_id", userId)
           .eq("group_id", data.groupId);
         const masteredCount = (masteryRows ?? []).filter(
-          (m) => m.mastered_at,
+          (m) => m.mastered_at && allowedForGroup.has(m.subcategory_id),
         ).length;
 
         const patch: Record<string, unknown> = {
