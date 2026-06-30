@@ -1300,7 +1300,7 @@ function Flashcard({
                   >
                     <Icon className="h-5 w-5" />
                   </span>
-                  <span className="flex-1 text-sm font-medium leading-snug line-clamp-2">
+                  <span className="flex-1 text-sm font-medium leading-snug" style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                     {opt}
                   </span>
                   {submitted && isCorrect && (
