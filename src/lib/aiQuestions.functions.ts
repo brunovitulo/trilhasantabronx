@@ -128,8 +128,11 @@ export const getGeneratedQuestions = createServerFn({ method: "GET" })
   .inputValidator((data: unknown) =>
     z.object({ subcategoryKey: z.string().min(1) }).parse(data),
   )
-  .handler(async ({ data, context }) => {
-    const { data: row, error } = await context.supabase
+  .handler(async ({ data }) => {
+    // SELECT direto da tabela é restrito a admins por RLS. Atendentes consomem
+    // o banco de questões somente por este choke point server-side.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row, error } = await supabaseAdmin
       .from("generated_questions")
       .select("subcategory_key, questions, generated_at")
       .eq("subcategory_key", data.subcategoryKey)

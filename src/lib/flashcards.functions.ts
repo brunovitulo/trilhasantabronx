@@ -284,8 +284,11 @@ export const getFlashcardSession = createServerFn({ method: "POST" })
     const products = getM7ProductsByGroup(data.groupId);
 
     // Cache de funcionalidades (todas do grupo, para alimentar distractors).
+    // RLS restringe SELECT em product_flashcards a admins; usamos o cliente
+    // admin server-side para servir o conteúdo de treino aos atendentes.
     const subcategoryIds = Array.from(new Set(products.map((p) => p.subcategoryId)));
-    const { data: cacheRows } = await supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: cacheRows } = await supabaseAdmin
       .from("product_flashcards")
       .select("subcategory_id, product_slug, functionality")
       .in("subcategory_id", subcategoryIds);
