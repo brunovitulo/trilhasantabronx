@@ -9,9 +9,13 @@ import {
   CheckCircle2,
   ClipboardCheck,
   Clock,
+  Droplet,
+  Flame,
+  Heart,
   Loader2,
   Sparkles,
   X,
+  Zap,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -870,7 +874,6 @@ function ProductGroupFlow({
 
   const [cursor, setCursor] = useState(0);
   const [funcChoice, setFuncChoice] = useState<number | null>(null);
-  const [priceChoice, setPriceChoice] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [results, setResults] = useState<{
     mastered: number;
@@ -938,10 +941,8 @@ function ProductGroupFlow({
   }
 
   async function confirm() {
-    if (funcChoice === null || priceChoice === null || submitted) return;
-    const both =
-      funcChoice === current.functionalityCorrectIndex &&
-      priceChoice === current.priceCorrectIndex;
+    if (funcChoice === null || submitted) return;
+    const correct = funcChoice === current.functionalityCorrectIndex;
     setSubmitted(true);
     try {
       if (!preview) {
@@ -950,14 +951,14 @@ function ProductGroupFlow({
             groupId: item.groupId,
             subcategoryId: current.subcategoryId,
             productSlug: current.productSlug,
-            mastered: both,
+            mastered: correct,
           },
         });
       }
       setResults((r) => ({
-        mastered: r.mastered + (both ? 1 : 0),
-        wrong: r.wrong + (both ? 0 : 1),
-        wrongItems: both ? r.wrongItems : [...r.wrongItems, current],
+        mastered: r.mastered + (correct ? 1 : 0),
+        wrong: r.wrong + (correct ? 0 : 1),
+        wrongItems: correct ? r.wrongItems : [...r.wrongItems, current],
       }));
     } catch (e) {
       toast.error("Erro ao registrar resultado", {
@@ -969,7 +970,6 @@ function ProductGroupFlow({
   function nextCard() {
     setCursor((c) => c + 1);
     setFuncChoice(null);
-    setPriceChoice(null);
     setSubmitted(false);
   }
 
@@ -981,9 +981,7 @@ function ProductGroupFlow({
       cursor={cursor}
       submitted={submitted}
       funcChoice={funcChoice}
-      priceChoice={priceChoice}
       onFuncChoice={(i) => !submitted && setFuncChoice(i)}
-      onPriceChoice={(i) => !submitted && setPriceChoice(i)}
       onConfirm={confirm}
       onNext={nextCard}
     />
@@ -1014,7 +1012,6 @@ function SessionSummary({
       );
     const cards = wrongItems
       .map((p) => {
-        const correctPrice = p.priceOptions[p.priceCorrectIndex] ?? "—";
         const correctFunc = p.functionalityOptions[p.functionalityCorrectIndex] ?? "—";
         const chips = chipsForProductSlug(p.productSlug);
         const chipsHtml = chips.length
@@ -1033,7 +1030,6 @@ function SessionSummary({
             ${img}
             <div style="flex:1;">
               <h3 style="margin:0 0 6px 0;font-size:16px;color:#111827;">${escape(p.productName)}</h3>
-              <p style="margin:0 0 8px 0;font-size:13px;color:#6b7280;"><strong>Preço:</strong> ${escape(correctPrice)}</p>
               <p style="margin:0 0 8px 0;font-size:13px;color:#374151;"><strong>Funcionalidade:</strong> ${escape(correctFunc)}</p>
               <div>${chipsHtml}</div>
             </div>
@@ -1105,9 +1101,9 @@ function SessionSummary({
                       {p.productName}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Preço correto:{" "}
+                      Funcionalidade:{" "}
                       <span className="text-foreground">
-                        {p.priceOptions[p.priceCorrectIndex]}
+                        {p.functionalityOptions[p.functionalityCorrectIndex]}
                       </span>
                     </p>
                     {chips.length > 0 && (
@@ -1146,6 +1142,8 @@ function SessionSummary({
 
 
 
+const OPTION_ICONS = [Droplet, Flame, Zap, Heart];
+
 function Flashcard({
   item,
   groupTitle,
@@ -1153,9 +1151,7 @@ function Flashcard({
   cursor,
   submitted,
   funcChoice,
-  priceChoice,
   onFuncChoice,
-  onPriceChoice,
   onConfirm,
   onNext,
 }: {
@@ -1165,31 +1161,36 @@ function Flashcard({
   cursor: number;
   submitted: boolean;
   funcChoice: number | null;
-  priceChoice: number | null;
   onFuncChoice: (i: number) => void;
-  onPriceChoice: (i: number) => void;
   onConfirm: () => void;
   onNext: () => void;
 }) {
   const funcCorrect = funcChoice === item.functionalityCorrectIndex;
-  const priceCorrect = priceChoice === item.priceCorrectIndex;
-  const allCorrect = submitted && funcCorrect && priceCorrect;
+  const allCorrect = submitted && funcCorrect;
 
-  function optionClasses(
-    chosen: number | null,
-    optIdx: number,
-    correctIdx: number,
-  ): string {
+  function optionClasses(optIdx: number): string {
     if (!submitted) {
-      return chosen === optIdx
-        ? "border-primary bg-primary/10"
+      return funcChoice === optIdx
+        ? "border-primary/60 bg-primary/10"
         : "border-white/10 bg-white/[0.04] hover:border-primary/40";
     }
-    if (optIdx === correctIdx)
-      return "border-emerald-500/60 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300";
-    if (chosen === optIdx)
-      return "border-rose-500/60 bg-rose-500/10 text-rose-700 dark:text-rose-300";
+    if (optIdx === item.functionalityCorrectIndex)
+      return "border-emerald-500/50 bg-emerald-500/[0.08] text-emerald-700 dark:text-emerald-300";
+    if (funcChoice === optIdx)
+      return "border-rose-500/50 bg-rose-500/[0.08] text-rose-700 dark:text-rose-300";
     return "border-white/10 bg-white/[0.03] opacity-60";
+  }
+
+  function iconWrapperClasses(optIdx: number): string {
+    if (!submitted) {
+      return funcChoice === optIdx
+        ? "bg-primary/15 text-primary"
+        : "bg-white/[0.06] text-muted-foreground";
+    }
+    if (optIdx === item.functionalityCorrectIndex)
+      return "bg-emerald-500/15 text-emerald-500";
+    if (funcChoice === optIdx) return "bg-rose-500/15 text-rose-500";
+    return "bg-white/[0.05] text-muted-foreground";
   }
 
   return (
@@ -1237,55 +1238,43 @@ function Flashcard({
           <p className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">
             Qual é a funcionalidade deste produto?
           </p>
-          <div className="space-y-1.5">
-            {item.functionalityOptions.map((opt, i) => (
-              <button
-                key={i}
-                onClick={() => onFuncChoice(i)}
-                disabled={submitted}
-                className={`w-full text-left text-sm rounded-lg border px-3 py-2.5 transition-colors ${optionClasses(
-                  funcChoice,
-                  i,
-                  item.functionalityCorrectIndex,
-                )}`}
-              >
-                {opt}
-              </button>
-            ))}
+          <div className="space-y-2.5">
+            {item.functionalityOptions.map((opt, i) => {
+              const Icon = OPTION_ICONS[i % OPTION_ICONS.length];
+              return (
+                <button
+                  key={i}
+                  onClick={() => onFuncChoice(i)}
+                  disabled={submitted}
+                  className={`w-full flex items-center gap-3 text-left rounded-lg border px-3 py-2 transition-colors ${optionClasses(
+                    i,
+                  )}`}
+                >
+                  <span
+                    className={`flex-shrink-0 flex items-center justify-center rounded-md transition-colors ${iconWrapperClasses(
+                      i,
+                    )}`}
+                    style={{ width: 32, height: 32 }}
+                    aria-hidden="true"
+                  >
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  <span
+                    className="flex-1"
+                    style={{ fontSize: 13, lineHeight: 1.4 }}
+                  >
+                    {opt}
+                  </span>
+                </button>
+              );
+            })}
           </div>
-        </div>
-
-        <div className="space-y-2">
-          <p className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">
-            Qual é o preço atual?
-          </p>
-          <div className="grid grid-cols-2 gap-1.5">
-            {item.priceOptions.map((opt, i) => (
-              <button
-                key={i}
-                onClick={() => onPriceChoice(i)}
-                disabled={submitted || item.priceOptions[0] === "—"}
-                className={`text-sm rounded-lg border px-3 py-2.5 transition-colors ${optionClasses(
-                  priceChoice,
-                  i,
-                  item.priceCorrectIndex,
-                )}`}
-              >
-                {opt}
-              </button>
-            ))}
-          </div>
-          {item.scrapeError && (
-            <p className="text-[11px] text-amber-500">
-              {item.scrapeError} · revise apenas a funcionalidade.
-            </p>
-          )}
         </div>
 
         {!submitted ? (
           <Button
             className="w-full"
-            disabled={funcChoice === null || priceChoice === null}
+            disabled={funcChoice === null}
             onClick={onConfirm}
           >
             Confirmar resposta
@@ -1300,9 +1289,7 @@ function Flashcard({
               }`}
             >
               <p className="font-bold mb-1">
-                {allCorrect
-                  ? "Acertou tudo!"
-                  : "Não foi dessa vez."}
+                {allCorrect ? "Acertou!" : "Não foi dessa vez."}
               </p>
               <p className="text-xs leading-relaxed">
                 {allCorrect

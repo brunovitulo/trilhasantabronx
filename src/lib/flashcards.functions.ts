@@ -169,7 +169,7 @@ export const generateProductFunctionalities = createServerFn({ method: "POST" })
       .map((p, i) => `${i + 1}. slug=${p.productSlug} | nome=${p.productName}`)
       .join("\n");
 
-    const prompt = `Você é treinadora de atendentes de sex shop. Para cada produto da lista abaixo, escreva UMA frase curta (máx. 18 palavras, em português brasileiro coloquial) descrevendo a FUNCIONALIDADE específica desse produto — o que ele faz / qual efeito entrega.
+    const prompt = `Você é treinadora de atendentes de sex shop. Para cada produto da lista abaixo, escreva UMA frase curta (máx. 10 palavras, em português brasileiro coloquial) descrevendo a FUNCIONALIDADE específica desse produto — o que ele faz / qual efeito entrega.
 
 Regras rígidas:
 - Use SOMENTE informações da apostila + nome do produto. Não invente.
