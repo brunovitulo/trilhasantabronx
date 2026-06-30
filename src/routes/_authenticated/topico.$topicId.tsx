@@ -2678,9 +2678,54 @@ function OpenEvaluationSubtask({
       toast.error("Erro ao salvar respostas", { description: ansErr.message });
       return;
     }
+
+    // Auto-finalize quando todas as questões são objetivas (já temos is_correct para todas).
+    const hasOpenQuestions = subtask.questions.some(
+      (q) => !(Array.isArray(q.options) && q.options.length > 0),
+    );
+    let autoStatus: "approved" | "rejected" | null = null;
+    let autoScore: number | null = null;
+    if (!hasOpenQuestions) {
+      const correctCount = rows.filter((r) => r.is_correct === true).length;
+      autoScore = Math.round((correctCount / rows.length) * 100);
+      autoStatus = autoScore >= ((subtask as { passingScore?: number }).passingScore ?? 70) ? "approved" : "rejected";
+      await supabase
+        .from("open_evaluation_submissions")
+        .update({
+          status: autoStatus,
+          score: autoScore,
+          reviewed_at: new Date().toISOString(),
+          retry_allowed: autoStatus === "rejected",
+          retry_requires_module_redo: false,
+        })
+        .eq("id", sub.id);
+      if (autoStatus === "approved") {
+        await supabase.from("subtask_progress").upsert(
+          {
+            user_id: userId,
+            subtask_id: subtask.id,
+            completed: true,
+            score: autoScore,
+            completed_at: new Date().toISOString(),
+          },
+          { onConflict: "user_id,subtask_id" },
+        );
+      } else {
+        await supabase
+          .from("subtask_progress")
+          .delete()
+          .eq("user_id", userId)
+          .eq("subtask_id", subtask.id);
+      }
+    }
+
     onSubmitted();
     if (force) {
       toast.warning("Tempo esgotado. Prova enviada automaticamente.");
+    } else if (autoStatus === "approved") {
+      toast.success(`Prova aprovada automaticamente — ${autoScore}%. Próximo módulo liberado!`);
+    } else if (autoStatus === "rejected") {
+      toast.error(`Prova reprovada — ${autoScore}%. Você pode refazer na sequência.`);
     } else {
       toast.success("Prova enviada. Aguarde a correção da gestora — o próximo módulo libera somente após aprovação.");
     }
