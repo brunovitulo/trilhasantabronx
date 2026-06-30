@@ -33,7 +33,17 @@ import {
   getProductRevisionGroup,
   type ProductRevisionItem,
 } from "@/data/produtosRevisao";
-import { sampleIndices, type ReviewQueueItem } from "@/lib/dailyReview";
+import {
+  MODULE_REVIEW_PLANS,
+  sampleIndices,
+  spDateKey,
+  type ReviewQueueItem,
+} from "@/lib/dailyReview";
+import { TOPICS } from "@/data/topics";
+import {
+  PRODUCT_REVISION_GROUPS,
+  type ProductRevisionGroupId,
+} from "@/data/produtosRevisao";
 import { useQuery } from "@tanstack/react-query";
 import {
   getFlashcardSession,
@@ -44,8 +54,63 @@ import {
 
 export const Route = createFileRoute("/_authenticated/revisao-do-dia")({
   head: () => ({ meta: [{ title: "Revisão do dia — Santa Bronx" }] }),
+  validateSearch: (search: Record<string, unknown>): { preview?: string } => ({
+    preview: typeof search.preview === "string" ? search.preview : undefined,
+  }),
   component: RevisaoDoDiaPage,
 });
+
+/** Constrói um estado sintético para o modo "visualizar revisão" (admin),
+ *  sem nenhuma gravação no banco. */
+function buildPreviewState(preview: string): TodayReviewState | null {
+  if (preview.startsWith("module:")) {
+    const topicId = preview.slice("module:".length);
+    const plan = MODULE_REVIEW_PLANS.find((p) => p.topicId === topicId);
+    if (!plan) return null;
+    const topic = TOPICS.find((t) => t.id === topicId);
+    return {
+      date: spDateKey(),
+      completedKeysToday: [],
+      queue: [
+        {
+          kind: "module",
+          reviewKey: `preview:${topicId}`,
+          topicId,
+          title: topic?.title ?? topicId,
+          hasApostila: plan.hasApostila,
+          hasChecklist: plan.hasChecklist,
+          quizCount: plan.quizCount,
+          dayOffset: plan.dayOffsets[0] ?? 1,
+          sessionIndex: 1,
+          totalSessions: plan.dayOffsets.length,
+          estimatedMinutes: plan.estimatedMinutes,
+        },
+      ],
+    };
+  }
+  if (preview.startsWith("group:")) {
+    const groupId = preview.slice("group:".length) as ProductRevisionGroupId;
+    const grp = PRODUCT_REVISION_GROUPS.find((g) => g.id === groupId);
+    if (!grp) return null;
+    return {
+      date: spDateKey(),
+      completedKeysToday: [],
+      queue: [
+        {
+          kind: "product-group",
+          reviewKey: `preview:produtos:${groupId}`,
+          groupId,
+          title: grp.title,
+          phase: 1,
+          cycle: 1,
+          sessionsDoneInCycle: 0,
+          estimatedMinutes: "10-15",
+        },
+      ],
+    };
+  }
+  return null;
+}
 
 // =============================================================================
 // Estados por item de revisão
