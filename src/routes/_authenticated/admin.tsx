@@ -275,6 +275,7 @@ function AdminPage() {
 
         <div className="mt-6">
           <ProductQuestionsAdminPanel />
+          <ProductFlashcardsAdminPanel />
         </div>
 
         {loading ? (
