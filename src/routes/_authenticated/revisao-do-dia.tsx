@@ -532,6 +532,13 @@ function RevisaoDoDiaPage() {
   return (
     <div className="min-h-screen">
       <main className="mx-auto max-w-3xl px-4 py-6 sm:py-8">
+        {previewMode && (
+          <div className="mb-4 rounded-xl border border-amber-500/50 bg-amber-500/10 px-4 py-3 text-sm text-amber-200 flex items-center gap-2">
+            <span className="inline-block h-2 w-2 rounded-full bg-amber-300 animate-pulse" />
+            <span className="font-semibold">Modo visualização</span>
+            <span className="text-amber-100/80">— não afeta dados reais. Apenas para você revisar a experiência da atendente.</span>
+          </div>
+        )}
         <div className="flex items-center justify-between mb-4">
           <Link
             to="/"
