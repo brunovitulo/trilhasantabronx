@@ -871,9 +871,14 @@ function ProductGroupFlow({
   const [funcChoice, setFuncChoice] = useState<number | null>(null);
   const [priceChoice, setPriceChoice] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
-  const [results, setResults] = useState<{ mastered: number; wrong: number }>({
+  const [results, setResults] = useState<{
+    mastered: number;
+    wrong: number;
+    wrongItems: FlashcardItem[];
+  }>({
     mastered: 0,
     wrong: 0,
+    wrongItems: [],
   });
 
   if (sessionQuery.isLoading) {
@@ -920,26 +925,14 @@ function ProductGroupFlow({
 
   if (isDone) {
     return (
-      <div className="mt-4 text-center space-y-3">
-        <CheckCircle2 className="h-10 w-10 text-emerald-500 mx-auto" />
-        <p className="text-base font-semibold">Sessão de flashcards pronta!</p>
-        <p className="text-sm text-muted-foreground">
-          Dominados:{" "}
-          <span className="font-semibold text-emerald-600">
-            {results.mastered}
-          </span>{" "}
-          · Voltam amanhã:{" "}
-          <span className="font-semibold text-rose-600">{results.wrong}</span>
-        </p>
-        <Button
-          onClick={onFinish}
-          disabled={saving}
-          className="bg-emerald-600 hover:bg-emerald-700"
-        >
-          {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-          Concluir este item
-        </Button>
-      </div>
+      <SessionSummary
+        groupTitle={item.title}
+        mastered={results.mastered}
+        wrong={results.wrong}
+        wrongItems={results.wrongItems}
+        onFinish={onFinish}
+        saving={saving}
+      />
     );
   }
 
@@ -963,6 +956,7 @@ function ProductGroupFlow({
       setResults((r) => ({
         mastered: r.mastered + (both ? 1 : 0),
         wrong: r.wrong + (both ? 0 : 1),
+        wrongItems: both ? r.wrongItems : [...r.wrongItems, current],
       }));
     } catch (e) {
       toast.error("Erro ao registrar resultado", {
