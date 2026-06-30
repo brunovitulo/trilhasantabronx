@@ -51,6 +51,33 @@ export function ExamResultPopup({ userId }: { userId: string }) {
     });
   }, []);
 
+export function ExamResultPopup({ userId }: { userId: string }) {
+  const [pending, setPending] = useState<ReviewedRow[]>([]);
+  const [commentsBySubmission, setCommentsBySubmission] = useState<
+    Record<string, AnswerComment[]>
+  >({});
+
+  const enqueue = useCallback((row: ReviewedRow) => {
+    setPending((prev) => {
+      if (prev.some((r) => r.id === row.id)) return prev;
+      return [...prev, row];
+    });
+  }, []);
+
+  const loadComments = useCallback(async (submissionId: string) => {
+    const { data } = await supabase
+      .from("open_evaluation_answers")
+      .select("id, question_index, question_text, answer_text, is_correct, feedback")
+      .eq("submission_id", submissionId)
+      .not("feedback", "is", null)
+      .order("question_index", { ascending: true });
+    const rows = (data ?? []) as AnswerComment[];
+    const filtered = rows.filter(
+      (r) => typeof r.feedback === "string" && r.feedback.trim().length > 0,
+    );
+    setCommentsBySubmission((prev) => ({ ...prev, [submissionId]: filtered }));
+  }, []);
+
   const fetchUnseen = useCallback(async () => {
     const { data } = await supabase
       .from("open_evaluation_submissions")
