@@ -204,6 +204,7 @@ export function CorrectionDialog({
         ) : (
           <div className="space-y-5">
             {answers.map((answer) => {
+              const isMC = isMcQuestion(answer.question_index);
               const marked = answer.is_correct !== null;
               const correct = answer.is_correct === true;
               return (
@@ -218,11 +219,26 @@ export function CorrectionDialog({
                   }`}
                 >
                   {/* Pergunta */}
-                  <div className="bg-muted/40 px-4 py-3 border-b border-border/40">
-                    <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">
-                      Pergunta {answer.question_index + 1}
-                    </p>
-                    <p className="text-sm font-semibold leading-snug">{answer.question_text}</p>
+                  <div className="bg-muted/40 px-4 py-3 border-b border-border/40 flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">
+                        Pergunta {answer.question_index + 1}
+                        {isMC && <span className="ml-2 text-teal-400">· Múltipla escolha</span>}
+                      </p>
+                      <p className="text-sm font-semibold leading-snug">{answer.question_text}</p>
+                    </div>
+                    {isMC && (
+                      <span
+                        className={`shrink-0 inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-semibold border ${
+                          correct
+                            ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/40"
+                            : "bg-rose-500/15 text-rose-300 border-rose-500/40"
+                        }`}
+                      >
+                        {correct ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                        Auto-corrigida
+                      </span>
+                    )}
                   </div>
 
                   {/* Resposta da atendente */}
@@ -235,56 +251,61 @@ export function CorrectionDialog({
                         <span className="text-muted-foreground italic">(sem resposta)</span>
                       )}
                     </p>
+                    {isMC && !correct && answer.feedback && (
+                      <p className="mt-2 text-xs text-emerald-300/90">{answer.feedback}</p>
+                    )}
                   </div>
 
-                  {/* Área de correção da gestora */}
-                  <div className="px-4 py-3 border-t border-dashed border-border/60 bg-primary/5 space-y-3">
-                    <p className="text-[10px] font-semibold uppercase tracking-wider text-primary/90 inline-flex items-center gap-1">
-                      <MessageSquare className="h-3 w-3" /> Sua correção
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      <Button
-                        type="button"
-                        size="sm"
-                        className={
-                          correct
-                            ? "rounded-full bg-emerald-600 hover:bg-emerald-700 text-white border-0"
-                            : "rounded-full border border-emerald-500/60 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20"
-                        }
-                        onClick={() => updateAnswer(answer.id, { is_correct: true })}
-                      >
-                        <CheckCircle2 className="h-4 w-4 mr-1" /> Está certa
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        className={
-                          answer.is_correct === false
-                            ? "rounded-full bg-rose-600 hover:bg-rose-700 text-white border-0"
-                            : "rounded-full border border-rose-500/60 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20"
-                        }
-                        onClick={() => updateAnswer(answer.id, { is_correct: false })}
-                      >
-                        <XCircle className="h-4 w-4 mr-1" /> Está errada
-                      </Button>
+                  {/* Área de correção da gestora (apenas abertas) */}
+                  {!isMC && (
+                    <div className="px-4 py-3 border-t border-dashed border-border/60 bg-primary/5 space-y-3">
+                      <p className="text-[10px] font-semibold uppercase tracking-wider text-primary/90 inline-flex items-center gap-1">
+                        <MessageSquare className="h-3 w-3" /> Sua correção
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        <Button
+                          type="button"
+                          size="sm"
+                          className={
+                            correct
+                              ? "rounded-full bg-emerald-600 hover:bg-emerald-700 text-white border-0"
+                              : "rounded-full border border-emerald-500/60 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20"
+                          }
+                          onClick={() => updateAnswer(answer.id, { is_correct: true })}
+                        >
+                          <CheckCircle2 className="h-4 w-4 mr-1" /> Está certa
+                        </Button>
+                        <Button
+                          type="button"
+                          size="sm"
+                          className={
+                            answer.is_correct === false
+                              ? "rounded-full bg-rose-600 hover:bg-rose-700 text-white border-0"
+                              : "rounded-full border border-rose-500/60 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20"
+                          }
+                          onClick={() => updateAnswer(answer.id, { is_correct: false })}
+                        >
+                          <XCircle className="h-4 w-4 mr-1" /> Está errada
+                        </Button>
+                      </div>
+                      <div>
+                        <Label htmlFor={`answer-feedback-${answer.id}`} className="text-[11px] text-muted-foreground">
+                          Comentário desta questão (opcional)
+                        </Label>
+                        <Textarea
+                          id={`answer-feedback-${answer.id}`}
+                          rows={2}
+                          placeholder="Adicione uma observação para a atendente..."
+                          defaultValue={answer.feedback ?? ""}
+                          onBlur={(event) => {
+                            const value = event.target.value || null;
+                            if (value !== (answer.feedback ?? null)) updateAnswer(answer.id, { feedback: value });
+                          }}
+                          className="mt-1 bg-background"
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <Label htmlFor={`answer-feedback-${answer.id}`} className="text-[11px] text-muted-foreground">
-                        Comentário desta questão (opcional)
-                      </Label>
-                      <Textarea
-                        id={`answer-feedback-${answer.id}`}
-                        rows={2}
-                        placeholder="Adicione uma observação para a atendente..."
-                        defaultValue={answer.feedback ?? ""}
-                        onBlur={(event) => {
-                          const value = event.target.value || null;
-                          if (value !== (answer.feedback ?? null)) updateAnswer(answer.id, { feedback: value });
-                        }}
-                        className="mt-1 bg-background"
-                      />
-                    </div>
-                  </div>
+                  )}
                 </div>
               );
             })}
