@@ -103,11 +103,6 @@ const CHIP_PALETTE = [
   { bg: "oklch(0.93 0.07 25)", fg: "oklch(0.50 0.20 25)", dbg: "oklch(0.55 0.22 25 / 22%)", dfg: "oklch(0.85 0.14 25)" },
   { bg: "oklch(0.92 0.07 320)", fg: "oklch(0.42 0.16 320)", dbg: "oklch(0.45 0.16 320 / 25%)", dfg: "oklch(0.85 0.12 320)" },
 ];
-  if (COSMETIC.has(key)) {
-    return specs.filter((c) => !SOLID_ONLY.some((re) => re.test(c)));
-  }
-  return specs;
-}
 
 
 // Paleta cíclica para chips de funcionalidade.
