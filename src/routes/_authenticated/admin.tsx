@@ -203,16 +203,12 @@ function AdminPage() {
   const pageStart = (currentPage - 1) * perPage;
   const paged = filtered.slice(pageStart, pageStart + perPage);
 
-  // Auto-expand first card of page, or any with pending alerts
+  // Mantém o cartão expandido apenas se ele ainda estiver visível na página atual.
+  // NÃO expande automaticamente nenhum atendente no carregamento — o admin
+  // precisa clicar manualmente em quem quiser abrir.
   useEffect(() => {
-    if (paged.length === 0) {
+    if (expandedId && !paged.some((a) => a.id === expandedId)) {
       setExpandedId(null);
-      return;
-    }
-    const stillVisible = paged.some((a) => a.id === expandedId);
-    if (!stillVisible) {
-      const withAlert = paged.find((a) => a.permissionRequests.length > 0 || a.pending.length > 0);
-      setExpandedId((withAlert ?? paged[0]).id);
     }
   }, [paged, expandedId]);
 
