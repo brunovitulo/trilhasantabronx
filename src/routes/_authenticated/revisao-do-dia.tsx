@@ -941,10 +941,8 @@ function ProductGroupFlow({
   }
 
   async function confirm() {
-    if (funcChoice === null || priceChoice === null || submitted) return;
-    const both =
-      funcChoice === current.functionalityCorrectIndex &&
-      priceChoice === current.priceCorrectIndex;
+    if (funcChoice === null || submitted) return;
+    const correct = funcChoice === current.functionalityCorrectIndex;
     setSubmitted(true);
     try {
       if (!preview) {
@@ -953,14 +951,14 @@ function ProductGroupFlow({
             groupId: item.groupId,
             subcategoryId: current.subcategoryId,
             productSlug: current.productSlug,
-            mastered: both,
+            mastered: correct,
           },
         });
       }
       setResults((r) => ({
-        mastered: r.mastered + (both ? 1 : 0),
-        wrong: r.wrong + (both ? 0 : 1),
-        wrongItems: both ? r.wrongItems : [...r.wrongItems, current],
+        mastered: r.mastered + (correct ? 1 : 0),
+        wrong: r.wrong + (correct ? 0 : 1),
+        wrongItems: correct ? r.wrongItems : [...r.wrongItems, current],
       }));
     } catch (e) {
       toast.error("Erro ao registrar resultado", {
@@ -972,7 +970,6 @@ function ProductGroupFlow({
   function nextCard() {
     setCursor((c) => c + 1);
     setFuncChoice(null);
-    setPriceChoice(null);
     setSubmitted(false);
   }
 
@@ -984,9 +981,7 @@ function ProductGroupFlow({
       cursor={cursor}
       submitted={submitted}
       funcChoice={funcChoice}
-      priceChoice={priceChoice}
       onFuncChoice={(i) => !submitted && setFuncChoice(i)}
-      onPriceChoice={(i) => !submitted && setPriceChoice(i)}
       onConfirm={confirm}
       onNext={nextCard}
     />
