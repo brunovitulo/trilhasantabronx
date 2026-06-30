@@ -989,6 +989,160 @@ function ProductGroupFlow({
   );
 }
 
+function SessionSummary({
+  groupTitle,
+  mastered,
+  wrong,
+  wrongItems,
+  onFinish,
+  saving,
+}: {
+  groupTitle: string;
+  mastered: number;
+  wrong: number;
+  wrongItems: FlashcardItem[];
+}) {
+  const today = new Date().toLocaleDateString("pt-BR");
+
+  function downloadHtml() {
+    const escape = (s: string) =>
+      s.replace(/[&<>"]/g, (c) =>
+        c === "&" ? "&amp;" : c === "<" ? "&lt;" : c === ">" ? "&gt;" : "&quot;",
+      );
+    const cards = wrongItems
+      .map((p) => {
+        const correctPrice = p.priceOptions[p.priceCorrectIndex] ?? "—";
+        const correctFunc = p.functionalityOptions[p.functionalityCorrectIndex] ?? "—";
+        const chips = chipsForProductSlug(p.productSlug);
+        const chipsHtml = chips.length
+          ? chips
+              .map(
+                (c) =>
+                  `<span style="display:inline-block;padding:4px 10px;margin:2px;border-radius:999px;background:#f3f4f6;font-size:12px;color:#374151;">${escape(c)}</span>`,
+              )
+              .join("")
+          : '<span style="color:#9ca3af;font-size:12px;">sem chips definidos</span>';
+        const img = p.imageUrl
+          ? `<img src="${escape(p.imageUrl)}" alt="${escape(p.productName)}" style="width:96px;height:96px;object-fit:cover;border-radius:8px;border:1px solid #e5e7eb;" />`
+          : `<div style="width:96px;height:96px;border-radius:8px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:11px;">sem imagem</div>`;
+        return `
+          <div style="display:flex;gap:16px;padding:16px;border:1px solid #e5e7eb;border-radius:12px;margin-bottom:12px;background:#fff;">
+            ${img}
+            <div style="flex:1;">
+              <h3 style="margin:0 0 6px 0;font-size:16px;color:#111827;">${escape(p.productName)}</h3>
+              <p style="margin:0 0 8px 0;font-size:13px;color:#6b7280;"><strong>Preço:</strong> ${escape(correctPrice)}</p>
+              <p style="margin:0 0 8px 0;font-size:13px;color:#374151;"><strong>Funcionalidade:</strong> ${escape(correctFunc)}</p>
+              <div>${chipsHtml}</div>
+            </div>
+          </div>`;
+      })
+      .join("");
+    const html = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"/><title>Resumo da revisão — ${escape(groupTitle)} (${today})</title></head><body style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;background:#f9fafb;color:#111827;margin:0;padding:24px;"><div style="max-width:720px;margin:0 auto;"><h1 style="font-size:22px;margin:0 0 4px 0;">Resumo da revisão — ${escape(groupTitle)}</h1><p style="margin:0 0 20px 0;color:#6b7280;font-size:13px;">${today} · Dominados: ${mastered} · Para revisar amanhã: ${wrong}</p>${wrongItems.length ? `<p style="font-size:13px;color:#374151;margin:0 0 12px 0;">Estes produtos voltam na próxima sessão. Revise os detalhes abaixo:</p>${cards}` : `<div style="padding:24px;text-align:center;background:#ecfdf5;border-radius:12px;color:#065f46;">Nenhum erro nesta sessão. Excelente!</div>`}</div></body></html>`;
+    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `revisao-${groupTitle.toLowerCase().replace(/\s+/g, "-")}-${today.replace(/\//g, "-")}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  return (
+    <div className="mt-4 space-y-4">
+      <div className="text-center space-y-2">
+        <CheckCircle2 className="h-10 w-10 text-emerald-500 mx-auto" />
+        <p className="text-base font-semibold">Sessão de flashcards pronta!</p>
+        <p className="text-sm text-muted-foreground">
+          Dominados:{" "}
+          <span className="font-semibold text-emerald-600">{mastered}</span> ·
+          Voltam amanhã:{" "}
+          <span className="font-semibold text-rose-600">{wrong}</span>
+        </p>
+      </div>
+
+      {wrongItems.length > 0 && (
+        <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <p className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Produtos para revisar amanhã ({wrongItems.length})
+            </p>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={downloadHtml}
+            >
+              Baixar resumo
+            </Button>
+          </div>
+          <div className="space-y-2">
+            {wrongItems.map((p) => {
+              const chips = chipsForProductSlug(p.productSlug);
+              return (
+                <div
+                  key={`${p.subcategoryId}:${p.productSlug}`}
+                  className="flex gap-3 rounded-lg border border-white/10 bg-white/[0.04] p-3"
+                >
+                  <div
+                    className="rounded-md bg-white/[0.06] overflow-hidden flex-shrink-0"
+                    style={{ width: 56, height: 56 }}
+                  >
+                    {p.imageUrl ? (
+                      <img
+                        src={p.imageUrl}
+                        alt={p.productName}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : null}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold truncate">
+                      {p.productName}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Preço correto:{" "}
+                      <span className="text-foreground">
+                        {p.priceOptions[p.priceCorrectIndex]}
+                      </span>
+                    </p>
+                    {chips.length > 0 && (
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        {chips.map((c) => (
+                          <span
+                            key={c}
+                            className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary"
+                          >
+                            {c}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      <div className="text-center">
+        <Button
+          onClick={onFinish}
+          disabled={saving}
+          className="bg-emerald-600 hover:bg-emerald-700"
+        >
+          {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+          Concluir este item
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+
+
 function Flashcard({
   item,
   groupTitle,
