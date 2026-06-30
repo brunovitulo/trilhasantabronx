@@ -515,6 +515,7 @@ export const getFlashcardSession = createServerFn({ method: "POST" })
       return {
         productSlug: p.productSlug,
         productName: p.productName,
+        displayName: displayNameFor(p),
         productUrl: p.productUrl,
         subcategoryId: p.subcategoryId,
         subcategoryLabel: M7_SUBCATEGORY_LABELS[p.subcategoryId] ?? p.subcategoryLabel,
