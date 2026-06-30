@@ -20,6 +20,15 @@ type ReviewedRow = {
   reviewed_at: string | null;
 };
 
+type AnswerComment = {
+  id: string;
+  question_index: number;
+  question_text: string;
+  answer_text: string | null;
+  is_correct: boolean | null;
+  feedback: string | null;
+};
+
 function seenKey(id: string) {
   return `sb-exam-seen-${id}`;
 }
@@ -32,14 +41,32 @@ function isUnseen(row: ReviewedRow) {
   }
 }
 
+
 export function ExamResultPopup({ userId }: { userId: string }) {
   const [pending, setPending] = useState<ReviewedRow[]>([]);
+  const [commentsBySubmission, setCommentsBySubmission] = useState<
+    Record<string, AnswerComment[]>
+  >({});
 
   const enqueue = useCallback((row: ReviewedRow) => {
     setPending((prev) => {
       if (prev.some((r) => r.id === row.id)) return prev;
       return [...prev, row];
     });
+  }, []);
+
+  const loadComments = useCallback(async (submissionId: string) => {
+    const { data } = await supabase
+      .from("open_evaluation_answers")
+      .select("id, question_index, question_text, answer_text, is_correct, feedback")
+      .eq("submission_id", submissionId)
+      .not("feedback", "is", null)
+      .order("question_index", { ascending: true });
+    const rows = (data ?? []) as AnswerComment[];
+    const filtered = rows.filter(
+      (r) => typeof r.feedback === "string" && r.feedback.trim().length > 0,
+    );
+    setCommentsBySubmission((prev) => ({ ...prev, [submissionId]: filtered }));
   }, []);
 
   const fetchUnseen = useCallback(async () => {
@@ -54,9 +81,12 @@ export function ExamResultPopup({ userId }: { userId: string }) {
     const rows = ((data ?? []) as ReviewedRow[]).filter(isUnseen);
     if (rows.length > 0) {
       // Mais antigo primeiro, pra a atendente ver na ordem
-      rows.reverse().forEach(enqueue);
+      rows.reverse().forEach((r) => {
+        enqueue(r);
+        void loadComments(r.id);
+      });
     }
-  }, [userId, enqueue]);
+  }, [userId, enqueue, loadComments]);
 
   useEffect(() => {
     fetchUnseen();
@@ -78,6 +108,7 @@ export function ExamResultPopup({ userId }: { userId: string }) {
             isUnseen(row)
           ) {
             enqueue(row);
+            void loadComments(row.id);
           }
         },
       )
@@ -88,7 +119,7 @@ export function ExamResultPopup({ userId }: { userId: string }) {
       supabase.removeChannel(channel);
       window.removeEventListener(EXAM_POPUP_EVENT, onShow);
     };
-  }, [userId, fetchUnseen, enqueue]);
+  }, [userId, fetchUnseen, enqueue, loadComments]);
 
   const current = pending[0] ?? null;
 
@@ -113,7 +144,7 @@ export function ExamResultPopup({ userId }: { userId: string }) {
 
   return (
     <Dialog open onOpenChange={(o) => !o && dismissCurrent()}>
-      <DialogContent className="sm:max-w-md border-white/10 bg-white/[0.08] backdrop-blur-2xl">
+      <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto border-white/10 bg-white/[0.08] backdrop-blur-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {approved ? (
@@ -150,6 +181,73 @@ export function ExamResultPopup({ userId }: { userId: string }) {
               </p>
             )}
           </div>
+          {(() => {
+            const comments = commentsBySubmission[current.id] ?? [];
+            if (comments.length === 0) return null;
+            return (
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-foreground/80">
+                  Perguntas comentadas pela gestora
+                </p>
+                <div className="space-y-2">
+                  {comments.map((c) => {
+                    const correct = c.is_correct === true;
+                    const incorrect = c.is_correct === false;
+                    const borderClass = correct
+                      ? "border-emerald-500/40"
+                      : incorrect
+                        ? "border-rose-500/40"
+                        : "border-white/10";
+                    return (
+                      <div
+                        key={c.id}
+                        className={`rounded-2xl border ${borderClass} bg-white/[0.04] backdrop-blur-xl p-3 space-y-2`}
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-xs font-semibold text-foreground/70">
+                            Pergunta {c.question_index + 1}
+                          </p>
+                          {correct && (
+                            <span className="text-[10px] uppercase tracking-wide font-semibold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/40">
+                              Correta
+                            </span>
+                          )}
+                          {incorrect && (
+                            <span className="text-[10px] uppercase tracking-wide font-semibold px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/40">
+                              Incorreta
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-foreground/90 whitespace-pre-wrap">
+                          {c.question_text}
+                        </p>
+                        {c.answer_text && (
+                          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-2">
+                            <p className="text-[10px] uppercase tracking-wide text-foreground/60 mb-1">
+                              Sua resposta
+                            </p>
+                            <p className="text-sm text-foreground/85 whitespace-pre-wrap">
+                              {c.answer_text}
+                            </p>
+                          </div>
+                        )}
+                        {c.feedback && (
+                          <div className="rounded-xl border border-violet-400/40 bg-violet-400/10 p-2">
+                            <p className="text-[10px] uppercase tracking-wide text-violet-200 mb-1 font-semibold">
+                              Comentário da gestora
+                            </p>
+                            <p className="text-sm text-foreground/90 whitespace-pre-wrap">
+                              {c.feedback}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
           {current.general_feedback && (
             <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
               <p className="text-xs font-semibold text-foreground/80 mb-1">
