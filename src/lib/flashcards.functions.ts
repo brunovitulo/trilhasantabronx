@@ -394,7 +394,16 @@ export const getFlashcardSession = createServerFn({ method: "POST" })
 
     function cachedFunctionality(p: M7Product): string | null {
       const v = funcCache.get(`${p.subcategoryId}:${p.productSlug}`);
-      return v && v.trim().length > 0 ? v.trim() : null;
+      const f = v?.functionality;
+      if (!f || !f.trim()) return null;
+      return shortFunctionality(f.trim());
+    }
+
+    function cachedCoreName(p: M7Product): string | null {
+      const v = funcCache.get(`${p.subcategoryId}:${p.productSlug}`);
+      const c = v?.coreName;
+      if (!c || !c.trim()) return null;
+      return c.trim();
     }
 
     function functionalityFor(p: M7Product): string {
@@ -404,6 +413,10 @@ export const getFlashcardSession = createServerFn({ method: "POST" })
         `[flashcards] funcionalidade ausente em product_flashcards para ${p.subcategoryId}/${p.productSlug} — admin precisa rodar generateProductFunctionalities`,
       );
       return PLACEHOLDER_FUNC;
+    }
+
+    function displayNameFor(p: M7Product): string {
+      return cachedCoreName(p) ?? neutralFallbackName(p.productName);
     }
 
     function pickDistractors(p: M7Product, correct: string, seed: number): string[] {
