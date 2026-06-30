@@ -123,7 +123,7 @@ function AdminPage() {
   const [historyFor, setHistoryFor] = useState<{ id: string; name: string | null } | null>(null);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "in_progress" | "completed">("all");
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  // (cards are always expanded — no collapse/expand toggle)
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
 
