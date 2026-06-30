@@ -411,6 +411,46 @@ const QUIZ_VENDAS: RevisionQuestion[] = [
     ],
     2,
   ),
+  Q(
+    "Por que a regra é responder em menos de 1 minuto e o que fazer quando não dá para resolver o pedido nesse tempo?",
+    [
+      "Apenas marcar como lido e responder com calma quando der — o sistema entende.",
+      "Dar um primeiro retorno em até 1 minuto avisando que está atendendo, mesmo que a resposta completa venha logo depois — para o cliente saber que está sendo atendido e não procurar outra loja.",
+      "Responder só quando tiver a resposta perfeita, mesmo que demore 10 minutos.",
+      "Transferir o atendimento imediatamente para outra atendente.",
+    ],
+    1,
+  ),
+  Q(
+    "Antes de recomendar qualquer produto, qual é o passo obrigatório de uma consultora?",
+    [
+      "Mandar o catálogo e deixar o cliente escolher.",
+      "Indicar o produto mais vendido para não correr risco.",
+      "Fazer perguntas para entender para quem é, qual é a real necessidade e qual o contexto de uso — só depois indicar.",
+      "Oferecer desconto logo de cara para ganhar a confiança do cliente.",
+    ],
+    2,
+  ),
+  Q(
+    "Por que explicar 'o porquê' de cada indicação é parte do trabalho de consultora?",
+    [
+      "Porque o cliente gosta de ouvir explicações longas antes de comprar.",
+      "Porque conecta a característica do produto à necessidade específica daquele cliente, reduz a incerteza e aumenta a confiança na compra — diferente de só listar o produto.",
+      "Porque é uma forma de demonstrar superioridade técnica.",
+      "Porque o gestor exige que cada produto tenha uma justificativa registrada.",
+    ],
+    1,
+  ),
+  Q(
+    "Por que a simpatia é tratada como pré-requisito e não apenas como mais um fundamento de vendas?",
+    [
+      "Porque clientes de sex shop reclamam mais do que clientes de outros nichos.",
+      "Porque sem simpatia o cliente não se abre, não conta a real necessidade e não confia nas indicações — quebrando todos os outros fundamentos.",
+      "Porque a simpatia compensa a falta de conhecimento sobre o produto.",
+      "Porque o atendimento por texto exige uso de emojis para parecer simpática.",
+    ],
+    1,
+  ),
 ];
 
 const QUIZ_OBJECOES: RevisionQuestion[] = [
@@ -494,6 +534,46 @@ const QUIZ_OBJECOES: RevisionQuestion[] = [
     ],
     1,
   ),
+  Q(
+    "Um cliente fala que tem medo de ser visto recebendo a entrega em casa. Qual resposta antecipa e quebra essa objeção?",
+    [
+      "\"Pode ficar tranquilo, nosso motoboy é discreto e não comenta nada.\"",
+      "\"Pode pedir para entregar no trabalho ou em endereço alternativo se preferir.\"",
+      "\"A embalagem é sem identificação da loja, lacrada e sem mostrar conteúdo — para quem olha de fora parece qualquer outra entrega de e-commerce.\"",
+      "\"Avisamos antes pelo WhatsApp para você combinar de receber sem alguém por perto.\"",
+    ],
+    2,
+  ),
+  Q(
+    "Uma cliente está com vergonha de entrar na loja e diz que vai pensar. O que a consultora deve fazer para quebrar essa objeção sem pressionar?",
+    [
+      "Aceitar a resposta e encerrar o atendimento para não constranger ainda mais.",
+      "Reforçar com leveza que o ambiente é acolhedor, sem julgamento, e oferecer também a opção de finalizar tudo pelo WhatsApp com entrega discreta — dando alternativa sem pressionar.",
+      "Insistir para a cliente vir naquele mesmo dia, prometendo desconto se aparecer em uma hora.",
+      "Dizer que muitas clientes se sentem assim e que é normal — sem dar nenhuma alternativa concreta.",
+    ],
+    1,
+  ),
+  Q(
+    "Por que a consultora deve quebrar objeções logo no início do atendimento, antes do cliente sequer perguntar?",
+    [
+      "Para encurtar a conversa e fechar a venda mais rápido.",
+      "Porque o cliente costuma sentir vergonha de expor o medo e pode desistir em silêncio se a objeção não for tratada antes de virar dúvida formal.",
+      "Porque o gestor avalia se todas as objeções clássicas foram citadas no atendimento.",
+      "Porque o script da loja exige cobrir todos os pontos antes de mandar o produto.",
+    ],
+    1,
+  ),
+  Q(
+    "Um cliente chega na loja física sem saber bem o que quer, claramente sem jeito. Qual postura presencial é a correta?",
+    [
+      "Deixar o cliente à vontade sozinho até ele chamar — para não constranger.",
+      "Receber com naturalidade, cumprimentar, perguntar de forma leve para quem é o presente ou o que está buscando e conduzir o atendimento com discrição, oferecendo área mais reservada se necessário.",
+      "Levar direto até o produto mais vendido da loja para acelerar a decisão.",
+      "Falar em voz alta o nome dos produtos para o cliente se acostumar com o vocabulário.",
+    ],
+    1,
+  ),
 ];
 
 const QUIZ_DORES: RevisionQuestion[] = [
@@ -574,6 +654,46 @@ const QUIZ_DORES: RevisionQuestion[] = [
       "Dizer que o produto é seguro e que qualquer dúvida ela pode consultar um ginecologista após o uso.",
       "Explicar que o corpo dissolve a bolinha naturalmente durante o uso — ela não fica presa.",
       "Garantir que a bolinha é pequena o suficiente para não oferecer nenhum risco independente do modelo.",
+    ],
+    2,
+  ),
+  Q(
+    "Uma cliente reclama de dor durante a penetração e o parceiro tem pênis acima da média. Qual conjunto de orientações é o mais adequado?",
+    [
+      "Indicar apenas anestésico vaginal para reduzir a sensibilidade durante a relação.",
+      "Indicar lubrificante de boa qualidade + preliminares mais longas + posições que permitam à cliente controlar a profundidade, explicando que dor não é normal.",
+      "Indicar dilatador vaginal sozinho, pois resolve qualquer dor de penetração.",
+      "Sugerir que o casal procure terapia sexual antes de tentar novos produtos.",
+    ],
+    1,
+  ),
+  Q(
+    "Por que o anel peniano ajuda na ereção e qual cuidado clínico a consultora precisa reforçar?",
+    [
+      "Ele aquece a região e estimula naturalmente — pode ser usado por quanto tempo o cliente quiser.",
+      "Ele restringe o retorno venoso, mantendo o sangue no pênis e prolongando a ereção — não deve ficar mais de 20 a 30 minutos para evitar lesão.",
+      "Ele libera vasodilatador na pele e funciona como o sachê — pode ser combinado livremente com qualquer estimulante.",
+      "Ele aumenta o tamanho do pênis de forma permanente quando usado com regularidade.",
+    ],
+    1,
+  ),
+  Q(
+    "Uma cliente relata baixa libido contínua e quer algo de uso diário. Qual indicação faz mais sentido e por quê?",
+    [
+      "Sachê estimulante feminino, pois resolve rapidamente qualquer queda de libido.",
+      "Excitante vaginal em gel, pois quanto mais usado, maior o efeito acumulado.",
+      "Cápsulas de libido de uso contínuo, pois agem por dentro e têm efeito acumulativo — diferente dos estimulantes pontuais.",
+      "Hidratante vaginal de uso contínuo, pois também atua sobre o desejo sexual.",
+    ],
+    2,
+  ),
+  Q(
+    "Um cliente confunde estimulante (sachê/cápsula) com Viagra e pergunta se precisa de receita. Como responder com precisão?",
+    [
+      "Explicar que são equivalentes ao Viagra e que por isso é melhor consultar um médico antes de usar.",
+      "Dizer que como são naturais não têm nenhuma contraindicação para ninguém.",
+      "Explicar que são estimulantes de origem natural/funcional, vendidos sem receita, e que não substituem medicamentos prescritos para disfunção erétil — em casos clínicos persistentes, indicar avaliação médica.",
+      "Dizer que substituem o Viagra com a vantagem de não ter efeito colateral.",
     ],
     2,
   ),

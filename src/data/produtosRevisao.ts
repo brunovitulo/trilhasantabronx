@@ -5,7 +5,7 @@
 
 import type { RevisionQuestion } from "@/data/revisao";
 
-export type ProductRevisionGroupId = "cosmeticos" | "acessorios" | "vibradores";
+export type ProductRevisionGroupId = "cosmeticos" | "vibradores";
 
 export type ProductRevisionItem = {
   productId: string;
@@ -353,18 +353,30 @@ const MINI_VIBRADOR: ProductRevisionItem = {
 // EXPORT
 // =============================================================
 
+// Revisão por flashcard (Módulo 7) cobre apenas Cosméticos (Excitantes + Lubrificantes)
+// e Vibradores. Demais produtos foram retirados da fila de revisão por decisão de
+// produto — eles seguem sendo estudados/avaliados na trilha, mas não viram flashcard.
+// As variáveis abaixo permanecem importadas para manter o banco de perguntas pronto
+// caso essas categorias voltem para a revisão no futuro.
+void PERFUMES;
+void ADSTRINGENTE;
+void ESTIMULANTES;
+void RETARDANTE;
+void ANESTESICOS;
+void CAPAS_PENIANAS;
+void PLUG_ANAL;
+void ANEL_PENIANO;
+void SADO;
+void MASTURBADOR_MASCULINO;
+void ROUPAS;
+void PENIS_REALISTICO;
+
 export const PRODUCT_REVISION_GROUPS: ProductRevisionGroup[] = [
   {
     id: "cosmeticos",
     title: "Cosméticos",
     examSubtaskId: "produtos.cosmeticos.exam",
-    products: [EXCITANTES, PERFUMES, ADSTRINGENTE, ESTIMULANTES, RETARDANTE, LUBRIFICANTE, ANESTESICOS],
-  },
-  {
-    id: "acessorios",
-    title: "Acessórios",
-    examSubtaskId: "produtos.acessorios.exam",
-    products: [CAPAS_PENIANAS, PLUG_ANAL, ANEL_PENIANO, SADO, MASTURBADOR_MASCULINO, ROUPAS, PENIS_REALISTICO],
+    products: [EXCITANTES, LUBRIFICANTE],
   },
   {
     id: "vibradores",
@@ -373,6 +385,21 @@ export const PRODUCT_REVISION_GROUPS: ProductRevisionGroup[] = [
     products: [VIBRADOR_RABBIT, SUGADOR_DE_CLITORIS, VIBRADOR_CALCINHA, MAQUINA_DE_SEXO, VIBRADOR_CASAL, VIBRADOR_APP, VARINHA_MAGICA, MINI_VIBRADOR],
   },
 ];
+
+/** Subcategorias do Módulo 7 efetivamente cobertas pela revisão por flashcards. */
+export const M7_REVIEW_ALLOWED_SUBCATEGORIES: Record<ProductRevisionGroupId, string[]> = {
+  cosmeticos: ["excitantes", "lubrificante"],
+  vibradores: [
+    "vibrador-rabbit",
+    "sugador-de-clitoris",
+    "vibrador-de-calcinha",
+    "maquina-de-sexo",
+    "vibrador-de-casal",
+    "vibrador-de-aplicativo",
+    "varinha-magica",
+    "mini-vibrador",
+  ],
+};
 
 export function getProductRevisionGroup(
   id: ProductRevisionGroupId,

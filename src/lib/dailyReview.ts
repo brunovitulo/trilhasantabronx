@@ -19,15 +19,16 @@ export type ModuleReviewPlan = {
 };
 
 export const MODULE_REVIEW_PLANS: ModuleReviewPlan[] = [
-  // Módulos 1-3: D+1 e D+2, com apostila + checklist + 5 perguntas
-  { topicId: "apresentacao", dayOffsets: [1, 2], quizCount: 5, hasApostila: true, hasChecklist: true, estimatedMinutes: "8-10" },
-  { topicId: "embalar", dayOffsets: [1, 2], quizCount: 5, hasApostila: true, hasChecklist: true, estimatedMinutes: "8-10" },
-  { topicId: "responsabilidade", dayOffsets: [1, 2], quizCount: 5, hasApostila: true, hasChecklist: true, estimatedMinutes: "8-10" },
-  // Módulos 4-5: D+1, D+3, D+5, sem apostila — checklist + 5 perguntas
-  { topicId: "objecoes", dayOffsets: [1, 3, 5], quizCount: 5, hasApostila: false, hasChecklist: true, estimatedMinutes: "5-7" },
-  { topicId: "vendas", dayOffsets: [1, 3, 5], quizCount: 5, hasApostila: false, hasChecklist: true, estimatedMinutes: "5-7" },
-  // Módulo 6: D+1, D+4, D+7, D+10 — checklist + 6 perguntas
-  { topicId: "dores", dayOffsets: [1, 4, 7, 10], quizCount: 6, hasApostila: false, hasChecklist: true, estimatedMinutes: "7-10" },
+  // Módulos 1-3: aparecem só em D+1 — checklist + 5 perguntas, sem apostila.
+  { topicId: "apresentacao", dayOffsets: [1], quizCount: 5, hasApostila: false, hasChecklist: true, estimatedMinutes: "5-7" },
+  { topicId: "embalar", dayOffsets: [1], quizCount: 5, hasApostila: false, hasChecklist: true, estimatedMinutes: "5-7" },
+  { topicId: "responsabilidade", dayOffsets: [1], quizCount: 5, hasApostila: false, hasChecklist: true, estimatedMinutes: "5-7" },
+  // Módulo 4: D+1, D+3, D+5 — apostila + checklist + 10 perguntas.
+  { topicId: "objecoes", dayOffsets: [1, 3, 5], quizCount: 10, hasApostila: true, hasChecklist: true, estimatedMinutes: "10-12" },
+  // Módulo 5: D+1, D+3, D+5 — checklist + 10 perguntas, sem apostila.
+  { topicId: "vendas", dayOffsets: [1, 3, 5], quizCount: 10, hasApostila: false, hasChecklist: true, estimatedMinutes: "9-12" },
+  // Módulo 6: D+1, D+4, D+7, D+10 — checklist + 10 perguntas.
+  { topicId: "dores", dayOffsets: [1, 4, 7, 10], quizCount: 10, hasApostila: false, hasChecklist: true, estimatedMinutes: "9-12" },
 ];
 
 export type ProductGroupQueueItem = {
