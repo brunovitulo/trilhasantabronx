@@ -467,17 +467,17 @@ export function ProductBlockSubtask({ subtask, apostila, completed, onComplete, 
             {subtask.products.map((p) => {
               const d = scrapedMap[p.url];
               const summary = productSummaries.get(p.url) ?? "";
-              const { chips: featChips, description } = splitFeatures(summary);
-              const specChips = filterSpecsForSubcategory(subtask.source, d?.specs ?? []);
-              // Mescla chips de funcionalidade (apostila) + chips de spec
-              // técnica (scrape), removendo duplicatas case-insensitive.
-              const seen = new Set<string>();
-              const chips = [...featChips, ...specChips].filter((c) => {
-                const k = c.toLowerCase();
-                if (seen.has(k)) return false;
-                seen.add(k);
-                return true;
-              });
+              // Chips agora vêm de um banco ESTÁTICO por slug — derivado de
+              // cada página real do produto sob regras estritas por tipo de
+              // categoria (cosméticos só efeitos+audiência, vibradores só
+              // modos/energia/estímulo, acessórios só material+tamanho+uso).
+              // O resumo da apostila é exibido como descrição livre, mas NÃO
+              // serve mais como fonte de chips, evitando contaminação cruzada.
+              const chips = chipsForProductSlug(slugFromUrl(p.url));
+              const description = summary
+                .replace(/\s+\+\s+/g, ", ")
+                .replace(/\s{2,}/g, " ")
+                .trim();
 
               return (
                 <div
