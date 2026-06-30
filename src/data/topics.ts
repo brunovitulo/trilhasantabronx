@@ -148,6 +148,16 @@ export type Subtask =
       kind: "multi_checklist";
       description?: string;
       groups: { title: string; subtitle?: string; items: string[] }[];
+    }
+  | {
+      id: string;
+      title: string;
+      kind: "product_block";
+      description?: string;
+      /** Slug do HTML em src/content/produtos (sem prefixo "produtos_"). */
+      source: string;
+      products: { name: string; url: string }[];
+      confirmLabel: string;
     };
 
 
