@@ -354,6 +354,8 @@ export function SubmissionHistoryDialog({
                 </div>
               </section>
             )}
+
+            {userId && <ReviewActivitySection userId={userId} />}
           </div>
         )}
       </DialogContent>
