@@ -1494,28 +1494,29 @@ export const TOPICS: Topic[] = [
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18213902995324551/",
       },
-      {
-        id: "produtos.excitantes.produtos",
-        kind: "product_links",
-        title: "1. Cosméticos — Excitantes — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Excitante Unissex Pico Pulse Suga Vibra Pulsa E Refresca Sabor Melancia", url: "https://sexshopsantabronx.com.br/produto/excitante-unissex-pico-pulse-suga-vibra-pulsa-e-refresca-sabor-melancia/" },
-          { label: "Excitante Unissex Vibration Morango Gel Vibrante Intt Facilita E Potencializa O Orgasmo...", url: "https://sexshopsantabronx.com.br/produto/excitante-unissex-vibration-morango-gel-vibrante-intt-facilita-e-potencializa-o-orgasmo-vibra-aumenta-sensibilidade-e-aquece-estimula-o-clitoris-e-glande-deixa/" },
-          { label: "Meltesao Excitante Unissex Intt", url: "https://sexshopsantabronx.com.br/produto/meltesao-excitante-unissex-intt/" },
-          { label: "Excitante Feminino Beijavel Extra Forte Clito Em Gotas Facilita E Potencializa O Orgasmo...", url: "https://sexshopsantabronx.com.br/produto/excitante-feminino-beijavel-extra-forte-clito-em-gotas-facilita-e-potencializa-o-orgasmo-efeito-de-shock-refrescancia-aquecimento-e-sensacao-de-inchaco-aumenta-sensibilidade-estimula-o-clito/" },
-          { label: "Excitante Feminino Goze", url: "https://sexshopsantabronx.com.br/produto/excitante-feminino-goze/" },
-          { label: "Excitante Feminino Xana Loka", url: "https://sexshopsantabronx.com.br/produto/excitante-feminino-xana-loka/" },
-          { label: "Excitante Masculino Super Macho", url: "https://sexshopsantabronx.com.br/produto/excitante-masculino-super-macho/" },
-          { label: "Excitante Masculino Em Spray", url: "https://sexshopsantabronx.com.br/produto/excitante-masculino-em-spray/" },
-          { label: "Excitante Masculino Pau De Cavalo", url: "https://sexshopsantabronx.com.br/produto/excitante-masculino-pau-de-cavalo/" }
+            {
+        id: "produtos.excitantes.bloco",
+        kind: "product_block",
+        title: "1. Cosméticos — Excitantes — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "excitantes",
+        products: [
+          { name: "Excitante Unissex Pico Pulse Suga Vibra Pulsa E Refresca Sabor Melancia", url: "https://sexshopsantabronx.com.br/produto/excitante-unissex-pico-pulse-suga-vibra-pulsa-e-refresca-sabor-melancia/" },
+          { name: "Excitante Unissex Vibration Morango Gel Vibrante Intt Facilita E Potencializa O Orgasmo...", url: "https://sexshopsantabronx.com.br/produto/excitante-unissex-vibration-morango-gel-vibrante-intt-facilita-e-potencializa-o-orgasmo-vibra-aumenta-sensibilidade-e-aquece-estimula-o-clitoris-e-glande-deixa/" },
+          { name: "Meltesao Excitante Unissex Intt", url: "https://sexshopsantabronx.com.br/produto/meltesao-excitante-unissex-intt/" },
+          { name: "Excitante Feminino Beijavel Extra Forte Clito Em Gotas Facilita E Potencializa O Orgasmo...", url: "https://sexshopsantabronx.com.br/produto/excitante-feminino-beijavel-extra-forte-clito-em-gotas-facilita-e-potencializa-o-orgasmo-efeito-de-shock-refrescancia-aquecimento-e-sensacao-de-inchaco-aumenta-sensibilidade-estimula-o-clito/" },
+          { name: "Excitante Feminino Goze", url: "https://sexshopsantabronx.com.br/produto/excitante-feminino-goze/" },
+          { name: "Excitante Feminino Xana Loka", url: "https://sexshopsantabronx.com.br/produto/excitante-feminino-xana-loka/" },
+          { name: "Excitante Masculino Super Macho", url: "https://sexshopsantabronx.com.br/produto/excitante-masculino-super-macho/" },
+          { name: "Excitante Masculino Em Spray", url: "https://sexshopsantabronx.com.br/produto/excitante-masculino-em-spray/" },
+          { name: "Excitante Masculino Pau De Cavalo", url: "https://sexshopsantabronx.com.br/produto/excitante-masculino-pau-de-cavalo/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.excitantes.fixacao",
         kind: "practice",
-        title: "1. Cosméticos — Excitantes — Exercício de fixação (7 questões)",
+        title: "1. Cosméticos — Excitantes — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Excitantes. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -1555,37 +1556,29 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.excitantes.apostila",
-        kind: "inline_html",
-        title: "1. Cosméticos — Excitantes — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_excitantes",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.perfumes_feromonios.video",
         kind: "video",
         title: "1. Cosméticos — Perfumes Feromônios — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18079101806153052/",
       },
-      {
-        id: "produtos.perfumes_feromonios.produtos",
-        kind: "product_links",
-        title: "1. Cosméticos — Perfumes Feromônios — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Perfume Com Feromonio Selvage", url: "https://sexshopsantabronx.com.br/produto/perfume-com-feromonio-selvage/" },
-          { label: "Perfume Com Feromonio Feminino Lady Femme", url: "https://sexshopsantabronx.com.br/produto/perfume-com-feromonio-feminino-lady-femme/" }
+            {
+        id: "produtos.perfumes_feromonios.bloco",
+        kind: "product_block",
+        title: "1. Cosméticos — Perfumes Feromônios — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "perfumes_feromonios",
+        products: [
+          { name: "Perfume Com Feromonio Selvage", url: "https://sexshopsantabronx.com.br/produto/perfume-com-feromonio-selvage/" },
+          { name: "Perfume Com Feromonio Feminino Lady Femme", url: "https://sexshopsantabronx.com.br/produto/perfume-com-feromonio-feminino-lady-femme/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.perfumes_feromonios.fixacao",
         kind: "practice",
-        title: "1. Cosméticos — Perfumes Feromônios — Exercício de fixação (7 questões)",
+        title: "1. Cosméticos — Perfumes Feromônios — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Perfumes Feromônios. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -1625,37 +1618,29 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.perfumes_feromonios.apostila",
-        kind: "inline_html",
-        title: "1. Cosméticos — Perfumes Feromônios — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_perfumes_feromonios",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.adstringente.video",
         kind: "video",
         title: "1. Cosméticos — Adstringente — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18110763523883412/",
       },
-      {
-        id: "produtos.adstringente.produtos",
-        kind: "product_links",
-        title: "1. Cosméticos — Adstringente — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Adstringente Feminino Lacradinha", url: "https://sexshopsantabronx.com.br/produto/adstringente-feminino-lacradinha/" },
-          { label: "Bolinha Explosiva Adstringente", url: "https://sexshopsantabronx.com.br/produto/bolinha-explosiva-adstringente/" }
+            {
+        id: "produtos.adstringente.bloco",
+        kind: "product_block",
+        title: "1. Cosméticos — Adstringente — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "adstringente",
+        products: [
+          { name: "Adstringente Feminino Lacradinha", url: "https://sexshopsantabronx.com.br/produto/adstringente-feminino-lacradinha/" },
+          { name: "Bolinha Explosiva Adstringente", url: "https://sexshopsantabronx.com.br/produto/bolinha-explosiva-adstringente/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.adstringente.fixacao",
         kind: "practice",
-        title: "1. Cosméticos — Adstringente — Exercício de fixação (7 questões)",
+        title: "1. Cosméticos — Adstringente — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Adstringente. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -1695,40 +1680,32 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.adstringente.apostila",
-        kind: "inline_html",
-        title: "1. Cosméticos — Adstringente — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_adstringente",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.estimulantes_sexuais.video",
         kind: "video",
         title: "1. Cosméticos — Estimulantes Sexuais — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/17948935620151742/",
       },
-      {
-        id: "produtos.estimulantes_sexuais.produtos",
-        kind: "product_links",
-        title: "1. Cosméticos — Estimulantes Sexuais — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Mel Power Honey Original Melzinho Do Amor", url: "https://sexshopsantabronx.com.br/produto/mel-power-honey-original-melzinho-do-amor/" },
-          { label: "Energetico Estimulante Unissex Mo Molhada Revoada Com Maca Peruana 355Ml", url: "https://sexshopsantabronx.com.br/produto/energetico-estimulante-unissex-mo-molhada-revoada-com-maca-peruana-355ml/" },
-          { label: "Energetico Estimulante Sexual Masculino Mozao Mo Molhada Com Maca Peruana 355Ml Sabor De...", url: "https://sexshopsantabronx.com.br/produto/energetico-estimulante-sexual-masculino-mozao-mo-molhada-com-maca-peruana-355ml-sabor-de-blueberry/" },
-          { label: "Potencializador Masculino", url: "https://sexshopsantabronx.com.br/produto/potencializador-masculino/" },
-          { label: "Excitante Feminino Sex Femme", url: "https://sexshopsantabronx.com.br/produto/excitante-feminino-sex-femme/" }
+            {
+        id: "produtos.estimulantes_sexuais.bloco",
+        kind: "product_block",
+        title: "1. Cosméticos — Estimulantes Sexuais — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "estimulantes_sexuais",
+        products: [
+          { name: "Mel Power Honey Original Melzinho Do Amor", url: "https://sexshopsantabronx.com.br/produto/mel-power-honey-original-melzinho-do-amor/" },
+          { name: "Energetico Estimulante Unissex Mo Molhada Revoada Com Maca Peruana 355Ml", url: "https://sexshopsantabronx.com.br/produto/energetico-estimulante-unissex-mo-molhada-revoada-com-maca-peruana-355ml/" },
+          { name: "Energetico Estimulante Sexual Masculino Mozao Mo Molhada Com Maca Peruana 355Ml Sabor De...", url: "https://sexshopsantabronx.com.br/produto/energetico-estimulante-sexual-masculino-mozao-mo-molhada-com-maca-peruana-355ml-sabor-de-blueberry/" },
+          { name: "Potencializador Masculino", url: "https://sexshopsantabronx.com.br/produto/potencializador-masculino/" },
+          { name: "Excitante Feminino Sex Femme", url: "https://sexshopsantabronx.com.br/produto/excitante-feminino-sex-femme/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.estimulantes_sexuais.fixacao",
         kind: "practice",
-        title: "1. Cosméticos — Estimulantes Sexuais — Exercício de fixação (7 questões)",
+        title: "1. Cosméticos — Estimulantes Sexuais — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Estimulantes Sexuais. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -1768,37 +1745,29 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.estimulantes_sexuais.apostila",
-        kind: "inline_html",
-        title: "1. Cosméticos — Estimulantes Sexuais — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_estimulantes_sexuais",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.retardante.video",
         kind: "video",
         title: "1. Cosméticos — Retardante — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18129328621565287/",
       },
-      {
-        id: "produtos.retardante.produtos",
-        kind: "product_links",
-        title: "1. Cosméticos — Retardante — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Retardante Masculino", url: "https://sexshopsantabronx.com.br/produto/retardante-masculino/" },
-          { label: "Excitante Masculino Em Spray", url: "https://sexshopsantabronx.com.br/produto/excitante-masculino-em-spray/" }
+            {
+        id: "produtos.retardante.bloco",
+        kind: "product_block",
+        title: "1. Cosméticos — Retardante — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "retardante",
+        products: [
+          { name: "Retardante Masculino", url: "https://sexshopsantabronx.com.br/produto/retardante-masculino/" },
+          { name: "Excitante Masculino Em Spray", url: "https://sexshopsantabronx.com.br/produto/excitante-masculino-em-spray/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.retardante.fixacao",
         kind: "practice",
-        title: "1. Cosméticos — Retardante — Exercício de fixação (7 questões)",
+        title: "1. Cosméticos — Retardante — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Retardante. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -1838,40 +1807,32 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.retardante.apostila",
-        kind: "inline_html",
-        title: "1. Cosméticos — Retardante — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_retardante",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.lubrificante.video",
         kind: "video",
         title: "1. Cosméticos — Lubrificante — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18203220946339583/",
       },
-      {
-        id: "produtos.lubrificante.produtos",
-        kind: "product_links",
-        title: "1. Cosméticos — Lubrificante — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Lubrificante Intimo Lubrisex Luxo", url: "https://sexshopsantabronx.com.br/produto/lubrificante-intimo-lubrisex-luxo/" },
-          { label: "Lubrificante Intimo Hidranal", url: "https://sexshopsantabronx.com.br/produto/lubrificante-intimo-hidranal/" },
-          { label: "Lubrificante Intimo Siliconado D4", url: "https://sexshopsantabronx.com.br/produto/lubrificante-intimo-siliconado-d4/" },
-          { label: "Lubrificante Intimo Beijavel D4 Sabor Morango A Base De Agua Nao Gorduroso Deixa O Sexo...", url: "https://sexshopsantabronx.com.br/produto/lubrificante-intimo-beijavel-d4-sabor-morango-a-base-de-agua-nao-gorduroso-deixa-o-sexo-oral-mais-saboroso-60g/" },
-          { label: "Lubrificante Intimo K Med 100G", url: "https://sexshopsantabronx.com.br/produto/lubrificante-intimo-k-med-100g/" }
+            {
+        id: "produtos.lubrificante.bloco",
+        kind: "product_block",
+        title: "1. Cosméticos — Lubrificante — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "lubrificante",
+        products: [
+          { name: "Lubrificante Intimo Lubrisex Luxo", url: "https://sexshopsantabronx.com.br/produto/lubrificante-intimo-lubrisex-luxo/" },
+          { name: "Lubrificante Intimo Hidranal", url: "https://sexshopsantabronx.com.br/produto/lubrificante-intimo-hidranal/" },
+          { name: "Lubrificante Intimo Siliconado D4", url: "https://sexshopsantabronx.com.br/produto/lubrificante-intimo-siliconado-d4/" },
+          { name: "Lubrificante Intimo Beijavel D4 Sabor Morango A Base De Agua Nao Gorduroso Deixa O Sexo...", url: "https://sexshopsantabronx.com.br/produto/lubrificante-intimo-beijavel-d4-sabor-morango-a-base-de-agua-nao-gorduroso-deixa-o-sexo-oral-mais-saboroso-60g/" },
+          { name: "Lubrificante Intimo K Med 100G", url: "https://sexshopsantabronx.com.br/produto/lubrificante-intimo-k-med-100g/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.lubrificante.fixacao",
         kind: "practice",
-        title: "1. Cosméticos — Lubrificante — Exercício de fixação (7 questões)",
+        title: "1. Cosméticos — Lubrificante — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Lubrificante. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -1911,39 +1872,31 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.lubrificante.apostila",
-        kind: "inline_html",
-        title: "1. Cosméticos — Lubrificante — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_lubrificante",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.anestesicos.video",
         kind: "video",
         title: "1. Cosméticos — Anestésicos — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18092275670268816/",
       },
-      {
-        id: "produtos.anestesicos.produtos",
-        kind: "product_links",
-        title: "1. Cosméticos — Anestésicos — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Anestesico Anal Cliv Intt Gold", url: "https://sexshopsantabronx.com.br/produto/anestesico-anal-cliv-intt-gold/" },
-          { label: "Anestesico Anal Cliv Intt", url: "https://sexshopsantabronx.com.br/produto/anestesico-anal-cliv-intt/" },
-          { label: "Anestesico Anal Analdor", url: "https://sexshopsantabronx.com.br/produto/anestesico-anal-analdor/" },
-          { label: "Anestesico Anal Sete Sensacoes", url: "https://sexshopsantabronx.com.br/produto/anestesico-anal-sete-sensacoes/" }
+            {
+        id: "produtos.anestesicos.bloco",
+        kind: "product_block",
+        title: "1. Cosméticos — Anestésicos — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "anestesicos",
+        products: [
+          { name: "Anestesico Anal Cliv Intt Gold", url: "https://sexshopsantabronx.com.br/produto/anestesico-anal-cliv-intt-gold/" },
+          { name: "Anestesico Anal Cliv Intt", url: "https://sexshopsantabronx.com.br/produto/anestesico-anal-cliv-intt/" },
+          { name: "Anestesico Anal Analdor", url: "https://sexshopsantabronx.com.br/produto/anestesico-anal-analdor/" },
+          { name: "Anestesico Anal Sete Sensacoes", url: "https://sexshopsantabronx.com.br/produto/anestesico-anal-sete-sensacoes/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.anestesicos.fixacao",
         kind: "practice",
-        title: "1. Cosméticos — Anestésicos — Exercício de fixação (7 questões)",
+        title: "1. Cosméticos — Anestésicos — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Anestésicos. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -1983,16 +1936,7 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.anestesicos.apostila",
-        kind: "inline_html",
-        title: "1. Cosméticos — Anestésicos — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_anestesicos",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.cosmeticos.exam",
         kind: "open_evaluation",
         title: "1. Cosméticos — Prova final do grupo",
@@ -2037,24 +1981,25 @@ export const TOPICS: Topic[] = [
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/17912793174179906/",
       },
-      {
-        id: "produtos.capas_penianas.produtos",
-        kind: "product_links",
-        title: "2. Acessórios — Capas Penianas — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Capa Peniana 4", url: "https://sexshopsantabronx.com.br/produto/capa-peniana-4/" },
-          { label: "Masturbador Capa Peniana 2 Em 1", url: "https://sexshopsantabronx.com.br/produto/masturbador-capa-peniana-2-em-1/" },
-          { label: "Capa Peniana Vazada Com Alca", url: "https://sexshopsantabronx.com.br/produto/capa-peniana-vazada-com-alca/" },
-          { label: "Capa Peniana 3", url: "https://sexshopsantabronx.com.br/produto/capa-peniana-3/" },
-          { label: "Capa Peniana Transparente Super Macia Possui Cerdas Massageadoras Aumenta O Tamanho Do...", url: "https://sexshopsantabronx.com.br/produto/capa-peniana-transparente-super-macia-possui-cerdas-massageadoras-aumenta-o-tamanho-do-penis-aumenta-o-prazer-na-penetracao-retarda-a-ejaculacao-glande-bem-destacada/" }
+            {
+        id: "produtos.capas_penianas.bloco",
+        kind: "product_block",
+        title: "2. Acessórios — Capas Penianas — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "capas_penianas",
+        products: [
+          { name: "Capa Peniana 4", url: "https://sexshopsantabronx.com.br/produto/capa-peniana-4/" },
+          { name: "Masturbador Capa Peniana 2 Em 1", url: "https://sexshopsantabronx.com.br/produto/masturbador-capa-peniana-2-em-1/" },
+          { name: "Capa Peniana Vazada Com Alca", url: "https://sexshopsantabronx.com.br/produto/capa-peniana-vazada-com-alca/" },
+          { name: "Capa Peniana 3", url: "https://sexshopsantabronx.com.br/produto/capa-peniana-3/" },
+          { name: "Capa Peniana Transparente Super Macia Possui Cerdas Massageadoras Aumenta O Tamanho Do...", url: "https://sexshopsantabronx.com.br/produto/capa-peniana-transparente-super-macia-possui-cerdas-massageadoras-aumenta-o-tamanho-do-penis-aumenta-o-prazer-na-penetracao-retarda-a-ejaculacao-glande-bem-destacada/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.capas_penianas.fixacao",
         kind: "practice",
-        title: "2. Acessórios — Capas Penianas — Exercício de fixação (7 questões)",
+        title: "2. Acessórios — Capas Penianas — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Capas Penianas. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2094,50 +2039,42 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.capas_penianas.apostila",
-        kind: "inline_html",
-        title: "2. Acessórios — Capas Penianas — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_capas_penianas",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.plug_anal.video",
         kind: "video",
         title: "2. Acessórios — Plug Anal — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/17881692318550727/",
       },
-      {
-        id: "produtos.plug_anal.produtos",
-        kind: "product_links",
-        title: "2. Acessórios — Plug Anal — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Plug Anal Com Joia Em Metal P", url: "https://sexshopsantabronx.com.br/produto/plug-anal-com-joia-em-metal-p/" },
-          { label: "Plug Anal Com Joia Em Metal M", url: "https://sexshopsantabronx.com.br/produto/plug-anal-com-joia-em-metal-m/" },
-          { label: "Plug Anal Com Joia Em Metal G", url: "https://sexshopsantabronx.com.br/produto/plug-anal-com-joia-em-metal-g/" },
-          { label: "Plug Anal P Em Silicone Macio", url: "https://sexshopsantabronx.com.br/produto/plug-anal-p-em-silicone-macio/" },
-          { label: "Plug Anal Com Joia Em Coracao", url: "https://sexshopsantabronx.com.br/produto/plug-anal-com-joia-em-coracao/" },
-          { label: "Plug Anal Em Plastico Com Pedra Em Formato De Coracao", url: "https://sexshopsantabronx.com.br/produto/plug-anal-em-plastico-com-pedra-em-formato-de-coracao/" },
-          { label: "Plug Anal Vibrador 2", url: "https://sexshopsantabronx.com.br/produto/plug-anal-vibrador-2/" },
-          { label: "Plug Anal Vibratorio Feito Em Silicone Controlado Por Aplicativo 10 Modos De Vibracao...", url: "https://sexshopsantabronx.com.br/produto/plug-anal-vibratorio-feito-em-silicone-controlado-por-aplicativo-10-modos-de-vibracao-recarregavel-resistente-a-agua-controlado-de-qualquer-distanci/" },
-          { label: "Vib Estimulador De Prostata360", url: "https://sexshopsantabronx.com.br/produto/vib-estimulador-de-prostata360/" },
-          { label: "Plug Anal De Vidro Temperado Rosa Tamanho M 8Cm X 5Cm", url: "https://sexshopsantabronx.com.br/produto/plug-anal-de-vidro-temperado-rosa-tamanho-m-8cm-x-5cm/" },
-          { label: "Plug Anal De Vidro Temperado Modelo Transparente Com Detalhe Em Coracao Possui Revelos...", url: "https://sexshopsantabronx.com.br/produto/plug-anal-de-vidro-temperado-modelo-transparente-com-detalhe-em-coracao-possui-revelos-massageadores-17cm-comprimento-x-5cm-espessura/" },
-          { label: "Kit Plug Anal Em Silicone", url: "https://sexshopsantabronx.com.br/produto/kit-plug-anal-em-silicone/" },
-          { label: "Plug Anal De Silicone Grande Gg", url: "https://sexshopsantabronx.com.br/produto/plug-anal-de-silicone-grande-gg/" },
-          { label: "Estimulador De Prostata 5", url: "https://sexshopsantabronx.com.br/produto/estimulador-de-prostata-5/" },
-          { label: "Plug Anal Inflavel", url: "https://sexshopsantabronx.com.br/produto/plug-anal-inflavel/" }
+            {
+        id: "produtos.plug_anal.bloco",
+        kind: "product_block",
+        title: "2. Acessórios — Plug Anal — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "plug_anal",
+        products: [
+          { name: "Plug Anal Com Joia Em Metal P", url: "https://sexshopsantabronx.com.br/produto/plug-anal-com-joia-em-metal-p/" },
+          { name: "Plug Anal Com Joia Em Metal M", url: "https://sexshopsantabronx.com.br/produto/plug-anal-com-joia-em-metal-m/" },
+          { name: "Plug Anal Com Joia Em Metal G", url: "https://sexshopsantabronx.com.br/produto/plug-anal-com-joia-em-metal-g/" },
+          { name: "Plug Anal P Em Silicone Macio", url: "https://sexshopsantabronx.com.br/produto/plug-anal-p-em-silicone-macio/" },
+          { name: "Plug Anal Com Joia Em Coracao", url: "https://sexshopsantabronx.com.br/produto/plug-anal-com-joia-em-coracao/" },
+          { name: "Plug Anal Em Plastico Com Pedra Em Formato De Coracao", url: "https://sexshopsantabronx.com.br/produto/plug-anal-em-plastico-com-pedra-em-formato-de-coracao/" },
+          { name: "Plug Anal Vibrador 2", url: "https://sexshopsantabronx.com.br/produto/plug-anal-vibrador-2/" },
+          { name: "Plug Anal Vibratorio Feito Em Silicone Controlado Por Aplicativo 10 Modos De Vibracao...", url: "https://sexshopsantabronx.com.br/produto/plug-anal-vibratorio-feito-em-silicone-controlado-por-aplicativo-10-modos-de-vibracao-recarregavel-resistente-a-agua-controlado-de-qualquer-distanci/" },
+          { name: "Vib Estimulador De Prostata360", url: "https://sexshopsantabronx.com.br/produto/vib-estimulador-de-prostata360/" },
+          { name: "Plug Anal De Vidro Temperado Rosa Tamanho M 8Cm X 5Cm", url: "https://sexshopsantabronx.com.br/produto/plug-anal-de-vidro-temperado-rosa-tamanho-m-8cm-x-5cm/" },
+          { name: "Plug Anal De Vidro Temperado Modelo Transparente Com Detalhe Em Coracao Possui Revelos...", url: "https://sexshopsantabronx.com.br/produto/plug-anal-de-vidro-temperado-modelo-transparente-com-detalhe-em-coracao-possui-revelos-massageadores-17cm-comprimento-x-5cm-espessura/" },
+          { name: "Kit Plug Anal Em Silicone", url: "https://sexshopsantabronx.com.br/produto/kit-plug-anal-em-silicone/" },
+          { name: "Plug Anal De Silicone Grande Gg", url: "https://sexshopsantabronx.com.br/produto/plug-anal-de-silicone-grande-gg/" },
+          { name: "Estimulador De Prostata 5", url: "https://sexshopsantabronx.com.br/produto/estimulador-de-prostata-5/" },
+          { name: "Plug Anal Inflavel", url: "https://sexshopsantabronx.com.br/produto/plug-anal-inflavel/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.plug_anal.fixacao",
         kind: "practice",
-        title: "2. Acessórios — Plug Anal — Exercício de fixação (7 questões)",
+        title: "2. Acessórios — Plug Anal — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Plug Anal. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2177,41 +2114,33 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.plug_anal.apostila",
-        kind: "inline_html",
-        title: "2. Acessórios — Plug Anal — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_plug_anal",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.anel_peniano.video",
         kind: "video",
         title: "2. Acessórios — Anel Peniano — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18007480826708456/",
       },
-      {
-        id: "produtos.anel_peniano.produtos",
-        kind: "product_links",
-        title: "2. Acessórios — Anel Peniano — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Anel Peniano Com Vibrador Luvkis", url: "https://sexshopsantabronx.com.br/produto/anel-peniano-com-vibrador-luvkis/" },
-          { label: "Anel Peniano Com Vibrador", url: "https://sexshopsantabronx.com.br/produto/anel-peniano-com-vibrador/" },
-          { label: "Anel Peniano Em Silicone Cirurgico Com Estimulador Vibratorio Estimula O Clitoris Baterias...", url: "https://sexshopsantabronx.com.br/produto/anel-peniano-em-silicone-cirurgico-com-estimulador-vibratorio-estimula-o-clitoris-baterias-inclusas/" },
-          { label: "Anel Peniano Vibratorio", url: "https://sexshopsantabronx.com.br/produto/anel-peniano-vibratorio/" },
-          { label: "Kit Com 03 Aneis Penianos", url: "https://sexshopsantabronx.com.br/produto/kit-com-03-aneis-penianos/" },
-          { label: "Kit 03 Aneis Penianos Borracha Com 03 Opcoes De Medida", url: "https://sexshopsantabronx.com.br/produto/kit-03-aneis-penianos-borracha-com-03-opcoes-de-medida/" }
+            {
+        id: "produtos.anel_peniano.bloco",
+        kind: "product_block",
+        title: "2. Acessórios — Anel Peniano — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "anel_peniano",
+        products: [
+          { name: "Anel Peniano Com Vibrador Luvkis", url: "https://sexshopsantabronx.com.br/produto/anel-peniano-com-vibrador-luvkis/" },
+          { name: "Anel Peniano Com Vibrador", url: "https://sexshopsantabronx.com.br/produto/anel-peniano-com-vibrador/" },
+          { name: "Anel Peniano Em Silicone Cirurgico Com Estimulador Vibratorio Estimula O Clitoris Baterias...", url: "https://sexshopsantabronx.com.br/produto/anel-peniano-em-silicone-cirurgico-com-estimulador-vibratorio-estimula-o-clitoris-baterias-inclusas/" },
+          { name: "Anel Peniano Vibratorio", url: "https://sexshopsantabronx.com.br/produto/anel-peniano-vibratorio/" },
+          { name: "Kit Com 03 Aneis Penianos", url: "https://sexshopsantabronx.com.br/produto/kit-com-03-aneis-penianos/" },
+          { name: "Kit 03 Aneis Penianos Borracha Com 03 Opcoes De Medida", url: "https://sexshopsantabronx.com.br/produto/kit-03-aneis-penianos-borracha-com-03-opcoes-de-medida/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.anel_peniano.fixacao",
         kind: "practice",
-        title: "2. Acessórios — Anel Peniano — Exercício de fixação (7 questões)",
+        title: "2. Acessórios — Anel Peniano — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Anel Peniano. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2251,45 +2180,37 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.anel_peniano.apostila",
-        kind: "inline_html",
-        title: "2. Acessórios — Anel Peniano — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_anel_peniano",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.sado.video",
         kind: "video",
         title: "2. Acessórios — Sado — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18047895194583475/",
       },
-      {
-        id: "produtos.sado.produtos",
-        kind: "product_links",
-        title: "2. Acessórios — Sado — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Algema De Luxo", url: "https://sexshopsantabronx.com.br/produto/algema-de-luxo/" },
-          { label: "Algema Metal Pelucia", url: "https://sexshopsantabronx.com.br/produto/algema-metal-pelucia/" },
-          { label: "Kit Sado Bdsm Black Wolf Acompanha 10 Pecas Material Em Alta Qualidade", url: "https://sexshopsantabronx.com.br/produto/kit-sado-bdsm-black-wolf-acompanha-10-pecas-material-em-alta-qualidade/" },
-          { label: "Arreio Do Pecado", url: "https://sexshopsantabronx.com.br/produto/arreio-do-pecado/" },
-          { label: "Chicote", url: "https://sexshopsantabronx.com.br/produto/chicote/" },
-          { label: "Chibata Reforcada De 40Cm 1", url: "https://sexshopsantabronx.com.br/produto/chibata-reforcada-de-40cm-1/" },
-          { label: "Corda Bondage De 10 Metros", url: "https://sexshopsantabronx.com.br/produto/corda-bondage-de-10-metros/" },
-          { label: "Corda Bondage Shibari 5 Metros", url: "https://sexshopsantabronx.com.br/produto/corda-bondage-shibari-5-metros/" },
-          { label: "Mordaca Erotica", url: "https://sexshopsantabronx.com.br/produto/mordaca-erotica/" },
-          { label: "Venda Tapa Olhos", url: "https://sexshopsantabronx.com.br/produto/venda-tapa-olhos/" }
+            {
+        id: "produtos.sado.bloco",
+        kind: "product_block",
+        title: "2. Acessórios — Sado — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "sado",
+        products: [
+          { name: "Algema De Luxo", url: "https://sexshopsantabronx.com.br/produto/algema-de-luxo/" },
+          { name: "Algema Metal Pelucia", url: "https://sexshopsantabronx.com.br/produto/algema-metal-pelucia/" },
+          { name: "Kit Sado Bdsm Black Wolf Acompanha 10 Pecas Material Em Alta Qualidade", url: "https://sexshopsantabronx.com.br/produto/kit-sado-bdsm-black-wolf-acompanha-10-pecas-material-em-alta-qualidade/" },
+          { name: "Arreio Do Pecado", url: "https://sexshopsantabronx.com.br/produto/arreio-do-pecado/" },
+          { name: "Chicote", url: "https://sexshopsantabronx.com.br/produto/chicote/" },
+          { name: "Chibata Reforcada De 40Cm 1", url: "https://sexshopsantabronx.com.br/produto/chibata-reforcada-de-40cm-1/" },
+          { name: "Corda Bondage De 10 Metros", url: "https://sexshopsantabronx.com.br/produto/corda-bondage-de-10-metros/" },
+          { name: "Corda Bondage Shibari 5 Metros", url: "https://sexshopsantabronx.com.br/produto/corda-bondage-shibari-5-metros/" },
+          { name: "Mordaca Erotica", url: "https://sexshopsantabronx.com.br/produto/mordaca-erotica/" },
+          { name: "Venda Tapa Olhos", url: "https://sexshopsantabronx.com.br/produto/venda-tapa-olhos/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.sado.fixacao",
         kind: "practice",
-        title: "2. Acessórios — Sado — Exercício de fixação (7 questões)",
+        title: "2. Acessórios — Sado — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Sado. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2329,41 +2250,33 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.sado.apostila",
-        kind: "inline_html",
-        title: "2. Acessórios — Sado — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_sado",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.masturbador_masculino.video",
         kind: "video",
         title: "2. Acessórios — Masturbador Masculino — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18007013321712178/",
       },
-      {
-        id: "produtos.masturbador_masculino.produtos",
-        kind: "product_links",
-        title: "2. Acessórios — Masturbador Masculino — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Masturbador Vagina E Anus Bumbum2", url: "https://sexshopsantabronx.com.br/produto/masturbador-vagina-e-anus-bumbum2/" },
-          { label: "Masturbador Vagina E Anus Ral", url: "https://sexshopsantabronx.com.br/produto/masturbador-vagina-e-anus-ral/" },
-          { label: "Masturbador Vagina C Vibracao", url: "https://sexshopsantabronx.com.br/produto/masturbador-vagina-c-vibracao/" },
-          { label: "Masturbador Vagina 4", url: "https://sexshopsantabronx.com.br/produto/masturbador-vagina-4/" },
-          { label: "Masturbador Vagina 2", url: "https://sexshopsantabronx.com.br/produto/masturbador-vagina-2/" },
-          { label: "Ovinho Masturbador Realistico", url: "https://sexshopsantabronx.com.br/produto/ovinho-masturbador-realistico/" }
+            {
+        id: "produtos.masturbador_masculino.bloco",
+        kind: "product_block",
+        title: "2. Acessórios — Masturbador Masculino — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "masturbador_masculino",
+        products: [
+          { name: "Masturbador Vagina E Anus Bumbum2", url: "https://sexshopsantabronx.com.br/produto/masturbador-vagina-e-anus-bumbum2/" },
+          { name: "Masturbador Vagina E Anus Ral", url: "https://sexshopsantabronx.com.br/produto/masturbador-vagina-e-anus-ral/" },
+          { name: "Masturbador Vagina C Vibracao", url: "https://sexshopsantabronx.com.br/produto/masturbador-vagina-c-vibracao/" },
+          { name: "Masturbador Vagina 4", url: "https://sexshopsantabronx.com.br/produto/masturbador-vagina-4/" },
+          { name: "Masturbador Vagina 2", url: "https://sexshopsantabronx.com.br/produto/masturbador-vagina-2/" },
+          { name: "Ovinho Masturbador Realistico", url: "https://sexshopsantabronx.com.br/produto/ovinho-masturbador-realistico/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.masturbador_masculino.fixacao",
         kind: "practice",
-        title: "2. Acessórios — Masturbador Masculino — Exercício de fixação (7 questões)",
+        title: "2. Acessórios — Masturbador Masculino — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Masturbador Masculino. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2403,40 +2316,32 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.masturbador_masculino.apostila",
-        kind: "inline_html",
-        title: "2. Acessórios — Masturbador Masculino — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_masturbador_masculino",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.roupas.video",
         kind: "video",
         title: "2. Acessórios — Roupas — Assistir destaque",
         description: "Copie o link, cole em outra aba e assista o destaque por completo.",
         url: "https://www.instagram.com/stories/highlights/18118409227649876/",
       },
-      {
-        id: "produtos.roupas.produtos",
-        kind: "product_links",
-        title: "2. Acessórios — Roupas — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Body Stocking Macacao Sexy Detalhe Na Barriga Abertura Intima Tamanho Unico Veste Do 34 Ao 44", url: "https://sexshopsantabronx.com.br/produto/body-stocking-macacao-sexy-detalhe-na-barriga-abertura-intima-tamanho-unico-veste-do-34-ao-44/" },
-          { label: "Body C Manga", url: "https://sexshopsantabronx.com.br/produto/body-c-manga/" },
-          { label: "Body Stocking Inteiro 1", url: "https://sexshopsantabronx.com.br/produto/body-stocking-inteiro-1/" },
-          { label: "Body Stocking Manga Com Strass", url: "https://sexshopsantabronx.com.br/produto/body-stocking-manga-com-strass/" },
-          { label: "Body Stocking Mini Vestido", url: "https://sexshopsantabronx.com.br/produto/body-stocking-mini-vestido/" }
+            {
+        id: "produtos.roupas.bloco",
+        kind: "product_block",
+        title: "2. Acessórios — Roupas — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "roupas",
+        products: [
+          { name: "Body Stocking Macacao Sexy Detalhe Na Barriga Abertura Intima Tamanho Unico Veste Do 34 Ao 44", url: "https://sexshopsantabronx.com.br/produto/body-stocking-macacao-sexy-detalhe-na-barriga-abertura-intima-tamanho-unico-veste-do-34-ao-44/" },
+          { name: "Body C Manga", url: "https://sexshopsantabronx.com.br/produto/body-c-manga/" },
+          { name: "Body Stocking Inteiro 1", url: "https://sexshopsantabronx.com.br/produto/body-stocking-inteiro-1/" },
+          { name: "Body Stocking Manga Com Strass", url: "https://sexshopsantabronx.com.br/produto/body-stocking-manga-com-strass/" },
+          { name: "Body Stocking Mini Vestido", url: "https://sexshopsantabronx.com.br/produto/body-stocking-mini-vestido/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.roupas.fixacao",
         kind: "practice",
-        title: "2. Acessórios — Roupas — Exercício de fixação (7 questões)",
+        title: "2. Acessórios — Roupas — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Roupas. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2476,38 +2381,30 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.roupas.apostila",
-        kind: "inline_html",
-        title: "2. Acessórios — Roupas — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_roupas",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.penis_realistico.video",
         kind: "video",
         title: "2. Acessórios — Pênis Realístico — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
         url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
-      {
-        id: "produtos.penis_realistico.produtos",
-        kind: "product_links",
-        title: "2. Acessórios — Pênis Realístico — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Penis De Borracha 22Cm X 4Cm 10 Modos De Vibracoes Rotacao 360 Graus Vai E Vem Aquecimento...", url: "https://sexshopsantabronx.com.br/produto/penis-de-borracha-22cm-x-4cm-10-modos-de-vibracoes-rotacao-360-graus-vai-e-vem-aquecimento-material-semelhante-a-pele-controle-sem-fio-recarregavel/" },
-          { label: "Penis De Borracha 20 Cm X 4Cm 10 Modos De Vibracoes 10 Movimentos De Vai E Vem E Rotacao...", url: "https://sexshopsantabronx.com.br/produto/penis-de-borracha-20-cm-x-4cm-10-modos-de-vibracoes-10-movimentos-de-vai-e-vem-e-rotacao-aquecimento-simula-a-temperatura-humana-material-semelhante-a-pele-controle-sem-fio-recarregavel/" },
-          { label: "Penis Realistico Com Vibro Vai E Vem Com Rotacao Controlado Por Aplicativo 9 Modos 215Cm X 4Cm", url: "https://sexshopsantabronx.com.br/produto/penis-realistico-com-vibro-vai-e-vem-com-rotacao-controlado-por-aplicativo-9-modos-215cm-x-4cm/" }
+            {
+        id: "produtos.penis_realistico.bloco",
+        kind: "product_block",
+        title: "2. Acessórios — Pênis Realístico — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "penis_realistico",
+        products: [
+          { name: "Penis De Borracha 22Cm X 4Cm 10 Modos De Vibracoes Rotacao 360 Graus Vai E Vem Aquecimento...", url: "https://sexshopsantabronx.com.br/produto/penis-de-borracha-22cm-x-4cm-10-modos-de-vibracoes-rotacao-360-graus-vai-e-vem-aquecimento-material-semelhante-a-pele-controle-sem-fio-recarregavel/" },
+          { name: "Penis De Borracha 20 Cm X 4Cm 10 Modos De Vibracoes 10 Movimentos De Vai E Vem E Rotacao...", url: "https://sexshopsantabronx.com.br/produto/penis-de-borracha-20-cm-x-4cm-10-modos-de-vibracoes-10-movimentos-de-vai-e-vem-e-rotacao-aquecimento-simula-a-temperatura-humana-material-semelhante-a-pele-controle-sem-fio-recarregavel/" },
+          { name: "Penis Realistico Com Vibro Vai E Vem Com Rotacao Controlado Por Aplicativo 9 Modos 215Cm X 4Cm", url: "https://sexshopsantabronx.com.br/produto/penis-realistico-com-vibro-vai-e-vem-com-rotacao-controlado-por-aplicativo-9-modos-215cm-x-4cm/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.penis_realistico.fixacao",
         kind: "practice",
-        title: "2. Acessórios — Pênis Realístico — Exercício de fixação (7 questões)",
+        title: "2. Acessórios — Pênis Realístico — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Pênis Realístico. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2547,16 +2444,7 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.penis_realistico.apostila",
-        kind: "inline_html",
-        title: "2. Acessórios — Pênis Realístico — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_penis_realistico",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.acessorios.exam",
         kind: "open_evaluation",
         title: "2. Acessórios — Prova final do grupo",
@@ -2601,22 +2489,23 @@ export const TOPICS: Topic[] = [
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
         url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
-      {
-        id: "produtos.vibrador_rabbit.produtos",
-        kind: "product_links",
-        title: "3. Vibradores — Vibrador Rabbit — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Vibrador Rabbit Ponto G E Clitoris Recarregavel 9 Modos De Vibracao", url: "https://sexshopsantabronx.com.br/produto/vibrador-rabbit-ponto-g-e-clitoris-recarregavel-9-modos-de-vibracao/" },
-          { label: "Vibrador Rabbit Recarregavel", url: "https://sexshopsantabronx.com.br/produto/vibrador-rabbit-recarregavel/" },
-          { label: "Vibrador Rabbit Pilha Realistico", url: "https://sexshopsantabronx.com.br/produto/vibrador-rabbit-pilha-realistico/" }
+            {
+        id: "produtos.vibrador_rabbit.bloco",
+        kind: "product_block",
+        title: "3. Vibradores — Vibrador Rabbit — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "vibrador_rabbit",
+        products: [
+          { name: "Vibrador Rabbit Ponto G E Clitoris Recarregavel 9 Modos De Vibracao", url: "https://sexshopsantabronx.com.br/produto/vibrador-rabbit-ponto-g-e-clitoris-recarregavel-9-modos-de-vibracao/" },
+          { name: "Vibrador Rabbit Recarregavel", url: "https://sexshopsantabronx.com.br/produto/vibrador-rabbit-recarregavel/" },
+          { name: "Vibrador Rabbit Pilha Realistico", url: "https://sexshopsantabronx.com.br/produto/vibrador-rabbit-pilha-realistico/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.vibrador_rabbit.fixacao",
         kind: "practice",
-        title: "3. Vibradores — Vibrador Rabbit — Exercício de fixação (7 questões)",
+        title: "3. Vibradores — Vibrador Rabbit — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Vibrador Rabbit. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2656,38 +2545,30 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.vibrador_rabbit.apostila",
-        kind: "inline_html",
-        title: "3. Vibradores — Vibrador Rabbit — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_vibrador_rabbit",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.sugador_de_clitoris.video",
         kind: "video",
         title: "3. Vibradores — Sugador de Clitóris — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
         url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
-      {
-        id: "produtos.sugador_de_clitoris.produtos",
-        kind: "product_links",
-        title: "3. Vibradores — Sugador de Clitóris — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Sugador De Clitoris Duplo", url: "https://sexshopsantabronx.com.br/produto/sugador-de-clitoris-duplo/" },
-          { label: "Sugador De Clitoris Recarregavel", url: "https://sexshopsantabronx.com.br/produto/sugador-de-clitoris-recarregavel/" },
-          { label: "Sugador De Clitoris Recarregavel 2", url: "https://sexshopsantabronx.com.br/produto/sugador-de-clitoris-recarregavel-2/" }
+            {
+        id: "produtos.sugador_de_clitoris.bloco",
+        kind: "product_block",
+        title: "3. Vibradores — Sugador de Clitóris — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "sugador_de_clitoris",
+        products: [
+          { name: "Sugador De Clitoris Duplo", url: "https://sexshopsantabronx.com.br/produto/sugador-de-clitoris-duplo/" },
+          { name: "Sugador De Clitoris Recarregavel", url: "https://sexshopsantabronx.com.br/produto/sugador-de-clitoris-recarregavel/" },
+          { name: "Sugador De Clitoris Recarregavel 2", url: "https://sexshopsantabronx.com.br/produto/sugador-de-clitoris-recarregavel-2/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.sugador_de_clitoris.fixacao",
         kind: "practice",
-        title: "3. Vibradores — Sugador de Clitóris — Exercício de fixação (7 questões)",
+        title: "3. Vibradores — Sugador de Clitóris — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Sugador de Clitóris. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2727,36 +2608,28 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.sugador_de_clitoris.apostila",
-        kind: "inline_html",
-        title: "3. Vibradores — Sugador de Clitóris — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_sugador_de_clitoris",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.vibrador_de_calcinha.video",
         kind: "video",
         title: "3. Vibradores — Vibrador de Calcinha — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
         url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
-      {
-        id: "produtos.vibrador_de_calcinha.produtos",
-        kind: "product_links",
-        title: "3. Vibradores — Vibrador de Calcinha — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Calcinha Vibratoria Recarregavel Com Ima E Controle Sem Fio", url: "https://sexshopsantabronx.com.br/produto/calcinha-vibratoria-recarregavel-com-ima-e-controle-sem-fio/" }
+            {
+        id: "produtos.vibrador_de_calcinha.bloco",
+        kind: "product_block",
+        title: "3. Vibradores — Vibrador de Calcinha — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "vibrador_de_calcinha",
+        products: [
+          { name: "Calcinha Vibratoria Recarregavel Com Ima E Controle Sem Fio", url: "https://sexshopsantabronx.com.br/produto/calcinha-vibratoria-recarregavel-com-ima-e-controle-sem-fio/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.vibrador_de_calcinha.fixacao",
         kind: "practice",
-        title: "3. Vibradores — Vibrador de Calcinha — Exercício de fixação (7 questões)",
+        title: "3. Vibradores — Vibrador de Calcinha — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Vibrador de Calcinha. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2796,36 +2669,28 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.vibrador_de_calcinha.apostila",
-        kind: "inline_html",
-        title: "3. Vibradores — Vibrador de Calcinha — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_vibrador_de_calcinha",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.maquina_de_sexo.video",
         kind: "video",
         title: "3. Vibradores — Máquina de Sexo — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
         url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
-      {
-        id: "produtos.maquina_de_sexo.produtos",
-        kind: "product_links",
-        title: "3. Vibradores — Máquina de Sexo — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Maquina De Sexo Uberlandia", url: "https://sexshopsantabronx.com.br/produto/maquina-de-sexo-uberlandia/" }
+            {
+        id: "produtos.maquina_de_sexo.bloco",
+        kind: "product_block",
+        title: "3. Vibradores — Máquina de Sexo — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "maquina_de_sexo",
+        products: [
+          { name: "Maquina De Sexo Uberlandia", url: "https://sexshopsantabronx.com.br/produto/maquina-de-sexo-uberlandia/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.maquina_de_sexo.fixacao",
         kind: "practice",
-        title: "3. Vibradores — Máquina de Sexo — Exercício de fixação (7 questões)",
+        title: "3. Vibradores — Máquina de Sexo — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Máquina de Sexo. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2865,37 +2730,29 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.maquina_de_sexo.apostila",
-        kind: "inline_html",
-        title: "3. Vibradores — Máquina de Sexo — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_maquina_de_sexo",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.vibrador_de_casal.video",
         kind: "video",
         title: "3. Vibradores — Vibrador de Casal — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
         url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
-      {
-        id: "produtos.vibrador_de_casal.produtos",
-        kind: "product_links",
-        title: "3. Vibradores — Vibrador de Casal — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Vibrador Para Casal Com Controle Sem Fio", url: "https://sexshopsantabronx.com.br/produto/vibrador-para-casal-com-controle-sem-fio/" },
-          { label: "Vibrador Para Casal Com Relevos", url: "https://sexshopsantabronx.com.br/produto/vibrador-para-casal-com-relevos/" }
+            {
+        id: "produtos.vibrador_de_casal.bloco",
+        kind: "product_block",
+        title: "3. Vibradores — Vibrador de Casal — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "vibrador_de_casal",
+        products: [
+          { name: "Vibrador Para Casal Com Controle Sem Fio", url: "https://sexshopsantabronx.com.br/produto/vibrador-para-casal-com-controle-sem-fio/" },
+          { name: "Vibrador Para Casal Com Relevos", url: "https://sexshopsantabronx.com.br/produto/vibrador-para-casal-com-relevos/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.vibrador_de_casal.fixacao",
         kind: "practice",
-        title: "3. Vibradores — Vibrador de Casal — Exercício de fixação (7 questões)",
+        title: "3. Vibradores — Vibrador de Casal — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Vibrador de Casal. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -2935,36 +2792,28 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.vibrador_de_casal.apostila",
-        kind: "inline_html",
-        title: "3. Vibradores — Vibrador de Casal — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_vibrador_de_casal",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.vibrador_de_aplicativo.video",
         kind: "video",
         title: "3. Vibradores — Vibrador de Aplicativo — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
         url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
-      {
-        id: "produtos.vibrador_de_aplicativo.produtos",
-        kind: "product_links",
-        title: "3. Vibradores — Vibrador de Aplicativo — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Vibrador Por Aplicativo Lola", url: "https://sexshopsantabronx.com.br/produto/vibrador-por-aplicativo-lola/" }
+            {
+        id: "produtos.vibrador_de_aplicativo.bloco",
+        kind: "product_block",
+        title: "3. Vibradores — Vibrador de Aplicativo — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "vibrador_de_aplicativo",
+        products: [
+          { name: "Vibrador Por Aplicativo Lola", url: "https://sexshopsantabronx.com.br/produto/vibrador-por-aplicativo-lola/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.vibrador_de_aplicativo.fixacao",
         kind: "practice",
-        title: "3. Vibradores — Vibrador de Aplicativo — Exercício de fixação (7 questões)",
+        title: "3. Vibradores — Vibrador de Aplicativo — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Vibrador de Aplicativo. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -3004,37 +2853,29 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.vibrador_de_aplicativo.apostila",
-        kind: "inline_html",
-        title: "3. Vibradores — Vibrador de Aplicativo — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_vibrador_de_aplicativo",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.varinha_magica.video",
         kind: "video",
         title: "3. Vibradores — Varinha Mágica — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
         url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
-      {
-        id: "produtos.varinha_magica.produtos",
-        kind: "product_links",
-        title: "3. Vibradores — Varinha Mágica — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Vibrador Varinha Magica Luxo", url: "https://sexshopsantabronx.com.br/produto/vibrador-varinha-magica-luxo/" },
-          { label: "Mini Vibrador Varinha Magica 3", url: "https://sexshopsantabronx.com.br/produto/mini-vibrador-varinha-magica-3/" }
+            {
+        id: "produtos.varinha_magica.bloco",
+        kind: "product_block",
+        title: "3. Vibradores — Varinha Mágica — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "varinha_magica",
+        products: [
+          { name: "Vibrador Varinha Magica Luxo", url: "https://sexshopsantabronx.com.br/produto/vibrador-varinha-magica-luxo/" },
+          { name: "Mini Vibrador Varinha Magica 3", url: "https://sexshopsantabronx.com.br/produto/mini-vibrador-varinha-magica-3/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.varinha_magica.fixacao",
         kind: "practice",
-        title: "3. Vibradores — Varinha Mágica — Exercício de fixação (7 questões)",
+        title: "3. Vibradores — Varinha Mágica — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Varinha Mágica. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -3074,36 +2915,28 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.varinha_magica.apostila",
-        kind: "inline_html",
-        title: "3. Vibradores — Varinha Mágica — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_varinha_magica",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.mini_vibrador.video",
         kind: "video",
         title: "3. Vibradores — Mini Vibrador — Assistir destaque",
         description: "Destaque único de vibradores no Instagram. Copie o link, cole em outra aba e assista por completo.",
         url: "https://www.instagram.com/stories/highlights/18095201698892966/",
       },
-      {
-        id: "produtos.mini_vibrador.produtos",
-        kind: "product_links",
-        title: "3. Vibradores — Mini Vibrador — Ver produtos reais no site",
-        description: "Abra cada link e observe nome, imagem, descrição e preço atualizado de cada produto desta categoria.",
-        links: [
-          { label: "Vibrador Bullet Recarregavel Com 10 Vibracoes", url: "https://sexshopsantabronx.com.br/produto/vibrador-bullet-recarregavel-com-10-vibracoes/" }
+            {
+        id: "produtos.mini_vibrador.bloco",
+        kind: "product_block",
+        title: "3. Vibradores — Mini Vibrador — Conteúdo e produtos",
+        description: "Estude o conteúdo da categoria e revise os produtos reais (preço atualizado em tempo real).",
+        source: "mini_vibrador",
+        products: [
+          { name: "Vibrador Bullet Recarregavel Com 10 Vibracoes", url: "https://sexshopsantabronx.com.br/produto/vibrador-bullet-recarregavel-com-10-vibracoes/" },
         ],
-        confirmLabel: "Já abri os produtos e revisei nome, imagem, descrição e preço no site.",
+        confirmLabel: "Estudei o conteúdo e revisei todos os produtos com preço atualizado.",
       },
       {
         id: "produtos.mini_vibrador.fixacao",
         kind: "practice",
-        title: "3. Vibradores — Mini Vibrador — Exercício de fixação (7 questões)",
+        title: "3. Vibradores — Mini Vibrador — Exercício de fixação (12 questões)",
         description: "Múltipla escolha autocorrigido. 7 perguntas sobre Mini Vibrador. Sem nota mínima — você vê quantas acertou ao final.",
         questions: [
           {
@@ -3143,16 +2976,7 @@ export const TOPICS: Topic[] = [
           },
         ],
       },
-      {
-        id: "produtos.mini_vibrador.apostila",
-        kind: "inline_html",
-        title: "3. Vibradores — Mini Vibrador — Ler apostila",
-        description: "Leia a apostila desta categoria como material de revisão.",
-        source: "produtos_mini_vibrador",
-        openLabel: "Abrir apostila",
-        confirmLabel: "Li a apostila por completo.",
-      },
-      {
+            {
         id: "produtos.vibradores.exam",
         kind: "open_evaluation",
         title: "3. Vibradores — Prova final do grupo",
