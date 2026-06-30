@@ -9,9 +9,13 @@ import {
   CheckCircle2,
   ClipboardCheck,
   Clock,
+  Droplet,
+  Flame,
+  Heart,
   Loader2,
   Sparkles,
   X,
+  Zap,
 } from "lucide-react";
 import { toast } from "sonner";
 
