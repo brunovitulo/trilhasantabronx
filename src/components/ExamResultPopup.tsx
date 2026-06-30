@@ -108,6 +108,7 @@ export function ExamResultPopup({ userId }: { userId: string }) {
             isUnseen(row)
           ) {
             enqueue(row);
+            void loadComments(row.id);
           }
         },
       )
