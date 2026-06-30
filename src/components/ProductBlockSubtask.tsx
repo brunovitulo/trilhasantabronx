@@ -397,17 +397,17 @@ export function ProductBlockSubtask({ subtask, apostila, completed, onComplete, 
             </p>
           </div>
 
-          {/* Banner — instrução de decoreba */}
+          {/* Banner — instrução de decoreba (azul) */}
           <div
             className="mb-3 flex items-start gap-2 rounded-lg"
             style={{
-              background: "var(--bg-pro)",
-              color: "var(--text-pro)",
+              background: "var(--bg-accent)",
+              color: "var(--text-accent)",
               padding: "10px 12px",
-              border: "1px solid var(--border-subtle)",
+              border: "1px solid var(--border-accent)",
             }}
           >
-            <Sparkles size={15} style={{ marginTop: 1, flexShrink: 0 }} />
+            <Sparkles size={15} style={{ marginTop: 1, flexShrink: 0, color: "var(--text-accent)" }} />
             <p style={{ fontSize: 12.5, lineHeight: 1.5, margin: 0, fontWeight: 500 }}>
               Decore o nome, o valor e as principais funcionalidades de cada
               produto abaixo — você vai precisar lembrar disso na revisão.
