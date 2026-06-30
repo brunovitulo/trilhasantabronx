@@ -120,13 +120,10 @@ export function ProductFlashcardsAdminPanel() {
                 >
                   {isGenerating ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : ok ? (
-                    <>
-                      <RefreshCw className="h-3.5 w-3.5 mr-1" /> Regerar
-                    </>
                   ) : (
                     <>
-                      <Sparkles className="h-3.5 w-3.5 mr-1" /> Gerar
+                      <RefreshCw className="h-3.5 w-3.5 mr-1" />
+                      {ok ? "Regerar" : "Refinar com IA"}
                     </>
                   )}
                 </Button>
@@ -135,6 +132,7 @@ export function ProductFlashcardsAdminPanel() {
           })}
         </div>
       )}
+
     </div>
   );
 }
