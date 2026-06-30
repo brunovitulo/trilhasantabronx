@@ -418,7 +418,17 @@ export function ProductBlockSubtask({ subtask, apostila, completed, onComplete, 
             {subtask.products.map((p) => {
               const d = scrapedMap[p.url];
               const summary = productSummaries.get(p.url) ?? "";
-              const { chips, description } = splitFeatures(summary);
+              const { chips: featChips, description } = splitFeatures(summary);
+              const specChips = d?.specs ?? [];
+              // Mescla chips de funcionalidade (apostila) + chips de spec
+              // técnica (scrape), removendo duplicatas case-insensitive.
+              const seen = new Set<string>();
+              const chips = [...featChips, ...specChips].filter((c) => {
+                const k = c.toLowerCase();
+                if (seen.has(k)) return false;
+                seen.add(k);
+                return true;
+              });
               return (
                 <div
                   key={p.url}
