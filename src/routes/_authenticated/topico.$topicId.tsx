@@ -52,6 +52,7 @@ import apostilaObjecoesHtml from "@/content/objecoes/apostila.html?raw";
 import checklistObjecoesHtml from "@/content/objecoes/checklist.html?raw";
 import apostilaDoresHtml from "@/content/dores/apostila.html?raw";
 import checklistDoresHtml from "@/content/dores/checklist.html?raw";
+import { getGeneratedQuestions } from "@/lib/aiQuestions.functions";
 
 // Apostilas do módulo 7 (Decorar Principais Produtos) — carregadas via glob.
 const PRODUTOS_APOSTILAS = import.meta.glob("@/content/produtos/*.html", {
