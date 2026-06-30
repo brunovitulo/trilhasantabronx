@@ -329,56 +329,55 @@ export const getFlashcardSession = createServerFn({ method: "POST" })
       }),
     );
 
-    // -- Derivação determinística de "funcionalidade" a partir do productName --
-    // Usada como fallback quando o cache do admin ainda não foi gerado.
-    // Garante que TODA opção exibida seja real, distinta, e nunca o próprio
-    // nome do produto nem o rótulo da categoria.
-    const CATEGORY_PREFIX_RE =
-      /^(excitante|vibrador(?:es)?|plug|anel|capa peniana|capa|masturbador|perfume|lubrificante|anest[eé]sico|adstringente|retardante|sugador(?:\s+de\s+clit[oó]ris)?|varinha(?:\s+m[aá]gica)?|mini\s+vibrador|m[aá]quina\s+de\s+sexo|sado|roupa|lingerie|p[eê]nis\s+real[ií]stico)\s+/i;
-    const FILLER_RE =
-      /\b(unissex|feminin[oa]|masculin[oa]|intt|sexy\s+fantasy|forte|extra)\b/gi;
+    // -- Funcionalidades reais (apenas do cache do admin) --
+    // Antes existia um fallback `deriveFunctionality(productName)` que extraía
+    // pedaços crus do nome do produto (ex.: "Em Spray", "Xana Loka") e usava
+    // isso tanto na opção correta quanto nos distratores. O resultado eram
+    // alternativas incoerentes. Agora só usamos texto real gerado pela IA
+    // (tabela product_flashcards). Se faltar cache, o item é claramente
+    // marcado e logamos um aviso para o admin rodar "Gerar funcionalidades".
+    const PLACEHOLDER_FUNC = "(funcionalidade ainda não cadastrada — peça à gestora)";
 
-    function deriveFunctionality(p: M7Product): string {
-      let base = p.productName.replace(/\.\.\.$/, "").trim();
-      base = base.replace(CATEGORY_PREFIX_RE, "");
-      base = base.replace(FILLER_RE, " ").replace(/\s+/g, " ").trim();
-      // Pega até as primeiras ~12 palavras como descrição funcional.
-      const words = base.split(/\s+/).slice(0, 12);
-      const phrase = words.join(" ").trim();
-      if (phrase.length < 6) {
-        return `${M7_SUBCATEGORY_LABELS[p.subcategoryId] ?? p.subcategoryLabel} — variante específica`;
-      }
-      return phrase.charAt(0).toUpperCase() + phrase.slice(1);
+    function cachedFunctionality(p: M7Product): string | null {
+      const v = funcCache.get(`${p.subcategoryId}:${p.productSlug}`);
+      return v && v.trim().length > 0 ? v.trim() : null;
     }
 
     function functionalityFor(p: M7Product): string {
-      return (
-        funcCache.get(`${p.subcategoryId}:${p.productSlug}`) ?? deriveFunctionality(p)
+      const v = cachedFunctionality(p);
+      if (v) return v;
+      console.warn(
+        `[flashcards] funcionalidade ausente em product_flashcards para ${p.subcategoryId}/${p.productSlug} — admin precisa rodar generateProductFunctionalities`,
       );
+      return PLACEHOLDER_FUNC;
     }
 
     function pickDistractors(p: M7Product, correct: string, seed: number): string[] {
-      const own = p.productName.toLowerCase();
       const ownLabel = (M7_SUBCATEGORY_LABELS[p.subcategoryId] ?? p.subcategoryLabel)
         .toLowerCase();
+      const own = p.productName.toLowerCase();
 
-      // 1) irmãos da subcategoria primeiro.
+      // 1) Irmãos da subcategoria primeiro — produzem os distratores mais difíceis.
       const siblings = getM7ProductsBySubcategory(p.subcategoryId).filter(
         (s) => s.productSlug !== p.productSlug,
       );
-      const pool: string[] = siblings.map((s) => functionalityFor(s));
+      const pool: string[] = [];
+      for (const s of siblings) {
+        const f = cachedFunctionality(s);
+        if (f) pool.push(f);
+      }
 
-      // 2) completa com produtos de outras subcategorias do mesmo grupo.
+      // 2) Completa com outras subcategorias do mesmo grupo, ainda do cache.
       if (pool.length < 3) {
         for (const other of products) {
           if (other.productSlug === p.productSlug) continue;
           if (siblings.some((s) => s.productSlug === other.productSlug)) continue;
-          pool.push(functionalityFor(other));
+          const f = cachedFunctionality(other);
+          if (f) pool.push(f);
         }
       }
 
-      // 3) filtra: distintos, nunca igual ao correto, nunca o próprio nome,
-      //    nunca o rótulo da categoria.
+      // 3) Filtra duplicados / coincidência com a correta / nome do próprio produto.
       const filtered: string[] = [];
       const seen = new Set<string>([correct.toLowerCase()]);
       for (const cand of pool) {
@@ -390,7 +389,7 @@ export const getFlashcardSession = createServerFn({ method: "POST" })
         filtered.push(c);
       }
 
-      // 4) embaralha determinístico e devolve 3.
+      // 4) Embaralha determinístico e devolve até 3.
       let s = seed >>> 0;
       const rand = () => {
         s = (s * 1664525 + 1013904223) >>> 0;
