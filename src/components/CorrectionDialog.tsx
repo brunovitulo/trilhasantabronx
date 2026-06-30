@@ -53,7 +53,18 @@ export function CorrectionDialog({
   const sub = submission ? findSubtask(submission.subtask_id) : null;
   const topicTitle = sub?.topic.title ?? "Prova";
   const subtaskTitle = sub?.subtask.title ?? "Avaliação";
-  const marked = answers.filter((a) => a.is_correct !== null).length;
+  const subtaskQuestions =
+    sub && (sub.subtask.kind === "open_evaluation" || sub.subtask.kind === "evaluation")
+      ? (sub.subtask as { questions?: Array<{ options?: string[]; correctIndex?: number }> }).questions ?? []
+      : [];
+  const isMcQuestion = (qIdx: number) => {
+    const q = subtaskQuestions[qIdx];
+    return !!(q && Array.isArray(q.options) && q.options.length > 0);
+  };
+  const openAnswers = answers.filter((a) => !isMcQuestion(a.question_index));
+  const mcAnswers = answers.filter((a) => isMcQuestion(a.question_index));
+  const openMarked = openAnswers.filter((a) => a.is_correct !== null).length;
+  const allOpenMarked = openAnswers.length === 0 || openAnswers.every((a) => a.is_correct !== null);
 
   useEffect(() => {
     if (!submission) {
