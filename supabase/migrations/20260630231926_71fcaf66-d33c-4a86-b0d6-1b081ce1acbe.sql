@@ -1,0 +1,1 @@
+ALTER TABLE public.product_flashcards ADD COLUMN IF NOT EXISTS core_name TEXT;

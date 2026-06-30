@@ -297,6 +297,7 @@ export type Database = {
       }
       product_flashcards: {
         Row: {
+          core_name: string | null
           created_at: string
           functionality: string
           generated_by: string | null
@@ -309,6 +310,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          core_name?: string | null
           created_at?: string
           functionality: string
           generated_by?: string | null
@@ -321,6 +323,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          core_name?: string | null
           created_at?: string
           functionality?: string
           generated_by?: string | null
