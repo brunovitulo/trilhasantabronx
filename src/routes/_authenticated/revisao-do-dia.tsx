@@ -365,7 +365,7 @@ function RevisaoDoDiaPage() {
                 const q = product.questions[qIdx];
                 const got = cur.answers[`p${sIdx}:q${qPos}`];
                 return {
-                  productName: product.name,
+                  productName: product.productLabel,
                   question: q.question,
                   options: q.options,
                   correctIndex: q.correctIndex,
