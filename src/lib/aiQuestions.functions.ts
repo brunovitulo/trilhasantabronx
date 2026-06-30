@@ -104,7 +104,7 @@ Devolva JSON estrito conforme schema com a chave "questions" contendo as 12 ques
       .from("generated_questions")
       .upsert({
         subcategory_key: data.subcategoryKey,
-        questions: output.questions as unknown as object,
+        questions: output.questions as unknown as never,
         approved_by: userId,
         generated_at: new Date().toISOString(),
       });
