@@ -73,9 +73,12 @@ export function ProductQuestionsAdminPanel() {
           <p className="text-xs text-muted-foreground">
             {open && listQuery.isLoading
               ? "Carregando…"
-              : `${generated}/${subs.length} subcategorias com 12 questões geradas.`}
+              : generated >= subs.length
+                ? `${subs.length}/${subs.length} subcategorias com questões refinadas.`
+                : `Pré-populado para todas as ${subs.length} subcategorias (banco padrão pronto). ${generated} já têm versão refinada por IA.`}
           </p>
         </div>
+
         <ChevronDown className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
