@@ -1012,7 +1012,6 @@ function SessionSummary({
       );
     const cards = wrongItems
       .map((p) => {
-        const correctPrice = p.priceOptions[p.priceCorrectIndex] ?? "—";
         const correctFunc = p.functionalityOptions[p.functionalityCorrectIndex] ?? "—";
         const chips = chipsForProductSlug(p.productSlug);
         const chipsHtml = chips.length
@@ -1031,7 +1030,6 @@ function SessionSummary({
             ${img}
             <div style="flex:1;">
               <h3 style="margin:0 0 6px 0;font-size:16px;color:#111827;">${escape(p.productName)}</h3>
-              <p style="margin:0 0 8px 0;font-size:13px;color:#6b7280;"><strong>Preço:</strong> ${escape(correctPrice)}</p>
               <p style="margin:0 0 8px 0;font-size:13px;color:#374151;"><strong>Funcionalidade:</strong> ${escape(correctFunc)}</p>
               <div>${chipsHtml}</div>
             </div>
