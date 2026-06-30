@@ -1,9 +1,9 @@
 // Painel admin: dispara geração das 12 questões IA por subcategoria do Módulo 7.
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Loader2, Sparkles, Check, ChevronDown, RefreshCw } from "lucide-react";
+import { Loader2, Sparkles, ChevronDown, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { TOPICS } from "@/data/topics";
