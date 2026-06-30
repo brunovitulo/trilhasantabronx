@@ -119,7 +119,7 @@ export function ExamResultPopup({ userId }: { userId: string }) {
       supabase.removeChannel(channel);
       window.removeEventListener(EXAM_POPUP_EVENT, onShow);
     };
-  }, [userId, fetchUnseen, enqueue]);
+  }, [userId, fetchUnseen, enqueue, loadComments]);
 
   const current = pending[0] ?? null;
 
