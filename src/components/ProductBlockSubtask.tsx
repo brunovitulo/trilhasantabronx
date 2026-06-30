@@ -419,7 +419,7 @@ export function ProductBlockSubtask({ subtask, apostila, completed, onComplete, 
               const d = scrapedMap[p.url];
               const summary = productSummaries.get(p.url) ?? "";
               const { chips: featChips, description } = splitFeatures(summary);
-              const specChips = d?.specs ?? [];
+              const specChips = filterSpecsForSubcategory(subtask.source, d?.specs ?? []);
               // Mescla chips de funcionalidade (apostila) + chips de spec
               // técnica (scrape), removendo duplicatas case-insensitive.
               const seen = new Set<string>();
@@ -429,6 +429,7 @@ export function ProductBlockSubtask({ subtask, apostila, completed, onComplete, 
                 seen.add(k);
                 return true;
               });
+
               return (
                 <div
                   key={p.url}
