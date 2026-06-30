@@ -154,6 +154,7 @@ export function ProductFlashcardsAdminPanel() {
               </div>
             );
           })}
+          </div>
         </div>
       )}
 
