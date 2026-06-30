@@ -12,6 +12,11 @@ export type ScrapedProduct = {
   price?: string;
   imageUrl?: string;
   summary?: string;
+  /** Chips de especificação técnica extraídos da página do produto
+   *  (ex.: "10 modos", "Recarregável", "Silicone", "À prova d'água",
+   *  "Ponto G", "Anal"). Usados como pílulas adicionais no card e como
+   *  fonte de dados para distratores da revisão. */
+  specs?: string[];
   error?: string;
   fetchedAt: string;
 };
