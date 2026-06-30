@@ -20,6 +20,15 @@ type ReviewedRow = {
   reviewed_at: string | null;
 };
 
+type AnswerComment = {
+  id: string;
+  question_index: number;
+  question_text: string;
+  answer_text: string | null;
+  is_correct: boolean | null;
+  feedback: string | null;
+};
+
 function seenKey(id: string) {
   return `sb-exam-seen-${id}`;
 }
