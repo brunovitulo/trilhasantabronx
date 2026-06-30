@@ -94,101 +94,15 @@ function buildProductSummaries(
   return out;
 }
 
-/** Extrai chips de funcionalidades do resumo da apostila.
- *  Tenta duas estratégias para garantir que TODOS os produtos virem pílulas
- *  (não apenas os que começam com "A + B + C"):
- *
- *   1) Capta QUALQUER trecho do texto no formato `X + Y + Z` (também aceita
- *      `/`, `•`, `|`). Funciona para listas no início ("SUGA + VIBRA + ...")
- *      e no meio do texto ("4 efeitos: SHOCK + REFRESCA + AQUECE + ...").
- *   2) Para os que sobrarem sem chips (ex.: "diferencial é o SABOR DE MEL e a
- *      fórmula SEM AÇÚCAR"), extrai frases em CAIXA ALTA com 2+ palavras como
- *      chips — é o padrão visual que a apostila usa para destacar atributos.
- */
-function splitFeatures(summary: string): { chips: string[]; description: string } {
-  if (!summary) return { chips: [], description: "" };
-  const chips: string[] = [];
-  const tryAdd = (raw: string) => {
-    const clean = raw
-      .replace(/^[\s.:;,\-–—]+|[\s.:;,\-–—]+$/g, "")
-      .replace(/\s+/g, " ")
-      .trim();
-    if (clean.length < 2 || clean.length > 26) return false;
-    if (clean.split(/\s+/).length > 3) return false;
-    const cap = clean.charAt(0).toUpperCase() + clean.slice(1).toLowerCase();
-    if (!chips.some((c) => c.toLowerCase() === cap.toLowerCase())) chips.push(cap);
-    return true;
-  };
-
-  let description = summary;
-
-  // (1) Sequências X + Y + Z em qualquer posição do texto.
-  const seqRe =
-    /[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ0-9'’ ]{0,22}[A-Za-zÀ-ÿ0-9](?:\s*[+/•|]\s*[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ0-9'’ ]{0,22}[A-Za-zÀ-ÿ0-9]){1,}/g;
-  description = description.replace(seqRe, (match) => {
-    const parts = match
-      .split(/\s*[+/•|]\s*/)
-      .map((s) => s.trim())
-      .filter(Boolean);
-    if (parts.length < 2) return match;
-    const valid = parts.filter((p) => p.length <= 26 && p.split(/\s+/).length <= 3);
-    if (valid.length < 2) return match;
-    valid.forEach(tryAdd);
-    return "";
-  });
-
-  // (2) Frases em CAIXA ALTA com 2+ palavras (ex.: "SABOR DE MEL", "SEM AÇÚCAR").
-  const capsRe = /\b([A-ZÀ-Ý][A-ZÀ-Ý0-9'’]*(?:\s+[A-ZÀ-Ý][A-ZÀ-Ý0-9'’]*){1,3})\b/g;
-  description = description.replace(capsRe, (match) => {
-    if (tryAdd(match)) return "";
-    return match;
-  });
-
-  description = description
-    .replace(/\s*\d+\s+efeitos?\s*:?\s*/gi, " ")
-    .replace(/^\s*[.:;,\-–—]+\s*/, "")
-    .replace(/\s*[.:;,\-–—]+\s*$/, "")
-    .replace(/\s{2,}/g, " ")
-    .trim();
-
-  return { chips, description };
-}
-
-/** Classifica a subcategoria do Módulo 7 e define quais TIPOS de chip de
- *  spec técnica fazem sentido para ela. Cosméticos (gel, spray, líquido)
- *  NUNCA recebem material/vibração/fonte de energia/tamanho — antes recebiam
- *  por contaminação cruzada do scraper (ex.: "gel" → CYBERSKIN no Goze). */
-function filterSpecsForSubcategory(source: string, specs: string[]): string[] {
-  const key = source.toLowerCase();
-  const COSMETIC = new Set([
-    "excitantes",
-    "perfumes-feromonios",
-    "adstringente",
-    "estimulantes-sexuais",
-    "estimulantes_sexuais",
-    "retardante",
-    "lubrificante",
-    "anestesicos",
-  ]);
-  // Chips só aplicáveis a produtos físicos/sólidos — sempre removidos de
-  // cosméticos. Materiais, modos de vibração, energia, controle remoto/app,
-  // tamanho em cm, à prova d'água.
-  const SOLID_ONLY = [
-    /^silicone/i,
-    /^abs$/i,
-    /^pvc$/i,
-    /^tpe$/i,
-    /^metal$/i,
-    /^cyberskin$/i,
-    /^l[áa]tex$/i,
-    /^vidro$/i,
-    /\bmodos?\b/i,
-    /recarreg[áa]vel/i,
-    /a\s+pilha/i,
-    /controle\s+(?:remoto|por\s+app)/i,
-    /\bcm\b/i,
-    /[àa]\s*prova\s*d/i,
-  ];
+// Paleta cíclica para chips de funcionalidade.
+const CHIP_PALETTE = [
+  { bg: "oklch(0.92 0.06 295)", fg: "oklch(0.40 0.18 295)", dbg: "oklch(0.45 0.18 295 / 25%)", dfg: "oklch(0.85 0.12 295)" },
+  { bg: "oklch(0.93 0.07 195)", fg: "oklch(0.40 0.15 195)", dbg: "oklch(0.45 0.15 195 / 25%)", dfg: "oklch(0.85 0.12 195)" },
+  { bg: "oklch(0.93 0.08 80)", fg: "oklch(0.45 0.16 70)", dbg: "oklch(0.50 0.16 70 / 25%)", dfg: "oklch(0.86 0.13 80)" },
+  { bg: "oklch(0.92 0.07 150)", fg: "oklch(0.42 0.14 150)", dbg: "oklch(0.45 0.14 150 / 25%)", dfg: "oklch(0.85 0.12 150)" },
+  { bg: "oklch(0.93 0.07 25)", fg: "oklch(0.50 0.20 25)", dbg: "oklch(0.55 0.22 25 / 22%)", dfg: "oklch(0.85 0.14 25)" },
+  { bg: "oklch(0.92 0.07 320)", fg: "oklch(0.42 0.16 320)", dbg: "oklch(0.45 0.16 320 / 25%)", dfg: "oklch(0.85 0.12 320)" },
+];
   if (COSMETIC.has(key)) {
     return specs.filter((c) => !SOLID_ONLY.some((re) => re.test(c)));
   }
