@@ -2313,7 +2313,7 @@ function EvaluationSubtask({
 }
 
 function PracticeSubtask({
-  subtask,
+  subtask: subtaskProp,
   userId,
   completed,
   onComplete,
@@ -2323,10 +2323,47 @@ function PracticeSubtask({
   completed: boolean;
   onComplete: () => void;
 }) {
+  // Para subtasks de fixação do Módulo 7 (produtos.<slug>.fixacao), tenta
+  // sobrescrever as questões embutidas pelas 12 questões geradas por IA
+  // (tabela generated_questions). Cai no fallback se não houver registro.
+  const m7Match = subtaskProp.id.match(/^produtos\.([a-z_]+)\.fixacao$/);
+  const [genQuestions, setGenQuestions] = useState<
+    Extract<Subtask, { kind: "practice" }>["questions"] | null
+  >(null);
+  useEffect(() => {
+    if (!m7Match) return;
+    let active = true;
+    (async () => {
+      const { data } = await supabase
+        .from("generated_questions")
+        .select("questions")
+        .eq("subcategory_key", m7Match[1])
+        .maybeSingle();
+      if (!active || !data?.questions) return;
+      const arr = data.questions as unknown as Extract<
+        Subtask,
+        { kind: "practice" }
+      >["questions"];
+      if (Array.isArray(arr) && arr.length >= 7) setGenQuestions(arr);
+    })();
+    return () => {
+      active = false;
+    };
+  }, [m7Match?.[1]]);
+
+  const subtask = useMemo(
+    () => (genQuestions ? { ...subtaskProp, questions: genQuestions } : subtaskProp),
+    [subtaskProp, genQuestions],
+  );
+
   const [started, setStarted] = useState(false);
   const [answers, setAnswers] = useState<(number | null)[]>(() =>
     subtask.questions.map(() => null),
   );
+  useEffect(() => {
+    // Re-inicializa o array de respostas se as questões vierem do banco depois.
+    setAnswers(subtask.questions.map(() => null));
+  }, [subtask.questions.length]);
   const [submitted, setSubmitted] = useState(false);
 
   function pick(qi: number, oi: number) {
