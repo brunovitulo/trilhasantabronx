@@ -102,6 +102,39 @@
   --ring: var(--brand);
 }
 
+/* Tokens de superfície/texto usados pelos blocos de produtos (Módulo 7)
+   e pelo stepper compacto. Definidos em modos claro e escuro. */
+:root {
+  --surface-1: oklch(0.97 0.008 300);
+  --surface-2: oklch(0.94 0.012 300);
+  --border-subtle: oklch(0.88 0.015 300);
+  --text-primary: oklch(0.18 0.04 285);
+  --text-secondary: oklch(0.40 0.03 290);
+  --text-muted: oklch(0.58 0.02 290);
+  --text-pro: oklch(0.45 0.18 295);
+  --bg-pro: oklch(0.92 0.06 295);
+  --text-success: oklch(0.45 0.14 150);
+  --bg-success: oklch(0.92 0.07 150);
+  --border-success: oklch(0.68 0.16 150);
+  --text-danger: oklch(0.55 0.22 27);
+  --bg-danger: oklch(0.95 0.05 27);
+}
+.dark {
+  --surface-1: oklch(1 0 0 / 5%);
+  --surface-2: oklch(1 0 0 / 8%);
+  --border-subtle: oklch(1 0 0 / 12%);
+  --text-primary: oklch(0.985 0.005 300);
+  --text-secondary: oklch(0.78 0.02 290);
+  --text-muted: oklch(0.60 0.02 290);
+  --text-pro: oklch(0.82 0.10 295);
+  --bg-pro: oklch(0.45 0.18 295 / 22%);
+  --text-success: oklch(0.85 0.12 150);
+  --bg-success: oklch(0.68 0.16 150 / 22%);
+  --border-success: oklch(0.68 0.16 150);
+  --text-danger: oklch(0.80 0.14 27);
+  --bg-danger: oklch(0.55 0.22 27 / 18%);
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
