@@ -81,9 +81,12 @@ export function ExamResultPopup({ userId }: { userId: string }) {
     const rows = ((data ?? []) as ReviewedRow[]).filter(isUnseen);
     if (rows.length > 0) {
       // Mais antigo primeiro, pra a atendente ver na ordem
-      rows.reverse().forEach(enqueue);
+      rows.reverse().forEach((r) => {
+        enqueue(r);
+        void loadComments(r.id);
+      });
     }
-  }, [userId, enqueue]);
+  }, [userId, enqueue, loadComments]);
 
   useEffect(() => {
     fetchUnseen();
