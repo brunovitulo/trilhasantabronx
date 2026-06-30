@@ -1101,9 +1101,9 @@ function SessionSummary({
                       {p.productName}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Preço correto:{" "}
+                      Funcionalidade:{" "}
                       <span className="text-foreground">
-                        {p.priceOptions[p.priceCorrectIndex]}
+                        {p.functionalityOptions[p.functionalityCorrectIndex]}
                       </span>
                     </p>
                     {chips.length > 0 && (
