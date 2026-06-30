@@ -131,7 +131,8 @@ const FuncSchema = z.object({
     .array(
       z.object({
         productSlug: z.string().min(1),
-        functionality: z.string().min(6).max(160),
+        functionality: z.string().min(2).max(80),
+        coreName: z.string().min(2).max(60),
       }),
     )
     .min(1),
