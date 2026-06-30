@@ -310,6 +310,42 @@ export type Database = {
         }
         Relationships: []
       }
+      product_price_cache: {
+        Row: {
+          error: string | null
+          fetched_at: string
+          image_url: string | null
+          name: string | null
+          price: string | null
+          specs: Json
+          summary: string | null
+          updated_by: string | null
+          url: string
+        }
+        Insert: {
+          error?: string | null
+          fetched_at?: string
+          image_url?: string | null
+          name?: string | null
+          price?: string | null
+          specs?: Json
+          summary?: string | null
+          updated_by?: string | null
+          url: string
+        }
+        Update: {
+          error?: string | null
+          fetched_at?: string
+          image_url?: string | null
+          name?: string | null
+          price?: string | null
+          specs?: Json
+          summary?: string | null
+          updated_by?: string | null
+          url?: string
+        }
+        Relationships: []
+      }
       product_revision_progress: {
         Row: {
           created_at: string
