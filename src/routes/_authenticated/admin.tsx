@@ -283,8 +283,7 @@ function AdminPage() {
             </div>
           </div>
           <ReviewPreviewPanel />
-          <ProductQuestionsAdminPanel />
-          <ProductFlashcardsAdminPanel />
+
         </section>
 
         <div className="mt-6 h-px bg-white/10" aria-hidden />
