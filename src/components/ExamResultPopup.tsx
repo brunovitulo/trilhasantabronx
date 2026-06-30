@@ -41,15 +41,6 @@ function isUnseen(row: ReviewedRow) {
   }
 }
 
-export function ExamResultPopup({ userId }: { userId: string }) {
-  const [pending, setPending] = useState<ReviewedRow[]>([]);
-
-  const enqueue = useCallback((row: ReviewedRow) => {
-    setPending((prev) => {
-      if (prev.some((r) => r.id === row.id)) return prev;
-      return [...prev, row];
-    });
-  }, []);
 
 export function ExamResultPopup({ userId }: { userId: string }) {
   const [pending, setPending] = useState<ReviewedRow[]>([]);
