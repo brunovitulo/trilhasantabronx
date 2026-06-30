@@ -34,6 +34,13 @@ import {
   type ProductRevisionItem,
 } from "@/data/produtosRevisao";
 import { sampleIndices, type ReviewQueueItem } from "@/lib/dailyReview";
+import { useQuery } from "@tanstack/react-query";
+import {
+  getFlashcardSession,
+  recordFlashcardResult,
+  type FlashcardItem,
+  type FlashcardSession,
+} from "@/lib/flashcards.functions";
 
 export const Route = createFileRoute("/_authenticated/revisao-do-dia")({
   head: () => ({ meta: [{ title: "Revisão do dia — Santa Bronx" }] }),
@@ -690,13 +697,14 @@ function ModuleFlow({
 }
 
 // =============================================================================
-// Fluxo PRODUCT GROUP (Módulo 7)
+// Fluxo PRODUCT GROUP (Módulo 7) — flashcards
 // =============================================================================
+
+
+
 
 function ProductGroupFlow({
   item,
-  state: ps,
-  onUpdate,
   onFinish,
   saving,
 }: {
@@ -706,37 +714,51 @@ function ProductGroupFlow({
   onFinish: () => void;
   saving: boolean;
 }) {
-  const group = getProductRevisionGroup(item.groupId);
-  if (!group) {
+  const sessionFn = useServerFn(getFlashcardSession);
+  const recordFn = useServerFn(recordFlashcardResult);
+
+  const sessionQuery = useQuery<FlashcardSession>({
+    queryKey: ["flashcard-session", item.groupId],
+    queryFn: () => sessionFn({ data: { groupId: item.groupId } }),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+
+  const [cursor, setCursor] = useState(0);
+  const [funcChoice, setFuncChoice] = useState<number | null>(null);
+  const [priceChoice, setPriceChoice] = useState<number | null>(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [results, setResults] = useState<{ mastered: number; wrong: number }>({
+    mastered: 0,
+    wrong: 0,
+  });
+
+  if (sessionQuery.isLoading) {
     return (
-      <div className="mt-4 text-sm text-muted-foreground">
-        Grupo indisponível.
+      <div className="mt-6 flex items-center justify-center py-10">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     );
   }
+  if (sessionQuery.error) {
+    return (
+      <div className="mt-4 text-sm text-rose-600">
+        Erro ao carregar a sessão: {(sessionQuery.error as Error).message}
+      </div>
+    );
+  }
+  const session = sessionQuery.data!;
+  const items = session.items;
 
-  const step = ps.steps[ps.stepIndex];
-
-  if (ps.finished || !step) {
-    const total = ps.steps.filter((s) => s.kind === "quiz").length;
-    let correct = 0;
-    ps.steps.forEach((s) => {
-      if (s.kind !== "quiz" || s.quizIdx === undefined) return;
-      const pIdx = ps.selectedProducts[s.productIdx];
-      const product = group.products[pIdx];
-      const qOriginalIdx = ps.selectedQuestionsPerProduct[s.productIdx][s.quizIdx];
-      const expected = product.questions[qOriginalIdx].correctIndex;
-      if (ps.answers[`p${s.productIdx}:q${s.quizIdx}`] === expected) correct++;
-    });
+  if (items.length === 0) {
     return (
       <div className="mt-4 text-center space-y-3">
         <CheckCircle2 className="h-10 w-10 text-emerald-500 mx-auto" />
-        <p className="text-base font-semibold">Sessão de revisão pronta!</p>
+        <p className="text-base font-semibold">
+          Todos os produtos deste grupo já foram dominados!
+        </p>
         <p className="text-sm text-muted-foreground">
-          Pontuação:{" "}
-          <span className="font-semibold text-foreground">
-            {correct}/{total} corretas ({Math.round((correct / Math.max(1, total)) * 100)}%)
-          </span>
+          Nada para revisar agora. Você pode fechar este item.
         </p>
         <Button
           onClick={onFinish}
@@ -750,81 +772,258 @@ function ProductGroupFlow({
     );
   }
 
-  const pIdx = ps.selectedProducts[step.productIdx];
-  const product = group.products[pIdx];
+  const current = items[cursor];
+  const isDone = cursor >= items.length;
 
-  function goNext() {
-    if (ps.stepIndex + 1 >= ps.steps.length) {
-      onUpdate({ finished: true });
-    } else {
-      onUpdate({ stepIndex: ps.stepIndex + 1 });
-    }
-  }
-
-  if (step.kind === "card") {
+  if (isDone) {
     return (
-      <ProductCard
-        product={product}
-        positionLabel={`Produto ${step.productIdx + 1} de ${ps.selectedProducts.length}`}
-        onContinue={goNext}
-      />
+      <div className="mt-4 text-center space-y-3">
+        <CheckCircle2 className="h-10 w-10 text-emerald-500 mx-auto" />
+        <p className="text-base font-semibold">Sessão de flashcards pronta!</p>
+        <p className="text-sm text-muted-foreground">
+          Dominados:{" "}
+          <span className="font-semibold text-emerald-600">
+            {results.mastered}
+          </span>{" "}
+          · Voltam amanhã:{" "}
+          <span className="font-semibold text-rose-600">{results.wrong}</span>
+        </p>
+        <Button
+          onClick={onFinish}
+          disabled={saving}
+          className="bg-emerald-600 hover:bg-emerald-700"
+        >
+          {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+          Concluir este item
+        </Button>
+      </div>
     );
   }
 
-  // quiz
-  const qPos = step.quizIdx ?? 0;
-  const qOriginalIdx = ps.selectedQuestionsPerProduct[step.productIdx][qPos];
-  const question = product.questions[qOriginalIdx];
-  const answerKey = `p${step.productIdx}:q${qPos}`;
-  const chosen = ps.answers[answerKey] ?? null;
+  async function confirm() {
+    if (funcChoice === null || priceChoice === null || submitted) return;
+    const both =
+      funcChoice === current.functionalityCorrectIndex &&
+      priceChoice === current.priceCorrectIndex;
+    setSubmitted(true);
+    try {
+      await recordFn({
+        data: {
+          groupId: item.groupId,
+          subcategoryId: current.subcategoryId,
+          productSlug: current.productSlug,
+          mastered: both,
+        },
+      });
+      setResults((r) => ({
+        mastered: r.mastered + (both ? 1 : 0),
+        wrong: r.wrong + (both ? 0 : 1),
+      }));
+    } catch (e) {
+      toast.error("Erro ao registrar resultado", {
+        description: e instanceof Error ? e.message : "Tente novamente.",
+      });
+    }
+  }
+
+  function nextCard() {
+    setCursor((c) => c + 1);
+    setFuncChoice(null);
+    setPriceChoice(null);
+    setSubmitted(false);
+  }
+
   return (
-    <div className="mt-4 space-y-3">
-      <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
-        {product.productLabel} · pergunta {qPos + 1} de{" "}
-        {ps.selectedQuestionsPerProduct[step.productIdx].length}
+    <Flashcard
+      item={current}
+      groupTitle={item.title}
+      total={items.length}
+      cursor={cursor}
+      submitted={submitted}
+      funcChoice={funcChoice}
+      priceChoice={priceChoice}
+      onFuncChoice={(i) => !submitted && setFuncChoice(i)}
+      onPriceChoice={(i) => !submitted && setPriceChoice(i)}
+      onConfirm={confirm}
+      onNext={nextCard}
+    />
+  );
+}
+
+function Flashcard({
+  item,
+  groupTitle,
+  total,
+  cursor,
+  submitted,
+  funcChoice,
+  priceChoice,
+  onFuncChoice,
+  onPriceChoice,
+  onConfirm,
+  onNext,
+}: {
+  item: FlashcardItem;
+  groupTitle: string;
+  total: number;
+  cursor: number;
+  submitted: boolean;
+  funcChoice: number | null;
+  priceChoice: number | null;
+  onFuncChoice: (i: number) => void;
+  onPriceChoice: (i: number) => void;
+  onConfirm: () => void;
+  onNext: () => void;
+}) {
+  const funcCorrect = funcChoice === item.functionalityCorrectIndex;
+  const priceCorrect = priceChoice === item.priceCorrectIndex;
+  const allCorrect = submitted && funcCorrect && priceCorrect;
+
+  function optionClasses(
+    chosen: number | null,
+    optIdx: number,
+    correctIdx: number,
+  ): string {
+    if (!submitted) {
+      return chosen === optIdx
+        ? "border-primary bg-primary/10"
+        : "border-white/10 bg-white/[0.04] hover:border-primary/40";
+    }
+    if (optIdx === correctIdx)
+      return "border-emerald-500/60 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300";
+    if (chosen === optIdx)
+      return "border-rose-500/60 bg-rose-500/10 text-rose-700 dark:text-rose-300";
+    return "border-white/10 bg-white/[0.03] opacity-60";
+  }
+
+  return (
+    <div className="mt-3 mx-auto" style={{ maxWidth: 420 }}>
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">
+          Revisão — {groupTitle}
+        </p>
+        <div className="flex items-center gap-1.5">
+          {Array.from({ length: total }).map((_, i) => (
+            <span
+              key={i}
+              className={`h-2 w-2 rounded-full ${
+                i < cursor
+                  ? "bg-emerald-500"
+                  : i === cursor
+                    ? "bg-primary"
+                    : "bg-white/15"
+              }`}
+            />
+          ))}
+        </div>
       </div>
-      <QuestionView
-        n={ps.stepIndex + 1}
-        total={ps.steps.length}
-        step={ps.phase === 1 ? 2 : 1}
-        question={question}
-        chosen={chosen}
-        onAnswer={(o) =>
-          onUpdate({ answers: { ...ps.answers, [answerKey]: o } })
-        }
-        onNext={goNext}
-        isLast={ps.stepIndex === ps.steps.length - 1}
-      />
+
+      <div className="rounded-xl border border-white/10 bg-white/[0.04] p-5 space-y-5">
+        <div className="flex flex-col items-center gap-3">
+          <div
+            className="rounded-lg bg-white/[0.06] flex items-center justify-center overflow-hidden"
+            style={{ width: 110, height: 110 }}
+          >
+            {item.imageUrl ? (
+              <img
+                src={item.imageUrl}
+                alt={item.productName}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span className="text-xs text-muted-foreground">sem imagem</span>
+            )}
+          </div>
+          <h3 className="text-base font-bold text-center">{item.productName}</h3>
+        </div>
+
+        <div className="space-y-2">
+          <p className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Qual é a funcionalidade deste produto?
+          </p>
+          <div className="space-y-1.5">
+            {item.functionalityOptions.map((opt, i) => (
+              <button
+                key={i}
+                onClick={() => onFuncChoice(i)}
+                disabled={submitted}
+                className={`w-full text-left text-sm rounded-lg border px-3 py-2.5 transition-colors ${optionClasses(
+                  funcChoice,
+                  i,
+                  item.functionalityCorrectIndex,
+                )}`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <p className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Qual é o preço atual?
+          </p>
+          <div className="grid grid-cols-2 gap-1.5">
+            {item.priceOptions.map((opt, i) => (
+              <button
+                key={i}
+                onClick={() => onPriceChoice(i)}
+                disabled={submitted || item.priceOptions[0] === "—"}
+                className={`text-sm rounded-lg border px-3 py-2.5 transition-colors ${optionClasses(
+                  priceChoice,
+                  i,
+                  item.priceCorrectIndex,
+                )}`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+          {item.scrapeError && (
+            <p className="text-[11px] text-amber-500">
+              {item.scrapeError} · revise apenas a funcionalidade.
+            </p>
+          )}
+        </div>
+
+        {!submitted ? (
+          <Button
+            className="w-full"
+            disabled={funcChoice === null || priceChoice === null}
+            onClick={onConfirm}
+          >
+            Confirmar resposta
+          </Button>
+        ) : (
+          <>
+            <div
+              className={`rounded-lg border px-4 py-3 text-sm ${
+                allCorrect
+                  ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                  : "border-rose-500/40 bg-rose-500/10 text-rose-700 dark:text-rose-300"
+              }`}
+            >
+              <p className="font-bold mb-1">
+                {allCorrect
+                  ? "Acertou tudo!"
+                  : "Não foi dessa vez."}
+              </p>
+              <p className="text-xs leading-relaxed">
+                {allCorrect
+                  ? "Este produto sai da sua fila de revisão de hoje."
+                  : "Este produto volta amanhã para revisão."}
+              </p>
+            </div>
+            <Button className="w-full" onClick={onNext}>
+              {cursor + 1 >= total ? "Ver resumo" : "Próximo produto"}
+            </Button>
+          </>
+        )}
+      </div>
     </div>
   );
 }
 
-function ProductCard({
-  product,
-  positionLabel,
-  onContinue,
-}: {
-  product: ProductRevisionItem;
-  positionLabel: string;
-  onContinue: () => void;
-}) {
-  return (
-    <div className="mt-4 space-y-4">
-      <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
-        {positionLabel}
-      </div>
-      <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5">
-        <h3 className="text-lg font-bold">{product.productLabel}</h3>
-        <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-          {product.summary}
-        </p>
-      </div>
-      <div className="flex justify-end">
-        <Button onClick={onContinue}>Começar perguntas</Button>
-      </div>
-    </div>
-  );
-}
 
 // =============================================================================
 // Helpers de UI

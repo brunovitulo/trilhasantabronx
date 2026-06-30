@@ -229,6 +229,87 @@ export type Database = {
         }
         Relationships: []
       }
+      product_flashcard_mastery: {
+        Row: {
+          attempts: number
+          created_at: string
+          group_id: string
+          id: string
+          last_attempt_at: string | null
+          mastered_at: string | null
+          next_review_date: string | null
+          product_slug: string
+          subcategory_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          group_id: string
+          id?: string
+          last_attempt_at?: string | null
+          mastered_at?: string | null
+          next_review_date?: string | null
+          product_slug: string
+          subcategory_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          group_id?: string
+          id?: string
+          last_attempt_at?: string | null
+          mastered_at?: string | null
+          next_review_date?: string | null
+          product_slug?: string
+          subcategory_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      product_flashcards: {
+        Row: {
+          created_at: string
+          functionality: string
+          generated_by: string | null
+          group_id: string
+          id: string
+          product_name: string
+          product_slug: string
+          product_url: string
+          subcategory_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          functionality: string
+          generated_by?: string | null
+          group_id: string
+          id?: string
+          product_name: string
+          product_slug: string
+          product_url: string
+          subcategory_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          functionality?: string
+          generated_by?: string | null
+          group_id?: string
+          id?: string
+          product_name?: string
+          product_slug?: string
+          product_url?: string
+          subcategory_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       product_revision_progress: {
         Row: {
           created_at: string
