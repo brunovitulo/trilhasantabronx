@@ -15,6 +15,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { AppHeader } from "@/components/AppHeader";
 import { TopicIntroGuide, topicIntroStorageKey } from "@/components/TopicIntroGuide";
 import { ProductBlockSubtask } from "@/components/ProductBlockSubtask";
+import { GlobalPriceUpdater } from "@/components/GlobalPriceUpdater";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
