@@ -270,11 +270,25 @@ function AdminPage() {
           </div>
         </div>
 
-        <div className="mt-6">
+        {/* Painel de Ferramentas administrativas — visualmente separado da lista de atendentes. */}
+        <section className="mt-6 rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-4 sm:p-5">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-sm font-semibold tracking-tight text-foreground/90">
+                Ferramentas
+              </h2>
+              <p className="text-[11px] text-muted-foreground">
+                Visualização de revisões e bancos de conteúdo do Módulo 7 — todo o conteúdo já vem pré-populado.
+              </p>
+            </div>
+          </div>
           <ReviewPreviewPanel />
           <ProductQuestionsAdminPanel />
           <ProductFlashcardsAdminPanel />
-        </div>
+        </section>
+
+        <div className="mt-6 h-px bg-white/10" aria-hidden />
+
 
         {loading ? (
           <div className="flex justify-center py-16">
