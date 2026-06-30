@@ -123,7 +123,7 @@ function AdminPage() {
   const [historyFor, setHistoryFor] = useState<{ id: string; name: string | null } | null>(null);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "in_progress" | "completed">("all");
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  // (cards are always expanded — no collapse/expand toggle)
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
 
@@ -203,14 +203,7 @@ function AdminPage() {
   const pageStart = (currentPage - 1) * perPage;
   const paged = filtered.slice(pageStart, pageStart + perPage);
 
-  // Mantém o cartão expandido apenas se ele ainda estiver visível na página atual.
-  // NÃO expande automaticamente nenhum atendente no carregamento — o admin
-  // precisa clicar manualmente em quem quiser abrir.
-  useEffect(() => {
-    if (expandedId && !paged.some((a) => a.id === expandedId)) {
-      setExpandedId(null);
-    }
-  }, [paged, expandedId]);
+  // (no expand/collapse state to reconcile)
 
   return (
     <div className="min-h-screen">
@@ -299,25 +292,15 @@ function AdminPage() {
           </Card>
         ) : (
           <div className="mt-6 space-y-3">
-            {paged.map((att) =>
-              expandedId === att.id ? (
-                <AttendantExpandedCard
-                  key={att.id}
-                  att={att}
-                  reviewerId={user.id}
-                  onCollapse={() => setExpandedId(null)}
-                  onCorrect={setCorrection}
-                  onOpenHistory={() => setHistoryFor({ id: att.id, name: att.full_name })}
-                />
-              ) : (
-                <AttendantCollapsedRow
-                  key={att.id}
-                  att={att}
-                  onExpand={() => setExpandedId(att.id)}
-                  onOpenHistory={() => setHistoryFor({ id: att.id, name: att.full_name })}
-                />
-              ),
-            )}
+            {paged.map((att) => (
+              <AttendantCard
+                key={att.id}
+                att={att}
+                reviewerId={user.id}
+                onCorrect={setCorrection}
+                onOpenHistory={() => setHistoryFor({ id: att.id, name: att.full_name })}
+              />
+            ))}
           </div>
         )}
 
@@ -593,21 +576,21 @@ function StatusBadge({ completed }: { completed: boolean }) {
   );
 }
 
-function AttendantCollapsedRow({
+function AttendantCard({
   att,
-  onExpand,
+  reviewerId,
+  onCorrect,
   onOpenHistory,
 }: {
   att: AttendantRow;
-  onExpand: () => void;
+  reviewerId: string;
+  onCorrect: (submission: CorrectionTarget) => void;
   onOpenHistory: () => void;
 }) {
   const s = useMemo(() => computeAttendantStats(att), [att]);
+
   return (
-    <Card
-      onClick={onExpand}
-      className="cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl hover:bg-white/[0.06] transition-colors"
-    >
+    <Card className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl">
       <div className="flex flex-col gap-3 p-3 sm:p-4">
         {/* Top line: name + actions */}
         <div className="flex items-center justify-between gap-3">
@@ -618,21 +601,18 @@ function AttendantCollapsedRow({
               size="sm"
               variant="outline"
               className="rounded-full gap-1.5 border-white/15 bg-white/[0.04] hover:bg-white/[0.1] h-8"
-              onClick={(e) => { e.stopPropagation(); onOpenHistory(); }}
+              onClick={onOpenHistory}
             >
               <FileText className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Ver histórico</span>
             </Button>
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              className="h-8 w-8 rounded-full border border-white/10 bg-white/[0.04]"
-              onClick={(e) => { e.stopPropagation(); onExpand(); }}
-              aria-label="Expandir"
-            >
-              <ChevronDown className="h-4 w-4" />
-            </Button>
+            <AttendantActionsMenu
+              attendantId={att.id}
+              attendantName={att.full_name}
+              reviewerId={reviewerId}
+              progress={att.progress}
+              onOpenHistory={onOpenHistory}
+            />
           </div>
         </div>
 
@@ -669,102 +649,19 @@ function AttendantCollapsedRow({
             </p>
           </div>
         </div>
-      </div>
-    </Card>
-  );
-}
 
-function AttendantExpandedCard({
-  att,
-  reviewerId,
-  onCollapse,
-  onCorrect,
-  onOpenHistory,
-}: {
-  att: AttendantRow;
-  reviewerId: string;
-  onCollapse: () => void;
-  onCorrect: (submission: CorrectionTarget) => void;
-  onOpenHistory: () => void;
-}) {
-  const s = useMemo(() => computeAttendantStats(att), [att]);
-
-  return (
-    <Card className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05] backdrop-blur-xl">
-      <div className="p-4 sm:p-5 space-y-4">
-        {/* Header: identidade + ações */}
-        <div className="flex items-center gap-3">
-          <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${avatarGradient(att.id)} text-white font-bold text-sm shadow`}>
-            {initials(att.full_name)}
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
-              <h3 className="font-semibold leading-tight truncate">{att.full_name ?? "Sem nome"}</h3>
-              <StatusBadge completed={s.completed} />
-            </div>
-            <p className="text-[11px] text-muted-foreground font-mono mt-0.5 truncate">{att.id.slice(0, 8)}</p>
-          </div>
-          <AttendantActionsMenu
-            attendantId={att.id}
-            attendantName={att.full_name}
-            reviewerId={reviewerId}
-            progress={att.progress}
-            onOpenHistory={onOpenHistory}
-          />
-          <Button
-            type="button"
-            size="icon"
-            variant="ghost"
-            className="h-8 w-8 rounded-full border border-white/10 bg-white/[0.04]"
-            onClick={onCollapse}
-            aria-label="Recolher"
-          >
-            <ChevronDown className="h-4 w-4 rotate-180" />
-          </Button>
-        </div>
-
-        {/* KPIs compactos */}
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-          <div className="flex items-center gap-2">
-            <span className="text-muted-foreground text-xs">Progresso</span>
-            <span className="font-semibold tabular-nums">{s.percent}%</span>
-            <Progress value={s.percent} className="h-1.5 w-24 bg-white/10 [&>div]:bg-[oklch(0.78_0.13_175)]" />
-          </div>
-          <div className="flex items-center gap-1.5">
-            <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
-            <span className="text-muted-foreground text-xs">Tópicos</span>
-            <span className="font-semibold tabular-nums">{s.doneTopics}/{s.totalTopics}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <ScrollText className="h-3.5 w-3.5 text-muted-foreground" />
-            <span className="text-muted-foreground text-xs">Provas</span>
-            <span className={`font-semibold tabular-nums ${s.doneExams === 0 ? "text-rose-300" : ""}`}>{s.doneExams}/{s.totalExams}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Star className={`h-3.5 w-3.5 ${s.examAverage != null ? "text-amber-300 fill-amber-300" : "text-muted-foreground"}`} />
-            <span className="text-muted-foreground text-xs">Média</span>
-            <span className="font-semibold tabular-nums">
-              {s.examAverage != null ? (s.examAverage / 10).toFixed(1).replace(".", ",") : "—"}
-            </span>
-          </div>
-        </div>
-
-        {/* Etapa atual — uma linha discreta */}
-        <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2.5 flex items-center gap-3">
-          <MapPin className="h-4 w-4 text-[oklch(0.82_0.13_295)] shrink-0" />
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium truncate">
-              {s.currentTopic ? s.currentTopic.title : "Trilha concluída"}
-            </p>
-            <p className="text-xs text-muted-foreground truncate">
-              {s.currentTopic
-                ? s.currentSubtask
+        {/* Etapa atual */}
+        {s.currentTopic && (
+          <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2.5 flex items-center gap-3">
+            <MapPin className="h-4 w-4 text-[oklch(0.82_0.13_295)] shrink-0" />
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium truncate">{s.currentTopic.title}</p>
+              <p className="text-xs text-muted-foreground truncate">
+                {s.currentSubtask
                   ? `Próxima ação: ${s.currentSubtask.title}`
-                  : "Aguardando avanço."
-                : "Concluiu todos os tópicos."}
-            </p>
-          </div>
-          {s.currentTopic && (
+                  : "Aguardando avanço."}
+              </p>
+            </div>
             <Link
               to="/topico/$topicId"
               params={{ topicId: s.currentTopic.id }}
@@ -773,8 +670,8 @@ function AttendantExpandedCard({
               <ChevronRight className="h-3.5 w-3.5" />
               Ir ao tópico
             </Link>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Pedidos de permissão para prova */}
         {att.permissionRequests.length > 0 && (
@@ -850,7 +747,6 @@ function AttendantExpandedCard({
             })}
           </div>
         )}
-
       </div>
     </Card>
   );
