@@ -93,8 +93,8 @@ export function CorrectionDialog({
 
   async function finalize() {
     if (!submission) return;
-    if (answers.length === 0 || answers.some((a) => a.is_correct === null)) {
-      toast.error(`Marque certa ou errada em todas as ${answers.length} questões antes de finalizar`);
+    if (!allOpenMarked) {
+      toast.error(`Marque certa ou errada em todas as ${openAnswers.length} questões abertas antes de finalizar`);
       return;
     }
     setSaving(true);
