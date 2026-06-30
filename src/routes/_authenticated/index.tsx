@@ -200,7 +200,10 @@ function HomePage() {
                         <p className="text-sm text-muted-foreground mt-1">{topic.summary}</p>
                         {!isEmpty && (
                           <div className="mt-3 flex items-center gap-3">
-                            <Progress value={percent} className="h-1.5" />
+                            <Progress
+                              value={percent}
+                              className="h-1.5 bg-white/10 [&>div]:bg-[oklch(0.78_0.13_175)]"
+                            />
                             <span className="text-xs text-muted-foreground whitespace-nowrap">
                               {percent}%
                             </span>
