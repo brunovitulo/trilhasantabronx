@@ -35,6 +35,13 @@ import type { Subtask } from "@/data/topics";
 import type { ScrapedProduct } from "@/lib/productScrape.functions";
 import { GLOBAL_SCRAPE_CACHE_KEY } from "@/lib/globalScrape";
 import { parseApostila, stripDetailPrefix } from "@/lib/apostilaParser";
+import { chipsForProductSlug } from "@/data/m7Chips";
+
+/** Extrai o slug do produto a partir da URL (compatível com /produto/<slug>/). */
+function slugFromUrl(url: string): string {
+  const m = url.match(/\/produto\/([^/?#]+)/);
+  return m ? m[1] : "";
+}
 
 type Props = {
   subtask: Extract<Subtask, { kind: "product_block" }>;
