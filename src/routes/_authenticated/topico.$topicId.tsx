@@ -440,6 +440,7 @@ function pickStepIcon(kind: Subtask["kind"], hasDownload?: boolean) {
     case "open_evaluation": return FilePen;
     case "external_html": return hasDownload ? Download : Globe;
     case "product_links": return Globe;
+    case "product_block": return BookOpen;
     case "credentials": return Lock;
     default: return BookOpen;
   }
@@ -1071,6 +1072,19 @@ function SubtaskContent({
       return <MultiChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
     case "product_links":
       return <ProductLinksSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
+    case "product_block": {
+      const sourceKey = `produtos_${subtask.source.replace(/-/g, "_")}`;
+      const apostila = INLINE_HTML_SOURCES[sourceKey];
+      return (
+        <ProductBlockSubtask
+          subtask={subtask}
+          apostila={apostila}
+          completed={completed}
+          onComplete={() => onComplete()}
+          onUncheck={onUncheck}
+        />
+      );
+    }
     case "open_evaluation":
       return useExamDialog ? (
         <ExamDialogLauncher
