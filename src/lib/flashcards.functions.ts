@@ -274,14 +274,18 @@ export const getFlashcardSession = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) =>
     z
       .object({
-        groupId: z.enum(["cosmeticos", "acessorios", "vibradores"]),
+        groupId: z.enum(["cosmeticos", "vibradores"]),
       })
       .parse(data),
   )
   .handler(async ({ data, context }): Promise<FlashcardSession> => {
     const { supabase, userId } = context;
     const today = spDateKey();
-    const products = getM7ProductsByGroup(data.groupId);
+    const { M7_REVIEW_ALLOWED_SUBCATEGORIES } = await import("@/data/produtosRevisao");
+    const allowed = new Set(M7_REVIEW_ALLOWED_SUBCATEGORIES[data.groupId] ?? []);
+    const products = getM7ProductsByGroup(data.groupId).filter((p) =>
+      allowed.has(p.subcategoryId),
+    );
 
     // Cache de funcionalidades (todas do grupo, para alimentar distractors).
     // RLS restringe SELECT em product_flashcards a admins; usamos o cliente
@@ -473,7 +477,7 @@ export const recordFlashcardResult = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) =>
     z
       .object({
-        groupId: z.enum(["cosmeticos", "acessorios", "vibradores"]),
+        groupId: z.enum(["cosmeticos", "vibradores"]),
         subcategoryId: z.string().min(1),
         productSlug: z.string().min(1),
         mastered: z.boolean(),
