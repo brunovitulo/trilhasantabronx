@@ -11,10 +11,36 @@ export type GuideStep = {
   completed?: boolean;
 };
 
+// Paleta de cores por posição do passo no fluxo.
+// Cada passo recebe um par (bg / fg) distinto, com semântica:
+//   0 → azul (conteúdo)
+//   1 → teal (revisão)
+//   2 → âmbar (ação)
+//   3+ (último) → verde (confirmar)
+const STEP_PALETTE: Array<{ bg: string; fg: string }> = [
+  { bg: "oklch(0.92 0.06 250)", fg: "oklch(0.45 0.18 250)" }, // azul
+  { bg: "oklch(0.92 0.07 195)", fg: "oklch(0.45 0.15 195)" }, // teal
+  { bg: "oklch(0.93 0.10 80)", fg: "oklch(0.50 0.16 70)" }, // âmbar
+  { bg: "oklch(0.92 0.07 150)", fg: "oklch(0.45 0.14 150)" }, // verde
+];
+const STEP_PALETTE_DARK: Array<{ bg: string; fg: string }> = [
+  { bg: "oklch(0.45 0.18 250 / 22%)", fg: "oklch(0.85 0.12 250)" },
+  { bg: "oklch(0.45 0.15 195 / 22%)", fg: "oklch(0.85 0.12 195)" },
+  { bg: "oklch(0.50 0.16 70 / 22%)", fg: "oklch(0.86 0.13 80)" },
+  { bg: "oklch(0.45 0.14 150 / 22%)", fg: "oklch(0.85 0.12 150)" },
+];
+
+function paletteFor(idx: number, isLast: boolean) {
+  // O último passo do fluxo é sempre "confirmar" → verde.
+  if (isLast) return { light: STEP_PALETTE[3], dark: STEP_PALETTE_DARK[3] };
+  const i = idx % 3; // alterna entre azul / teal / âmbar
+  return { light: STEP_PALETTE[i], dark: STEP_PALETTE_DARK[i] };
+}
+
 /**
  * Stepper compacto horizontal usado no topo de cada subtarefa.
- * Mantém todas as instruções originais como tooltip (atributo `title`)
- * para preservar o contexto sem ocupar espaço vertical.
+ * Os passos quebram em múltiplas linhas (sem scroll horizontal) e cada
+ * badge recebe uma cor distinta para reforçar a sequência visual.
  */
 export function StepGuide({
   steps,
@@ -34,17 +60,20 @@ export function StepGuide({
         borderRadius: 10,
         padding: "10px 12px",
         display: "flex",
+        flexWrap: "wrap",
         alignItems: "center",
-        gap: 6,
-        overflowX: "auto",
+        rowGap: 8,
+        columnGap: 6,
         border: "1px solid var(--border-subtle)",
       }}
     >
       {steps.map((s, i) => {
         const Icon = s.icon;
-        const tooltip = s.description
-          ? `${s.title} — ${s.description}`
-          : s.title;
+        const tooltip = s.description ? `${s.title} — ${s.description}` : s.title;
+        const isLast = i === steps.length - 1;
+        const pal = paletteFor(i, isLast);
+        const completedBg = "var(--bg-success)";
+        const completedFg = "var(--text-success)";
         return (
           <div key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <div
@@ -59,22 +88,33 @@ export function StepGuide({
             >
               <span
                 aria-hidden
-                style={{
-                  width: 22,
-                  height: 22,
-                  borderRadius: 999,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  background: s.completed ? "var(--bg-success)" : "var(--bg-pro)",
-                  color: s.completed ? "var(--text-success)" : "var(--text-pro)",
-                  flexShrink: 0,
-                }}
+                className="step-guide-badge"
+                data-step={i}
+                style={
+                  {
+                    width: 24,
+                    height: 24,
+                    borderRadius: 999,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background: s.completed ? completedBg : pal.light.bg,
+                    color: s.completed ? completedFg : pal.light.fg,
+                    flexShrink: 0,
+                    // Permite override em dark via CSS var custom.
+                    ["--sg-bg-dark" as string]: s.completed
+                      ? "var(--bg-success)"
+                      : pal.dark.bg,
+                    ["--sg-fg-dark" as string]: s.completed
+                      ? "var(--text-success)"
+                      : pal.dark.fg,
+                  } as React.CSSProperties
+                }
               >
                 {s.completed ? (
-                  <Check size={12} strokeWidth={3} />
+                  <Check size={13} strokeWidth={3} />
                 ) : (
-                  <Icon size={12} strokeWidth={2.5} />
+                  <Icon size={13} strokeWidth={2.5} />
                 )}
               </span>
               <span
@@ -87,7 +127,7 @@ export function StepGuide({
                 {s.title}
               </span>
             </div>
-            {i < steps.length - 1 && (
+            {!isLast && (
               <ChevronRight
                 size={13}
                 style={{ color: "var(--text-muted)", flexShrink: 0 }}
