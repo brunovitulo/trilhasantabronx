@@ -49,6 +49,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SubmissionHistoryDialog } from "@/components/SubmissionHistoryDialog";
 import { ProductQuestionsAdminPanel } from "@/components/ProductQuestionsAdminPanel";
+import { ProductFlashcardsAdminPanel } from "@/components/ProductFlashcardsAdminPanel";
 import { CorrectionDialog, type CorrectionTarget } from "@/components/CorrectionDialog";
 import {
   Select,
