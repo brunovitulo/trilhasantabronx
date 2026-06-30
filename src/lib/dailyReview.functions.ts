@@ -168,26 +168,44 @@ export const getTodayReview = createServerFn({ method: "GET" })
       masteryByGroup.set(m.group_id, arr);
     }
 
-    // Importa estaticamente para sabermos o total de produtos por grupo (catálogo M7).
+    // Importa estaticamente para sabermos o total de produtos por grupo APÓS o filtro
+    // de subcategorias permitidas para a revisão (catálogo M7 cobre mais SKUs do que
+    // a revisão por flashcard).
     const { M7_PRODUCTS } = await import("@/data/m7Products");
+    const { M7_REVIEW_ALLOWED_SUBCATEGORIES } = await import("@/data/produtosRevisao");
     const totalByGroup = new Map<string, number>();
     for (const p of M7_PRODUCTS) {
+      const allowed = M7_REVIEW_ALLOWED_SUBCATEGORIES[
+        p.groupId as keyof typeof M7_REVIEW_ALLOWED_SUBCATEGORIES
+      ];
+      if (!allowed || !allowed.includes(p.subcategoryId)) continue;
       totalByGroup.set(p.groupId, (totalByGroup.get(p.groupId) ?? 0) + 1);
     }
 
+    // Progressão sequencial: só enfileira o próximo grupo se TODOS os produtos
+    // dos grupos anteriores já foram dominados.
+    let previousGroupsDone = true;
     for (const group of PRODUCT_REVISION_GROUPS) {
       const gp = existingProgress.get(group.id);
-      if (!gp || gp.group_completed) continue;
-
       const mastery = masteryByGroup.get(group.id) ?? [];
-      const masteredCount = mastery.filter((m) => m.mastered_at).length;
+      const allowedForGroup = new Set(
+        M7_REVIEW_ALLOWED_SUBCATEGORIES[group.id] ?? [],
+      );
+      const masteredCount = mastery.filter(
+        (m) => m.mastered_at && allowedForGroup.has(m.subcategory_id),
+      ).length;
       const total = totalByGroup.get(group.id) ?? 0;
-      // Critério único: mostra o grupo enquanto houver QUALQUER produto não
-      // dominado. Acertar funcionalidade + preço no mesmo flashcard é o que
-      // marca o produto como dominado (em `recordFlashcardResult`).
-      // As "fases" são mantidas apenas como rótulo informativo na UI.
-      if (total === 0) continue;
-      if (masteredCount >= total) continue;
+
+      if (!gp || gp.group_completed || total === 0 || masteredCount >= total) {
+        // Esse grupo está pronto — não entra na fila, mas também não bloqueia o próximo.
+        continue;
+      }
+
+      if (!previousGroupsDone) {
+        // Aguarda o grupo anterior ser dominado por completo antes de aparecer.
+        previousGroupsDone = false;
+        continue;
+      }
 
       const phase = gp.phase as 1 | 2 | 3;
       queue.push({
@@ -198,9 +216,10 @@ export const getTodayReview = createServerFn({ method: "GET" })
         phase,
         cycle: gp.cycle,
         sessionsDoneInCycle: gp.sessions_done,
-        estimatedMinutes:
-          phase === 1 ? "10-14" : phase === 2 ? "8-10" : "6-8",
+        estimatedMinutes: "10-15",
       });
+      // Trava grupos seguintes até este ser dominado.
+      previousGroupsDone = false;
     }
 
 
