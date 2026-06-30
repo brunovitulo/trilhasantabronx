@@ -5,9 +5,7 @@ import { isTopicComplete, type ProgressRow } from "@/lib/progress";
 import {
   spDateKey,
   daysBetween,
-  addDaysIso,
   MODULE_REVIEW_PLANS,
-  PRODUCT_PHASE_DAYS,
   type ReviewQueueItem,
 } from "@/lib/dailyReview";
 import {
@@ -184,21 +182,14 @@ export const getTodayReview = createServerFn({ method: "GET" })
       const mastery = masteryByGroup.get(group.id) ?? [];
       const masteredCount = mastery.filter((m) => m.mastered_at).length;
       const total = totalByGroup.get(group.id) ?? 0;
-      // Se todos os produtos do grupo já foram dominados, oculta da fila.
-      if (total > 0 && masteredCount >= total) continue;
+      // Critério único: mostra o grupo enquanto houver QUALQUER produto não
+      // dominado. Acertar funcionalidade + preço no mesmo flashcard é o que
+      // marca o produto como dominado (em `recordFlashcardResult`).
+      // As "fases" são mantidas apenas como rótulo informativo na UI.
+      if (total === 0) continue;
+      if (masteredCount >= total) continue;
 
-      // Decide se entra na fila hoje:
-      // 1) data de ciclo/fase corresponde ao plano OU
-      // 2) existe ao menos um produto com next_review_date <= today (re-fila por erro).
       const phase = gp.phase as 1 | 2 | 3;
-      const diff = daysBetween(gp.cycle_anchor_date, today);
-      const days = PRODUCT_PHASE_DAYS[phase];
-      const phaseDay = days.includes(diff);
-      const dueByReQueue = mastery.some(
-        (m) => !m.mastered_at && m.next_review_date && m.next_review_date <= today,
-      );
-      if (!phaseDay && !dueByReQueue) continue;
-
       queue.push({
         kind: "product-group",
         reviewKey: `produtos:${group.id}`,
@@ -211,6 +202,7 @@ export const getTodayReview = createServerFn({ method: "GET" })
           phase === 1 ? "10-14" : phase === 2 ? "8-10" : "6-8",
       });
     }
+
 
     // Ordena: módulos primeiro (mesma ordem dos TOPICS), depois grupos de produtos.
     queue.sort((a, b) => {
@@ -260,63 +252,44 @@ export const completeReviewItem = createServerFn({ method: "POST" })
       );
     if (insErr) throw new Error(insErr.message);
 
-    // Avança o progresso do grupo de produtos, quando aplicável.
+    // Apenas registra atividade no progresso do grupo (sem mais avançar fases
+    // por contagem de sessões). O grupo é considerado completo SOMENTE quando
+    // TODOS os produtos estão marcados em `product_flashcard_mastery.mastered_at`.
     if (data.groupId && data.reviewKey.startsWith("produtos:")) {
       const { data: gpRow } = await supabase
         .from("product_revision_progress")
-        .select(
-          "id, group_id, cycle, phase, cycle_anchor_date, sessions_done, group_completed",
-        )
+        .select("id, group_completed, sessions_done")
         .eq("user_id", userId)
         .eq("group_id", data.groupId)
         .maybeSingle();
 
       if (gpRow && !gpRow.group_completed) {
-        const phase = gpRow.phase as 1 | 2 | 3;
-        const sessionsDone = (gpRow.sessions_done ?? 0) + 1;
-        const sessionsPerPhase = PRODUCT_PHASE_DAYS[phase].length;
-        const score =
-          data.scoreTotal > 0 ? data.scoreCorrect / data.scoreTotal : 0;
+        // Conta produtos do grupo no catálogo M7.
+        const { M7_PRODUCTS } = await import("@/data/m7Products");
+        const total = M7_PRODUCTS.filter((p) => p.groupId === data.groupId).length;
+        const { data: masteryRows } = await supabase
+          .from("product_flashcard_mastery")
+          .select("product_slug, mastered_at")
+          .eq("user_id", userId)
+          .eq("group_id", data.groupId);
+        const masteredCount = (masteryRows ?? []).filter(
+          (m) => m.mastered_at,
+        ).length;
 
-        let nextUpdate: Record<string, unknown> = {
-          sessions_done: sessionsDone,
+        const patch: Record<string, unknown> = {
+          sessions_done: (gpRow.sessions_done ?? 0) + 1,
           last_session_at: new Date().toISOString(),
         };
-
-        if (sessionsDone >= sessionsPerPhase) {
-          // Encerra a fase atual e decide o que vem.
-          if (phase === 1) {
-            nextUpdate = { ...nextUpdate, phase: 2, sessions_done: 0 };
-          } else if (phase === 2) {
-            nextUpdate = { ...nextUpdate, phase: 3, sessions_done: 0 };
-          } else {
-            // Fase 3: verifica nota.
-            if (score >= 0.7) {
-              nextUpdate = {
-                ...nextUpdate,
-                group_completed: true,
-                phase3_score: score,
-              };
-            } else {
-              // Reinicia o ciclo daqui 3 dias.
-              nextUpdate = {
-                ...nextUpdate,
-                phase: 1,
-                cycle: gpRow.cycle + 1,
-                sessions_done: 0,
-                cycle_anchor_date: addDaysIso(today, 3),
-                phase3_score: score,
-              };
-            }
-          }
+        if (total > 0 && masteredCount >= total) {
+          patch.group_completed = true;
         }
-
         await supabase
           .from("product_revision_progress")
-          .update(nextUpdate as never)
+          .update(patch as never)
           .eq("id", gpRow.id);
       }
     }
+
 
     return { ok: true, date: today };
   });

@@ -79,9 +79,12 @@ export function ProductFlashcardsAdminPanel() {
           <p className="text-xs text-muted-foreground">
             {open && listQuery.isLoading
               ? "Carregando…"
-              : `${generated}/${subs.length} subcategorias com cache completo.`}
+              : generated >= subs.length
+                ? `${subs.length}/${subs.length} subcategorias com cache completo.`
+                : `Pré-populado para todas as ${subs.length} subcategorias (fallback automático). ${generated} já têm versão refinada por IA.`}
           </p>
         </div>
+
         <ChevronDown
           className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`}
         />
@@ -102,9 +105,10 @@ export function ProductFlashcardsAdminPanel() {
                   <p className="text-[13px] font-medium truncate">{s.title}</p>
                   <p className="text-[11px] text-muted-foreground">
                     {r
-                      ? `${r.count}/${s.total} produtos · atualizado ${new Date(r.latest).toLocaleDateString("pt-BR")}`
-                      : `${s.total} produtos — sem cache.`}
+                      ? `${r.count}/${s.total} produtos · refinado em ${new Date(r.latest).toLocaleDateString("pt-BR")}`
+                      : `${s.total} produtos — usando fallback automático (pronto).`}
                   </p>
+
                 </div>
                 <Button
                   type="button"
@@ -116,13 +120,10 @@ export function ProductFlashcardsAdminPanel() {
                 >
                   {isGenerating ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : ok ? (
-                    <>
-                      <RefreshCw className="h-3.5 w-3.5 mr-1" /> Regerar
-                    </>
                   ) : (
                     <>
-                      <Sparkles className="h-3.5 w-3.5 mr-1" /> Gerar
+                      <RefreshCw className="h-3.5 w-3.5 mr-1" />
+                      {ok ? "Regerar" : "Refinar com IA"}
                     </>
                   )}
                 </Button>
@@ -131,6 +132,7 @@ export function ProductFlashcardsAdminPanel() {
           })}
         </div>
       )}
+
     </div>
   );
 }

@@ -1,14 +1,21 @@
 // Botão único de "Atualizar preços" no topo do Módulo 7.
-// Coleta todas as URLs de produtos de todas as subtarefas product_block do
-// tópico em uma única chamada e popula o cache global compartilhado.
+// - Hidrata o cache local (React Query) a partir do cache GLOBAL compartilhado
+//   em Supabase, para que todos os usuários vejam os mesmos valores.
+// - Se nenhum produto do tópico tem dados em cache, dispara o scraping
+//   automaticamente na primeira renderização (auto-fetch on setup).
+// - O botão segue disponível para refresh manual.
 
-import { useMemo, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Check, Loader2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Topic } from "@/data/topics";
-import { scrapeProducts, type ScrapedProduct } from "@/lib/productScrape.functions";
+import {
+  scrapeProducts,
+  getProductPriceCache,
+  type ScrapedProduct,
+} from "@/lib/productScrape.functions";
 import { GLOBAL_SCRAPE_CACHE_KEY } from "@/lib/globalScrape";
 
 type Props = { topic: Topic };
@@ -16,28 +23,40 @@ type Props = { topic: Topic };
 export function GlobalPriceUpdater({ topic }: Props) {
   const qc = useQueryClient();
   const scrape = useServerFn(scrapeProducts);
+  const getCache = useServerFn(getProductPriceCache);
   const [justFinished, setJustFinished] = useState(false);
+  const autoTriggered = useRef(false);
 
   const urls = useMemo(() => {
     const all: string[] = [];
     for (const s of topic.subtasks) {
-      if (s.kind === "product_block") {
-        for (const p of s.products) all.push(p.url);
-      }
+      if (s.kind === "product_block") for (const p of s.products) all.push(p.url);
     }
     return Array.from(new Set(all));
   }, [topic.subtasks]);
+
+  // Hidrata o cache local com o cache global do Supabase (compartilhado entre usuários).
+  const cacheQuery = useQuery({
+    queryKey: ["product-price-cache-bootstrap"],
+    queryFn: async () => {
+      const rows = await getCache({ data: undefined as never });
+      const map = (qc.getQueryData<Record<string, ScrapedProduct>>(
+        [GLOBAL_SCRAPE_CACHE_KEY],
+      ) ?? {}) as Record<string, ScrapedProduct>;
+      for (const r of rows) map[r.url] = r;
+      qc.setQueryData([GLOBAL_SCRAPE_CACHE_KEY], map);
+      return rows;
+    },
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
 
   const existing =
     qc.getQueryData<Record<string, ScrapedProduct>>([GLOBAL_SCRAPE_CACHE_KEY]) ?? {};
   const fetchedAt = Object.values(existing)[0]?.fetchedAt;
 
   const mutation = useMutation({
-    // Faz uma única chamada batch para o servidor — o server function já
-    // paraleliza internamente respeitando limite de concorrência.
     mutationFn: async () => {
-      // O backend valida no máximo 40 URLs por chamada (z.array.max(40)).
-      // Para o Módulo 7 atual (~93 produtos) fatiamos em lotes de 40.
       const chunks: string[][] = [];
       for (let i = 0; i < urls.length; i += 40) chunks.push(urls.slice(i, i + 40));
       const all = await Promise.all(chunks.map((c) => scrape({ data: { urls: c } })));
@@ -51,6 +70,22 @@ export function GlobalPriceUpdater({ topic }: Props) {
       setTimeout(() => setJustFinished(false), 2500);
     },
   });
+
+  // Auto-fetch na inicialização do Módulo 7 se nenhum produto do tópico
+  // estiver no cache global ainda. Só dispara uma vez por sessão.
+  useEffect(() => {
+    if (autoTriggered.current) return;
+    if (cacheQuery.isLoading) return;
+    if (urls.length === 0) return;
+    const anyCached = urls.some((u) => existing[u]?.price);
+    if (anyCached) {
+      autoTriggered.current = true;
+      return;
+    }
+    autoTriggered.current = true;
+    mutation.mutate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cacheQuery.isLoading, urls.length]);
 
   if (urls.length === 0) return null;
 
@@ -80,13 +115,15 @@ export function GlobalPriceUpdater({ topic }: Props) {
         )}
         {label}
         <span className="ml-1.5 text-[11px] opacity-70">
-          ({urls.length} produtos)
+          ({urls.length} produtos · cache global compartilhado)
         </span>
       </Button>
       {fetchedAt && !isPending && !justFinished && (
         <span className="text-[11px] text-muted-foreground">
           Última atualização:{" "}
-          {new Date(fetchedAt).toLocaleTimeString("pt-BR", {
+          {new Date(fetchedAt).toLocaleString("pt-BR", {
+            day: "2-digit",
+            month: "2-digit",
             hour: "2-digit",
             minute: "2-digit",
           })}

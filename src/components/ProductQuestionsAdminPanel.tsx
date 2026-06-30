@@ -1,9 +1,9 @@
 // Painel admin: dispara geração das 12 questões IA por subcategoria do Módulo 7.
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Loader2, Sparkles, Check, ChevronDown, RefreshCw } from "lucide-react";
+import { Loader2, Sparkles, ChevronDown, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { TOPICS } from "@/data/topics";
@@ -73,9 +73,12 @@ export function ProductQuestionsAdminPanel() {
           <p className="text-xs text-muted-foreground">
             {open && listQuery.isLoading
               ? "Carregando…"
-              : `${generated}/${subs.length} subcategorias com 12 questões geradas.`}
+              : generated >= subs.length
+                ? `${subs.length}/${subs.length} subcategorias com questões refinadas.`
+                : `Pré-populado para todas as ${subs.length} subcategorias (banco padrão pronto). ${generated} já têm versão refinada por IA.`}
           </p>
         </div>
+
         <ChevronDown className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
@@ -92,8 +95,8 @@ export function ProductQuestionsAdminPanel() {
                   <p className="text-[13px] font-medium truncate">{s.title}</p>
                   <p className="text-[11px] text-muted-foreground">
                     {ts
-                      ? `Gerado em ${new Date(ts).toLocaleString("pt-BR")}`
-                      : "Ainda sem questões geradas (usa fallback embutido)."}
+                      ? `Refinado em ${new Date(ts).toLocaleString("pt-BR")}`
+                      : "Usando banco padrão embutido (pronto para uso)."}
                   </p>
                 </div>
                 <Button
@@ -106,16 +109,14 @@ export function ProductQuestionsAdminPanel() {
                 >
                   {isGenerating ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : ts ? (
-                    <>
-                      <RefreshCw className="h-3.5 w-3.5 mr-1" /> Regerar
-                    </>
                   ) : (
                     <>
-                      <Sparkles className="h-3.5 w-3.5 mr-1" /> Gerar 12
+                      <RefreshCw className="h-3.5 w-3.5 mr-1" />
+                      {ts ? "Regerar" : "Refinar com IA"}
                     </>
                   )}
                 </Button>
+
               </div>
             );
           })}

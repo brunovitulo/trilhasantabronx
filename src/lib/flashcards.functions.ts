@@ -322,45 +322,96 @@ export const getFlashcardSession = createServerFn({ method: "POST" })
       }),
     );
 
-    function pickDistractors(p: M7Product, seed: number): string[] {
+    // -- Derivação determinística de "funcionalidade" a partir do productName --
+    // Usada como fallback quando o cache do admin ainda não foi gerado.
+    // Garante que TODA opção exibida seja real, distinta, e nunca o próprio
+    // nome do produto nem o rótulo da categoria.
+    const CATEGORY_PREFIX_RE =
+      /^(excitante|vibrador(?:es)?|plug|anel|capa peniana|capa|masturbador|perfume|lubrificante|anest[eé]sico|adstringente|retardante|sugador(?:\s+de\s+clit[oó]ris)?|varinha(?:\s+m[aá]gica)?|mini\s+vibrador|m[aá]quina\s+de\s+sexo|sado|roupa|lingerie|p[eê]nis\s+real[ií]stico)\s+/i;
+    const FILLER_RE =
+      /\b(unissex|feminin[oa]|masculin[oa]|intt|sexy\s+fantasy|forte|extra)\b/gi;
+
+    function deriveFunctionality(p: M7Product): string {
+      let base = p.productName.replace(/\.\.\.$/, "").trim();
+      base = base.replace(CATEGORY_PREFIX_RE, "");
+      base = base.replace(FILLER_RE, " ").replace(/\s+/g, " ").trim();
+      // Pega até as primeiras ~12 palavras como descrição funcional.
+      const words = base.split(/\s+/).slice(0, 12);
+      const phrase = words.join(" ").trim();
+      if (phrase.length < 6) {
+        return `${M7_SUBCATEGORY_LABELS[p.subcategoryId] ?? p.subcategoryLabel} — variante específica`;
+      }
+      return phrase.charAt(0).toUpperCase() + phrase.slice(1);
+    }
+
+    function functionalityFor(p: M7Product): string {
+      return (
+        funcCache.get(`${p.subcategoryId}:${p.productSlug}`) ?? deriveFunctionality(p)
+      );
+    }
+
+    function pickDistractors(p: M7Product, correct: string, seed: number): string[] {
+      const own = p.productName.toLowerCase();
+      const ownLabel = (M7_SUBCATEGORY_LABELS[p.subcategoryId] ?? p.subcategoryLabel)
+        .toLowerCase();
+
+      // 1) irmãos da subcategoria primeiro.
       const siblings = getM7ProductsBySubcategory(p.subcategoryId).filter(
         (s) => s.productSlug !== p.productSlug,
       );
-      const pool = siblings
-        .map((s) => funcCache.get(`${s.subcategoryId}:${s.productSlug}`))
-        .filter((x): x is string => !!x);
-      // Se faltam distratores nos irmãos da subcategoria, completa com outros do grupo.
+      const pool: string[] = siblings.map((s) => functionalityFor(s));
+
+      // 2) completa com produtos de outras subcategorias do mesmo grupo.
       if (pool.length < 3) {
-        const extras = products
-          .filter((x) => x.productSlug !== p.productSlug)
-          .map((x) => funcCache.get(`${x.subcategoryId}:${x.productSlug}`))
-          .filter((x): x is string => !!x && !pool.includes(x));
-        pool.push(...extras);
+        for (const other of products) {
+          if (other.productSlug === p.productSlug) continue;
+          if (siblings.some((s) => s.productSlug === other.productSlug)) continue;
+          pool.push(functionalityFor(other));
+        }
       }
-      // Dedup
-      const uniq = Array.from(new Set(pool));
-      // Embaralha determinístico
+
+      // 3) filtra: distintos, nunca igual ao correto, nunca o próprio nome,
+      //    nunca o rótulo da categoria.
+      const filtered: string[] = [];
+      const seen = new Set<string>([correct.toLowerCase()]);
+      for (const cand of pool) {
+        const c = cand.trim();
+        const lc = c.toLowerCase();
+        if (!c || seen.has(lc)) continue;
+        if (lc === own || lc === ownLabel) continue;
+        seen.add(lc);
+        filtered.push(c);
+      }
+
+      // 4) embaralha determinístico e devolve 3.
       let s = seed >>> 0;
       const rand = () => {
         s = (s * 1664525 + 1013904223) >>> 0;
         return s / 0xffffffff;
       };
-      for (let i = uniq.length - 1; i > 0; i--) {
+      for (let i = filtered.length - 1; i > 0; i--) {
         const j = Math.floor(rand() * (i + 1));
-        [uniq[i], uniq[j]] = [uniq[j], uniq[i]];
+        [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
       }
-      return uniq.slice(0, 3);
+      return filtered.slice(0, 3);
     }
 
     const items: FlashcardItem[] = queue.map((p) => {
       const scraped = results.get(p.productUrl) ?? {};
-      const correctFunc =
-        funcCache.get(`${p.subcategoryId}:${p.productSlug}`) ?? p.productName;
+      const correctFunc = functionalityFor(p);
       const baseSeed = seedFromString(`${userId}:${today}:${p.productSlug}`);
-      const distractors = pickDistractors(p, baseSeed);
-      // Monta opções de funcionalidade e embaralha.
+      const distractors = pickDistractors(p, correctFunc, baseSeed);
+      // Monta 4 opções (correta + 3 distratores reais).
       const funcArr = [correctFunc, ...distractors];
-      while (funcArr.length < 4) funcArr.push(p.subcategoryLabel);
+      // Se ainda não houver 3 distratores reais (catálogo minúsculo), preenche
+      // com outras variantes derivadas — JAMAIS subcategoryLabel ou productName.
+      while (funcArr.length < 4) {
+        const extra = products
+          .map((x) => functionalityFor(x))
+          .find((t) => !funcArr.some((f) => f.toLowerCase() === t.toLowerCase()));
+        if (!extra) break;
+        funcArr.push(extra);
+      }
       let s = baseSeed;
       const rand = () => {
         s = (s * 1664525 + 1013904223) >>> 0;
@@ -384,7 +435,6 @@ export const getFlashcardSession = createServerFn({ method: "POST" })
         priceCorrectIndex = built.correctIndex;
         realPrice = formatPriceBRL(realNum);
       } else {
-        // Sem preço — preenche placeholder pra UI não quebrar.
         priceOptions = ["—", "—", "—", "—"];
         priceCorrectIndex = 0;
       }
@@ -404,6 +454,7 @@ export const getFlashcardSession = createServerFn({ method: "POST" })
         scrapeError: !scraped.price ? "Preço indisponível agora" : undefined,
       };
     });
+
 
     return {
       groupId: data.groupId,
