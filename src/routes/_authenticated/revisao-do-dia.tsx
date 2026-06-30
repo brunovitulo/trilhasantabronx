@@ -255,7 +255,13 @@ function RevisaoDoDiaPage() {
     let alive = true;
     (async () => {
       try {
-        const s = await fetchToday();
+        const s = previewMode
+          ? buildPreviewState(search.preview!) ?? {
+              date: spDateKey(),
+              queue: [],
+              completedKeysToday: [],
+            }
+          : await fetchToday();
         if (!alive) return;
         setState(s);
         const init: Record<string, ItemState> = {};
@@ -277,7 +283,8 @@ function RevisaoDoDiaPage() {
     return () => {
       alive = false;
     };
-  }, [fetchToday]);
+  }, [fetchToday, previewMode, search.preview]);
+
 
   const queue = state?.queue ?? [];
   const remaining = queue.filter((q) => !completed[q.reviewKey]);
