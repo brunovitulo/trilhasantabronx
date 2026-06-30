@@ -104,17 +104,6 @@ const CHIP_PALETTE = [
   { bg: "oklch(0.92 0.07 320)", fg: "oklch(0.42 0.16 320)", dbg: "oklch(0.45 0.16 320 / 25%)", dfg: "oklch(0.85 0.12 320)" },
 ];
 
-
-// Paleta cíclica para chips de funcionalidade.
-const CHIP_PALETTE = [
-  { bg: "oklch(0.92 0.06 295)", fg: "oklch(0.40 0.18 295)", dbg: "oklch(0.45 0.18 295 / 25%)", dfg: "oklch(0.85 0.12 295)" },
-  { bg: "oklch(0.93 0.07 195)", fg: "oklch(0.40 0.15 195)", dbg: "oklch(0.45 0.15 195 / 25%)", dfg: "oklch(0.85 0.12 195)" },
-  { bg: "oklch(0.93 0.08 80)", fg: "oklch(0.45 0.16 70)", dbg: "oklch(0.50 0.16 70 / 25%)", dfg: "oklch(0.86 0.13 80)" },
-  { bg: "oklch(0.92 0.07 150)", fg: "oklch(0.42 0.14 150)", dbg: "oklch(0.45 0.14 150 / 25%)", dfg: "oklch(0.85 0.12 150)" },
-  { bg: "oklch(0.93 0.07 25)", fg: "oklch(0.50 0.20 25)", dbg: "oklch(0.55 0.22 25 / 22%)", dfg: "oklch(0.85 0.14 25)" },
-  { bg: "oklch(0.92 0.07 320)", fg: "oklch(0.42 0.16 320)", dbg: "oklch(0.45 0.16 320 / 25%)", dfg: "oklch(0.85 0.12 320)" },
-];
-
 export function ProductBlockSubtask({ subtask, apostila, completed, onComplete, onUncheck }: Props) {
   const [open, setOpen] = useState(false);
   const [nonce, setNonce] = useState(0);
