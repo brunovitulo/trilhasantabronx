@@ -1199,6 +1199,12 @@ function ExamDialogLauncher({
   const hasActiveSubmission =
     lastSubmission != null && !forceRedoModule;
 
+  // IMPORTANTE: todos os hooks precisam ser chamados antes de qualquer return
+  // condicional, senão o React quebra quando lastSubmission muda de undefined
+  // para um valor (mudança no número de hooks entre renders → erro de SSR).
+  const { row: permRow, status: permStatus } = useExamPermission(userId, subtask.id);
+  const [requesting, setRequesting] = useState(false);
+
   // Se já foi enviada/corrigida e não exige refazer o módulo, mostra o status inline.
   if (completed || hasActiveSubmission) {
     return (
@@ -1211,8 +1217,6 @@ function ExamDialogLauncher({
     );
   }
 
-  const { row: permRow, status: permStatus } = useExamPermission(userId, subtask.id);
-  const [requesting, setRequesting] = useState(false);
 
   async function handleRequest() {
     setRequesting(true);
