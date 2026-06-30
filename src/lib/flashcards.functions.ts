@@ -281,7 +281,10 @@ export const listFlashcardCoverage = createServerFn({ method: "GET" })
 
 export type FlashcardItem = {
   productSlug: string;
+  /** Nome comercial completo — uso interno (matching, URLs, scraping). */
   productName: string;
+  /** Nome neutro mostrado na UI; NÃO entrega a funcionalidade. */
+  displayName: string;
   productUrl: string;
   subcategoryId: string;
   subcategoryLabel: string;
