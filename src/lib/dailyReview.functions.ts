@@ -5,9 +5,7 @@ import { isTopicComplete, type ProgressRow } from "@/lib/progress";
 import {
   spDateKey,
   daysBetween,
-  addDaysIso,
   MODULE_REVIEW_PLANS,
-  PRODUCT_PHASE_DAYS,
   type ReviewQueueItem,
 } from "@/lib/dailyReview";
 import {
