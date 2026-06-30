@@ -1231,7 +1231,7 @@ function Flashcard({
               <span className="text-xs text-muted-foreground">sem imagem</span>
             )}
           </div>
-          <h3 className="text-base font-bold text-center">{item.productName}</h3>
+          <h3 className="text-base font-bold text-center">{item.displayName}</h3>
         </div>
 
         <div className="space-y-2">
@@ -1261,7 +1261,15 @@ function Flashcard({
                   </span>
                   <span
                     className="flex-1"
-                    style={{ fontSize: 13, lineHeight: 1.4 }}
+                    style={{
+                      fontSize: 13,
+                      lineHeight: 1.4,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 1,
+                      WebkitBoxOrient: "vertical",
+                    }}
                   >
                     {opt}
                   </span>

@@ -124,14 +124,44 @@ async function scrapeOne(url: string): Promise<{ price?: string; imageUrl?: stri
   }
 }
 
+/** Lista de termos de EFEITO/BENEFÍCIO que NUNCA devem aparecer no displayName
+ *  nem em fallback de funcionalidade — eles entregariam a resposta. */
+const FILLER_RE =
+  /\b(vibra(?:dor)?|vibrat(?:ório|orio)|aquece|esquenta|esfria|refresca|gel(?:a|ada|ado)|gelado|facilita|potencializa|intensifica|estimula|estimulante|lubrifica|lubrificante|suga|sucção|succao|pulsa|pulsante|prolonga|retarda|retardante|orgasmo|prazer|excita(?:nte|cao|ção)?|ere(?:cao|ção)|libido|desejo|sensa(?:cao|ção)|formigamento|choque|tesão|tesao)\b/gi;
+
+/** Constrói um nome neutro curto a partir do nome comercial, removendo
+ *  termos de efeito/benefício e cortando para no máx. 4 palavras. */
+function neutralFallbackName(productName: string): string {
+  const cleaned = productName
+    .replace(FILLER_RE, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  const words = cleaned.split(" ").filter(Boolean).slice(0, 4);
+  return words.join(" ") || productName.split(" ").slice(0, 2).join(" ");
+}
+
+/** Encurta uma frase de funcionalidade que veio longa (cache antigo / fallback):
+ *  remove termos genéricos triviais e mantém no máx. 6 palavras. */
+function shortFunctionality(s: string): string {
+  const t = s
+    .replace(/[\.\!\?]+$/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  const words = t.split(" ");
+  if (words.length <= 6) return t;
+  return words.slice(0, 6).join(" ");
+}
+
 // ---------- ADMIN: gerar funcionalidades ----------------------------------
+
 
 const FuncSchema = z.object({
   items: z
     .array(
       z.object({
         productSlug: z.string().min(1),
-        functionality: z.string().min(6).max(160),
+        functionality: z.string().min(2).max(80),
+        coreName: z.string().min(2).max(60),
       }),
     )
     .min(1),
@@ -169,13 +199,19 @@ export const generateProductFunctionalities = createServerFn({ method: "POST" })
       .map((p, i) => `${i + 1}. slug=${p.productSlug} | nome=${p.productName}`)
       .join("\n");
 
-    const prompt = `Você é treinadora de atendentes de sex shop. Para cada produto da lista abaixo, escreva UMA frase curta (máx. 10 palavras, em português brasileiro coloquial) descrevendo a FUNCIONALIDADE específica desse produto — o que ele faz / qual efeito entrega.
+    const prompt = `Você é treinadora de atendentes de sex shop. Para cada produto da lista abaixo, devolva DOIS campos curtos, em português brasileiro coloquial:
 
-Regras rígidas:
+1) functionality — chip curtíssimo (MÁX. 6 PALAVRAS) descrevendo o EFEITO/AÇÃO específica do produto. Sem artigo inicial, sem ponto final, sem aspas, sem listas. Exemplos: "Vibra e esquenta", "Sabor morango refrescante", "Suga e pulsa".
+2) coreName — nome neutro (MÁX. 4 PALAVRAS) que diz APENAS O QUE É o produto: categoria + uma característica NÃO-funcional (sabor, cor, tamanho, material, formato). Exemplos: "Excitante sabor morango", "Plug anal pequeno", "Vibrador rabbit rosa".
+
+REGRA CRÍTICA sobre coreName:
+- NUNCA inclua verbos/substantivos de efeito ou benefício. Lista proibida (e variações): vibra, vibrador-de-efeito, aquece, esquenta, esfria, refresca, gela, gelada, facilita, potencializa, intensifica, estimula, lubrifica, suga, pulsa, prolonga, retarda, orgasmo, prazer, excita, excitação, ereção, libido, desejo, sensação, formigamento, choque.
+- Esses termos vão APENAS em functionality. coreName precisa servir como TÍTULO neutro mostrado ANTES de o atendente ver as alternativas — não pode entregar a resposta.
+
+Outras regras:
 - Use SOMENTE informações da apostila + nome do produto. Não invente.
-- Cada frase precisa ser DISTINGUÍVEL das outras: destaque o que diferencia este produto dos irmãos (efeito principal, sabor, tamanho, material, modo de uso etc.).
-- Não comece com "Produto que…" — vá direto ao efeito (ex.: "Vibra, refresca, suga e pulsa com sabor melancia", "Plug pequeno em silicone macio ideal para iniciantes").
-- Não use emojis, aspas, listas, nem termos vagos como "para prazer".
+- functionality precisa ser DISTINGUÍVEL entre irmãos da mesma subcategoria.
+- Sem emojis.
 
 Apostila (categoria ${data.subcategoryKey}):
 """
@@ -185,7 +221,7 @@ ${apostilaText}
 Produtos:
 ${list}
 
-Devolva JSON estrito com a chave "items": [{ "productSlug": "...", "functionality": "..." }] na MESMA ORDEM e cobrindo TODOS os ${products.length} produtos.`;
+Devolva JSON estrito com a chave "items": [{ "productSlug": "...", "functionality": "...", "coreName": "..." }] na MESMA ORDEM e cobrindo TODOS os ${products.length} produtos.`;
 
     const { output } = await generateText({
       model,
@@ -193,17 +229,23 @@ Devolva JSON estrito com a chave "items": [{ "productSlug": "...", "functionalit
       prompt,
     });
 
-    const bySlug = new Map(output.items.map((it) => [it.productSlug, it.functionality]));
-    const rows = products.map((p) => ({
-      group_id: p.groupId,
-      subcategory_id: p.subcategoryId,
-      product_slug: p.productSlug,
-      product_name: p.productName,
-      product_url: p.productUrl,
-      functionality: bySlug.get(p.productSlug) ?? p.productName,
-      generated_by: userId,
-      updated_at: new Date().toISOString(),
-    }));
+    const bySlug = new Map(
+      output.items.map((it) => [it.productSlug, it] as const),
+    );
+    const rows = products.map((p) => {
+      const ai = bySlug.get(p.productSlug);
+      return {
+        group_id: p.groupId,
+        subcategory_id: p.subcategoryId,
+        product_slug: p.productSlug,
+        product_name: p.productName,
+        product_url: p.productUrl,
+        functionality: ai?.functionality ?? p.productName,
+        core_name: ai?.coreName ?? neutralFallbackName(p.productName),
+        generated_by: userId,
+        updated_at: new Date().toISOString(),
+      };
+    });
 
     const { error } = await supabase
       .from("product_flashcards")
@@ -239,7 +281,10 @@ export const listFlashcardCoverage = createServerFn({ method: "GET" })
 
 export type FlashcardItem = {
   productSlug: string;
+  /** Nome comercial completo — uso interno (matching, URLs, scraping). */
   productName: string;
+  /** Nome neutro mostrado na UI; NÃO entrega a funcionalidade. */
+  displayName: string;
   productUrl: string;
   subcategoryId: string;
   subcategoryLabel: string;
@@ -294,11 +339,20 @@ export const getFlashcardSession = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: cacheRows } = await supabaseAdmin
       .from("product_flashcards")
-      .select("subcategory_id, product_slug, functionality")
+      .select("subcategory_id, product_slug, functionality, core_name")
       .in("subcategory_id", subcategoryIds);
-    const funcCache = new Map<string, string>();
-    for (const r of cacheRows ?? []) {
-      funcCache.set(`${r.subcategory_id}:${r.product_slug}`, r.functionality);
+    type CacheEntry = { functionality: string | null; coreName: string | null };
+    const funcCache = new Map<string, CacheEntry>();
+    for (const r of (cacheRows ?? []) as Array<{
+      subcategory_id: string;
+      product_slug: string;
+      functionality: string | null;
+      core_name: string | null;
+    }>) {
+      funcCache.set(`${r.subcategory_id}:${r.product_slug}`, {
+        functionality: r.functionality,
+        coreName: r.core_name,
+      });
     }
 
     // Mastery do usuário.
@@ -340,7 +394,16 @@ export const getFlashcardSession = createServerFn({ method: "POST" })
 
     function cachedFunctionality(p: M7Product): string | null {
       const v = funcCache.get(`${p.subcategoryId}:${p.productSlug}`);
-      return v && v.trim().length > 0 ? v.trim() : null;
+      const f = v?.functionality;
+      if (!f || !f.trim()) return null;
+      return shortFunctionality(f.trim());
+    }
+
+    function cachedCoreName(p: M7Product): string | null {
+      const v = funcCache.get(`${p.subcategoryId}:${p.productSlug}`);
+      const c = v?.coreName;
+      if (!c || !c.trim()) return null;
+      return c.trim();
     }
 
     function functionalityFor(p: M7Product): string {
@@ -350,6 +413,10 @@ export const getFlashcardSession = createServerFn({ method: "POST" })
         `[flashcards] funcionalidade ausente em product_flashcards para ${p.subcategoryId}/${p.productSlug} — admin precisa rodar generateProductFunctionalities`,
       );
       return PLACEHOLDER_FUNC;
+    }
+
+    function displayNameFor(p: M7Product): string {
+      return cachedCoreName(p) ?? neutralFallbackName(p.productName);
     }
 
     function pickDistractors(p: M7Product, correct: string, seed: number): string[] {
@@ -448,6 +515,7 @@ export const getFlashcardSession = createServerFn({ method: "POST" })
       return {
         productSlug: p.productSlug,
         productName: p.productName,
+        displayName: displayNameFor(p),
         productUrl: p.productUrl,
         subcategoryId: p.subcategoryId,
         subcategoryLabel: M7_SUBCATEGORY_LABELS[p.subcategoryId] ?? p.subcategoryLabel,
