@@ -105,9 +105,10 @@ export function ProductFlashcardsAdminPanel() {
                   <p className="text-[13px] font-medium truncate">{s.title}</p>
                   <p className="text-[11px] text-muted-foreground">
                     {r
-                      ? `${r.count}/${s.total} produtos · atualizado ${new Date(r.latest).toLocaleDateString("pt-BR")}`
-                      : `${s.total} produtos — sem cache.`}
+                      ? `${r.count}/${s.total} produtos · refinado em ${new Date(r.latest).toLocaleDateString("pt-BR")}`
+                      : `${s.total} produtos — usando fallback automático (pronto).`}
                   </p>
+
                 </div>
                 <Button
                   type="button"
