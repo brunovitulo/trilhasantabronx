@@ -48,6 +48,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SubmissionHistoryDialog } from "@/components/SubmissionHistoryDialog";
+import { ProductQuestionsAdminPanel } from "@/components/ProductQuestionsAdminPanel";
 import { CorrectionDialog, type CorrectionTarget } from "@/components/CorrectionDialog";
 import {
   Select,
@@ -269,6 +270,10 @@ function AdminPage() {
             </Select>
             <ExportChatButton compact />
           </div>
+        </div>
+
+        <div className="mt-6">
+          <ProductQuestionsAdminPanel />
         </div>
 
         {loading ? (

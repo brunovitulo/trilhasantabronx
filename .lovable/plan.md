@@ -1,127 +1,132 @@
-# Nova estrutura de Revisão do Dia
+## Visão geral
 
-Apagar a estrutura atual (rotas `revisao.tsx` e `revisao-do-dia.tsx`, `src/lib/reviews.ts`, `src/lib/reviews.functions.ts`, tabelas `scheduled_reviews` e `review_answers`) e construir uma fila de revisão dirigida pela data de conclusão dos módulos.
+22 subcategorias × 3 grupos no Tópico 7. Para cada uma:
+- Hoje: 4 subtasks (`video` + `product_links` + `practice` 7q + `inline_html` apostila)
+- Novo: 3 subtasks (`video` + **`product_block`** unificado + `practice` 12q)
 
-## 1. Regra de fila (sem agendamento prévio)
+Nenhuma URL de produto, link de vídeo ou texto de apostila é descartado — tudo é redirecionado pro novo bloco unificado e/ou pro banco de questões expandido.
 
-Em vez de pré-agendar entradas em uma tabela, a fila do dia é calculada em tempo real a partir de `subtask_progress.completed_at`:
+---
 
-- Para cada tópico principal (Apresentação, Embalar, Responsabilidade, Vendas, Objeções, Dores, Produtos, Presencial), pegar a maior `completed_at` entre as subtarefas do tópico.
-- Considerar o tópico "concluído em D" quando todas as suas subtarefas atendem à regra atual de conclusão (`isTopicComplete`, já existente em `src/lib/progress.ts`).
-- Um tópico entra na fila nos dias **D+1** e **D+2** (fuso `America/Sao_Paulo`). A partir de D+3 some.
-- Se o usuário concluir o mesmo tópico mais de uma vez (ex: progresso resetado pelo admin), considerar a `completed_at` mais recente.
+## 1. Novo subtype: `product_block`
 
-Isso elimina a tabela `scheduled_reviews` e simplifica tudo: nada de cron, nada de backfill, nada de divergência entre agendamento e progresso.
-
-## 2. Persistência da revisão concluída
-
-Nova tabela `daily_review_completions`:
-
-- `user_id uuid`
-- `review_date date` (data local SP)
-- `module_ids text[]` (lista dos tópicos revisados no dia)
-- `completed_at timestamptz`
-- UNIQUE `(user_id, review_date)`
-- RLS escoposado por `auth.uid()` + admin via `has_role`
-- GRANTs: `SELECT, INSERT, UPDATE, DELETE` para `authenticated`; `ALL` para `service_role`
-
-A tarefa "Fazer revisão do dia" aparece como concluída na aba de tarefas do dia quando existe uma linha para o `review_date` de hoje.
-
-## 3. Conteúdo das revisões
-
-Adicionar em `src/data/topics.ts` (ou novo `src/data/revisao.ts`) um mapa por `topicId`:
+Criar `kind: "product_block"` em `src/data/topics.ts` (extensão do union de `Subtask`). Estrutura:
 
 ```ts
-type RevisionQuiz = { question: string; options: string[]; correctIndex: number }[];
-type RevisionContent = {
-  apostilaHtml: string;        // já existe via ?raw imports
-  checklistHtml: string;       // idem
-  quiz: RevisionQuiz;          // 8 perguntas
-};
+{
+  id: "produtos.excitantes.bloco",
+  kind: "product_block",
+  title: "1. Cosméticos — Excitantes — Conteúdo e produtos",
+  apostilaSource: "produtos_excitantes",   // reusa HTML existente para "o que é/pontos/fala/cuidados"
+  products: [
+    { name: "...", url: "https://sexshopsantabronx.com.br/produto/..." }
+    // copiados dos links atuais
+  ],
+  confirmLabel: "Estudei o conteúdo e revisei todos os produtos."
+}
 ```
 
-Bancos de quiz a serem cadastrados nesta entrega, com as 8 perguntas exatas do prompt:
-- `apresentacao` (Módulo 1)
-- `embalar` (Módulo 2)
-- `responsabilidade` (Módulo 3)
-- `vendas` (Módulo 5 do prompt = 4º tópico da home)
+A apostila HTML existente já contém todas as seções (✨ O que é, 🧠 Pontos para decorar, 💬 Como falar, ⚠️ Cuidados). O novo componente extrai/renderiza essas seções inline (sem o link "abrir em nova aba"), seguidas do grid de cards de produtos.
 
-Tópicos sem banco de perguntas ainda (`objecoes`, `dores`, `produtos`, `presencial`): entram na fila normalmente e mostram apenas Etapa 1 (apostila) + Etapa 2 (checklist). A Etapa 3 fica desabilitada com aviso "Quiz de revisão em breve". Quando o usuário fornecer as perguntas, basta adicionar ao mapa.
+## 2. Componente `ProductBlockSubtask`
 
-Reaproveitar os HTMLs já importados (`@/content/<modulo>/apostila.html?raw` e `checklist.html?raw`) — para tópicos que usam apostila estruturada em React (`apresentacao`), abrir o componente `ApostilaView` correspondente no popup.
+Novo arquivo `src/components/ProductBlockSubtask.tsx`. Renderiza:
 
-## 4. UI
+1. Botão "Atualizar preços" no topo (loading state, "atualizado há X").
+2. Seções extraídas da apostila (parsing leve do HTML para pegar as `<section>`).
+3. Grid responsivo de cards: imagem | nome | preço | resumo features | botão "Ver no site".
+4. Checkbox de confirmação no final, que marca o subtask como concluído.
 
-### Tarefa do dia
-- `DailyTasksButton.tsx` recebe a nova entrada "Fazer revisão do dia" sempre na **última posição**.
-- Estado: pendente se a fila do dia não está vazia e ainda não há `daily_review_completions` para hoje; concluída se há registro; oculta se fila vazia.
-- Clicar abre a rota `/revisao-do-dia`.
+Cada card consulta `usePriceData(url)` (cache em React Query, chave = URL). Primeira render = placeholder até clicar em "Atualizar preços" (ou se já tiver cache fresco).
 
-### Rota `/revisao-do-dia`
-Reescrita do zero. Layout: modal/tela cheia com stepper.
+## 3. Server function de scraping
 
-Para cada módulo da fila, em sequência:
+`src/lib/productScrape.functions.ts`:
 
-1. **Etapa 1 — Reler apostila**
-   - Botão "Abrir apostila" → `Dialog` centralizado com a apostila do módulo.
-   - Checkbox de confirmação: "Reli a apostila deste módulo."
-2. **Etapa 2 — Checklist**
-   - Botão "Abrir checklist" → `Dialog` centralizado com o checklist HTML.
-   - Checkbox: "Marquei os principais pontos do checklist."
-3. **Etapa 3 — 8 perguntas**
-   - Renderizar uma pergunta por vez, com 4 alternativas.
-   - Ao responder, marcar imediatamente certo/errado e mostrar a alternativa correta + curto reforço.
-   - Botão "Próxima" libera após resposta.
-   - Final: card "X/8 corretas" + botão "Próximo módulo".
+```ts
+export const scrapeProducts = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { urls: string[] }) => d)
+  .handler(async ({ data }) => {
+    return Promise.all(data.urls.map(scrapeOne));
+  });
+```
 
-Botão "Concluir revisão do dia" no fim:
-- Insere linha em `daily_review_completions` com `module_ids` = fila do dia.
-- Mostra popup: "Revisão do dia concluída! Conteúdo revisado: [nomes dos módulos]." e volta para a home.
-- Marca a tarefa do dia como concluída.
+Cada `scrapeOne(url)`:
+- `fetch(url)` no servidor (Cloudflare Worker permite fetch externo).
+- Parse via regex/cheerio-leve do HTML do WooCommerce padrão da Santa Bronx:
+  - **Preço**: `<p class="price">` → pega `<bdi>` da promoção (`ins`) se existir, senão o único.
+  - **Imagem**: `<meta property="og:image">` (sempre presente em WooCommerce).
+  - **Features**: `<div class="woocommerce-product-details__short-description">` → primeiras 2-3 linhas / 280 chars.
+- Retorna `{ url, price, imageUrl, summary, fetchedAt }`.
+- Erros individuais não derrubam o lote — devolve `{ url, error: "..." }` no item.
 
-Progresso da sessão fica em estado de React (não persistir parciais). Se o usuário recarregar, recomeça — aceitável porque a sessão inteira dura poucos minutos.
+Sem cache em DB (escolha do usuário: "scraping ao vivo"). React Query mantém o resultado em memória durante a sessão.
 
-### Home (`index.tsx`)
-- Remover o card/atalho atual de revisão (qualquer referência a `/revisao` e ao banner antigo).
+## 4. Expansão 7 → 12 questões via IA
 
-### Header (`AppHeader.tsx`)
-- Remover links para `/revisao` e `/revisao-do-dia` da navegação direta (o acesso passa a ser exclusivamente pela aba de tarefas do dia).
+Botão no painel admin (`/admin`): **"Gerar questões M7"**.
 
-## 5. Migração de dados
+Fluxo:
+1. Server fn `generateProductQuestions({ subcategoryKey })`:
+   - Carrega o HTML da apostila correspondente.
+   - Chama Lovable AI Gateway (`google/gemini-3-flash-preview`) com prompt instruindo: gerar exatamente 12 questões de múltipla escolha (4 opções, distratores plausíveis), baseadas SOMENTE no conteúdo da apostila, no formato JSON estruturado (`Output.object` com Zod).
+   - Retorna `OpenQuestion[]` (12 itens).
+2. UI no admin lista as 22 subcategorias, com "Gerar" + preview/edit + "Salvar".
+3. Salva em nova tabela `generated_questions(subcategory_key text PK, questions jsonb, generated_at timestamptz, approved_by uuid)`.
+4. Em runtime, `PracticeSubtask` para subtasks do M7 puxa as questões do banco se existirem; cai no array embutido (atualmente 7) como fallback.
 
-- Migration: criar `daily_review_completions` (+ GRANTs + RLS + trigger updated_at).
-- Migration: `DROP TABLE public.review_answers; DROP TABLE public.scheduled_reviews;` (depende uma da outra via FK — dropar `review_answers` primeiro).
-- Remover qualquer `cron.unschedule` se houver job antigo apontando para as rotas removidas. Verificar `cron.job` antes da remoção.
+Por que tabela e não hard-code: permite regerar/editar sem republish, e o usuário pediu pra ser sob demanda.
 
-## 6. Arquivos removidos / criados / editados
+## 5. Migração de schema
 
-Removidos:
-- `src/routes/_authenticated/revisao.tsx`
-- `src/lib/reviews.ts`
-- `src/lib/reviews.functions.ts`
+```sql
+CREATE TABLE public.generated_questions (
+  subcategory_key text PRIMARY KEY,
+  questions jsonb NOT NULL,
+  generated_at timestamptz NOT NULL DEFAULT now(),
+  approved_by uuid REFERENCES auth.users(id),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+GRANT SELECT ON public.generated_questions TO authenticated;
+GRANT ALL ON public.generated_questions TO service_role;
+ALTER TABLE public.generated_questions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "auth read" ON public.generated_questions FOR SELECT TO authenticated USING (true);
+CREATE POLICY "admin write" ON public.generated_questions FOR ALL TO authenticated
+  USING (public.has_role(auth.uid(), 'admin'))
+  WITH CHECK (public.has_role(auth.uid(), 'admin'));
+```
 
-Criados:
-- `src/data/revisao.ts` (banco de quizzes + helper de conteúdo por módulo)
-- `src/lib/dailyReview.ts` (cálculo da fila do dia + helpers de data SP)
-- `src/lib/dailyReview.functions.ts` (`getTodayQueue`, `completeTodayReview`, `getTodayCompletion` com `requireSupabaseAuth`)
-- Migration SQL para `daily_review_completions` e drop das tabelas antigas.
+## 6. Refactor de `topics.ts`
 
-Editados:
-- `src/routes/_authenticated/revisao-do-dia.tsx` (reescrita total)
-- `src/components/DailyTasksButton.tsx` (adicionar tarefa final + estado)
-- `src/components/AppHeader.tsx` (limpar links antigos)
-- `src/routes/_authenticated/index.tsx` (remover card antigo de revisão, se houver)
+Script Python que, para cada uma das 22 subcategorias:
+- Remove os subtasks `.produtos` e `.apostila`.
+- Substitui por um único `.bloco` (`kind: "product_block"`) carregando os mesmos links e o mesmo `source`.
+- Mantém `.video` e `.fixacao` intactos por enquanto (questões expandidas vêm do banco em runtime).
+- Atualiza títulos: "1. Cosméticos — Excitantes — Conteúdo e produtos" e mantém "Exercício de fixação (12 questões)".
+
+## 7. Roteamento no `SubtaskGroupCard` / `topico.$topicId.tsx`
+
+Adicionar branch para `kind === "product_block"` que renderiza `<ProductBlockSubtask />` no lugar onde hoje são renderizados `product_links` + `inline_html`.
+
+---
 
 ## Detalhes técnicos
 
-- Datas em fuso `America/Sao_Paulo`: usar `Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo' }).format(date)` para obter `YYYY-MM-DD` consistente entre cliente e servidor.
-- Server functions usam `requireSupabaseAuth` e leem `subtask_progress` + `daily_review_completions` pelo client do contexto (RLS como usuário).
-- A `getTodayQueue` retorna `Array<{ topicId, topicTitle, dayInWindow: 1 | 2, hasQuiz: boolean }>`.
-- O quiz é autocorrigido no cliente; nada é gravado por resposta. Apenas a conclusão final grava em `daily_review_completions`.
-- Sem cron job — toda a lógica é derivada em request-time.
+**Stack:**
+- Server fns em `src/lib/productScrape.functions.ts` e `src/lib/aiQuestions.functions.ts` (client-safe path).
+- `cheerio` NÃO funciona no Worker — usar regex direto no HTML (suficiente pro WooCommerce padrão).
+- IA via `@ai-sdk/openai-compatible` + helper `createLovableAiGatewayProvider` (skill ai-sdk-lovable-gateway).
+- Output estruturado: `generateText({ output: Output.object({ schema: z.object({ questions: z.array(...) }) }) })`.
 
-## Suposições aplicadas (questões puladas pelo usuário)
+**Escopo desta entrega:**
+- 1 migração + 2 server fns + 1 componente novo + 1 página admin de gerenciamento + refactor do `topics.ts` + integração no router de subtasks.
 
-- "Módulo 5 — Fundamentos de Vendas" = tópico `vendas` (4º card da home).
-- Tópicos sem perguntas (`objecoes`, `dores`, `produtos`, `presencial`) entram na fila com Etapas 1 e 2 funcionais e Etapa 3 desabilitada até que as perguntas sejam fornecidas.
-- Dados antigos de `scheduled_reviews` e `review_answers` são descartados completamente; a nova fila é recalculada a partir do histórico de `subtask_progress`, então usuários que concluíram um módulo ontem ou hoje vão ver esse módulo na revisão automaticamente.
+**Não incluso (a confirmar depois):**
+- Não vou pré-gerar as 264 questões automaticamente — o admin gera sob demanda (sua escolha "sob demanda"). Até gerar, o `.fixacao` continua mostrando as 7 originais. Quer que eu já dispare a geração de todas após mergear?
+
+---
+
+## Pergunta antes de executar
+
+Confirma escopo + a pergunta acima (pré-gerar todas as 264 questões automaticamente, ou deixar você acionar no admin uma a uma)?

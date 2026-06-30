@@ -14,6 +14,7 @@ import { TOPICS } from "@/data/topics";
 import { useServerFn } from "@tanstack/react-start";
 import { AppHeader } from "@/components/AppHeader";
 import { TopicIntroGuide, topicIntroStorageKey } from "@/components/TopicIntroGuide";
+import { ProductBlockSubtask } from "@/components/ProductBlockSubtask";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -440,6 +441,7 @@ function pickStepIcon(kind: Subtask["kind"], hasDownload?: boolean) {
     case "open_evaluation": return FilePen;
     case "external_html": return hasDownload ? Download : Globe;
     case "product_links": return Globe;
+    case "product_block": return BookOpen;
     case "credentials": return Lock;
     default: return BookOpen;
   }
@@ -1071,6 +1073,19 @@ function SubtaskContent({
       return <MultiChecklistSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
     case "product_links":
       return <ProductLinksSubtask subtask={subtask} completed={completed} onComplete={() => onComplete()} onUncheck={onUncheck} />;
+    case "product_block": {
+      const sourceKey = `produtos_${subtask.source.replace(/-/g, "_")}`;
+      const apostila = INLINE_HTML_SOURCES[sourceKey];
+      return (
+        <ProductBlockSubtask
+          subtask={subtask}
+          apostila={apostila}
+          completed={completed}
+          onComplete={() => onComplete()}
+          onUncheck={onUncheck}
+        />
+      );
+    }
     case "open_evaluation":
       return useExamDialog ? (
         <ExamDialogLauncher
@@ -2298,7 +2313,7 @@ function EvaluationSubtask({
 }
 
 function PracticeSubtask({
-  subtask,
+  subtask: subtaskProp,
   userId,
   completed,
   onComplete,
@@ -2308,10 +2323,47 @@ function PracticeSubtask({
   completed: boolean;
   onComplete: () => void;
 }) {
+  // Para subtasks de fixação do Módulo 7 (produtos.<slug>.fixacao), tenta
+  // sobrescrever as questões embutidas pelas 12 questões geradas por IA
+  // (tabela generated_questions). Cai no fallback se não houver registro.
+  const m7Match = subtaskProp.id.match(/^produtos\.([a-z_]+)\.fixacao$/);
+  const [genQuestions, setGenQuestions] = useState<
+    Extract<Subtask, { kind: "practice" }>["questions"] | null
+  >(null);
+  useEffect(() => {
+    if (!m7Match) return;
+    let active = true;
+    (async () => {
+      const { data } = await supabase
+        .from("generated_questions")
+        .select("questions")
+        .eq("subcategory_key", m7Match[1])
+        .maybeSingle();
+      if (!active || !data?.questions) return;
+      const arr = data.questions as unknown as Extract<
+        Subtask,
+        { kind: "practice" }
+      >["questions"];
+      if (Array.isArray(arr) && arr.length >= 7) setGenQuestions(arr);
+    })();
+    return () => {
+      active = false;
+    };
+  }, [m7Match?.[1]]);
+
+  const subtask = useMemo(
+    () => (genQuestions ? { ...subtaskProp, questions: genQuestions } : subtaskProp),
+    [subtaskProp, genQuestions],
+  );
+
   const [started, setStarted] = useState(false);
   const [answers, setAnswers] = useState<(number | null)[]>(() =>
     subtask.questions.map(() => null),
   );
+  useEffect(() => {
+    // Re-inicializa o array de respostas se as questões vierem do banco depois.
+    setAnswers(subtask.questions.map(() => null));
+  }, [subtask.questions.length]);
   const [submitted, setSubmitted] = useState(false);
 
   function pick(qi: number, oi: number) {
