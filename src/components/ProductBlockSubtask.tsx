@@ -147,6 +147,48 @@ function splitFeatures(summary: string): { chips: string[]; description: string 
   return { chips, description };
 }
 
+/** Classifica a subcategoria do Módulo 7 e define quais TIPOS de chip de
+ *  spec técnica fazem sentido para ela. Cosméticos (gel, spray, líquido)
+ *  NUNCA recebem material/vibração/fonte de energia/tamanho — antes recebiam
+ *  por contaminação cruzada do scraper (ex.: "gel" → CYBERSKIN no Goze). */
+function filterSpecsForSubcategory(source: string, specs: string[]): string[] {
+  const key = source.toLowerCase();
+  const COSMETIC = new Set([
+    "excitantes",
+    "perfumes-feromonios",
+    "adstringente",
+    "estimulantes-sexuais",
+    "estimulantes_sexuais",
+    "retardante",
+    "lubrificante",
+    "anestesicos",
+  ]);
+  // Chips só aplicáveis a produtos físicos/sólidos — sempre removidos de
+  // cosméticos. Materiais, modos de vibração, energia, controle remoto/app,
+  // tamanho em cm, à prova d'água.
+  const SOLID_ONLY = [
+    /^silicone/i,
+    /^abs$/i,
+    /^pvc$/i,
+    /^tpe$/i,
+    /^metal$/i,
+    /^cyberskin$/i,
+    /^l[áa]tex$/i,
+    /^vidro$/i,
+    /\bmodos?\b/i,
+    /recarreg[áa]vel/i,
+    /a\s+pilha/i,
+    /controle\s+(?:remoto|por\s+app)/i,
+    /\bcm\b/i,
+    /[àa]\s*prova\s*d/i,
+  ];
+  if (COSMETIC.has(key)) {
+    return specs.filter((c) => !SOLID_ONLY.some((re) => re.test(c)));
+  }
+  return specs;
+}
+
+
 // Paleta cíclica para chips de funcionalidade.
 const CHIP_PALETTE = [
   { bg: "oklch(0.92 0.06 295)", fg: "oklch(0.40 0.18 295)", dbg: "oklch(0.45 0.18 295 / 25%)", dfg: "oklch(0.85 0.12 295)" },
@@ -419,7 +461,7 @@ export function ProductBlockSubtask({ subtask, apostila, completed, onComplete, 
               const d = scrapedMap[p.url];
               const summary = productSummaries.get(p.url) ?? "";
               const { chips: featChips, description } = splitFeatures(summary);
-              const specChips = d?.specs ?? [];
+              const specChips = filterSpecsForSubcategory(subtask.source, d?.specs ?? []);
               // Mescla chips de funcionalidade (apostila) + chips de spec
               // técnica (scrape), removendo duplicatas case-insensitive.
               const seen = new Set<string>();
@@ -429,6 +471,7 @@ export function ProductBlockSubtask({ subtask, apostila, completed, onComplete, 
                 seen.add(k);
                 return true;
               });
+
               return (
                 <div
                   key={p.url}
