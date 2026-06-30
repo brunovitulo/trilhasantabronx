@@ -62,6 +62,11 @@ export function ProductFlashcardsAdminPanel() {
     return r && r.count >= s.total;
   }).length;
 
+  const pending = subs.filter((s) => {
+    const r = byKey.get(s.key);
+    return !r || r.count < s.total;
+  });
+
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] mb-5">
       <button
@@ -81,7 +86,7 @@ export function ProductFlashcardsAdminPanel() {
               ? "Carregando…"
               : generated >= subs.length
                 ? `${subs.length}/${subs.length} subcategorias com cache completo.`
-                : `Pré-populado para todas as ${subs.length} subcategorias (fallback automático). ${generated} já têm versão refinada por IA.`}
+                : `${generated}/${subs.length} subcategorias com funcionalidades geradas pela IA. ${pending.length} pendente(s) — sem isso, os flashcards mostram opções incoerentes.`}
           </p>
         </div>
 
