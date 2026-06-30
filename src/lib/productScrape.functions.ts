@@ -217,7 +217,7 @@ async function scrapeOne(url: string): Promise<ScrapedProduct> {
 export const scrapeProducts = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => InputSchema.parse(data))
-  .handler(async ({ data }): Promise<ScrapedProduct[]> => {
+  .handler(async ({ data, context }): Promise<ScrapedProduct[]> => {
     // Limita concorrência leve para não sobrecarregar o site.
     const results: ScrapedProduct[] = [];
     const queue = [...data.urls];
@@ -229,7 +229,54 @@ export const scrapeProducts = createServerFn({ method: "POST" })
       }
     });
     await Promise.all(workers);
-    // Mantém ordem de entrada.
     const byUrl = new Map(results.map((r) => [r.url, r]));
-    return data.urls.map((u) => byUrl.get(u)!);
+    const ordered = data.urls.map((u) => byUrl.get(u)!);
+
+    // Grava no cache GLOBAL compartilhado (product_price_cache) — outros usuários
+    // já leem os preços/imagens atualizados sem rodar scraping novamente.
+    try {
+      const { supabase, userId } = context;
+      const rows = ordered
+        .filter((p) => !!p)
+        .map((p) => ({
+          url: p.url,
+          name: p.name ?? null,
+          price: p.price ?? null,
+          image_url: p.imageUrl ?? null,
+          summary: p.summary ?? null,
+          specs: (p.specs ?? []) as unknown,
+          error: p.error ?? null,
+          fetched_at: p.fetchedAt,
+          updated_by: userId,
+        }));
+      if (rows.length > 0) {
+        await supabase
+          .from("product_price_cache")
+          .upsert(rows as never, { onConflict: "url" });
+      }
+    } catch {
+      // Falha silenciosa: não bloqueia o retorno dos dados ao cliente.
+    }
+
+    return ordered;
+  });
+
+/** Lê o cache global compartilhado de preços (sem disparar scraping). */
+export const getProductPriceCache = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<ScrapedProduct[]> => {
+    const { data, error } = await context.supabase
+      .from("product_price_cache")
+      .select("url, name, price, image_url, summary, specs, error, fetched_at");
+    if (error) throw new Error(error.message);
+    return (data ?? []).map((r) => ({
+      url: r.url as string,
+      name: (r.name as string | null) ?? undefined,
+      price: (r.price as string | null) ?? undefined,
+      imageUrl: (r.image_url as string | null) ?? undefined,
+      summary: (r.summary as string | null) ?? undefined,
+      specs: ((r.specs as unknown as string[] | null) ?? []),
+      error: (r.error as string | null) ?? undefined,
+      fetchedAt: r.fetched_at as string,
+    }));
   });
