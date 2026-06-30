@@ -124,7 +124,36 @@ async function scrapeOne(url: string): Promise<{ price?: string; imageUrl?: stri
   }
 }
 
+/** Lista de termos de EFEITO/BENEFÍCIO que NUNCA devem aparecer no displayName
+ *  nem em fallback de funcionalidade — eles entregariam a resposta. */
+const FILLER_RE =
+  /\b(vibra(?:dor)?|vibrat(?:ório|orio)|aquece|esquenta|esfria|refresca|gel(?:a|ada|ado)|gelado|facilita|potencializa|intensifica|estimula|estimulante|lubrifica|lubrificante|suga|sucção|succao|pulsa|pulsante|prolonga|retarda|retardante|orgasmo|prazer|excita(?:nte|cao|ção)?|ere(?:cao|ção)|libido|desejo|sensa(?:cao|ção)|formigamento|choque|tesão|tesao)\b/gi;
+
+/** Constrói um nome neutro curto a partir do nome comercial, removendo
+ *  termos de efeito/benefício e cortando para no máx. 4 palavras. */
+function neutralFallbackName(productName: string): string {
+  const cleaned = productName
+    .replace(FILLER_RE, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  const words = cleaned.split(" ").filter(Boolean).slice(0, 4);
+  return words.join(" ") || productName.split(" ").slice(0, 2).join(" ");
+}
+
+/** Encurta uma frase de funcionalidade que veio longa (cache antigo / fallback):
+ *  remove termos genéricos triviais e mantém no máx. 6 palavras. */
+function shortFunctionality(s: string): string {
+  const t = s
+    .replace(/[\.\!\?]+$/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  const words = t.split(" ");
+  if (words.length <= 6) return t;
+  return words.slice(0, 6).join(" ");
+}
+
 // ---------- ADMIN: gerar funcionalidades ----------------------------------
+
 
 const FuncSchema = z.object({
   items: z
