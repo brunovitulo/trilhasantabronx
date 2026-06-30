@@ -700,13 +700,8 @@ function ModuleFlow({
 // Fluxo PRODUCT GROUP (Módulo 7) — flashcards
 // =============================================================================
 
-import { useQuery } from "@tanstack/react-query";
-import {
-  getFlashcardSession,
-  recordFlashcardResult,
-  type FlashcardItem,
-  type FlashcardSession,
-} from "@/lib/flashcards.functions";
+
+
 
 function ProductGroupFlow({
   item,
