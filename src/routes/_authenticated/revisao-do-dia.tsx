@@ -950,14 +950,16 @@ function ProductGroupFlow({
       priceChoice === current.priceCorrectIndex;
     setSubmitted(true);
     try {
-      await recordFn({
-        data: {
-          groupId: item.groupId,
-          subcategoryId: current.subcategoryId,
-          productSlug: current.productSlug,
-          mastered: both,
-        },
-      });
+      if (!preview) {
+        await recordFn({
+          data: {
+            groupId: item.groupId,
+            subcategoryId: current.subcategoryId,
+            productSlug: current.productSlug,
+            mastered: both,
+          },
+        });
+      }
       setResults((r) => ({
         mastered: r.mastered + (both ? 1 : 0),
         wrong: r.wrong + (both ? 0 : 1),
