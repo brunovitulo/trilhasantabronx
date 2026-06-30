@@ -40,6 +40,7 @@ import {
   type ReviewQueueItem,
 } from "@/lib/dailyReview";
 import { TOPICS } from "@/data/topics";
+import { chipsForProductSlug } from "@/data/m7Chips";
 import {
   PRODUCT_REVISION_GROUPS,
   type ProductRevisionGroupId,
