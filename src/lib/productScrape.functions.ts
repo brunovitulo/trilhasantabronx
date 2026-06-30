@@ -12,6 +12,11 @@ export type ScrapedProduct = {
   price?: string;
   imageUrl?: string;
   summary?: string;
+  /** Chips de especificação técnica extraídos da página do produto
+   *  (ex.: "10 modos", "Recarregável", "Silicone", "À prova d'água",
+   *  "Ponto G", "Anal"). Usados como pílulas adicionais no card e como
+   *  fonte de dados para distratores da revisão. */
+  specs?: string[];
   error?: string;
   fetchedAt: string;
 };
@@ -98,6 +103,88 @@ function extractSummary(html: string): string | undefined {
   return undefined;
 }
 
+/** Extrai pílulas de especificação técnica a partir do texto da página do
+ *  produto (descrição curta + descrição longa + tabela de atributos do
+ *  WooCommerce). Cobre o que um atendente precisa lembrar:
+ *  modos de vibração, fonte de energia, material, à prova d'água,
+ *  uso indicado e tamanho. Ordem importa — chips mais relevantes primeiro. */
+function extractSpecs(html: string): string[] {
+  // Pega blocos onde a info normalmente vive (descrição + atributos).
+  const blocks: string[] = [];
+  const grab = (re: RegExp) => {
+    const m = html.match(re);
+    if (m) blocks.push(m[1]);
+  };
+  grab(/<div[^>]*class="[^"]*woocommerce-product-details__short-description[^"]*"[^>]*>([\s\S]*?)<\/div>/i);
+  grab(/<div[^>]*id="tab-description"[^>]*>([\s\S]*?)<\/div>\s*<div/i);
+  grab(/<table[^>]*class="[^"]*shop_attributes[^"]*"[^>]*>([\s\S]*?)<\/table>/i);
+  if (blocks.length === 0) blocks.push(html);
+  const text = stripTags(blocks.join(" \n "));
+  const lower = text.toLowerCase();
+  const chips: string[] = [];
+  const push = (chip: string) => {
+    if (!chips.some((c) => c.toLowerCase() === chip.toLowerCase())) chips.push(chip);
+  };
+
+  // Modos de vibração / velocidades / funções
+  const modos = text.match(/(\d{1,2})\s*(?:modos?|velocidades?|fun[cç][õo]es|n[ií]veis|frequ[êe]ncias?|padr[õo]es)\b/i);
+  if (modos) push(`${modos[1]} modos`);
+
+  // Fonte de energia
+  if (/recarreg[áa]vel|recarga\s+usb|carregamento\s+usb|\busb\b|cabo\s+usb/i.test(lower))
+    push("Recarregável USB");
+  else if (/\b(\d+)\s*(?:pilhas?|baterias?)\b|funciona\s+(?:com|a)\s+pilhas?|à\s+pilha/i.test(lower))
+    push("A pilha");
+
+  // À prova d'água
+  if (/[àa]\s*prova\s*d['’ ]?[aá]gua|resistente\s*[àa]\s*[aá]gua|water\s*proof|waterproof|ipx[4-8]/i.test(lower))
+    push("À prova d'água");
+
+  // Materiais
+  for (const [re, label] of [
+    [/silicone\s+m[ée]dico/i, "Silicone médico"],
+    [/silicone/i, "Silicone"],
+    [/abs\b/i, "ABS"],
+    [/pvc\b/i, "PVC"],
+    [/tpe\b|tpr\b/i, "TPE"],
+    [/metal|a[çc]o\s+inox|inox/i, "Metal"],
+    [/cyber\s*skin|cyberskin|jelly|gel/i, "Cyberskin"],
+    [/l[áa]tex/i, "Látex"],
+    [/vidro/i, "Vidro"],
+  ] as [RegExp, string][]) {
+    if (re.test(lower)) {
+      push(label);
+      break;
+    }
+  }
+
+  // Indicação de uso
+  if (/ponto\s*g\b/i.test(lower)) push("Ponto G");
+  if (/clit[óo]ris|clitoriano/i.test(lower)) push("Clitóris");
+  if (/anal|pl[úu]g\s*anal|para\s+uso\s+anal/i.test(lower)) push("Uso anal");
+  if (/casal|casais|para\s+dois/i.test(lower)) push("Para casal");
+  if (/masturba[çc][ãa]o\s+masculina|p[êe]nis|glande/i.test(lower)) push("Masculino");
+  if (/aplicativo|app\s+bluetooth|controle\s+por\s+aplicativo|bluetooth/i.test(lower))
+    push("Controle por app");
+  if (/controle\s+remoto|controle\s+sem\s+fio|wireless\s+remote/i.test(lower))
+    push("Controle remoto");
+  if (/sabor\s+([a-zà-ÿ]+)/i.test(lower)) {
+    const m = lower.match(/sabor\s+([a-zà-ÿ]+)/i);
+    if (m) push(`Sabor ${m[1]}`);
+  }
+  if (/base\s+(?:de\s+)?[áa]gua|water\s*based/i.test(lower)) push("Base água");
+  if (/base\s+(?:de\s+)?silicone/i.test(lower)) push("Base silicone");
+  if (/refresca|gela|esfria|menta|menthol/i.test(lower)) push("Refresca");
+  if (/esquenta|aquece|t[ée]rmico/i.test(lower)) push("Aquece");
+  if (/anest[ée]sico|dessensibilizante|retardante/i.test(lower)) push("Retardante");
+
+  // Tamanho aproximado (apenas o primeiro número plausível em cm)
+  const tam = text.match(/(\d{1,2}(?:[.,]\d)?)\s*cm\b/i);
+  if (tam) push(`${tam[1].replace(",", ".")} cm`);
+
+  return chips.slice(0, 6);
+}
+
 async function scrapeOne(url: string): Promise<ScrapedProduct> {
   const fetchedAt = new Date().toISOString();
   try {
@@ -120,6 +207,7 @@ async function scrapeOne(url: string): Promise<ScrapedProduct> {
       price: extractPrice(html),
       imageUrl: extractImage(html),
       summary: extractSummary(html),
+      specs: extractSpecs(html),
     };
   } catch (e) {
     return { url, fetchedAt, error: e instanceof Error ? e.message : "fetch error" };

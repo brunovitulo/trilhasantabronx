@@ -118,6 +118,9 @@
   --border-success: oklch(0.68 0.16 150);
   --text-danger: oklch(0.55 0.22 27);
   --bg-danger: oklch(0.95 0.05 27);
+  --text-accent: oklch(0.42 0.16 250);
+  --bg-accent: oklch(0.94 0.05 250);
+  --border-accent: oklch(0.72 0.14 250);
 }
 .dark {
   --surface-1: oklch(1 0 0 / 5%);
@@ -133,6 +136,9 @@
   --border-success: oklch(0.68 0.16 150);
   --text-danger: oklch(0.80 0.14 27);
   --bg-danger: oklch(0.55 0.22 27 / 18%);
+  --text-accent: oklch(0.82 0.12 250);
+  --bg-accent: oklch(0.50 0.18 250 / 20%);
+  --border-accent: oklch(0.70 0.16 250 / 60%);
 }
 
 @layer base {

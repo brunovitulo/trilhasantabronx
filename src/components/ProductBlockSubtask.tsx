@@ -87,30 +87,63 @@ function buildProductSummaries(
   return out;
 }
 
-/** Extrai chips de funcionalidades quando o resumo começa com uma lista
- *  curta separada por "+" / "/" / "," (ex.: "SUGA + VIBRA + PULSA + REFRESCA. ..."). */
+/** Extrai chips de funcionalidades do resumo da apostila.
+ *  Tenta duas estratégias para garantir que TODOS os produtos virem pílulas
+ *  (não apenas os que começam com "A + B + C"):
+ *
+ *   1) Capta QUALQUER trecho do texto no formato `X + Y + Z` (também aceita
+ *      `/`, `•`, `|`). Funciona para listas no início ("SUGA + VIBRA + ...")
+ *      e no meio do texto ("4 efeitos: SHOCK + REFRESCA + AQUECE + ...").
+ *   2) Para os que sobrarem sem chips (ex.: "diferencial é o SABOR DE MEL e a
+ *      fórmula SEM AÇÚCAR"), extrai frases em CAIXA ALTA com 2+ palavras como
+ *      chips — é o padrão visual que a apostila usa para destacar atributos.
+ */
 function splitFeatures(summary: string): { chips: string[]; description: string } {
   if (!summary) return { chips: [], description: "" };
-  const m = summary.match(
-    /^([A-Za-zÀ-ÿ0-9 ]+(?:\s*[+/,•|]\s*[A-Za-zÀ-ÿ0-9 ]+){1,})\s*[.:\-–—]?\s*/,
-  );
-  if (!m) return { chips: [], description: summary.trim() };
-  const chunk = m[1];
-  const parts = chunk
-    .split(/\s*[+/,•|]\s*/)
-    .map((s) => s.trim())
-    .filter(Boolean);
-  if (parts.length < 2) return { chips: [], description: summary.trim() };
-  // Cada chip precisa ser curto (1-3 palavras, <=22 chars) — senão tratamos
-  // como texto comum.
-  if (parts.some((c) => c.length > 22 || c.split(/\s+/).length > 3)) {
-    return { chips: [], description: summary.trim() };
-  }
-  const chips = parts.map((c) => {
-    const low = c.toLowerCase();
-    return low.charAt(0).toUpperCase() + low.slice(1);
+  const chips: string[] = [];
+  const tryAdd = (raw: string) => {
+    const clean = raw
+      .replace(/^[\s.:;,\-–—]+|[\s.:;,\-–—]+$/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (clean.length < 2 || clean.length > 26) return false;
+    if (clean.split(/\s+/).length > 3) return false;
+    const cap = clean.charAt(0).toUpperCase() + clean.slice(1).toLowerCase();
+    if (!chips.some((c) => c.toLowerCase() === cap.toLowerCase())) chips.push(cap);
+    return true;
+  };
+
+  let description = summary;
+
+  // (1) Sequências X + Y + Z em qualquer posição do texto.
+  const seqRe =
+    /[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ0-9'’ ]{0,22}[A-Za-zÀ-ÿ0-9](?:\s*[+/•|]\s*[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ0-9'’ ]{0,22}[A-Za-zÀ-ÿ0-9]){1,}/g;
+  description = description.replace(seqRe, (match) => {
+    const parts = match
+      .split(/\s*[+/•|]\s*/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (parts.length < 2) return match;
+    const valid = parts.filter((p) => p.length <= 26 && p.split(/\s+/).length <= 3);
+    if (valid.length < 2) return match;
+    valid.forEach(tryAdd);
+    return "";
   });
-  const description = summary.slice(m[0].length).trim();
+
+  // (2) Frases em CAIXA ALTA com 2+ palavras (ex.: "SABOR DE MEL", "SEM AÇÚCAR").
+  const capsRe = /\b([A-ZÀ-Ý][A-ZÀ-Ý0-9'’]*(?:\s+[A-ZÀ-Ý][A-ZÀ-Ý0-9'’]*){1,3})\b/g;
+  description = description.replace(capsRe, (match) => {
+    if (tryAdd(match)) return "";
+    return match;
+  });
+
+  description = description
+    .replace(/\s*\d+\s+efeitos?\s*:?\s*/gi, " ")
+    .replace(/^\s*[.:;,\-–—]+\s*/, "")
+    .replace(/\s*[.:;,\-–—]+\s*$/, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+
   return { chips, description };
 }
 
@@ -364,17 +397,17 @@ export function ProductBlockSubtask({ subtask, apostila, completed, onComplete, 
             </p>
           </div>
 
-          {/* Banner — instrução de decoreba */}
+          {/* Banner — instrução de decoreba (azul) */}
           <div
             className="mb-3 flex items-start gap-2 rounded-lg"
             style={{
-              background: "var(--bg-pro)",
-              color: "var(--text-pro)",
+              background: "var(--bg-accent)",
+              color: "var(--text-accent)",
               padding: "10px 12px",
-              border: "1px solid var(--border-subtle)",
+              border: "1px solid var(--border-accent)",
             }}
           >
-            <Sparkles size={15} style={{ marginTop: 1, flexShrink: 0 }} />
+            <Sparkles size={15} style={{ marginTop: 1, flexShrink: 0, color: "var(--text-accent)" }} />
             <p style={{ fontSize: 12.5, lineHeight: 1.5, margin: 0, fontWeight: 500 }}>
               Decore o nome, o valor e as principais funcionalidades de cada
               produto abaixo — você vai precisar lembrar disso na revisão.
@@ -385,7 +418,17 @@ export function ProductBlockSubtask({ subtask, apostila, completed, onComplete, 
             {subtask.products.map((p) => {
               const d = scrapedMap[p.url];
               const summary = productSummaries.get(p.url) ?? "";
-              const { chips, description } = splitFeatures(summary);
+              const { chips: featChips, description } = splitFeatures(summary);
+              const specChips = d?.specs ?? [];
+              // Mescla chips de funcionalidade (apostila) + chips de spec
+              // técnica (scrape), removendo duplicatas case-insensitive.
+              const seen = new Set<string>();
+              const chips = [...featChips, ...specChips].filter((c) => {
+                const k = c.toLowerCase();
+                if (seen.has(k)) return false;
+                seen.add(k);
+                return true;
+              });
               return (
                 <div
                   key={p.url}
