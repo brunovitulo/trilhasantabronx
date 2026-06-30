@@ -47,6 +47,30 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_task_completions: {
+        Row: {
+          completed_at: string
+          id: string
+          task_date: string
+          task_id: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          id?: string
+          task_date: string
+          task_id: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          id?: string
+          task_date?: string
+          task_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       exam_permission_requests: {
         Row: {
           created_at: string
