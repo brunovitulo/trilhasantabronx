@@ -848,12 +848,14 @@ function ProductGroupFlow({
   item,
   onFinish,
   saving,
+  preview = false,
 }: {
   item: Extract<ReviewQueueItem, { kind: "product-group" }>;
   state: ProductItemState;
   onUpdate: (patch: Partial<ProductItemState>) => void;
   onFinish: () => void;
   saving: boolean;
+  preview?: boolean;
 }) {
   const sessionFn = useServerFn(getFlashcardSession);
   const recordFn = useServerFn(recordFlashcardResult);
