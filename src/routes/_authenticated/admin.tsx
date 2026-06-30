@@ -274,6 +274,7 @@ function AdminPage() {
         </div>
 
         <div className="mt-6">
+          <ReviewPreviewPanel />
           <ProductQuestionsAdminPanel />
           <ProductFlashcardsAdminPanel />
         </div>
