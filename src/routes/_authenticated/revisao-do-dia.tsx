@@ -874,7 +874,6 @@ function ProductGroupFlow({
 
   const [cursor, setCursor] = useState(0);
   const [funcChoice, setFuncChoice] = useState<number | null>(null);
-  const [priceChoice, setPriceChoice] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [results, setResults] = useState<{
     mastered: number;
