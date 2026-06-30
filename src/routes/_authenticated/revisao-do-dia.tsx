@@ -1001,6 +1001,8 @@ function SessionSummary({
   mastered: number;
   wrong: number;
   wrongItems: FlashcardItem[];
+  onFinish: () => void;
+  saving: boolean;
 }) {
   const today = new Date().toLocaleDateString("pt-BR");
 
