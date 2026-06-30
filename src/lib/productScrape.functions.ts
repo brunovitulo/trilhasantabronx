@@ -140,23 +140,32 @@ function extractSpecs(html: string): string[] {
   if (/[àa]\s*prova\s*d['’ ]?[aá]gua|resistente\s*[àa]\s*[aá]gua|water\s*proof|waterproof|ipx[4-8]/i.test(lower))
     push("À prova d'água");
 
-  // Materiais
-  for (const [re, label] of [
-    [/silicone\s+m[ée]dico/i, "Silicone médico"],
-    [/silicone/i, "Silicone"],
-    [/abs\b/i, "ABS"],
-    [/pvc\b/i, "PVC"],
-    [/tpe\b|tpr\b/i, "TPE"],
-    [/metal|a[çc]o\s+inox|inox/i, "Metal"],
-    [/cyber\s*skin|cyberskin|jelly|gel/i, "Cyberskin"],
-    [/l[áa]tex/i, "Látex"],
-    [/vidro/i, "Vidro"],
-  ] as [RegExp, string][]) {
-    if (re.test(lower)) {
-      push(label);
-      break;
+  // Materiais — exigem CONTEXTO explícito ("material:", "feito em/de",
+  // "composição", tabela de atributos). Antes, o regex casava "gel" solto
+  // e marcava cosméticos (Goze, Vibration etc.) erroneamente como CYBERSKIN.
+  const matCtx = text.match(
+    /(?:material|composi[cç][aã]o|feito\s+(?:em|de)|fabricado\s+(?:em|de)|confeccionado\s+(?:em|de))\s*[:\-]?\s*([^.\n]{3,80})/i,
+  );
+  if (matCtx) {
+    const ctx = matCtx[1].toLowerCase();
+    for (const [re, label] of [
+      [/silicone\s+m[ée]dico/, "Silicone médico"],
+      [/silicone/, "Silicone"],
+      [/\babs\b/, "ABS"],
+      [/\bpvc\b/, "PVC"],
+      [/\btpe\b|\btpr\b/, "TPE"],
+      [/cyber\s*skin|cyberskin/, "Cyberskin"],
+      [/a[çc]o\s+inox|inox|\bmetal\b/, "Metal"],
+      [/l[áa]tex/, "Látex"],
+      [/vidro/, "Vidro"],
+    ] as [RegExp, string][]) {
+      if (re.test(ctx)) {
+        push(label);
+        break;
+      }
     }
   }
+
 
   // Indicação de uso
   if (/ponto\s*g\b/i.test(lower)) push("Ponto G");
