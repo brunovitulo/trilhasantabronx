@@ -180,3 +180,13 @@
   background: var(--sg-bg-dark) !important;
   color: var(--sg-fg-dark) !important;
 }
+
+/* Chips de funcionalidade / badges de seção em dark mode */
+.dark .product-feature-chip {
+  background: var(--chip-bg-dark) !important;
+  color: var(--chip-fg-dark) !important;
+}
+.dark .rich-summary-badge {
+  background: var(--rs-icon-bg-dark) !important;
+  color: var(--rs-icon-fg-dark) !important;
+}
