@@ -170,13 +170,19 @@ export const generateProductFunctionalities = createServerFn({ method: "POST" })
       .map((p, i) => `${i + 1}. slug=${p.productSlug} | nome=${p.productName}`)
       .join("\n");
 
-    const prompt = `Você é treinadora de atendentes de sex shop. Para cada produto da lista abaixo, escreva UMA frase curta (máx. 10 palavras, em português brasileiro coloquial) descrevendo a FUNCIONALIDADE específica desse produto — o que ele faz / qual efeito entrega.
+    const prompt = `Você é treinadora de atendentes de sex shop. Para cada produto da lista abaixo, devolva DOIS campos curtos, em português brasileiro coloquial:
 
-Regras rígidas:
+1) functionality — chip curtíssimo (MÁX. 6 PALAVRAS) descrevendo o EFEITO/AÇÃO específica do produto. Sem artigo inicial, sem ponto final, sem aspas, sem listas. Exemplos: "Vibra e esquenta", "Sabor morango refrescante", "Suga e pulsa".
+2) coreName — nome neutro (MÁX. 4 PALAVRAS) que diz APENAS O QUE É o produto: categoria + uma característica NÃO-funcional (sabor, cor, tamanho, material, formato). Exemplos: "Excitante sabor morango", "Plug anal pequeno", "Vibrador rabbit rosa".
+
+REGRA CRÍTICA sobre coreName:
+- NUNCA inclua verbos/substantivos de efeito ou benefício. Lista proibida (e variações): vibra, vibrador-de-efeito, aquece, esquenta, esfria, refresca, gela, gelada, facilita, potencializa, intensifica, estimula, lubrifica, suga, pulsa, prolonga, retarda, orgasmo, prazer, excita, excitação, ereção, libido, desejo, sensação, formigamento, choque.
+- Esses termos vão APENAS em functionality. coreName precisa servir como TÍTULO neutro mostrado ANTES de o atendente ver as alternativas — não pode entregar a resposta.
+
+Outras regras:
 - Use SOMENTE informações da apostila + nome do produto. Não invente.
-- Cada frase precisa ser DISTINGUÍVEL das outras: destaque o que diferencia este produto dos irmãos (efeito principal, sabor, tamanho, material, modo de uso etc.).
-- Não comece com "Produto que…" — vá direto ao efeito (ex.: "Vibra, refresca, suga e pulsa com sabor melancia", "Plug pequeno em silicone macio ideal para iniciantes").
-- Não use emojis, aspas, listas, nem termos vagos como "para prazer".
+- functionality precisa ser DISTINGUÍVEL entre irmãos da mesma subcategoria.
+- Sem emojis.
 
 Apostila (categoria ${data.subcategoryKey}):
 """
@@ -186,7 +192,7 @@ ${apostilaText}
 Produtos:
 ${list}
 
-Devolva JSON estrito com a chave "items": [{ "productSlug": "...", "functionality": "..." }] na MESMA ORDEM e cobrindo TODOS os ${products.length} produtos.`;
+Devolva JSON estrito com a chave "items": [{ "productSlug": "...", "functionality": "...", "coreName": "..." }] na MESMA ORDEM e cobrindo TODOS os ${products.length} produtos.`;
 
     const { output } = await generateText({
       model,
@@ -194,17 +200,23 @@ Devolva JSON estrito com a chave "items": [{ "productSlug": "...", "functionalit
       prompt,
     });
 
-    const bySlug = new Map(output.items.map((it) => [it.productSlug, it.functionality]));
-    const rows = products.map((p) => ({
-      group_id: p.groupId,
-      subcategory_id: p.subcategoryId,
-      product_slug: p.productSlug,
-      product_name: p.productName,
-      product_url: p.productUrl,
-      functionality: bySlug.get(p.productSlug) ?? p.productName,
-      generated_by: userId,
-      updated_at: new Date().toISOString(),
-    }));
+    const bySlug = new Map(
+      output.items.map((it) => [it.productSlug, it] as const),
+    );
+    const rows = products.map((p) => {
+      const ai = bySlug.get(p.productSlug);
+      return {
+        group_id: p.groupId,
+        subcategory_id: p.subcategoryId,
+        product_slug: p.productSlug,
+        product_name: p.productName,
+        product_url: p.productUrl,
+        functionality: ai?.functionality ?? p.productName,
+        core_name: ai?.coreName ?? neutralFallbackName(p.productName),
+        generated_by: userId,
+        updated_at: new Date().toISOString(),
+      };
+    });
 
     const { error } = await supabase
       .from("product_flashcards")
