@@ -55,24 +55,32 @@ export const getTodayReview = createServerFn({ method: "GET" })
     const { supabase, userId } = context;
     const today = spDateKey();
 
-    const [{ data: progress }, { data: todayCompletions }, { data: groupProgress }] =
-      await Promise.all([
-        supabase
-          .from("subtask_progress")
-          .select("subtask_id, completed, score, completed_at")
-          .eq("user_id", userId),
-        supabase
-          .from("daily_review_completions")
-          .select("review_key")
-          .eq("user_id", userId)
-          .eq("review_date", today),
-        supabase
-          .from("product_revision_progress")
-          .select(
-            "group_id, cycle, phase, cycle_anchor_date, sessions_done, group_completed",
-          )
-          .eq("user_id", userId),
-      ]);
+    const [
+      { data: progress },
+      { data: todayCompletions },
+      { data: groupProgress },
+      { data: flashcardMastery },
+    ] = await Promise.all([
+      supabase
+        .from("subtask_progress")
+        .select("subtask_id, completed, score, completed_at")
+        .eq("user_id", userId),
+      supabase
+        .from("daily_review_completions")
+        .select("review_key")
+        .eq("user_id", userId)
+        .eq("review_date", today),
+      supabase
+        .from("product_revision_progress")
+        .select(
+          "group_id, cycle, phase, cycle_anchor_date, sessions_done, group_completed",
+        )
+        .eq("user_id", userId),
+      supabase
+        .from("product_flashcard_mastery")
+        .select("group_id, subcategory_id, product_slug, mastered_at, next_review_date")
+        .eq("user_id", userId),
+    ]);
 
     const rows = (progress ?? []) as Array<
       ProgressRow & { completed_at: string | null }
