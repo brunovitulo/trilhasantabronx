@@ -325,9 +325,8 @@ export function CorrectionDialog({
             </div>
 
             {(() => {
-              const allMarked = answers.length > 0 && answers.every((a) => a.is_correct !== null);
               const correctCount = answers.filter((a) => a.is_correct === true).length;
-              const previewScore = allMarked
+              const previewScore = allOpenMarked
                 ? Math.round((correctCount / answers.length) * 100)
                 : null;
               const wouldFail = previewScore != null && previewScore < PASSING_SCORE;
@@ -384,12 +383,20 @@ export function CorrectionDialog({
 
             <div className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
               <span className="text-xs text-muted-foreground">
-                {marked} de {answers.length} questões marcadas
+                {mcAnswers.length > 0 && (
+                  <>
+                    {mcAnswers.filter((a) => a.is_correct === true).length}/{mcAnswers.length} objetivas auto-corrigidas
+                    {openAnswers.length > 0 && " · "}
+                  </>
+                )}
+                {openAnswers.length > 0 && (
+                  <>{openMarked}/{openAnswers.length} abertas marcadas</>
+                )}
               </span>
               <Button
                 type="button"
                 onClick={finalize}
-                disabled={saving || answers.length === 0 || answers.some((a) => a.is_correct === null)}
+                disabled={saving || answers.length === 0 || !allOpenMarked}
               >
                 {saving ? "Finalizando..." : "Finalizar avaliação"}
               </Button>
