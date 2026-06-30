@@ -608,70 +608,66 @@ function AttendantCollapsedRow({
       onClick={onExpand}
       className="cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl hover:bg-white/[0.06] transition-colors"
     >
-      <div className="grid grid-cols-12 items-center gap-3 p-3 sm:p-4">
-        <div className="col-span-12 sm:col-span-3 flex items-center gap-3 min-w-0">
-          <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${avatarGradient(att.id)} text-white font-bold text-xs`}>
-            {initials(att.full_name)}
+      <div className="flex flex-col gap-3 p-3 sm:p-4">
+        {/* Top line: name + actions */}
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="font-bold text-base truncate">{att.full_name ?? "Sem nome"}</h3>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              className="rounded-full gap-1.5 border-white/15 bg-white/[0.04] hover:bg-white/[0.1] h-8"
+              onClick={(e) => { e.stopPropagation(); onOpenHistory(); }}
+            >
+              <FileText className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Ver histórico</span>
+            </Button>
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              className="h-8 w-8 rounded-full border border-white/10 bg-white/[0.04]"
+              onClick={(e) => { e.stopPropagation(); onExpand(); }}
+              aria-label="Expandir"
+            >
+              <ChevronDown className="h-4 w-4" />
+            </Button>
           </div>
-          <div className="min-w-0">
-            <p className="font-semibold leading-tight truncate text-sm">{att.full_name ?? "Sem nome"}</p>
-            <p className="text-[11px] text-muted-foreground font-mono mt-0.5 truncate">{att.id.slice(0, 8)}</p>
-          </div>
-          <StatusBadge completed={s.completed} />
         </div>
 
-        <div className="col-span-12 sm:col-span-4 flex flex-col gap-1">
-          <p className="text-[11px] text-muted-foreground">Tópicos concluídos</p>
+        {/* Topics progress */}
+        <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
+            <span className="text-[11px] text-muted-foreground">Tópicos</span>
             <span className="text-sm font-semibold tabular-nums whitespace-nowrap">
               <span className="text-[oklch(0.82_0.14_175)]">{s.doneTopics}</span>
               <span className="text-muted-foreground"> de {s.totalTopics}</span>
             </span>
-            <Progress
-              value={s.percent}
-              className="h-1.5 flex-1 bg-white/10 [&>div]:bg-[oklch(0.78_0.13_175)]"
-            />
             <span className="text-xs text-muted-foreground tabular-nums w-9 text-right">{s.percent}%</span>
           </div>
+          <Progress
+            value={s.percent}
+            className="h-1.5 w-full bg-white/10 [&>div]:bg-[oklch(0.78_0.13_175)]"
+          />
         </div>
 
-        <div className="col-span-6 sm:col-span-2">
-          <p className="text-[11px] text-muted-foreground">Provas concluídas</p>
-          <p className="text-sm font-semibold tabular-nums mt-1">
-            <span className={s.doneExams === 0 ? "text-rose-300" : "text-[oklch(0.82_0.14_175)]"}>{s.doneExams}</span>
-            <span className="text-muted-foreground"> de {s.totalExams}</span>
-          </p>
-        </div>
-
-        <div className="col-span-6 sm:col-span-1">
-          <p className="text-[11px] text-muted-foreground">Média geral</p>
-          <p className="text-sm font-semibold mt-1 flex items-center gap-1">
-            <Star className={`h-3.5 w-3.5 ${s.examAverage != null ? "text-amber-300 fill-amber-300" : "text-muted-foreground"}`} />
-            {s.examAverage != null ? (s.examAverage / 10).toFixed(1).replace(".", ",") : "—"}
-          </p>
-        </div>
-
-        <div className="col-span-6 sm:col-span-2 flex items-center justify-end gap-1.5">
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            className="rounded-full gap-1.5 border-white/15 bg-white/[0.04] hover:bg-white/[0.1] h-8"
-            onClick={(e) => { e.stopPropagation(); onOpenHistory(); }}
-          >
-            <FileText className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Ver histórico</span>
-          </Button>
-          <Button
-            type="button"
-            size="icon"
-            variant="ghost"
-            className="h-8 w-8 rounded-full border border-white/10 bg-white/[0.04]"
-            onClick={(e) => { e.stopPropagation(); onExpand(); }}
-            aria-label="Expandir"
-          >
-            <ChevronDown className="h-4 w-4" />
-          </Button>
+        {/* Exams + Average side by side */}
+        <div className="flex items-center gap-6">
+          <div>
+            <p className="text-[11px] text-muted-foreground">Provas</p>
+            <p className="text-sm font-semibold tabular-nums">
+              <span className={s.doneExams === 0 ? "text-rose-300" : "text-[oklch(0.82_0.14_175)]"}>{s.doneExams}</span>
+              <span className="text-muted-foreground"> de {s.totalExams}</span>
+            </p>
+          </div>
+          <div>
+            <p className="text-[11px] text-muted-foreground">Média</p>
+            <p className="text-sm font-semibold flex items-center gap-1">
+              <Star className={`h-3.5 w-3.5 ${s.examAverage != null ? "text-amber-300 fill-amber-300" : "text-muted-foreground"}`} />
+              {s.examAverage != null ? (s.examAverage / 10).toFixed(1).replace(".", ",") : "—"}
+            </p>
+          </div>
         </div>
       </div>
     </Card>
