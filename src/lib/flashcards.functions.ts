@@ -339,11 +339,20 @@ export const getFlashcardSession = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: cacheRows } = await supabaseAdmin
       .from("product_flashcards")
-      .select("subcategory_id, product_slug, functionality")
+      .select("subcategory_id, product_slug, functionality, core_name")
       .in("subcategory_id", subcategoryIds);
-    const funcCache = new Map<string, string>();
-    for (const r of cacheRows ?? []) {
-      funcCache.set(`${r.subcategory_id}:${r.product_slug}`, r.functionality);
+    type CacheEntry = { functionality: string | null; coreName: string | null };
+    const funcCache = new Map<string, CacheEntry>();
+    for (const r of (cacheRows ?? []) as Array<{
+      subcategory_id: string;
+      product_slug: string;
+      functionality: string | null;
+      core_name: string | null;
+    }>) {
+      funcCache.set(`${r.subcategory_id}:${r.product_slug}`, {
+        functionality: r.functionality,
+        coreName: r.core_name,
+      });
     }
 
     // Mastery do usuário.
