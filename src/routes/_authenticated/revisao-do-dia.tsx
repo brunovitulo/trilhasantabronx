@@ -1194,16 +1194,16 @@ function Flashcard({
   }
 
   return (
-    <div className="mt-3 mx-auto" style={{ maxWidth: 420 }}>
-      <div className="flex items-center justify-between mb-3">
+    <div className="mt-4 mx-auto" style={{ maxWidth: 460 }}>
+      <div className="flex items-center justify-between mb-4">
         <p className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">
           Revisão — {groupTitle}
         </p>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           {Array.from({ length: total }).map((_, i) => (
             <span
               key={i}
-              className={`h-2 w-2 rounded-full ${
+              className={`h-2.5 w-2.5 rounded-full transition-colors ${
                 i < cursor
                   ? "bg-emerald-500"
                   : i === cursor
@@ -1215,64 +1215,100 @@ function Flashcard({
         </div>
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-white/[0.04] p-5 space-y-5">
-        <div className="flex flex-col items-center gap-3">
+      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 space-y-6">
+        <div className="flex flex-col items-center gap-4">
           <div
-            className="rounded-lg bg-white/[0.06] flex items-center justify-center overflow-hidden"
-            style={{ width: 110, height: 110 }}
+            className="rounded-xl bg-white/[0.06] flex items-center justify-center overflow-hidden shadow-sm"
+            style={{ width: 120, height: 120 }}
           >
             {item.imageUrl ? (
               <img
                 src={item.imageUrl}
-                alt={item.productName}
+                alt={item.displayName}
                 className="w-full h-full object-cover"
               />
             ) : (
               <span className="text-xs text-muted-foreground">sem imagem</span>
             )}
           </div>
-          <h3 className="text-base font-bold text-center">{item.displayName}</h3>
+          <h3 className="text-lg font-bold text-center leading-snug">
+            {item.displayName}
+          </h3>
         </div>
 
-        <div className="space-y-2">
-          <p className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className="space-y-3">
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
             Qual é a funcionalidade deste produto?
           </p>
-          <div className="space-y-2.5">
+          <div className="space-y-2">
             {item.functionalityOptions.map((opt, i) => {
               const Icon = OPTION_ICONS[i % OPTION_ICONS.length];
+              const isCorrect = i === item.functionalityCorrectIndex;
+              const isChosen = funcChoice === i;
+              const isWrongChosen = submitted && isChosen && !isCorrect;
+
+              // Estado neutro (não submetido)
+              let cardBg = "bg-white/[0.03]";
+              let cardBorder = "border-white/[0.06]";
+              let cardText = "text-foreground";
+              let iconBg = "bg-white/[0.06]";
+              let iconText = "text-muted-foreground";
+
+              if (!submitted) {
+                if (isChosen) {
+                  cardBg = "bg-primary/10";
+                  cardBorder = "border-primary/40";
+                  iconBg = "bg-primary/15";
+                  iconText = "text-primary";
+                } else {
+                  cardBg = "bg-white/[0.03] hover:bg-white/[0.06]";
+                  cardBorder = "border-white/[0.06] hover:border-white/20";
+                }
+              } else {
+                if (isCorrect) {
+                  cardBg = "bg-emerald-500/10";
+                  cardBorder = "border-emerald-500/40";
+                  cardText = "text-emerald-300";
+                  iconBg = "bg-emerald-500/15";
+                  iconText = "text-emerald-400";
+                } else if (isWrongChosen) {
+                  cardBg = "bg-rose-500/10";
+                  cardBorder = "border-rose-500/40";
+                  cardText = "text-rose-300";
+                  iconBg = "bg-rose-500/15";
+                  iconText = "text-rose-400";
+                } else {
+                  cardBg = "bg-white/[0.02]";
+                  cardBorder = "border-white/[0.04]";
+                  cardText = "text-muted-foreground/60";
+                  iconBg = "bg-white/[0.04]";
+                  iconText = "text-muted-foreground/40";
+                }
+              }
+
               return (
                 <button
                   key={i}
                   onClick={() => onFuncChoice(i)}
                   disabled={submitted}
-                  className={`w-full flex items-center gap-3 text-left rounded-lg border px-3 py-2 transition-colors ${optionClasses(
-                    i,
-                  )}`}
+                  className={`w-full flex items-center gap-3.5 text-left rounded-xl border px-4 py-3.5 transition-all ${cardBg} ${cardBorder} ${cardText}`}
                 >
                   <span
-                    className={`flex-shrink-0 flex items-center justify-center rounded-md transition-colors ${iconWrapperClasses(
-                      i,
-                    )}`}
-                    style={{ width: 32, height: 32 }}
+                    className={`flex-shrink-0 flex items-center justify-center rounded-lg transition-colors ${iconBg} ${iconText}`}
+                    style={{ width: 36, height: 36 }}
                     aria-hidden="true"
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-5 w-5" />
                   </span>
-                  <span
-                    className="flex-1"
-                    style={{
-                      fontSize: 13,
-                      lineHeight: 1.4,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      display: "-webkit-box",
-                      WebkitLineClamp: 1,
-                      WebkitBoxOrient: "vertical",
-                    }}
-                  >
+                  <span className="flex-1 text-sm font-medium leading-snug" style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                     {opt}
                   </span>
+                  {submitted && isCorrect && (
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
+                  )}
+                  {submitted && isWrongChosen && (
+                    <X className="h-5 w-5 text-rose-400 shrink-0" />
+                  )}
                 </button>
               );
             })}
@@ -1281,34 +1317,45 @@ function Flashcard({
 
         {!submitted ? (
           <Button
-            className="w-full"
+            className="w-full h-11 text-sm font-semibold"
             disabled={funcChoice === null}
             onClick={onConfirm}
           >
             Confirmar resposta
           </Button>
         ) : (
-          <>
+          <div className="space-y-3">
             <div
-              className={`rounded-lg border px-4 py-3 text-sm ${
+              className={`rounded-xl border px-4 py-3.5 ${
                 allCorrect
-                  ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
-                  : "border-rose-500/40 bg-rose-500/10 text-rose-700 dark:text-rose-300"
+                  ? "border-emerald-500/30 bg-emerald-500/10"
+                  : "border-rose-500/30 bg-rose-500/10"
               }`}
             >
-              <p className="font-bold mb-1">
+              <p
+                className={`text-sm font-bold mb-1 ${
+                  allCorrect ? "text-emerald-300" : "text-rose-300"
+                }`}
+              >
                 {allCorrect ? "Acertou!" : "Não foi dessa vez."}
               </p>
-              <p className="text-xs leading-relaxed">
+              <p
+                className={`text-xs leading-relaxed ${
+                  allCorrect ? "text-emerald-200/80" : "text-rose-200/80"
+                }`}
+              >
                 {allCorrect
                   ? "Este produto sai da sua fila de revisão de hoje."
                   : "Este produto volta amanhã para revisão."}
               </p>
             </div>
-            <Button className="w-full" onClick={onNext}>
+            <Button
+              className="w-full h-11 text-sm font-semibold"
+              onClick={onNext}
+            >
               {cursor + 1 >= total ? "Ver resumo" : "Próximo produto"}
             </Button>
-          </>
+          </div>
         )}
       </div>
     </div>
