@@ -1,132 +1,114 @@
 ## Visão geral
 
-22 subcategorias × 3 grupos no Tópico 7. Para cada uma:
-- Hoje: 4 subtasks (`video` + `product_links` + `practice` 7q + `inline_html` apostila)
-- Novo: 3 subtasks (`video` + **`product_block`** unificado + `practice` 12q)
-
-Nenhuma URL de produto, link de vídeo ou texto de apostila é descartado — tudo é redirecionado pro novo bloco unificado e/ou pro banco de questões expandido.
+Reformular a lógica e o conteúdo da Revisão do Dia para todos os módulos. As mudanças tocam 5 arquivos principais e exigem ajuste no modo "preview" do admin para refletir o novo formato.
 
 ---
 
-## 1. Novo subtype: `product_block`
+## 1. Módulos 1, 2 e 3 — Apresentação / Embalar / Responsabilidade
 
-Criar `kind: "product_block"` em `src/data/topics.ts` (extensão do union de `Subtask`). Estrutura:
+**`src/lib/dailyReview.ts`** — atualizar `MODULE_REVIEW_PLANS`:
+- `dayOffsets: [1]` (somente D+1, sai da fila depois)
+- `hasApostila: false`
+- `hasChecklist: true`
+- `quizCount: 5` (mantém)
+- `estimatedMinutes: "5-7"`
 
-```ts
-{
-  id: "produtos.excitantes.bloco",
-  kind: "product_block",
-  title: "1. Cosméticos — Excitantes — Conteúdo e produtos",
-  apostilaSource: "produtos_excitantes",   // reusa HTML existente para "o que é/pontos/fala/cuidados"
-  products: [
-    { name: "...", url: "https://sexshopsantabronx.com.br/produto/..." }
-    // copiados dos links atuais
-  ],
-  confirmLabel: "Estudei o conteúdo e revisei todos os produtos."
-}
-```
+Fluxo: checklist → 5 perguntas. Aparece uma única vez no dia seguinte.
 
-A apostila HTML existente já contém todas as seções (✨ O que é, 🧠 Pontos para decorar, 💬 Como falar, ⚠️ Cuidados). O novo componente extrai/renderiza essas seções inline (sem o link "abrir em nova aba"), seguidas do grid de cards de produtos.
+---
 
-## 2. Componente `ProductBlockSubtask`
+## 2. Módulo 4 — Principais Objeções
 
-Novo arquivo `src/components/ProductBlockSubtask.tsx`. Renderiza:
+**`src/lib/dailyReview.ts`**:
+- `dayOffsets: [1, 3, 5]` (mantém)
+- `hasApostila: true` (volta)
+- `hasChecklist: true`
+- `quizCount: 10`
 
-1. Botão "Atualizar preços" no topo (loading state, "atualizado há X").
-2. Seções extraídas da apostila (parsing leve do HTML para pegar as `<section>`).
-3. Grid responsivo de cards: imagem | nome | preço | resumo features | botão "Ver no site".
-4. Checkbox de confirmação no final, que marca o subtask como concluído.
+**`src/data/revisao.ts`** — expandir `QUIZ_OBJECOES` para 12 perguntas (banco maior que o `quizCount=10`, igual aos outros módulos). Conteúdo cobre: quebrar objeções comuns, discrição na entrega, medo de ser visto, experiência presencial na loja, sigilo no atendimento, postura consultiva ao receber objeção.
 
-Cada card consulta `usePriceData(url)` (cache em React Query, chave = URL). Primeira render = placeholder até clicar em "Atualizar preços" (ou se já tiver cache fresco).
+---
 
-## 3. Server function de scraping
+## 3. Módulo 5 — Fundamentos de Vendas
 
-`src/lib/productScrape.functions.ts`:
+**`src/lib/dailyReview.ts`**:
+- `quizCount: 10` (era 5)
 
-```ts
-export const scrapeProducts = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((d: { urls: string[] }) => d)
-  .handler(async ({ data }) => {
-    return Promise.all(data.urls.map(scrapeOne));
-  });
-```
+**`src/data/revisao.ts`** — expandir `QUIZ_VENDAS` para 12 perguntas. Pontos cobertos: tempo de resposta < 1 min, mentalidade consultora vs vendedora, perguntar antes de indicar, explicar o porquê, antecipar e quebrar objeções, simpatia como pré-requisito.
 
-Cada `scrapeOne(url)`:
-- `fetch(url)` no servidor (Cloudflare Worker permite fetch externo).
-- Parse via regex/cheerio-leve do HTML do WooCommerce padrão da Santa Bronx:
-  - **Preço**: `<p class="price">` → pega `<bdi>` da promoção (`ins`) se existir, senão o único.
-  - **Imagem**: `<meta property="og:image">` (sempre presente em WooCommerce).
-  - **Features**: `<div class="woocommerce-product-details__short-description">` → primeiras 2-3 linhas / 280 chars.
-- Retorna `{ url, price, imageUrl, summary, fetchedAt }`.
-- Erros individuais não derrubam o lote — devolve `{ url, error: "..." }` no item.
+---
 
-Sem cache em DB (escolha do usuário: "scraping ao vivo"). React Query mantém o resultado em memória durante a sessão.
+## 4. Módulo 6 — Principais Dores e Soluções
 
-## 4. Expansão 7 → 12 questões via IA
+**`src/lib/dailyReview.ts`**:
+- `quizCount: 10` (era 6)
 
-Botão no painel admin (`/admin`): **"Gerar questões M7"**.
+**`src/data/revisao.ts`** — expandir `QUIZ_DORES` para 12 perguntas cobrindo os principais pares dor → produto/solução e notas clínicas relevantes (ressecamento, libido baixa, ejaculação precoce, dificuldade de orgasmo, dor anal, monotonia do casal, etc.).
 
-Fluxo:
-1. Server fn `generateProductQuestions({ subcategoryKey })`:
-   - Carrega o HTML da apostila correspondente.
-   - Chama Lovable AI Gateway (`google/gemini-3-flash-preview`) com prompt instruindo: gerar exatamente 12 questões de múltipla escolha (4 opções, distratores plausíveis), baseadas SOMENTE no conteúdo da apostila, no formato JSON estruturado (`Output.object` com Zod).
-   - Retorna `OpenQuestion[]` (12 itens).
-2. UI no admin lista as 22 subcategorias, com "Gerar" + preview/edit + "Salvar".
-3. Salva em nova tabela `generated_questions(subcategory_key text PK, questions jsonb, generated_at timestamptz, approved_by uuid)`.
-4. Em runtime, `PracticeSubtask` para subtasks do M7 puxa as questões do banco se existirem; cai no array embutido (atualmente 7) como fallback.
+---
 
-Por que tabela e não hard-code: permite regerar/editar sem republish, e o usuário pediu pra ser sob demanda.
+## 5. Módulo 7 — Revisão de Produtos (Flashcards)
 
-## 5. Migração de schema
+### 5.1 Restringir produtos elegíveis para revisão
 
-```sql
-CREATE TABLE public.generated_questions (
-  subcategory_key text PRIMARY KEY,
-  questions jsonb NOT NULL,
-  generated_at timestamptz NOT NULL DEFAULT now(),
-  approved_by uuid REFERENCES auth.users(id),
-  updated_at timestamptz NOT NULL DEFAULT now()
-);
-GRANT SELECT ON public.generated_questions TO authenticated;
-GRANT ALL ON public.generated_questions TO service_role;
-ALTER TABLE public.generated_questions ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "auth read" ON public.generated_questions FOR SELECT TO authenticated USING (true);
-CREATE POLICY "admin write" ON public.generated_questions FOR ALL TO authenticated
-  USING (public.has_role(auth.uid(), 'admin'))
-  WITH CHECK (public.has_role(auth.uid(), 'admin'));
-```
+**`src/data/produtosRevisao.ts`**:
+- Grupo **Cosméticos** passa a conter apenas `EXCITANTES` + `LUBRIFICANTE`. Remover Perfumes, Adstringente, Estimulantes, Retardante, Anestésicos do array.
+- Grupo **Vibradores**: mantém todos.
+- Remover o grupo **Acessórios** de `PRODUCT_REVISION_GROUPS`.
 
-## 6. Refactor de `topics.ts`
+### 5.2 Filtrar `M7_PRODUCTS` na fila de flashcards
 
-Script Python que, para cada uma das 22 subcategorias:
-- Remove os subtasks `.produtos` e `.apostila`.
-- Substitui por um único `.bloco` (`kind: "product_block"`) carregando os mesmos links e o mesmo `source`.
-- Mantém `.video` e `.fixacao` intactos por enquanto (questões expandidas vêm do banco em runtime).
-- Atualiza títulos: "1. Cosméticos — Excitantes — Conteúdo e produtos" e mantém "Exercício de fixação (12 questões)".
+**`src/lib/flashcards.functions.ts`** — em `getFlashcardSession`, filtrar `products` para incluir apenas as subcategorias permitidas:
+- Cosméticos: `excitantes`, `lubrificante`
+- Vibradores: todas as subcategorias do grupo
 
-## 7. Roteamento no `SubtaskGroupCard` / `topico.$topicId.tsx`
+Os distratores e a contagem de total/mastered também passam a usar essa lista filtrada.
 
-Adicionar branch para `kind === "product_block"` que renderiza `<ProductBlockSubtask />` no lugar onde hoje são renderizados `product_links` + `inline_html`.
+### 5.3 Progressão sequencial entre grupos
+
+**`src/lib/dailyReview.functions.ts`** — em `getTodayReview`:
+- Iterar `PRODUCT_REVISION_GROUPS` na ordem (Cosméticos → Vibradores).
+- Calcular `total` e `masteredCount` usando apenas os produtos filtrados (5.2).
+- Quando Cosméticos ainda tem produto não-dominado, NÃO enfileirar Vibradores nesse dia, mesmo se o exame de Vibradores já estiver concluído.
+- Reescrever a função auxiliar `totalByGroup` para respeitar o filtro de subcategorias permitidas.
+
+### 5.4 Lógica por produto (sem bloqueio)
+
+Já é o comportamento atual: a sessão percorre todos os flashcards; quem acerta as duas perguntas (funcionalidade + preço) vira `mastered` e sai da fila; quem erra reaparece no dia seguinte. **Nenhuma mudança necessária** em `recordFlashcardResult`.
+
+### 5.5 Tela de resumo + download (HTML)
+
+**`src/routes/_authenticated/revisao-do-dia.tsx`** — substituir a tela "Sessão de flashcards pronta!" do `ProductGroupFlow` por uma tela de resumo que:
+- Lista todos os produtos errados na sessão (rastreados em estado local: `wrongItems: FlashcardItem[]`).
+- Mostra imagem, nome, funcionalidade correta (chips) e preço correto de cada produto errado.
+- Mensagem positiva se a lista estiver vazia.
+- Botão **"Baixar resumo"** que gera um HTML standalone (`Blob` + `URL.createObjectURL`) com os produtos errados e dispara download. HTML é imprimível no navegador (Ctrl+P → "Salvar como PDF"), atendendo "PDF ou HTML".
+- Botão "Concluir este item" para finalizar.
+
+Implementação puramente client-side, sem nova dependência.
+
+### 5.6 Limpeza
+
+- Remover tela `phase3Result` (não há mais fases 2/3 — a sessão é diária até dominar).
+- Simplificar `initProductState`: percorre todos os flashcards do grupo, sem cards intermediários.
 
 ---
 
 ## Detalhes técnicos
 
-**Stack:**
-- Server fns em `src/lib/productScrape.functions.ts` e `src/lib/aiQuestions.functions.ts` (client-safe path).
-- `cheerio` NÃO funciona no Worker — usar regex direto no HTML (suficiente pro WooCommerce padrão).
-- IA via `@ai-sdk/openai-compatible` + helper `createLovableAiGatewayProvider` (skill ai-sdk-lovable-gateway).
-- Output estruturado: `generateText({ output: Output.object({ schema: z.object({ questions: z.array(...) }) }) })`.
-
-**Escopo desta entrega:**
-- 1 migração + 2 server fns + 1 componente novo + 1 página admin de gerenciamento + refactor do `topics.ts` + integração no router de subtasks.
-
-**Não incluso (a confirmar depois):**
-- Não vou pré-gerar as 264 questões automaticamente — o admin gera sob demanda (sua escolha "sob demanda"). Até gerar, o `.fixacao` continua mostrando as 7 originais. Quer que eu já dispare a geração de todas após mergear?
+- **Sem migração de schema**: `product_flashcard_mastery` já suporta o fluxo (mastered_at + reset diário implícito).
+- **`product_revision_progress`**: a flag `group_completed` continua sendo setada quando todos os produtos filtrados são dominados.
+- **Preview admin** (`buildPreviewState`): remover `group:acessorios` da lista — feito implicitamente porque o grupo deixa de existir em `PRODUCT_REVISION_GROUPS`.
 
 ---
 
-## Pergunta antes de executar
+## Arquivos alterados
 
-Confirma escopo + a pergunta acima (pré-gerar todas as 264 questões automaticamente, ou deixar você acionar no admin uma a uma)?
+1. `src/lib/dailyReview.ts` — `MODULE_REVIEW_PLANS`
+2. `src/data/revisao.ts` — expansão dos quizzes M4/M5/M6
+3. `src/data/produtosRevisao.ts` — remoção de produtos/grupos
+4. `src/lib/flashcards.functions.ts` — filtro de subcategorias permitidas
+5. `src/lib/dailyReview.functions.ts` — progressão sequencial entre grupos M7
+6. `src/routes/_authenticated/revisao-do-dia.tsx` — tela de resumo + download, simplificação
+
+Confirma que posso seguir com tudo nesse formato?
