@@ -144,7 +144,7 @@ export function ExamResultPopup({ userId }: { userId: string }) {
 
   return (
     <Dialog open onOpenChange={(o) => !o && dismissCurrent()}>
-      <DialogContent className="sm:max-w-md border-white/10 bg-white/[0.08] backdrop-blur-2xl">
+      <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto border-white/10 bg-white/[0.08] backdrop-blur-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {approved ? (
