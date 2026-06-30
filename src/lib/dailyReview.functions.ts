@@ -161,13 +161,44 @@ export const getTodayReview = createServerFn({ method: "GET" })
       }
     }
 
+    // Mastery por grupo (para sabermos se há produto "vencido" hoje OU se o grupo já foi totalmente dominado).
+    type MR = { group_id: string; subcategory_id: string; product_slug: string; mastered_at: string | null; next_review_date: string | null };
+    const masteryByGroup = new Map<string, MR[]>();
+    for (const m of (flashcardMastery ?? []) as MR[]) {
+      const arr = masteryByGroup.get(m.group_id) ?? [];
+      arr.push(m);
+      masteryByGroup.set(m.group_id, arr);
+    }
+
+    // Importa estaticamente para sabermos o total de produtos por grupo (catálogo M7).
+    const { M7_PRODUCTS } = await import("@/data/m7Products");
+    const totalByGroup = new Map<string, number>();
+    for (const p of M7_PRODUCTS) {
+      totalByGroup.set(p.groupId, (totalByGroup.get(p.groupId) ?? 0) + 1);
+    }
+
     for (const group of PRODUCT_REVISION_GROUPS) {
       const gp = existingProgress.get(group.id);
       if (!gp || gp.group_completed) continue;
+
+      const mastery = masteryByGroup.get(group.id) ?? [];
+      const masteredCount = mastery.filter((m) => m.mastered_at).length;
+      const total = totalByGroup.get(group.id) ?? 0;
+      // Se todos os produtos do grupo já foram dominados, oculta da fila.
+      if (total > 0 && masteredCount >= total) continue;
+
+      // Decide se entra na fila hoje:
+      // 1) data de ciclo/fase corresponde ao plano OU
+      // 2) existe ao menos um produto com next_review_date <= today (re-fila por erro).
       const phase = gp.phase as 1 | 2 | 3;
       const diff = daysBetween(gp.cycle_anchor_date, today);
       const days = PRODUCT_PHASE_DAYS[phase];
-      if (!days.includes(diff)) continue;
+      const phaseDay = days.includes(diff);
+      const dueByReQueue = mastery.some(
+        (m) => !m.mastered_at && m.next_review_date && m.next_review_date <= today,
+      );
+      if (!phaseDay && !dueByReQueue) continue;
+
       queue.push({
         kind: "product-group",
         reviewKey: `produtos:${group.id}`,
