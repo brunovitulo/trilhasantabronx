@@ -95,7 +95,22 @@ export function ProductFlashcardsAdminPanel() {
         />
       </button>
       {open && (
-        <div className="px-4 pb-4 grid gap-2 sm:grid-cols-2">
+        <div className="px-4 pb-4 space-y-3">
+          {pending.length > 0 && (
+            <div className="flex gap-2 items-start rounded-xl border border-amber-400/30 bg-amber-400/10 px-3 py-2 text-[12px] text-amber-100">
+              <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
+              <div>
+                <p className="font-semibold">
+                  {pending.length} subcategoria(s) ainda sem funcionalidades cadastradas.
+                </p>
+                <p className="opacity-80">
+                  Sem isso, os flashcards exibem um aviso no lugar das opções.
+                  Rode “Refinar com IA” em: {pending.map((p) => p.title).join(", ")}.
+                </p>
+              </div>
+            </div>
+          )}
+          <div className="grid gap-2 sm:grid-cols-2">
           {subs.map((s) => {
             const r = byKey.get(s.key);
             const ok = r && r.count >= s.total;
@@ -104,14 +119,18 @@ export function ProductFlashcardsAdminPanel() {
             return (
               <div
                 key={s.key}
-                className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2"
+                className={`flex items-center gap-3 rounded-xl border px-3 py-2 ${
+                  ok
+                    ? "border-emerald-400/20 bg-emerald-400/5"
+                    : "border-amber-400/30 bg-amber-400/10"
+                }`}
               >
                 <div className="min-w-0 flex-1">
                   <p className="text-[13px] font-medium truncate">{s.title}</p>
                   <p className="text-[11px] text-muted-foreground">
                     {r
                       ? `${r.count}/${s.total} produtos · refinado em ${new Date(r.latest).toLocaleDateString("pt-BR")}`
-                      : `${s.total} produtos — usando fallback automático (pronto).`}
+                      : `${s.total} produtos · pendente — gerar agora.`}
                   </p>
 
                 </div>
