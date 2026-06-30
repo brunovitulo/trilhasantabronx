@@ -2331,6 +2331,7 @@ function PracticeSubtask({
   // sobrescrever as questões embutidas pelas 12 questões geradas por IA
   // (tabela generated_questions). Cai no fallback se não houver registro.
   const m7Match = subtaskProp.id.match(/^produtos\.([a-z_]+)\.fixacao$/);
+  const fetchGenQuestions = useServerFn(getGeneratedQuestions);
   const [genQuestions, setGenQuestions] = useState<
     Extract<Subtask, { kind: "practice" }>["questions"] | null
   >(null);
@@ -2338,13 +2339,13 @@ function PracticeSubtask({
     if (!m7Match) return;
     let active = true;
     (async () => {
-      const { data } = await supabase
-        .from("generated_questions")
-        .select("questions")
-        .eq("subcategory_key", m7Match[1])
-        .maybeSingle();
-      if (!active || !data?.questions) return;
-      const arr = data.questions as unknown as Extract<
+      // Banco de questões IA é protegido por RLS (admin-only SELECT). Acessamos
+      // exclusivamente via server function controlada.
+      const row = await fetchGenQuestions({
+        data: { subcategoryKey: m7Match[1] },
+      });
+      if (!active || !row?.questions) return;
+      const arr = row.questions as unknown as Extract<
         Subtask,
         { kind: "practice" }
       >["questions"];
