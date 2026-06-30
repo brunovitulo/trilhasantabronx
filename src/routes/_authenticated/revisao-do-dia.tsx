@@ -1231,7 +1231,7 @@ function Flashcard({
               <span className="text-xs text-muted-foreground">sem imagem</span>
             )}
           </div>
-          <h3 className="text-base font-bold text-center">{item.productName}</h3>
+          <h3 className="text-base font-bold text-center">{item.displayName}</h3>
         </div>
 
         <div className="space-y-2">
