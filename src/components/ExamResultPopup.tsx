@@ -181,6 +181,73 @@ export function ExamResultPopup({ userId }: { userId: string }) {
               </p>
             )}
           </div>
+          {(() => {
+            const comments = commentsBySubmission[current.id] ?? [];
+            if (comments.length === 0) return null;
+            return (
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-foreground/80">
+                  Perguntas comentadas pela gestora
+                </p>
+                <div className="space-y-2">
+                  {comments.map((c) => {
+                    const correct = c.is_correct === true;
+                    const incorrect = c.is_correct === false;
+                    const borderClass = correct
+                      ? "border-emerald-500/40"
+                      : incorrect
+                        ? "border-rose-500/40"
+                        : "border-white/10";
+                    return (
+                      <div
+                        key={c.id}
+                        className={`rounded-2xl border ${borderClass} bg-white/[0.04] backdrop-blur-xl p-3 space-y-2`}
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-xs font-semibold text-foreground/70">
+                            Pergunta {c.question_index + 1}
+                          </p>
+                          {correct && (
+                            <span className="text-[10px] uppercase tracking-wide font-semibold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/40">
+                              Correta
+                            </span>
+                          )}
+                          {incorrect && (
+                            <span className="text-[10px] uppercase tracking-wide font-semibold px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/40">
+                              Incorreta
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-foreground/90 whitespace-pre-wrap">
+                          {c.question_text}
+                        </p>
+                        {c.answer_text && (
+                          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-2">
+                            <p className="text-[10px] uppercase tracking-wide text-foreground/60 mb-1">
+                              Sua resposta
+                            </p>
+                            <p className="text-sm text-foreground/85 whitespace-pre-wrap">
+                              {c.answer_text}
+                            </p>
+                          </div>
+                        )}
+                        {c.feedback && (
+                          <div className="rounded-xl border border-violet-400/40 bg-violet-400/10 p-2">
+                            <p className="text-[10px] uppercase tracking-wide text-violet-200 mb-1 font-semibold">
+                              Comentário da gestora
+                            </p>
+                            <p className="text-sm text-foreground/90 whitespace-pre-wrap">
+                              {c.feedback}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
           {current.general_feedback && (
             <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
               <p className="text-xs font-semibold text-foreground/80 mb-1">
