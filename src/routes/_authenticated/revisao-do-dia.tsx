@@ -634,6 +634,7 @@ function RevisaoDoDiaPage() {
                 onUpdate={(patch) => updateState(current.reviewKey, patch)}
                 onFinish={finishCurrentItem}
                 saving={saving}
+                preview={previewMode}
               />
             )}
         </Card>
