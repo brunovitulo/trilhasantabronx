@@ -254,63 +254,44 @@ export const completeReviewItem = createServerFn({ method: "POST" })
       );
     if (insErr) throw new Error(insErr.message);
 
-    // Avança o progresso do grupo de produtos, quando aplicável.
+    // Apenas registra atividade no progresso do grupo (sem mais avançar fases
+    // por contagem de sessões). O grupo é considerado completo SOMENTE quando
+    // TODOS os produtos estão marcados em `product_flashcard_mastery.mastered_at`.
     if (data.groupId && data.reviewKey.startsWith("produtos:")) {
       const { data: gpRow } = await supabase
         .from("product_revision_progress")
-        .select(
-          "id, group_id, cycle, phase, cycle_anchor_date, sessions_done, group_completed",
-        )
+        .select("id, group_completed, sessions_done")
         .eq("user_id", userId)
         .eq("group_id", data.groupId)
         .maybeSingle();
 
       if (gpRow && !gpRow.group_completed) {
-        const phase = gpRow.phase as 1 | 2 | 3;
-        const sessionsDone = (gpRow.sessions_done ?? 0) + 1;
-        const sessionsPerPhase = PRODUCT_PHASE_DAYS[phase].length;
-        const score =
-          data.scoreTotal > 0 ? data.scoreCorrect / data.scoreTotal : 0;
+        // Conta produtos do grupo no catálogo M7.
+        const { M7_PRODUCTS } = await import("@/data/m7Products");
+        const total = M7_PRODUCTS.filter((p) => p.groupId === data.groupId).length;
+        const { data: masteryRows } = await supabase
+          .from("product_flashcard_mastery")
+          .select("product_slug, mastered_at")
+          .eq("user_id", userId)
+          .eq("group_id", data.groupId);
+        const masteredCount = (masteryRows ?? []).filter(
+          (m) => m.mastered_at,
+        ).length;
 
-        let nextUpdate: Record<string, unknown> = {
-          sessions_done: sessionsDone,
+        const patch: Record<string, unknown> = {
+          sessions_done: (gpRow.sessions_done ?? 0) + 1,
           last_session_at: new Date().toISOString(),
         };
-
-        if (sessionsDone >= sessionsPerPhase) {
-          // Encerra a fase atual e decide o que vem.
-          if (phase === 1) {
-            nextUpdate = { ...nextUpdate, phase: 2, sessions_done: 0 };
-          } else if (phase === 2) {
-            nextUpdate = { ...nextUpdate, phase: 3, sessions_done: 0 };
-          } else {
-            // Fase 3: verifica nota.
-            if (score >= 0.7) {
-              nextUpdate = {
-                ...nextUpdate,
-                group_completed: true,
-                phase3_score: score,
-              };
-            } else {
-              // Reinicia o ciclo daqui 3 dias.
-              nextUpdate = {
-                ...nextUpdate,
-                phase: 1,
-                cycle: gpRow.cycle + 1,
-                sessions_done: 0,
-                cycle_anchor_date: addDaysIso(today, 3),
-                phase3_score: score,
-              };
-            }
-          }
+        if (total > 0 && masteredCount >= total) {
+          patch.group_completed = true;
         }
-
         await supabase
           .from("product_revision_progress")
-          .update(nextUpdate as never)
+          .update(patch as never)
           .eq("id", gpRow.id);
       }
     }
+
 
     return { ok: true, date: today };
   });
