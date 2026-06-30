@@ -330,6 +330,63 @@ function RevisaoDoDiaPage() {
         }
       }
 
+      // Constrói metadata detalhada (respostas por questão) para auditoria admin.
+      let metadata: Record<string, unknown> | undefined;
+      if (cur.kind === "module" && current.kind === "module") {
+        const content = getRevisionContent(current.topicId);
+        if (content) {
+          metadata = {
+            kind: "module",
+            topicId: current.topicId,
+            answers: cur.selected.map((qOriginalIdx, i) => {
+              const q = content.quiz[qOriginalIdx];
+              const chosen = cur.answers[i];
+              return {
+                question: q.question,
+                options: q.options,
+                correctIndex: q.correctIndex,
+                chosenIndex: chosen,
+                correct: chosen === q.correctIndex,
+              };
+            }),
+          };
+        }
+      } else if (cur.kind === "product-group" && current.kind === "product-group") {
+        const group = getProductRevisionGroup(current.groupId);
+        if (group) {
+          metadata = {
+            kind: "product-group",
+            groupId: current.groupId,
+            phase: current.phase,
+            cycle: current.cycle,
+            answers: cur.selectedProducts.flatMap((pIdx, sIdx) => {
+              const product = group.products[pIdx];
+              return cur.selectedQuestionsPerProduct[sIdx].map((qIdx, qPos) => {
+                const q = product.questions[qIdx];
+                const got = cur.answers[`p${sIdx}:q${qPos}`];
+                return {
+                  productName: product.name,
+                  question: q.question,
+                  options: q.options,
+                  correctIndex: q.correctIndex,
+                  chosenIndex: got ?? null,
+                  correct: got === q.correctIndex,
+                };
+              });
+            }),
+          };
+        }
+      }
+
+      if (previewMode) {
+        // Modo visualização — não grava nada.
+        setCompleted((prev) => ({ ...prev, [current.reviewKey]: true }));
+        const nextRemaining = remaining.filter((q) => q.reviewKey !== current.reviewKey);
+        if (nextRemaining.length === 0) setFinalScreen(true);
+        else setItemIdx(0);
+        return;
+      }
+
       await completeItem({
         data: {
           reviewKey: current.reviewKey,
@@ -337,6 +394,7 @@ function RevisaoDoDiaPage() {
           scoreTotal,
           groupId:
             current.kind === "product-group" ? current.groupId : undefined,
+          metadata,
         },
       });
 
