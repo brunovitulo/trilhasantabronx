@@ -1261,7 +1261,15 @@ function Flashcard({
                   </span>
                   <span
                     className="flex-1"
-                    style={{ fontSize: 13, lineHeight: 1.4 }}
+                    style={{
+                      fontSize: 13,
+                      lineHeight: 1.4,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 1,
+                      WebkitBoxOrient: "vertical",
+                    }}
                   >
                     {opt}
                   </span>
