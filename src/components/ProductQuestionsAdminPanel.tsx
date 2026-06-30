@@ -95,8 +95,8 @@ export function ProductQuestionsAdminPanel() {
                   <p className="text-[13px] font-medium truncate">{s.title}</p>
                   <p className="text-[11px] text-muted-foreground">
                     {ts
-                      ? `Gerado em ${new Date(ts).toLocaleString("pt-BR")}`
-                      : "Ainda sem questões geradas (usa fallback embutido)."}
+                      ? `Refinado em ${new Date(ts).toLocaleString("pt-BR")}`
+                      : "Usando banco padrão embutido (pronto para uso)."}
                   </p>
                 </div>
                 <Button
@@ -109,16 +109,14 @@ export function ProductQuestionsAdminPanel() {
                 >
                   {isGenerating ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : ts ? (
-                    <>
-                      <RefreshCw className="h-3.5 w-3.5 mr-1" /> Regerar
-                    </>
                   ) : (
                     <>
-                      <Sparkles className="h-3.5 w-3.5 mr-1" /> Gerar 12
+                      <RefreshCw className="h-3.5 w-3.5 mr-1" />
+                      {ts ? "Regerar" : "Refinar com IA"}
                     </>
                   )}
                 </Button>
+
               </div>
             );
           })}
