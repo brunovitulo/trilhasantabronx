@@ -184,21 +184,14 @@ export const getTodayReview = createServerFn({ method: "GET" })
       const mastery = masteryByGroup.get(group.id) ?? [];
       const masteredCount = mastery.filter((m) => m.mastered_at).length;
       const total = totalByGroup.get(group.id) ?? 0;
-      // Se todos os produtos do grupo já foram dominados, oculta da fila.
-      if (total > 0 && masteredCount >= total) continue;
+      // Critério único: mostra o grupo enquanto houver QUALQUER produto não
+      // dominado. Acertar funcionalidade + preço no mesmo flashcard é o que
+      // marca o produto como dominado (em `recordFlashcardResult`).
+      // As "fases" são mantidas apenas como rótulo informativo na UI.
+      if (total === 0) continue;
+      if (masteredCount >= total) continue;
 
-      // Decide se entra na fila hoje:
-      // 1) data de ciclo/fase corresponde ao plano OU
-      // 2) existe ao menos um produto com next_review_date <= today (re-fila por erro).
       const phase = gp.phase as 1 | 2 | 3;
-      const diff = daysBetween(gp.cycle_anchor_date, today);
-      const days = PRODUCT_PHASE_DAYS[phase];
-      const phaseDay = days.includes(diff);
-      const dueByReQueue = mastery.some(
-        (m) => !m.mastered_at && m.next_review_date && m.next_review_date <= today,
-      );
-      if (!phaseDay && !dueByReQueue) continue;
-
       queue.push({
         kind: "product-group",
         reviewKey: `produtos:${group.id}`,
@@ -211,6 +204,7 @@ export const getTodayReview = createServerFn({ method: "GET" })
           phase === 1 ? "10-14" : phase === 2 ? "8-10" : "6-8",
       });
     }
+
 
     // Ordena: módulos primeiro (mesma ordem dos TOPICS), depois grupos de produtos.
     queue.sort((a, b) => {
