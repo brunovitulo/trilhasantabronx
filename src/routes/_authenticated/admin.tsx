@@ -952,18 +952,6 @@ function AttendantActionsMenu({
               Ver histórico de provas
             </DropdownMenuItem>
           )}
-          <DropdownMenuItem
-            onSelect={(e) => {
-              e.preventDefault();
-              handleImpersonate();
-            }}
-            disabled={impersonating || attendantId === reviewerId}
-            className="gap-2"
-          >
-            <Eye className="h-4 w-4 text-[oklch(0.82_0.13_295)]" />
-            {impersonating ? "Abrindo…" : "Ver como este usuário"}
-          </DropdownMenuItem>
-
           <DropdownMenuItem onSelect={() => setUnlockOpen(true)} className="gap-2">
             <ShieldCheck className="h-4 w-4 text-[oklch(0.78_0.13_180)]" />
             Liberar todas as provas
