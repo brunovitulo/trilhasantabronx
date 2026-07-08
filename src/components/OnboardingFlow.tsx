@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-import { isImpersonating, stopImpersonation } from "@/components/ImpersonationBanner";
+import { forceStopImpersonationNow, isImpersonating } from "@/components/ImpersonationBanner";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -56,8 +56,8 @@ export function OnboardingFlow({ userId, onFinish }: Props) {
   async function exitImpersonation() {
     if (exitingImpersonation) return;
     setExitingImpersonation(true);
-    const result = await stopImpersonation();
-    window.location.href = result.restored ? "/admin" : "/auth";
+    const result = forceStopImpersonationNow();
+    window.location.replace(result.restored ? "/admin" : "/auth");
   }
 
   async function finish() {
@@ -83,6 +83,11 @@ export function OnboardingFlow({ userId, onFinish }: Props) {
       {impersonating && (
         <Button
           type="button"
+          onPointerDownCapture={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            exitImpersonation();
+          }}
           onClick={exitImpersonation}
           disabled={exitingImpersonation}
           className="fixed right-4 top-4 z-[2147483647] h-10 gap-2 rounded-full border border-amber-300/50 bg-amber-400 px-4 text-sm font-bold text-amber-950 shadow-xl hover:bg-amber-300 disabled:opacity-80 sm:right-6 sm:top-6"
