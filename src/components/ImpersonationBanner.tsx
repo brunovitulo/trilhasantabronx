@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Eye, LogOut, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 
 const BACKUP_KEY = "impersonation:admin-session";
 const INFO_KEY = "impersonation:target";
+const AUTH_KEY_RE = /^sb-.+-auth-token$/;
 
 type Backup = {
   access_token: string;
@@ -20,7 +20,7 @@ function findAuthStorageKey() {
   if (typeof window === "undefined") return null;
   for (let i = 0; i < localStorage.length; i += 1) {
     const key = localStorage.key(i);
-    if (key && /^sb-.+-auth-token$/.test(key)) return key;
+    if (key && AUTH_KEY_RE.test(key)) return key;
   }
   return null;
 }
@@ -122,7 +122,23 @@ export function forceStopImpersonationNow(): { restored: boolean } {
 
   localStorage.removeItem(BACKUP_KEY);
   localStorage.removeItem(INFO_KEY);
+  window.dispatchEvent(new Event("impersonation:changed"));
   return { restored };
+}
+
+export function clearAllLocalAuthState() {
+  if (typeof window === "undefined") return;
+  const keysToRemove: string[] = [];
+  for (let i = 0; i < localStorage.length; i += 1) {
+    const key = localStorage.key(i);
+    if (key && (AUTH_KEY_RE.test(key) || key.startsWith("impersonation:"))) {
+      keysToRemove.push(key);
+    }
+  }
+  keysToRemove.forEach((key) => localStorage.removeItem(key));
+  sessionStorage.removeItem(BACKUP_KEY);
+  sessionStorage.removeItem(INFO_KEY);
+  window.dispatchEvent(new Event("impersonation:changed"));
 }
 
 function readImpersonationInfo(): Info | null {
@@ -203,11 +219,31 @@ export async function startImpersonation(params: {
   // Persist AFTER successful swap so a failure doesn't strand the admin.
   localStorage.setItem(BACKUP_KEY, JSON.stringify(backup));
   localStorage.setItem(INFO_KEY, JSON.stringify(info));
+  window.dispatchEvent(new Event("impersonation:changed"));
 }
 
 export function ImpersonationBanner() {
   const [info, setInfo] = useState<Info | null>(null);
   const [exiting, setExiting] = useState(false);
+  const exitingRef = useRef(false);
+
+  const exit = useCallback(() => {
+    if (exitingRef.current) return;
+    exitingRef.current = true;
+    setExiting(true);
+    const result = forceStopImpersonationNow();
+    window.location.assign(result.restored ? "/admin" : "/auth");
+  }, []);
+
+  const logoutEverything = useCallback(() => {
+    if (exitingRef.current) return;
+    exitingRef.current = true;
+    setExiting(true);
+    clearAllLocalAuthState();
+    void supabase.auth.signOut({ scope: "local" }).finally(() => {
+      window.location.assign("/auth");
+    });
+  }, []);
 
   useEffect(() => {
     const read = () => {
@@ -215,26 +251,62 @@ export function ImpersonationBanner() {
     };
     read();
     window.addEventListener("storage", read);
+    window.addEventListener("impersonation:changed", read);
     const t = window.setInterval(read, 1000);
     return () => {
       window.removeEventListener("storage", read);
+      window.removeEventListener("impersonation:changed", read);
       window.clearInterval(t);
     };
   }, []);
 
-  if (!info) return null;
+  useEffect(() => {
+    if (!info) return;
 
-  async function exit() {
-    setExiting(true);
-    const result = forceStopImpersonationNow();
-    window.location.replace(result.restored ? "/admin" : "/auth");
-  }
+    const previousBodyPointerEvents = document.body.style.pointerEvents;
+    const previousHtmlPointerEvents = document.documentElement.style.pointerEvents;
+    const keepClickable = () => {
+      document.body.style.pointerEvents = "auto";
+      document.documentElement.style.pointerEvents = "auto";
+    };
+    keepClickable();
+    const intervalId = window.setInterval(keepClickable, 200);
+
+    const onForcedClick = (event: Event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const action = target.closest<HTMLElement>("[data-impersonation-action]")?.dataset.impersonationAction;
+      if (!action) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if ("stopImmediatePropagation" in event) event.stopImmediatePropagation();
+      if (action === "logout") logoutEverything();
+      else exit();
+    };
+
+    document.addEventListener("pointerdown", onForcedClick, true);
+    document.addEventListener("mousedown", onForcedClick, true);
+    document.addEventListener("touchstart", onForcedClick, true);
+    document.addEventListener("click", onForcedClick, true);
+
+    return () => {
+      window.clearInterval(intervalId);
+      document.removeEventListener("pointerdown", onForcedClick, true);
+      document.removeEventListener("mousedown", onForcedClick, true);
+      document.removeEventListener("touchstart", onForcedClick, true);
+      document.removeEventListener("click", onForcedClick, true);
+      document.body.style.pointerEvents = previousBodyPointerEvents;
+      document.documentElement.style.pointerEvents = previousHtmlPointerEvents;
+    };
+  }, [exit, info, logoutEverything]);
+
+  if (!info) return null;
 
   return (
     <>
       {/* Spacer so page content isn't hidden under the fixed banner */}
       <div aria-hidden className="h-11" />
-      <div className="fixed inset-x-0 top-0 z-[2147483647] border-b border-amber-400/40 bg-amber-500/95 shadow-lg backdrop-blur-xl">
+      <div className="fixed inset-x-0 top-0 z-[2147483647] border-b border-amber-400/40 bg-amber-500/95 shadow-lg backdrop-blur-xl pointer-events-auto">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2 sm:px-6">
           <div className="flex items-center gap-2 text-sm text-amber-950 min-w-0">
             <Eye className="h-4 w-4 shrink-0" />
@@ -246,17 +318,43 @@ export function ImpersonationBanner() {
           <Button
             type="button"
             size="sm"
+            data-impersonation-action="exit"
             onPointerDownCapture={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              exit();
+            }}
+            onMouseDownCapture={(event) => {
               event.preventDefault();
               event.stopPropagation();
               exit();
             }}
             onClick={exit}
             disabled={exiting}
-            className="h-8 gap-1.5 rounded-full bg-amber-950 text-amber-50 hover:bg-amber-900 shrink-0"
+            className="h-8 gap-1.5 rounded-full bg-amber-950 text-amber-50 hover:bg-amber-900 shrink-0 pointer-events-auto"
           >
             {exiting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <LogOut className="h-3.5 w-3.5" />}
             Sair da visualização
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            data-impersonation-action="logout"
+            onPointerDownCapture={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              logoutEverything();
+            }}
+            onMouseDownCapture={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              logoutEverything();
+            }}
+            onClick={logoutEverything}
+            disabled={exiting}
+            className="hidden h-8 gap-1.5 rounded-full border border-amber-950/30 bg-amber-100/90 text-amber-950 hover:bg-amber-50 shrink-0 pointer-events-auto sm:inline-flex"
+          >
+            Sair de tudo
           </Button>
         </div>
       </div>
