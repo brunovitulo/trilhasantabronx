@@ -1,7 +1,7 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { deleteAttendant, setAttendantBanned, impersonateUser } from "@/lib/adminUsers.functions";
+import { deleteAttendant, setAttendantBanned, impersonateUser, setAttendantAdmin } from "@/lib/adminUsers.functions";
 import { startImpersonation } from "@/components/ImpersonationBanner";
 import { Ban, Trash2, ShieldOff, Eye } from "lucide-react";
 
