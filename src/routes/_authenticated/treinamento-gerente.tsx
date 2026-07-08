@@ -24,7 +24,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-export const Route = createFileRoute("/_authenticated/admin/treinamento")({
+export const Route = createFileRoute("/_authenticated/treinamento-gerente")({
   beforeLoad: async ({ context }) => {
     const { data } = await supabase
       .from("user_roles")

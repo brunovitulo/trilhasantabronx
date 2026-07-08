@@ -232,7 +232,7 @@ function AdminPage() {
             variant="outline"
             className="rounded-full gap-1.5 border-[oklch(0.65_0.18_295)]/40 bg-[oklch(0.55_0.22_295)]/10 text-[oklch(0.85_0.13_295)] hover:bg-[oklch(0.55_0.22_295)]/20 hover:text-[oklch(0.9_0.1_295)] h-8"
           >
-            <Link to="/admin/treinamento">
+            <Link to="/treinamento-gerente">
               <GraduationCap className="h-3.5 w-3.5" />
               Treinamento do gerente
             </Link>
