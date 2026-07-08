@@ -628,6 +628,11 @@ function AttendantCard({
             )}
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
+            <ImpersonateButton
+              attendantId={att.id}
+              attendantName={att.full_name}
+              reviewerId={reviewerId}
+            />
             <Button
               type="button"
               size="sm"
