@@ -182,6 +182,8 @@ function AdminPage() {
       .on("postgres_changes", { event: "*", schema: "public", table: "open_evaluation_submissions" }, () => refresh())
       .on("postgres_changes", { event: "*", schema: "public", table: "subtask_progress" }, () => refresh())
       .on("postgres_changes", { event: "*", schema: "public", table: "exam_permission_requests" }, () => refresh())
+      .on("postgres_changes", { event: "*", schema: "public", table: "user_roles" }, () => refresh())
+
       .subscribe();
     const onFocus = () => refresh();
     window.addEventListener("focus", onFocus);
