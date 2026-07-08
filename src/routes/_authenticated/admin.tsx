@@ -928,32 +928,9 @@ function AttendantActionsMenu({
   const [banOpen, setBanOpen] = useState(false);
   const [unbanOpen, setUnbanOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [impersonating, setImpersonating] = useState(false);
   const [togglingAdmin, setTogglingAdmin] = useState(false);
-  const impersonateFn = useServerFn(impersonateUser);
   const setAdminFn = useServerFn(setAttendantAdmin);
 
-  async function handleImpersonate() {
-    if (attendantId === reviewerId) {
-      toast.error("Você já está logado como você mesmo.");
-      return;
-    }
-    setImpersonating(true);
-    try {
-      const res = await impersonateFn({ data: { userId: attendantId } });
-      await startImpersonation({
-        tokenHash: res.tokenHash,
-        email: res.email,
-        name: res.fullName ?? attendantName,
-      });
-      window.location.href = "/";
-    } catch (err) {
-      toast.error("Não consegui abrir a visualização", {
-        description: err instanceof Error ? err.message : "Tente novamente",
-      });
-      setImpersonating(false);
-    }
-  }
 
   async function handleToggleAdmin() {
     if (attendantIsAdmin && attendantId === reviewerId) {
