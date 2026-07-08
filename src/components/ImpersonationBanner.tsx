@@ -51,7 +51,11 @@ export function ImpersonationBanner() {
     };
     read();
     window.addEventListener("storage", read);
-    return () => window.removeEventListener("storage", read);
+    const t = window.setInterval(read, 1000);
+    return () => {
+      window.removeEventListener("storage", read);
+      window.clearInterval(t);
+    };
   }, []);
 
   if (!info) return null;
@@ -76,27 +80,30 @@ export function ImpersonationBanner() {
   }
 
   return (
-    <div className="sticky top-0 z-50 border-b border-amber-400/30 bg-amber-500/15 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2 sm:px-6">
-        <div className="flex items-center gap-2 text-sm text-amber-100">
-          <Eye className="h-4 w-4" />
-          <span>
-            Visualizando como{" "}
-            <strong className="font-semibold">{info.name ?? info.email}</strong>
-          </span>
+    <>
+      {/* Spacer so page content isn't hidden under the fixed banner */}
+      <div aria-hidden className="h-11" />
+      <div className="fixed inset-x-0 top-0 z-[200] border-b border-amber-400/40 bg-amber-500/95 shadow-lg backdrop-blur-xl">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2 sm:px-6">
+          <div className="flex items-center gap-2 text-sm text-amber-950 min-w-0">
+            <Eye className="h-4 w-4 shrink-0" />
+            <span className="truncate">
+              Visualizando como{" "}
+              <strong className="font-semibold">{info.name ?? info.email}</strong>
+            </span>
+          </div>
+          <Button
+            type="button"
+            size="sm"
+            onClick={exit}
+            disabled={exiting}
+            className="h-8 gap-1.5 rounded-full bg-amber-950 text-amber-50 hover:bg-amber-900 shrink-0"
+          >
+            {exiting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <LogOut className="h-3.5 w-3.5" />}
+            Sair da visualização
+          </Button>
         </div>
-        <Button
-          type="button"
-          size="sm"
-          variant="ghost"
-          onClick={exit}
-          disabled={exiting}
-          className="h-8 gap-1.5 rounded-full border border-amber-300/40 bg-amber-500/10 text-amber-100 hover:bg-amber-500/20 hover:text-amber-50"
-        >
-          {exiting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <LogOut className="h-3.5 w-3.5" />}
-          Sair da visualização
-        </Button>
       </div>
-    </div>
+    </>
   );
 }
