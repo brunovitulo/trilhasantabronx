@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { deleteAttendant, setAttendantBanned, impersonateUser, setAttendantAdmin } from "@/lib/adminUsers.functions";
 import { startImpersonation } from "@/components/ImpersonationBanner";
-import { Ban, Trash2, ShieldOff, Eye } from "lucide-react";
+import { Ban, Trash2, ShieldOff, Eye, GraduationCap } from "lucide-react";
 
 
 import {
@@ -219,12 +219,26 @@ function AdminPage() {
     <div className="min-h-screen">
       <AppHeader isAdmin />
       <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
-        <Link
-          to="/"
-          className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4"
-        >
-          <ChevronLeft className="h-4 w-4" /> Voltar à trilha
-        </Link>
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <Link
+            to="/"
+            className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
+          >
+            <ChevronLeft className="h-4 w-4" /> Voltar à trilha
+          </Link>
+          <Button
+            asChild
+            size="sm"
+            variant="outline"
+            className="rounded-full gap-1.5 border-[oklch(0.65_0.18_295)]/40 bg-[oklch(0.55_0.22_295)]/10 text-[oklch(0.85_0.13_295)] hover:bg-[oklch(0.55_0.22_295)]/20 hover:text-[oklch(0.9_0.1_295)] h-8"
+          >
+            <Link to="/admin/treinamento">
+              <GraduationCap className="h-3.5 w-3.5" />
+              Treinamento do gerente
+            </Link>
+          </Button>
+        </div>
+
 
         {/* Header: title + search + filter */}
         <div className="flex flex-wrap items-start justify-between gap-4">
