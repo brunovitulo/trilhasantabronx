@@ -99,6 +99,32 @@ export function isImpersonating(): boolean {
   return !!localStorage.getItem(BACKUP_KEY);
 }
 
+export function forceStopImpersonationNow(): { restored: boolean } {
+  if (typeof window === "undefined") return { restored: false };
+  const raw = localStorage.getItem(BACKUP_KEY);
+  if (!raw) {
+    localStorage.removeItem(INFO_KEY);
+    return { restored: false };
+  }
+
+  let restored = false;
+  try {
+    const backup = JSON.parse(raw) as Backup;
+    if (backup.storageKey && backup.storageValue) {
+      localStorage.setItem(backup.storageKey, backup.storageValue);
+      restored = true;
+    } else if (backup.access_token && backup.refresh_token) {
+      restored = patchStoredSessionFromTokens(backup);
+    }
+  } catch {
+    restored = false;
+  }
+
+  localStorage.removeItem(BACKUP_KEY);
+  localStorage.removeItem(INFO_KEY);
+  return { restored };
+}
+
 function readImpersonationInfo(): Info | null {
   if (typeof window === "undefined") return null;
   if (!localStorage.getItem(BACKUP_KEY)) return null;
@@ -129,10 +155,7 @@ export async function stopImpersonation(): Promise<{ restored: boolean }> {
 
   try {
     if (backup.storageKey && backup.storageValue) {
-      localStorage.setItem(backup.storageKey, backup.storageValue);
-      localStorage.removeItem(BACKUP_KEY);
-      localStorage.removeItem(INFO_KEY);
-      return { restored: true };
+      return forceStopImpersonationNow();
     }
 
     const { error } = await withTimeout(
@@ -147,9 +170,7 @@ export async function stopImpersonation(): Promise<{ restored: boolean }> {
     localStorage.removeItem(INFO_KEY);
     return { restored: true };
   } catch {
-    const patched = patchStoredSessionFromTokens(backup);
-    localStorage.removeItem(BACKUP_KEY);
-    localStorage.removeItem(INFO_KEY);
+    const patched = forceStopImpersonationNow().restored;
     if (patched) return { restored: true };
     await supabase.auth.signOut({ scope: "local" }).catch(() => undefined);
     return { restored: false };
@@ -205,11 +226,8 @@ export function ImpersonationBanner() {
 
   async function exit() {
     setExiting(true);
-    const result = await stopImpersonation();
-    if (!result.restored) {
-      toast.warning("Visualização encerrada. Entre novamente se necessário.");
-    }
-    window.location.href = result.restored ? "/admin" : "/auth";
+    const result = forceStopImpersonationNow();
+    window.location.replace(result.restored ? "/admin" : "/auth");
   }
 
   return (
@@ -228,6 +246,11 @@ export function ImpersonationBanner() {
           <Button
             type="button"
             size="sm"
+            onPointerDownCapture={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              exit();
+            }}
             onClick={exit}
             disabled={exiting}
             className="h-8 gap-1.5 rounded-full bg-amber-950 text-amber-50 hover:bg-amber-900 shrink-0"
