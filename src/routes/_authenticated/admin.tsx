@@ -133,7 +133,7 @@ function AdminPage() {
 
   async function refresh() {
     setLoading(true);
-    const [{ data: profiles }, { data: progress }, { data: pendings }, { data: perms }] = await Promise.all([
+    const [{ data: profiles }, { data: progress }, { data: pendings }, { data: perms }, { data: roles }] = await Promise.all([
       supabase
         .from("profiles")
         .select("id, full_name")
@@ -149,10 +149,13 @@ function AdminPage() {
         .select("id, user_id, subtask_id, created_at")
         .eq("status", "pending")
         .order("created_at", { ascending: true }),
+      supabase.from("user_roles").select("user_id, role").eq("role", "admin"),
     ]);
+    const adminSet = new Set((roles ?? []).map((r) => r.user_id));
     const grouped: AttendantRow[] = (profiles ?? []).map((p) => ({
       id: p.id,
       full_name: p.full_name,
+      isAdmin: adminSet.has(p.id),
       progress: (progress ?? [])
         .filter((r) => r.user_id === p.id)
         .map((r) => ({
@@ -170,6 +173,7 @@ function AdminPage() {
     setList(grouped);
     setLoading(false);
   }
+
 
   useEffect(() => {
     refresh();
