@@ -19,9 +19,11 @@ function AuthenticatedLayout() {
   const { user } = Route.useRouteContext();
   return (
     <>
+      <ImpersonationBanner />
       <Outlet />
       <ExamResultPopup userId={user.id} />
       <DailyTasksGate userId={user.id} />
     </>
+
   );
 }
