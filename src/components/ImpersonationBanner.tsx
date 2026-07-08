@@ -15,6 +15,28 @@ export function isImpersonating(): boolean {
   return !!localStorage.getItem(BACKUP_KEY);
 }
 
+function readImpersonationInfo(): Info | null {
+  if (typeof window === "undefined") return null;
+  if (!localStorage.getItem(BACKUP_KEY)) return null;
+  const raw = localStorage.getItem(INFO_KEY);
+  if (!raw) return { name: null, email: "usuário visualizado" };
+  try {
+    return JSON.parse(raw) as Info;
+  } catch {
+    return { name: null, email: "usuário visualizado" };
+  }
+}
+
+export async function stopImpersonation() {
+  const raw = localStorage.getItem(BACKUP_KEY);
+  if (!raw) throw new Error("Backup de sessão não encontrado.");
+  const backup = JSON.parse(raw) as Backup;
+  const { error } = await supabase.auth.setSession(backup);
+  if (error) throw new Error(error.message);
+  localStorage.removeItem(BACKUP_KEY);
+  localStorage.removeItem(INFO_KEY);
+}
+
 export async function startImpersonation(params: {
   tokenHash: string;
   email: string;
@@ -45,9 +67,7 @@ export function ImpersonationBanner() {
 
   useEffect(() => {
     const read = () => {
-      const raw = localStorage.getItem(INFO_KEY);
-      const has = !!localStorage.getItem(BACKUP_KEY);
-      setInfo(has && raw ? (JSON.parse(raw) as Info) : null);
+      setInfo(readImpersonationInfo());
     };
     read();
     window.addEventListener("storage", read);
@@ -63,13 +83,7 @@ export function ImpersonationBanner() {
   async function exit() {
     setExiting(true);
     try {
-      const raw = localStorage.getItem(BACKUP_KEY);
-      if (!raw) throw new Error("Backup de sessão não encontrado.");
-      const backup = JSON.parse(raw) as Backup;
-      const { error } = await supabase.auth.setSession(backup);
-      if (error) throw new Error(error.message);
-      localStorage.removeItem(BACKUP_KEY);
-      localStorage.removeItem(INFO_KEY);
+      await stopImpersonation();
       window.location.href = "/admin";
     } catch (err) {
       toast.error("Falha ao voltar", {
@@ -83,7 +97,7 @@ export function ImpersonationBanner() {
     <>
       {/* Spacer so page content isn't hidden under the fixed banner */}
       <div aria-hidden className="h-11" />
-      <div className="fixed inset-x-0 top-0 z-[200] border-b border-amber-400/40 bg-amber-500/95 shadow-lg backdrop-blur-xl">
+      <div className="fixed inset-x-0 top-0 z-[2147483647] border-b border-amber-400/40 bg-amber-500/95 shadow-lg backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2 sm:px-6">
           <div className="flex items-center gap-2 text-sm text-amber-950 min-w-0">
             <Eye className="h-4 w-4 shrink-0" />
