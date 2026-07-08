@@ -841,12 +841,14 @@ function UnlockAllExamsLauncher({
 function AttendantActionsMenu({
   attendantId,
   attendantName,
+  attendantIsAdmin,
   reviewerId,
   progress,
   onOpenHistory,
 }: {
   attendantId: string;
   attendantName: string | null;
+  attendantIsAdmin: boolean;
   reviewerId: string;
   progress: ProgressRow[];
   onOpenHistory?: () => void;
@@ -857,7 +859,9 @@ function AttendantActionsMenu({
   const [unbanOpen, setUnbanOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [impersonating, setImpersonating] = useState(false);
+  const [togglingAdmin, setTogglingAdmin] = useState(false);
   const impersonateFn = useServerFn(impersonateUser);
+  const setAdminFn = useServerFn(setAttendantAdmin);
 
   async function handleImpersonate() {
     if (attendantId === reviewerId) {
@@ -880,6 +884,29 @@ function AttendantActionsMenu({
       setImpersonating(false);
     }
   }
+
+  async function handleToggleAdmin() {
+    if (attendantIsAdmin && attendantId === reviewerId) {
+      toast.error("Você não pode remover seu próprio acesso de admin.");
+      return;
+    }
+    setTogglingAdmin(true);
+    try {
+      await setAdminFn({ data: { userId: attendantId, isAdmin: !attendantIsAdmin } });
+      toast.success(
+        attendantIsAdmin
+          ? `${attendantName ?? "Usuário"} não é mais admin.`
+          : `${attendantName ?? "Usuário"} agora é admin.`,
+      );
+    } catch (err) {
+      toast.error("Falha ao alterar papel", {
+        description: err instanceof Error ? err.message : "Tente novamente",
+      });
+    } finally {
+      setTogglingAdmin(false);
+    }
+  }
+
 
 
   return (
