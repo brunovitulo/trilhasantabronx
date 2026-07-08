@@ -1,8 +1,10 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { deleteAttendant, setAttendantBanned } from "@/lib/adminUsers.functions";
-import { Ban, Trash2, ShieldOff } from "lucide-react";
+import { deleteAttendant, setAttendantBanned, impersonateUser } from "@/lib/adminUsers.functions";
+import { startImpersonation } from "@/components/ImpersonationBanner";
+import { Ban, Trash2, ShieldOff, Eye } from "lucide-react";
+
 
 import {
   ChevronLeft,
@@ -836,6 +838,31 @@ function AttendantActionsMenu({
   const [banOpen, setBanOpen] = useState(false);
   const [unbanOpen, setUnbanOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [impersonating, setImpersonating] = useState(false);
+  const impersonateFn = useServerFn(impersonateUser);
+
+  async function handleImpersonate() {
+    if (attendantId === reviewerId) {
+      toast.error("Você já está logado como você mesmo.");
+      return;
+    }
+    setImpersonating(true);
+    try {
+      const res = await impersonateFn({ data: { userId: attendantId } });
+      await startImpersonation({
+        tokenHash: res.tokenHash,
+        email: res.email,
+        name: res.fullName ?? attendantName,
+      });
+      window.location.href = "/";
+    } catch (err) {
+      toast.error("Não consegui abrir a visualização", {
+        description: err instanceof Error ? err.message : "Tente novamente",
+      });
+      setImpersonating(false);
+    }
+  }
+
 
   return (
     <>
@@ -861,6 +888,18 @@ function AttendantActionsMenu({
               Ver histórico de provas
             </DropdownMenuItem>
           )}
+          <DropdownMenuItem
+            onSelect={(e) => {
+              e.preventDefault();
+              handleImpersonate();
+            }}
+            disabled={impersonating || attendantId === reviewerId}
+            className="gap-2"
+          >
+            <Eye className="h-4 w-4 text-[oklch(0.82_0.13_295)]" />
+            {impersonating ? "Abrindo…" : "Ver como este usuário"}
+          </DropdownMenuItem>
+
           <DropdownMenuItem onSelect={() => setUnlockOpen(true)} className="gap-2">
             <ShieldCheck className="h-4 w-4 text-[oklch(0.78_0.13_180)]" />
             Liberar todas as provas
