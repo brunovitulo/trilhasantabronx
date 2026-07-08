@@ -949,7 +949,23 @@ function AttendantActionsMenu({
             <ShieldCheck className="h-4 w-4 text-[oklch(0.78_0.13_180)]" />
             Liberar todas as provas
           </DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={(e) => {
+              e.preventDefault();
+              handleToggleAdmin();
+            }}
+            disabled={togglingAdmin || (attendantIsAdmin && attendantId === reviewerId)}
+            className="gap-2"
+          >
+            <ShieldCheck className="h-4 w-4 text-[oklch(0.82_0.13_295)]" />
+            {togglingAdmin
+              ? "Aplicando…"
+              : attendantIsAdmin
+                ? "Remover admin"
+                : "Definir como admin"}
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
+
           <DropdownMenuItem
             onSelect={() => setResetOpen(true)}
             className="gap-2 text-amber-300 focus:text-amber-200"
