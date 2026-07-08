@@ -16,6 +16,7 @@ import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedRevisaoDoDiaRouteImport } from './routes/_authenticated/revisao-do-dia'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedTopicoTopicIdRouteImport } from './routes/_authenticated/topico.$topicId'
+import { Route as AuthenticatedAdminTreinamentoRouteImport } from './routes/_authenticated/admin.treinamento'
 import { Route as AuthenticatedAdminAvaliacoesRouteImport } from './routes/_authenticated/admin.avaliacoes'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -54,6 +55,12 @@ const AuthenticatedTopicoTopicIdRoute =
     path: '/topico/$topicId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminTreinamentoRoute =
+  AuthenticatedAdminTreinamentoRouteImport.update({
+    id: '/treinamento',
+    path: '/treinamento',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAvaliacoesRoute =
   AuthenticatedAdminAvaliacoesRouteImport.update({
     id: '/avaliacoes',
@@ -68,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/revisao-do-dia': typeof AuthenticatedRevisaoDoDiaRoute
   '/admin/avaliacoes': typeof AuthenticatedAdminAvaliacoesRoute
+  '/admin/treinamento': typeof AuthenticatedAdminTreinamentoRoute
   '/topico/$topicId': typeof AuthenticatedTopicoTopicIdRoute
 }
 export interface FileRoutesByTo {
@@ -77,6 +85,7 @@ export interface FileRoutesByTo {
   '/revisao-do-dia': typeof AuthenticatedRevisaoDoDiaRoute
   '/': typeof AuthenticatedIndexRoute
   '/admin/avaliacoes': typeof AuthenticatedAdminAvaliacoesRoute
+  '/admin/treinamento': typeof AuthenticatedAdminTreinamentoRoute
   '/topico/$topicId': typeof AuthenticatedTopicoTopicIdRoute
 }
 export interface FileRoutesById {
@@ -88,6 +97,7 @@ export interface FileRoutesById {
   '/_authenticated/revisao-do-dia': typeof AuthenticatedRevisaoDoDiaRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/admin/avaliacoes': typeof AuthenticatedAdminAvaliacoesRoute
+  '/_authenticated/admin/treinamento': typeof AuthenticatedAdminTreinamentoRoute
   '/_authenticated/topico/$topicId': typeof AuthenticatedTopicoTopicIdRoute
 }
 export interface FileRouteTypes {
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/revisao-do-dia'
     | '/admin/avaliacoes'
+    | '/admin/treinamento'
     | '/topico/$topicId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/revisao-do-dia'
     | '/'
     | '/admin/avaliacoes'
+    | '/admin/treinamento'
     | '/topico/$topicId'
   id:
     | '__root__'
@@ -118,6 +130,7 @@ export interface FileRouteTypes {
     | '/_authenticated/revisao-do-dia'
     | '/_authenticated/'
     | '/_authenticated/admin/avaliacoes'
+    | '/_authenticated/admin/treinamento'
     | '/_authenticated/topico/$topicId'
   fileRoutesById: FileRoutesById
 }
@@ -178,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTopicoTopicIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/treinamento': {
+      id: '/_authenticated/admin/treinamento'
+      path: '/treinamento'
+      fullPath: '/admin/treinamento'
+      preLoaderRoute: typeof AuthenticatedAdminTreinamentoRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/avaliacoes': {
       id: '/_authenticated/admin/avaliacoes'
       path: '/avaliacoes'
@@ -190,10 +210,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAvaliacoesRoute: typeof AuthenticatedAdminAvaliacoesRoute
+  AuthenticatedAdminTreinamentoRoute: typeof AuthenticatedAdminTreinamentoRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAvaliacoesRoute: AuthenticatedAdminAvaliacoesRoute,
+  AuthenticatedAdminTreinamentoRoute: AuthenticatedAdminTreinamentoRoute,
 }
 
 const AuthenticatedAdminRouteWithChildren =
