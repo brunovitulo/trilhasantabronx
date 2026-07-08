@@ -37,9 +37,19 @@ export function OnboardingFlow({ userId, onFinish }: Props) {
   const [exitingImpersonation, setExitingImpersonation] = useState(false);
 
   useEffect(() => {
-    setImpersonating(isImpersonating());
+    const activeImpersonation = isImpersonating();
+    setImpersonating(activeImpersonation);
     const prev = document.body.style.overflow;
+    const prevBodyPointerEvents = document.body.style.pointerEvents;
+    const prevHtmlPointerEvents = document.documentElement.style.pointerEvents;
+    const keepClickable = () => {
+      if (!activeImpersonation) return;
+      document.body.style.pointerEvents = "auto";
+      document.documentElement.style.pointerEvents = "auto";
+    };
     document.body.style.overflow = "hidden";
+    keepClickable();
+    const pointerInterval = activeImpersonation ? window.setInterval(keepClickable, 200) : undefined;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
@@ -49,6 +59,9 @@ export function OnboardingFlow({ userId, onFinish }: Props) {
     window.addEventListener("keydown", onKey, true);
     return () => {
       document.body.style.overflow = prev;
+      if (pointerInterval) window.clearInterval(pointerInterval);
+      document.body.style.pointerEvents = prevBodyPointerEvents;
+      document.documentElement.style.pointerEvents = prevHtmlPointerEvents;
       window.removeEventListener("keydown", onKey, true);
     };
   }, []);
@@ -57,7 +70,7 @@ export function OnboardingFlow({ userId, onFinish }: Props) {
     if (exitingImpersonation) return;
     setExitingImpersonation(true);
     const result = forceStopImpersonationNow();
-    window.location.replace(result.restored ? "/admin" : "/auth");
+    window.location.assign(result.restored ? "/admin" : "/auth");
   }
 
   async function finish() {
@@ -90,7 +103,7 @@ export function OnboardingFlow({ userId, onFinish }: Props) {
           }}
           onClick={exitImpersonation}
           disabled={exitingImpersonation}
-          className="fixed right-4 top-4 z-[2147483647] h-10 gap-2 rounded-full border border-amber-300/50 bg-amber-400 px-4 text-sm font-bold text-amber-950 shadow-xl hover:bg-amber-300 disabled:opacity-80 sm:right-6 sm:top-6"
+          className="fixed right-4 top-4 z-[2147483647] h-10 gap-2 rounded-full border border-amber-300/50 bg-amber-400 px-4 text-sm font-bold text-amber-950 shadow-xl hover:bg-amber-300 disabled:opacity-80 sm:right-6 sm:top-6 pointer-events-auto"
         >
           {exitingImpersonation ? (
             <Loader2 className="h-4 w-4 animate-spin" />
