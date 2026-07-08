@@ -604,7 +604,15 @@ function AttendantCard({
       <div className="flex flex-col gap-3 p-3 sm:p-4">
         {/* Top line: name + actions */}
         <div className="flex items-center justify-between gap-3">
-          <h3 className="font-bold text-base truncate">{att.full_name ?? "Sem nome"}</h3>
+          <div className="flex items-center gap-2 min-w-0">
+            <h3 className="font-bold text-base truncate">{att.full_name ?? "Sem nome"}</h3>
+            {att.isAdmin && (
+              <Badge className="shrink-0 gap-1 rounded-full border border-[oklch(0.65_0.18_295)]/40 bg-[oklch(0.55_0.22_295)]/15 text-[oklch(0.85_0.13_295)] hover:bg-[oklch(0.55_0.22_295)]/15">
+                <ShieldCheck className="h-3 w-3" />
+                Admin
+              </Badge>
+            )}
+          </div>
           <div className="flex items-center gap-1.5 shrink-0">
             <Button
               type="button"
@@ -619,12 +627,14 @@ function AttendantCard({
             <AttendantActionsMenu
               attendantId={att.id}
               attendantName={att.full_name}
+              attendantIsAdmin={att.isAdmin}
               reviewerId={reviewerId}
               progress={att.progress}
               onOpenHistory={onOpenHistory}
             />
           </div>
         </div>
+
 
         {/* Topics progress */}
         <div className="flex flex-col gap-1">
