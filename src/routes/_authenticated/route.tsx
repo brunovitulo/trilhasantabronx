@@ -2,6 +2,8 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { ExamResultPopup } from "@/components/ExamResultPopup";
 import { DailyTasksGate } from "@/components/DailyTasksGate";
+import { ImpersonationBanner } from "@/components/ImpersonationBanner";
+
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
