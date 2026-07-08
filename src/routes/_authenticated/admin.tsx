@@ -1,7 +1,7 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { deleteAttendant, setAttendantBanned, impersonateUser } from "@/lib/adminUsers.functions";
+import { deleteAttendant, setAttendantBanned, impersonateUser, setAttendantAdmin } from "@/lib/adminUsers.functions";
 import { startImpersonation } from "@/components/ImpersonationBanner";
 import { Ban, Trash2, ShieldOff, Eye } from "lucide-react";
 
@@ -112,10 +112,12 @@ type PermissionRequest = {
 type AttendantRow = {
   id: string;
   full_name: string | null;
+  isAdmin: boolean;
   progress: ProgressRow[];
   pending: PendingSubmission[];
   permissionRequests: PermissionRequest[];
 };
+
 
 function AdminPage() {
   const { user } = Route.useRouteContext();
@@ -131,7 +133,7 @@ function AdminPage() {
 
   async function refresh() {
     setLoading(true);
-    const [{ data: profiles }, { data: progress }, { data: pendings }, { data: perms }] = await Promise.all([
+    const [{ data: profiles }, { data: progress }, { data: pendings }, { data: perms }, { data: roles }] = await Promise.all([
       supabase
         .from("profiles")
         .select("id, full_name")
@@ -147,10 +149,13 @@ function AdminPage() {
         .select("id, user_id, subtask_id, created_at")
         .eq("status", "pending")
         .order("created_at", { ascending: true }),
+      supabase.from("user_roles").select("user_id, role").eq("role", "admin"),
     ]);
+    const adminSet = new Set((roles ?? []).map((r) => r.user_id));
     const grouped: AttendantRow[] = (profiles ?? []).map((p) => ({
       id: p.id,
       full_name: p.full_name,
+      isAdmin: adminSet.has(p.id),
       progress: (progress ?? [])
         .filter((r) => r.user_id === p.id)
         .map((r) => ({
@@ -169,6 +174,7 @@ function AdminPage() {
     setLoading(false);
   }
 
+
   useEffect(() => {
     refresh();
     const ch = supabase
@@ -176,6 +182,8 @@ function AdminPage() {
       .on("postgres_changes", { event: "*", schema: "public", table: "open_evaluation_submissions" }, () => refresh())
       .on("postgres_changes", { event: "*", schema: "public", table: "subtask_progress" }, () => refresh())
       .on("postgres_changes", { event: "*", schema: "public", table: "exam_permission_requests" }, () => refresh())
+      .on("postgres_changes", { event: "*", schema: "public", table: "user_roles" }, () => refresh())
+
       .subscribe();
     const onFocus = () => refresh();
     window.addEventListener("focus", onFocus);
@@ -596,7 +604,15 @@ function AttendantCard({
       <div className="flex flex-col gap-3 p-3 sm:p-4">
         {/* Top line: name + actions */}
         <div className="flex items-center justify-between gap-3">
-          <h3 className="font-bold text-base truncate">{att.full_name ?? "Sem nome"}</h3>
+          <div className="flex items-center gap-2 min-w-0">
+            <h3 className="font-bold text-base truncate">{att.full_name ?? "Sem nome"}</h3>
+            {att.isAdmin && (
+              <Badge className="shrink-0 gap-1 rounded-full border border-[oklch(0.65_0.18_295)]/40 bg-[oklch(0.55_0.22_295)]/15 text-[oklch(0.85_0.13_295)] hover:bg-[oklch(0.55_0.22_295)]/15">
+                <ShieldCheck className="h-3 w-3" />
+                Admin
+              </Badge>
+            )}
+          </div>
           <div className="flex items-center gap-1.5 shrink-0">
             <Button
               type="button"
@@ -611,12 +627,14 @@ function AttendantCard({
             <AttendantActionsMenu
               attendantId={att.id}
               attendantName={att.full_name}
+              attendantIsAdmin={att.isAdmin}
               reviewerId={reviewerId}
               progress={att.progress}
               onOpenHistory={onOpenHistory}
             />
           </div>
         </div>
+
 
         {/* Topics progress */}
         <div className="flex flex-col gap-1">
@@ -823,12 +841,14 @@ function UnlockAllExamsLauncher({
 function AttendantActionsMenu({
   attendantId,
   attendantName,
+  attendantIsAdmin,
   reviewerId,
   progress,
   onOpenHistory,
 }: {
   attendantId: string;
   attendantName: string | null;
+  attendantIsAdmin: boolean;
   reviewerId: string;
   progress: ProgressRow[];
   onOpenHistory?: () => void;
@@ -839,7 +859,9 @@ function AttendantActionsMenu({
   const [unbanOpen, setUnbanOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [impersonating, setImpersonating] = useState(false);
+  const [togglingAdmin, setTogglingAdmin] = useState(false);
   const impersonateFn = useServerFn(impersonateUser);
+  const setAdminFn = useServerFn(setAttendantAdmin);
 
   async function handleImpersonate() {
     if (attendantId === reviewerId) {
@@ -862,6 +884,29 @@ function AttendantActionsMenu({
       setImpersonating(false);
     }
   }
+
+  async function handleToggleAdmin() {
+    if (attendantIsAdmin && attendantId === reviewerId) {
+      toast.error("Você não pode remover seu próprio acesso de admin.");
+      return;
+    }
+    setTogglingAdmin(true);
+    try {
+      await setAdminFn({ data: { userId: attendantId, isAdmin: !attendantIsAdmin } });
+      toast.success(
+        attendantIsAdmin
+          ? `${attendantName ?? "Usuário"} não é mais admin.`
+          : `${attendantName ?? "Usuário"} agora é admin.`,
+      );
+    } catch (err) {
+      toast.error("Falha ao alterar papel", {
+        description: err instanceof Error ? err.message : "Tente novamente",
+      });
+    } finally {
+      setTogglingAdmin(false);
+    }
+  }
+
 
 
   return (
@@ -904,7 +949,23 @@ function AttendantActionsMenu({
             <ShieldCheck className="h-4 w-4 text-[oklch(0.78_0.13_180)]" />
             Liberar todas as provas
           </DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={(e) => {
+              e.preventDefault();
+              handleToggleAdmin();
+            }}
+            disabled={togglingAdmin || (attendantIsAdmin && attendantId === reviewerId)}
+            className="gap-2"
+          >
+            <ShieldCheck className="h-4 w-4 text-[oklch(0.82_0.13_295)]" />
+            {togglingAdmin
+              ? "Aplicando…"
+              : attendantIsAdmin
+                ? "Remover admin"
+                : "Definir como admin"}
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
+
           <DropdownMenuItem
             onSelect={() => setResetOpen(true)}
             className="gap-2 text-amber-300 focus:text-amber-200"

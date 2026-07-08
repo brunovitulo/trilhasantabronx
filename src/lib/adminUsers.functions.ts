@@ -64,3 +64,29 @@ export const setAttendantBanned = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true, banned: data.banned };
   });
+
+export const setAttendantAdmin = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { userId: string; isAdmin: boolean }) => input)
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    if (data.userId === context.userId && !data.isAdmin) {
+      throw new Error("Você não pode remover a si mesmo do papel de admin.");
+    }
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    if (data.isAdmin) {
+      const { error } = await supabaseAdmin
+        .from("user_roles")
+        .upsert({ user_id: data.userId, role: "admin" }, { onConflict: "user_id,role" });
+      if (error) throw new Error(error.message);
+    } else {
+      const { error } = await supabaseAdmin
+        .from("user_roles")
+        .delete()
+        .eq("user_id", data.userId)
+        .eq("role", "admin");
+      if (error) throw new Error(error.message);
+    }
+    return { ok: true, isAdmin: data.isAdmin };
+  });
+
