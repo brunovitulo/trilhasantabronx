@@ -857,6 +857,57 @@ function UnlockAllExamsLauncher({
   );
 }
 
+function ImpersonateButton({
+  attendantId,
+  attendantName,
+  reviewerId,
+}: {
+  attendantId: string;
+  attendantName: string | null;
+  reviewerId: string;
+}) {
+  const [busy, setBusy] = useState(false);
+  const impersonateFn = useServerFn(impersonateUser);
+  const disabled = busy || attendantId === reviewerId;
+
+  async function run() {
+    if (attendantId === reviewerId) {
+      toast.error("Você já está logado como você mesmo.");
+      return;
+    }
+    setBusy(true);
+    try {
+      const res = await impersonateFn({ data: { userId: attendantId } });
+      await startImpersonation({
+        tokenHash: res.tokenHash,
+        email: res.email,
+        name: res.fullName ?? attendantName,
+      });
+      window.location.href = "/";
+    } catch (err) {
+      toast.error("Não consegui abrir a visualização", {
+        description: err instanceof Error ? err.message : "Tente novamente",
+      });
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Button
+      type="button"
+      size="sm"
+      variant="outline"
+      onClick={run}
+      disabled={disabled}
+      title="Ver como este usuário"
+      aria-label="Ver como este usuário"
+      className="h-8 w-8 rounded-full p-0 border-[oklch(0.65_0.18_295)]/40 bg-[oklch(0.55_0.22_295)]/10 text-[oklch(0.85_0.13_295)] hover:bg-[oklch(0.55_0.22_295)]/20 hover:text-[oklch(0.9_0.1_295)]"
+    >
+      {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Eye className="h-3.5 w-3.5" />}
+    </Button>
+  );
+}
+
 function AttendantActionsMenu({
   attendantId,
   attendantName,
