@@ -112,10 +112,12 @@ type PermissionRequest = {
 type AttendantRow = {
   id: string;
   full_name: string | null;
+  isAdmin: boolean;
   progress: ProgressRow[];
   pending: PendingSubmission[];
   permissionRequests: PermissionRequest[];
 };
+
 
 function AdminPage() {
   const { user } = Route.useRouteContext();
