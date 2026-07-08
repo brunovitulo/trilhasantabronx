@@ -56,12 +56,8 @@ export function OnboardingFlow({ userId, onFinish }: Props) {
   async function exitImpersonation() {
     if (exitingImpersonation) return;
     setExitingImpersonation(true);
-    try {
-      await stopImpersonation();
-      window.location.href = "/admin";
-    } catch {
-      setExitingImpersonation(false);
-    }
+    const result = await stopImpersonation();
+    window.location.href = result.restored ? "/admin" : "/auth";
   }
 
   async function finish() {
