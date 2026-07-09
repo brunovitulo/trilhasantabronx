@@ -330,7 +330,7 @@ function TreinamentoPage() {
               {[
                 "Abrir o app e conferir o sininho de pendências.",
                 "Aprovar (ou rejeitar) as solicitações de prova que aparecerem.",
-                "Sempre que uma atendente for fazer prova: abrir Ver como este usuário e ficar acompanhando ao vivo.",
+                "Sempre que uma atendente for fazer prova: liberar somente com você por perto e acompanhar presencialmente até o envio.",
                 "Corrigir as provas que caíram pra revisão.",
                 "Passar rápido pela lista de Usuários pra ver se alguém está travada há muito tempo no mesmo módulo.",
               ].map((item, i) => (
