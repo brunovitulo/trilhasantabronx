@@ -118,6 +118,18 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    document.body.style.pointerEvents = "";
+    document.documentElement.style.pointerEvents = "";
+
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i += 1) {
+      const key = localStorage.key(i);
+      if (key?.startsWith("impersonation:")) keysToRemove.push(key);
+    }
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}

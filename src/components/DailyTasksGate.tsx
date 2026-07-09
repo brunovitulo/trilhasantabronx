@@ -24,13 +24,19 @@ export function DailyTasksGate({ userId }: { userId: string }) {
   const fetchReview = useServerFn(getTodayReview);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [onboardingComplete, setOnboardingComplete] = useState(false);
   const [done, setDone] = useState<Record<string, boolean>>({});
   const [review, setReview] = useState<TodayReviewState | null>(null);
 
   const reload = useCallback(async () => {
     const today = todayKey();
-    const [{ data: roles }, { data: comps }, rev] = await Promise.all([
+    const [{ data: roles }, { data: profile }, { data: comps }, rev] = await Promise.all([
       supabase.from("user_roles").select("role").eq("user_id", userId),
+      supabase
+        .from("profiles")
+        .select("onboarding_completed_at")
+        .eq("id", userId)
+        .maybeSingle(),
       supabase
         .from("daily_task_completions")
         .select("task_id")
@@ -39,6 +45,7 @@ export function DailyTasksGate({ userId }: { userId: string }) {
       fetchReview().catch(() => null),
     ]);
     setIsAdmin(!!roles?.some((r) => r.role === "admin"));
+    setOnboardingComplete(!!profile?.onboarding_completed_at);
     const map: Record<string, boolean> = {};
     (comps ?? []).forEach((c) => {
       map[c.task_id as string] = true;
@@ -84,6 +91,7 @@ export function DailyTasksGate({ userId }: { userId: string }) {
   const open =
     !loading &&
     !isAdmin &&
+    onboardingComplete &&
     !allDone &&
     router.state.location.pathname !== "/revisao-do-dia";
 

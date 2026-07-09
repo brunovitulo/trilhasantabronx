@@ -1,32 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-export const impersonateUser = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((input: { userId: string }) => input)
-  .handler(async ({ data, context }) => {
-    await assertAdmin(context);
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: userRes, error: userErr } = await supabaseAdmin.auth.admin.getUserById(data.userId);
-    if (userErr || !userRes?.user?.email) {
-      throw new Error(userErr?.message ?? "Usuário sem e-mail — impossível visualizar.");
-    }
-    const email = userRes.user.email;
-    const { data: linkData, error: linkErr } = await supabaseAdmin.auth.admin.generateLink({
-      type: "magiclink",
-      email,
-    });
-    if (linkErr || !linkData?.properties?.hashed_token) {
-      throw new Error(linkErr?.message ?? "Falha ao gerar sessão de visualização.");
-    }
-    return {
-      email,
-      tokenHash: linkData.properties.hashed_token,
-      fullName: (userRes.user.user_metadata as { full_name?: string } | null)?.full_name ?? null,
-    };
-  });
-
-
 async function assertAdmin(context: { supabase: any; userId: string }) {
   const { data, error } = await context.supabase
     .rpc("has_role", { _user_id: context.userId, _role: "admin" });
