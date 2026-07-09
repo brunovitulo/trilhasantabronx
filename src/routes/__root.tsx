@@ -145,7 +145,43 @@ function RootComponent() {
     keysToRemove.forEach((key) => localStorage.removeItem(key));
     sessionStorage.removeItem("impersonation:admin-session");
     sessionStorage.removeItem("impersonation:target");
+
+    // Defensive: Radix Dialog/Popover às vezes deixa `pointer-events: none`
+    // no <body> depois de fechar (especialmente quando abrimos e fechamos
+    // vários popovers em sequência no /admin). Isso trava TODOS os cliques
+    // da página. Um observer barato desfaz esse estado quando não há mais
+    // nenhum overlay/dialog aberto no DOM.
+    const unstick = () => {
+      const hasOpenOverlay = !!document.querySelector(
+        '[data-state="open"][role="dialog"], [data-state="open"][role="alertdialog"], [data-radix-popper-content-wrapper]',
+      );
+      if (!hasOpenOverlay) {
+        if (document.body.style.pointerEvents === "none") {
+          document.body.style.pointerEvents = "";
+        }
+        if (document.body.getAttribute("aria-hidden") === "true") {
+          document.body.removeAttribute("aria-hidden");
+        }
+        const root = document.getElementById("root");
+        if (root?.getAttribute("aria-hidden") === "true") {
+          root.removeAttribute("aria-hidden");
+        }
+      }
+    };
+    const observer = new MutationObserver(unstick);
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["style", "aria-hidden"],
+      childList: true,
+      subtree: true,
+    });
+    const interval = window.setInterval(unstick, 1500);
+    return () => {
+      observer.disconnect();
+      window.clearInterval(interval);
+    };
   }, []);
+
 
   return (
     <QueryClientProvider client={queryClient}>
