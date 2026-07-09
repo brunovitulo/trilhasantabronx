@@ -12,14 +12,11 @@ import {
   ShieldCheck,
   ArrowRight,
   Rocket,
-  LogOut,
-  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-import { forceStopImpersonationNow, isImpersonating } from "@/components/ImpersonationBanner";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -33,23 +30,12 @@ export function OnboardingFlow({ userId, onFinish }: Props) {
   const [step, setStep] = useState(0);
   const [confirmed, setConfirmed] = useState<boolean[]>([false, false, false]);
   const [saving, setSaving] = useState(false);
-  const [impersonating, setImpersonating] = useState(false);
-  const [exitingImpersonation, setExitingImpersonation] = useState(false);
 
   useEffect(() => {
-    const activeImpersonation = isImpersonating();
-    setImpersonating(activeImpersonation);
     const prev = document.body.style.overflow;
-    const prevBodyPointerEvents = document.body.style.pointerEvents;
-    const prevHtmlPointerEvents = document.documentElement.style.pointerEvents;
-    const keepClickable = () => {
-      if (!activeImpersonation) return;
-      document.body.style.pointerEvents = "auto";
-      document.documentElement.style.pointerEvents = "auto";
-    };
+    document.body.style.pointerEvents = "";
+    document.documentElement.style.pointerEvents = "";
     document.body.style.overflow = "hidden";
-    keepClickable();
-    const pointerInterval = activeImpersonation ? window.setInterval(keepClickable, 200) : undefined;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
@@ -59,19 +45,11 @@ export function OnboardingFlow({ userId, onFinish }: Props) {
     window.addEventListener("keydown", onKey, true);
     return () => {
       document.body.style.overflow = prev;
-      if (pointerInterval) window.clearInterval(pointerInterval);
-      document.body.style.pointerEvents = prevBodyPointerEvents;
-      document.documentElement.style.pointerEvents = prevHtmlPointerEvents;
+      document.body.style.pointerEvents = "";
+      document.documentElement.style.pointerEvents = "";
       window.removeEventListener("keydown", onKey, true);
     };
   }, []);
-
-  async function exitImpersonation() {
-    if (exitingImpersonation) return;
-    setExitingImpersonation(true);
-    const result = forceStopImpersonationNow();
-    window.location.assign(result.restored ? "/admin" : "/auth");
-  }
 
   async function finish() {
     if (saving) return;
@@ -93,26 +71,6 @@ export function OnboardingFlow({ userId, onFinish }: Props) {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 overflow-y-auto">
-      {impersonating && (
-        <Button
-          type="button"
-          onPointerDownCapture={(event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            exitImpersonation();
-          }}
-          onClick={exitImpersonation}
-          disabled={exitingImpersonation}
-          className="fixed right-4 top-4 z-[2147483647] h-10 gap-2 rounded-full border border-amber-300/50 bg-amber-400 px-4 text-sm font-bold text-amber-950 shadow-xl hover:bg-amber-300 disabled:opacity-80 sm:right-6 sm:top-6 pointer-events-auto"
-        >
-          {exitingImpersonation ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <LogOut className="h-4 w-4" />
-          )}
-          Voltar para minha conta
-        </Button>
-      )}
       <div className="w-full max-w-2xl my-auto">
         {/* Indicador superior */}
         <div className="mb-5 flex items-center justify-between">

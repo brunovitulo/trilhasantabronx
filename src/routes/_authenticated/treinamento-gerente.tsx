@@ -6,7 +6,6 @@ import {
   ListChecks,
   BookOpen,
   KeyRound,
-  Eye,
   ClipboardCheck,
   RotateCcw,
   Bell,
@@ -100,15 +99,15 @@ const STEPS: Array<{
   },
   {
     n: 5,
-    icon: Eye,
-    title: "Acompanhe a prova em TEMPO REAL",
+    icon: Clock,
+    title: "Acompanhe a prova de perto",
     body:
-      "Esse é o passo mais importante. Enquanto ela faz a prova, você tem que estar vendo a tela dela ao vivo — pelo próprio app.",
+      "Esse é o passo mais importante. Enquanto ela faz a prova, acompanhe presencialmente e garanta que ela não consulte materiais externos.",
     details: [
-      "Vá em Admin → encontre o nome dela → menu Ações → Ver como este usuário.",
-      "Você entra na conta dela e vê exatamente a tela que ela está vendo. É pra você conferir se ela não está consultando a apostila, o WhatsApp, o Google ou perguntando pra outra pessoa.",
-      "Fique junto dela fisicamente e olhando o app. É o único jeito da prova valer.",
-      "Terminou? Clique em Sair da visualização (barra amarela no topo) pra voltar pra sua conta de admin.",
+      "Libere a prova apenas quando ela estiver pronta e com você por perto.",
+      "Oriente a atendente a manter apostila, WhatsApp, Google e conversas fechadas durante a prova.",
+      "Fique junto dela fisicamente até o envio da prova. É o único jeito do resultado ter valor.",
+      "Quando ela enviar, a prova aparece para correção no seu painel de admin.",
     ],
     tint: "from-[oklch(0.55_0.22_295)]/25 to-[oklch(0.4_0.18_295)]/10 border-[oklch(0.65_0.18_295)]/30",
   },
@@ -147,12 +146,6 @@ const TOOLS: Array<{ icon: typeof Bell; title: string; body: string }> = [
       "No topo da tela mostra pedidos de prova esperando aprovação e provas aguardando correção. Confira várias vezes ao dia.",
   },
   {
-    icon: Eye,
-    title: "Ver como este usuário",
-    body:
-      "Impersona a conta da atendente pra você acompanhar em tempo real. Use SEMPRE que ela estiver fazendo uma prova.",
-  },
-  {
     icon: ShieldCheck,
     title: "Liberar todas as provas",
     body:
@@ -180,7 +173,7 @@ const TOOLS: Array<{ icon: typeof Bell; title: string; body: string }> = [
     icon: ShieldCheck,
     title: "Definir como admin",
     body:
-      "Dá pra outra pessoa os mesmos poderes que você tem. Use com moderação — quem for admin pode aprovar prova, visualizar contas e excluir usuários.",
+      "Dá pra outra pessoa os mesmos poderes que você tem. Use com moderação — quem for admin pode aprovar prova, corrigir avaliações e excluir usuários.",
   },
 ];
 
@@ -229,9 +222,8 @@ function TreinamentoPage() {
               <strong className="font-semibold">Regra de ouro:</strong> durante uma
               prova você{" "}
               <span className="underline decoration-amber-300/50">precisa</span>{" "}
-              estar dentro da conta dela usando o botão{" "}
-              <em>Ver como este usuário</em>. É esse acompanhamento em tempo real
-              que impede cola e faz o resultado ter valor.
+              acompanhar a atendente de perto. Libere a prova somente com ela
+              preparada, sem consulta externa, e permaneça junto até o envio.
             </div>
           </div>
         </Card>
@@ -338,7 +330,7 @@ function TreinamentoPage() {
               {[
                 "Abrir o app e conferir o sininho de pendências.",
                 "Aprovar (ou rejeitar) as solicitações de prova que aparecerem.",
-                "Sempre que uma atendente for fazer prova: abrir Ver como este usuário e ficar acompanhando ao vivo.",
+                "Sempre que uma atendente for fazer prova: liberar somente com você por perto e acompanhar presencialmente até o envio.",
                 "Corrigir as provas que caíram pra revisão.",
                 "Passar rápido pela lista de Usuários pra ver se alguém está travada há muito tempo no mesmo módulo.",
               ].map((item, i) => (

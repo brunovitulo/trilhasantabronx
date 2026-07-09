@@ -118,6 +118,35 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    document.body.style.pointerEvents = "";
+    document.documentElement.style.pointerEvents = "";
+
+    const backupRaw = localStorage.getItem("impersonation:admin-session");
+    if (backupRaw) {
+      try {
+        const backup = JSON.parse(backupRaw) as {
+          storageKey?: string | null;
+          storageValue?: string | null;
+        };
+        if (backup.storageKey && backup.storageValue) {
+          localStorage.setItem(backup.storageKey, backup.storageValue);
+        }
+      } catch {
+        // If the old backup is malformed, still clear the stale lock below.
+      }
+    }
+
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i += 1) {
+      const key = localStorage.key(i);
+      if (key?.startsWith("impersonation:")) keysToRemove.push(key);
+    }
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
+    sessionStorage.removeItem("impersonation:admin-session");
+    sessionStorage.removeItem("impersonation:target");
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}

@@ -102,10 +102,8 @@ function HomePage() {
   const totalDone = Object.values(statuses).filter((s) => s === "completed").length;
   const overallPercent = Math.round((totalDone / TOPICS.length) * 100);
 
-  // Onboarding: aparece no primeiro acesso (sem timestamp), quando a conta
-  // está totalmente zerada (sem nenhum registro de progresso), ou quando o
-  // admin resetou o progresso depois da última conclusão do guia — exceto admin.
-  const accountIsEmpty = rows.length === 0;
+  // Onboarding: aparece no primeiro acesso ou quando o admin resetou o
+  // progresso depois da última conclusão do guia — exceto admin.
   const resetAfterOnboarding =
     !!profile?.progress_reset_at &&
     (!profile?.onboarding_completed_at ||
@@ -114,7 +112,7 @@ function HomePage() {
     !loading &&
     !isAdmin &&
     !onboardingDone &&
-    (!profile?.onboarding_completed_at || accountIsEmpty || resetAfterOnboarding);
+    (!profile?.onboarding_completed_at || resetAfterOnboarding);
 
 
   return (
